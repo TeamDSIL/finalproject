@@ -1,9 +1,6 @@
 <template>
     <div>
-        tlqkf
-        dadfas
-
-        asdfadsf
+    깃테스트입니다.
         <InformationList></InformationList>
 
     </div>
