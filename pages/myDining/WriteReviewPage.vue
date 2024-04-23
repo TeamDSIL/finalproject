@@ -93,8 +93,8 @@ export default {
 
 <style lang="scss" scoped>
 .review-logo{
-    max-width: 100px; /* 최대 너비 고정 */
-  max-height: 100px; /* 최대 높이 고정 */
+    max-width: 150px; /* 최대 너비 고정 */
+  max-height: 150px; /* 최대 높이 고정 */
 }
 .write-review-logo{
     display: flex;
