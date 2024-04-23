@@ -407,7 +407,7 @@ export default {
         },
         {
           text: 'Resturants',
-          disabled: true,
+          disabled: true, 
           href: '/',
         },
       ],
