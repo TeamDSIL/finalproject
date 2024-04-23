@@ -45,8 +45,8 @@
           <v-divider></v-divider>
           <v-row>
             <v-col cols="12">
-              <h4 class="info-edit-title">식당 정보 수정</h4>
-              <v-btn v-on:click="updateRestaurant" style="background-color: rgb(210,63,87); color: white;">식당수정</v-btn>
+              <h3>식당 정보 수정</h3>
+              <v-btn style="background-color: rgb(210,63,87); color: white;" v-on:click="goToRestaurantModify">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -114,7 +114,7 @@
           
           <v-row>
             <v-col cols="12">
-              <h4 class="restaurant-name-title">{{ restaurantName }}</h4>
+              <h4 class="restaurant-name-title">{{ restaurant.name }}</h4>
 <v-divider></v-divider>
               <v-col cols="12">
                 <div slot="boxContent">
@@ -167,7 +167,7 @@
             </v-col>
             <v-col cols="12">
               <div class="review-all-title">
-                <h4 class="fw-bold"> {{ restaurantName }}</h4>
+                <h4 class="fw-bold"> {{ restaurant.name }}</h4>
 
               </div>
               <v-divider style="margin-bottom: 20px;"></v-divider>
@@ -411,17 +411,17 @@ export default {
           href: '/',
         },
       ],
-      formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-      mobileItems: [
-        'Order Online', 'Book a Table', 'Reviews',
-      ],
+      // formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      // mobileItems: [
+      //   'Order Online', 'Book a Table', 'Reviews',
+      // ],
       text: 'hello',
       tab: null,
       checkbox: true,
       radioGroup: 1,
       value: [20, 40],
       selected: null, // 현재 선택된 버튼을 저장
-      restaurantName: "기영이네 존맛치킨",
+      
       
       reviews: [
         { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
@@ -447,6 +447,9 @@ export default {
     },
     goToReviewManage() {
       this.$router.push({ path: '/restaurant/ReviewManagePage' });
+    },
+    goToRestaurantModify() {
+      this.$router.push({ path: '/restaurant/RestaurantModifyPage' });
     },
     toggleSelection(button) {
       // 선택된 버튼이 다시 클릭되면 선택 해제, 아니면 선택
