@@ -27,8 +27,9 @@
       <v-tabs-items v-model="tab">
         <v-tab-item value="tab-1">
           <v-row>
-            <v-col cols="12">
-              <h3 class="fw-bold">{{ restaurantName }}</h3>
+            <v-col cols="12" class="restaurant-title-img">
+              <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px" style="max-width: 20px; margin-right: 5px;"></v-img>
+              <h3 class="fw-bold">{{ restaurant.name }}</h3>
             </v-col>
           </v-row>
           <v-row>
@@ -45,7 +46,7 @@
           <v-row>
             <v-col cols="12">
               <h3>식당 정보 수정</h3>
-              <v-btn v-on:click="updateRestaurant">식당수정</v-btn>
+              <v-btn style="background-color: rgb(210,63,87); color: white;" v-on:click="goToRestaurantModify">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -113,7 +114,7 @@
           
           <v-row>
             <v-col cols="12">
-              <h4 class="restaurant-name-title">{{ restaurantName }}</h4>
+              <h4 class="restaurant-name-title">{{ restaurant.name }}</h4>
 <v-divider></v-divider>
               <v-col cols="12">
                 <div slot="boxContent">
@@ -166,7 +167,7 @@
             </v-col>
             <v-col cols="12">
               <div class="review-all-title">
-                <h4 class="fw-bold"> {{ restaurantName }}</h4>
+                <h4 class="fw-bold"> {{ restaurant.name }}</h4>
 
               </div>
               <v-divider style="margin-bottom: 20px;"></v-divider>
