@@ -46,7 +46,7 @@
           <v-row>
             <v-col cols="12">
               <h4 class="info-edit-title">식당 정보 수정</h4>
-              <v-btn v-on:click="updateRestaurant" style="background-color: rgb(210,63,87); color: white;">식당수정</v-btn>
+              <v-btn style="background-color: rgb(210,63,87); color: white;">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -114,7 +114,7 @@
           
           <v-row>
             <v-col cols="12">
-              <h4 class="restaurant-name-title">{{ restaurantName }}</h4>
+              <h4 class="restaurant-name-title">{{ restaurant.name }}</h4>
 <v-divider></v-divider>
               <v-col cols="12">
                 <div slot="boxContent">
