@@ -403,7 +403,7 @@ export default {
         {
           text: 'New York',
           disabled: false,
-          href: '/',
+          href: '/', 
         },
         {
           text: 'Resturants',
