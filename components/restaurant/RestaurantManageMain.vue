@@ -29,7 +29,7 @@
           <v-row>
             <v-col cols="12" class="restaurant-title-img">
               <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px" style="max-width: 20px; margin-right: 5px;"></v-img>
-              <h3 class="fw-bold">{{ restaurantName }}</h3>
+              <h3 class="fw-bold">{{ restaurant.name }}</h3>
             </v-col>
           </v-row>
           <v-row>
@@ -363,7 +363,14 @@
 export default {
   data() {
     return {
-      restaurantName: "기영이네 존맛치킨",
+      restaurant: {
+                id: '123', // 예시 ID
+                name: '기영이네 존맛치킨', // 예시 식당명
+                address: '서울시 관악구', // 예시 주소
+                contact: '02-1234-5678', // 수정 가능한 연락처
+                deposit: '5000', // 수정 가능한 예약금
+                image: ''  // 수정 가능한 식당 사진
+            },
       headers: [
         { text: '날짜', value: 'date' },
         { text: '시간', value: 'time' },
