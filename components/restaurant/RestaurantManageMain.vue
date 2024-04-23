@@ -12,29 +12,29 @@
         </v-tab>
 
         <v-tab class="text-capitalize" href="#tab-2">
-          전체예약현황
+          예약전체현황
 
         </v-tab>
 
         <v-tab class="text-capitalize" href="#tab-3">
-          리뷰전체보기
+          전체리뷰보기
 
         </v-tab>
       </v-tabs>
-      <v-divider></v-divider>
+      <!-- <v-divider></v-divider> -->
 
       <!-- tab-1에 해당하는 화면 -->
       <v-tabs-items v-model="tab">
         <v-tab-item value="tab-1">
           <v-row>
             <v-col cols="12">
-              <h3 class="fw-bold">{{ restaurant.name }}</h3>
+              <h3 class="fw-bold">{{ restaurantName }}</h3>
             </v-col>
           </v-row>
           <v-row>
             <v-col cols="12">
               <!-- 실시간 이용현황 버튼. 클릭시 컬러 변경되게 설정 -->
-              <h3>실시간 이용 현황</h3>
+              <h4 class="silsigan-use-title">실시간 이용 현황</h4>
               <v-btn :color="selected === 'free' ? '#1DDB16' : ''" @click="toggleSelection('free')">여유</v-btn>
               <v-btn :color="selected === 'normal' ? '#FFE400' : ''" @click="toggleSelection('normal')">보통</v-btn>
               <v-btn :color="selected === 'busy' ? '#FF0000' : ''" @click="toggleSelection('busy')">혼잡</v-btn>
@@ -45,14 +45,14 @@
           <v-row>
             <v-col cols="12">
               <h3>식당 정보 수정</h3>
-              <v-btn @click="goToRestaurantModify">식당수정</v-btn>
+              <v-btn v-on:click="updateRestaurant">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
           <v-divider></v-divider>
           <v-row>
             <v-col cols="12">
-              <h3>예약 신청 현황</h3>
+              <h4 class="reserve-title">예약 신청 현황</h4>
               <v-simple-table>
                 <template v-slot:default>
                   <thead>
@@ -78,8 +78,8 @@
           <v-divider></v-divider>
           <v-row>
             <v-col cols="12">
-              <h3>최근 리뷰</h3>
-              <v-simple-table>
+              <h4 class="review-title">최근 리뷰</h4>
+              <v-simple-table class="review-table">
                 <template v-slot:default>
                   <thead>
                     <tr>
@@ -105,20 +105,22 @@
         <!-- tab-2에 해당하는 화면 -->
         <v-tab-item value="tab-2">
           <v-row>
-            <v-col cols="12">
-              <h3 class="fw-bold">{{ restaurantName }} 예약 전체보기</h3>
+            <v-col cols="12" style="display: flex;">
+              <v-img contain :src="require('~/assets/images/reserve-icon.png')" width="20px" style="max-width: 20px; margin-right: 5px;"></v-img>
+              <h3 class="fw-bold"> 예약 전체보기</h3>
             </v-col>
           </v-row>
+          
           <v-row>
             <v-col cols="12">
-              <h3>예약 신청 현황</h3>
-
+              <h4 class="restaurant-name-title">{{ restaurantName }}</h4>
+<v-divider></v-divider>
               <v-col cols="12">
                 <div slot="boxContent">
                   <div class="px-10">
                     <v-row>
                       <v-col cols="12">
-                        <h1>Reservation List</h1>
+                        <!-- <h4>Reservation List</h4> -->
                       </v-col>
                       <v-col cols="12">
                         <v-data-table :headers="headers" :items="bookings" :items-per-page="10" class="elevation-1">
@@ -154,10 +156,21 @@
         <!-- tab-3에 해당하는 화면 -->
         <v-tab-item value="tab-3">
           <v-row>
-            <v-col cols="12" class="mb-10">
+            <!-- <v-col cols="12" class="mb-10">
+              
               <h3 class="fw-bold">{{ restaurantName }}</h3>
+            </v-col> -->
+            <v-col cols="12" style="display: flex;">
+              <v-img contain :src="require('~/assets/images/review-icon.png')" width="20px" style="max-width: 20px; margin-right: 5px;"></v-img>
+              <h3 class="fw-bold"> 리뷰 전체보기</h3>
             </v-col>
             <v-col cols="12">
+              <div class="review-all-title">
+                <h4 class="fw-bold"> {{ restaurantName }}</h4>
+
+              </div>
+              <v-divider style="margin-bottom: 20px;"></v-divider>
+       
               <div slot="boxContent">
                 <div class="px-10">
                   <v-row>
@@ -447,4 +460,32 @@ export default {
 
 <style>
 /* 여기에 필요한 스타일 추가 */
+.restaurant-title-img{
+  display: flex;
+}
+.restaurant-name-title{
+  margin-bottom: 20px;
+
+}
+.review-all-title{
+  margin-bottom: 20px;
+}
+.review-table{
+  margin-bottom: 50px;
+}
+.review-title{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.reserve-title{
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.silsigan-use-title{
+  margin-bottom: 20px;
+}
+.info-edit-title{
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
 </style>

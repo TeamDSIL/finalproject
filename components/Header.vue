@@ -9,7 +9,7 @@
             <v-container class="d-flex align-center">
                 <nuxt-link to="/">
                   <v-avatar class="me-10" tile>
-                      <img src="~/assets/images/dsilLogoCut.jpg" alt="" style="width: 100px;"/>
+                      <img src="~/assets/images/dsillogoround.png" alt="" style="width: 100px;"/>
             
                   </v-avatar>
                 </nuxt-link>
