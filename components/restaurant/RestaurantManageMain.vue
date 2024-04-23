@@ -28,7 +28,7 @@
         <v-tab-item value="tab-1">
           <v-row>
             <v-col cols="12">
-              <h3 class="fw-bold">{{ restaurantName }}</h3>
+              <h3 class="fw-bold">{{ restaurant.name }}</h3>
             </v-col>
           </v-row>
           <v-row>
@@ -45,7 +45,7 @@
           <v-row>
             <v-col cols="12">
               <h3>식당 정보 수정</h3>
-              <v-btn v-on:click="updateRestaurant">식당수정</v-btn>
+              <v-btn @click="goToRestaurantModify">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -349,7 +349,14 @@
 export default {
   data() {
     return {
-      restaurantName: "기영이네 존맛치킨",
+      restaurant: {
+                id: '123', // 예시 ID
+                name: '기영이네 존맛치킨', // 예시 식당명
+                address: '서울시 관악구', // 예시 주소
+                contact: '02-1234-5678', // 수정 가능한 연락처
+                deposit: '5000', // 수정 가능한 예약금
+                image: ''  // 수정 가능한 식당 사진
+            },
       headers: [
         { text: '날짜', value: 'date' },
         { text: '시간', value: 'time' },
@@ -390,17 +397,17 @@ export default {
           href: '/',
         },
       ],
-      formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-      mobileItems: [
-        'Order Online', 'Book a Table', 'Reviews',
-      ],
+      // formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      // mobileItems: [
+      //   'Order Online', 'Book a Table', 'Reviews',
+      // ],
       text: 'hello',
       tab: null,
       checkbox: true,
       radioGroup: 1,
       value: [20, 40],
       selected: null, // 현재 선택된 버튼을 저장
-      restaurantName: "기영이네 존맛치킨",
+      
       
       reviews: [
         { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
@@ -426,6 +433,9 @@ export default {
     },
     goToReviewManage() {
       this.$router.push({ path: '/restaurant/ReviewManagePage' });
+    },
+    goToRestaurantModify() {
+      this.$router.push({ path: '/restaurant/RestaurantModifyPage' });
     },
     toggleSelection(button) {
       // 선택된 버튼이 다시 클릭되면 선택 해제, 아니면 선택
