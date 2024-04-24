@@ -193,8 +193,11 @@
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
-                          <span v-for="index in 5" :key="index">
-                            <img src="~/assets/images/babscore.png" alt="Custom Image" style="width: 20px;">
+                          <span v-for="(star, index) in 5" :key="index">
+                            <div style="margin-left: 2px;">
+                              <v-img :src="require('~/assets/images/babscore.png')" width="20px"
+                                class="fixed-size"></v-img>
+                            </div>
                           </span>
 
                           <span class="font-weight-bold text-14 ms-2">4.0</span>
@@ -210,20 +213,27 @@
                             <v-img contain :src="require('~/assets/images/gallery/foodSix.png')"></v-img>
                           </v-col>
                         </v-row>
+
+
                         <div>
                           <span class="grey--text text--darken-1 text-14">2 Comments</span>
                           <div class="mt-4">
 
-                            <!-- 답글달기 입력 폼 -->
-                            <v-form @submit.prevent="submitReply">
-                              <v-text-field v-model="reply" label="답글 작성" outlined dense class="mb-2"></v-text-field>
-
-                              <!-- 답글달기 버튼 -->
-                              <v-btn color="primary" small @click="submitReply">
-                                <v-icon left small>mdi-comment-text-outline</v-icon>
-                                답글달기
-                              </v-btn>
-                            </v-form>
+                            <!-- 답글달기 버튼 클릭 시 입력 폼을 토글합니다! -->
+                            <v-btn color="primary" small @click="toggleReplyForm">
+                              <v-icon left small>mdi-comment-text-outline</v-icon>
+                              답글달기
+                            </v-btn>
+                            <div v-if="showReplyForm">
+                              <v-form @submit.prevent="submitReply">
+                                <v-text-field v-model="reply" label="답글 작성" outlined dense class="mb-2"></v-text-field>
+                                <!-- 답글 등록 버튼 -->
+                                <v-btn color="primary" small type="submit">
+                                  <v-icon left small>mdi-send</v-icon>
+                                  등록
+                                </v-btn>
+                              </v-form>
+                            </div>
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small
                               @click="confirmDelete">
                               <v-icon left small>mdi-delete</v-icon>
@@ -231,7 +241,6 @@
                             </v-btn>
                           </div>
                         </div>
-
                         <!-- 답글  -->
                         <div class="mb-6">
                           <div class="d-flex align-center mb-3">
@@ -240,7 +249,7 @@
                             </v-avatar>
                             <div class="text-14 grey--text text--darken-4 f-600">기영이 존맛치킨</div>
                           </div>
-                          <h5 class="grey--text text--darken-2 font-weight-regular">오늘도 감사합니다다</h5>
+                          <h5 class="grey--text text--darken-2 font-weight-regular">오늘도 감사합니다</h5>
                         </div>
 
                         <v-divider></v-divider>
@@ -261,8 +270,11 @@
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
-                          <span v-for="index in 5" :key="index">
-                            <img src="~/assets/images/babscore.png" alt="Custom Image" style="width: 20px;">
+                          <span v-for="(star, index) in 5" :key="index">
+                            <div style="margin-left: 2px;">
+                              <v-img :src="require('~/assets/images/babscore.png')" width="20px"
+                                class="fixed-size"></v-img>
+                            </div>
                           </span>
                           <span class="font-weight-bold text-14 ms-2">4.0</span>
                           <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
@@ -304,8 +316,11 @@
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
-                          <span v-for="index in 5" :key="index">
-                            <img src="~/assets/images/babscore.png" alt="Custom Image" style="width: 20px;">
+                          <span v-for="(star, index) in 5" :key="index">
+                            <div style="margin-left: 2px;">
+                              <v-img :src="require('~/assets/images/babscore.png')" width="20px"
+                                class="fixed-size"></v-img>
+                            </div>
                           </span>
                           <span class="font-weight-bold text-14 ms-2">4.0</span>
                           <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
@@ -368,7 +383,9 @@
 export default {
   data() {
     return {
-      reply: '', // 답글 내용을 바인딩할 데이터
+      showReplyForm: false, // 입력 폼의 표시 상태를 제어하는 데이터 속성
+      replyText: {}, // 각 리뷰 ID별로 답글 입력 데이터를 저장장답글 내용을 바인딩할 데이터
+      replies: [], //답글 목록을 저장하는 배열
       restaurant: {
         id: '123', // 예시 ID
         name: '기영이네 존맛치킨', // 예시 식당명
@@ -469,6 +486,9 @@ export default {
     deleteReview() {
       //삭제요청하는 로직...구현예정
       console.log('리뷰 삭제 요청됨')
+    },
+    toggleReplyForm() {
+      this.showReplyForm = !this.showReplyForm; // 입력 폼 표시 상태를 토글합니다
     },
     submitReply() {
       if (this.reply.trim() !== '') {
