@@ -12,8 +12,12 @@
     "aos": "^2.3.4",
     "core-js": "^3.18.1",
     "nuxt": "^2.15.8",
+<<<<<<< HEAD
     "vuetify": "^2.7.2",
     "vuetify-dialog": "^2.0.17"
+=======
+    "vuetify": "^2.7.2"
+>>>>>>> 93c28b7cf5737c3bd2c4b8614c76e380549a2408
   },
   "devDependencies": {
     "@babel/core": "7.15.5",
