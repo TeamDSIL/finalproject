@@ -63,50 +63,17 @@
                                     class="text-decoration-none white--text"
                                   >
                                   <v-btn
-                                  outlined
+                                  
                                   color="primary"
                                   small
                                   class="review-write-button">
                                     리뷰 쓰기
-                                    <v-icon right small>mdi-plus</v-icon>
+                                    <!-- <v-icon right small>mdi-plus</v-icon> -->
                                   </v-btn>
                                     
                                   </nuxt-link>
                            
 
-                                <v-dialog
-                                  v-model="dialog"
-                                  persistent
-                                  max-width="600px"
-                                >
-                                  <v-card>
-                                    <v-card-title class="text-h5"
-                                      >리뷰 작성</v-card-title
-                                    >
-                                    <v-card-text>
-                                      <v-textarea
-                                        label="리뷰 내용"
-                                        v-model="reviewText"
-                                        auto-grow
-                                      ></v-textarea>
-                                    </v-card-text>
-                                    <v-card-actions>
-                                      <v-spacer></v-spacer>
-                                      <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="closeDialog"
-                                        >취소</v-btn
-                                      >
-                                      <v-btn
-                                        color="blue darken-1"
-                                        text
-                                        @click="submitReview"
-                                        >제출</v-btn
-                                      >
-                                    </v-card-actions>
-                                  </v-card>
-                                </v-dialog>
                               </div>
                               <!-- <p class="text-14 grey--text text--darken-1">(4 Pcs mutton in chicken keema gravy)</p> -->
                             </div>
@@ -119,7 +86,7 @@
                               small
                               class="delete-button"
                             >
-                              삭제 요청
+                              취소하기
                             </v-btn>
                           </div>
                         </div>
@@ -157,11 +124,11 @@
                                   >Must Try</v-chip
                                 > -->
                               <div class="d-flex mb-3">
-                                <v-icon color="amber" small>mdi-star</v-icon>
-                                <v-icon color="amber" small>mdi-star</v-icon>
-                                <v-icon color="amber" small>mdi-star</v-icon>
-                                <v-icon color="amber" small>mdi-star</v-icon>
-                                <v-icon color="amber" small>mdi-star</v-icon>
+                                <span v-for="(star, index) in 5" :key="index">
+                      <div style="margin-left: 2px;">
+            <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
+          </div>
+                    </span>
                                 <h6
                                   class="ms-3 grey--text text--darken-1 font-weight-light"
                                 >
@@ -185,7 +152,7 @@
                                   전화번호: 055-249-1070
                                 </p>
                                 <v-btn
-                                  outlined
+                        
                                   color="primary"
                                   small
                                   class="review-read-button"
@@ -194,7 +161,7 @@
                                   <!-- <v-icon right small>mdi-plus</v-icon> -->
                                 </v-btn>
                                 <v-btn
-                                  outlined
+                          
                                   color="primary"
                                   small
                                   class="detail-read-view"
@@ -240,10 +207,22 @@
                         2024-01-01
                       </p>
                     </div>
+                    <v-btn
+                              outlined
+                              color="primary"
+                              small
+                              class="delete-button"
+                              style="margin-left: 30px;"
+                            >
+                              삭제요청
+                            </v-btn>
                   </div>
+                  
                   <div class="d-flex align-center mb-2">
                     <span v-for="(star, index) in 5" :key="index">
-                      <v-icon small color="warning">mdi-star</v-icon>
+                      <div style="margin-left: 2px;">
+            <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
+          </div>
                     </span>
                     <span class="font-weight-bold text-14 ms-2">4.0</span>
                     <!-- <span class="grey--text text--darken-1 text-14 ms-2"
@@ -299,10 +278,21 @@
                         2024-01-01
                       </p>
                     </div>
+                    <v-btn
+                              outlined
+                              color="primary"
+                              small
+                              class="delete-button"
+                              style="margin-left: 30px;"
+                            >
+                              삭제요청
+                            </v-btn>
                   </div>
                   <div class="d-flex align-center mb-2">
                     <span v-for="(star, index) in 5" :key="index">
-                      <v-icon small color="warning">mdi-star</v-icon>
+                      <div style="margin-left: 2px;">
+            <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
+          </div>
                     </span>
                     <span class="font-weight-bold text-14 ms-2">4.0</span>
                     <!-- <span class="grey--text text--darken-1 text-14 ms-2"
@@ -359,10 +349,21 @@
                         2024-01-01
                       </p>
                     </div>
+                    <v-btn
+                              outlined
+                              color="primary"
+                              small
+                              class="delete-button"
+                              style="margin-left: 30px;"
+                            >
+                              삭제요청
+                            </v-btn>
                   </div>
                   <div class="d-flex align-center mb-2">
                     <span v-for="(star, index) in 5" :key="index">
-                      <v-icon small color="warning">mdi-star</v-icon>
+                      <div style="margin-left: 2px;">
+            <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
+          </div>
                     </span>
                     <span class="font-weight-bold text-14 ms-2">4.0</span>
                     <!-- <span class="grey--text text--darken-1 text-14 ms-2"
@@ -427,9 +428,9 @@
 
 <script>
 export default {
-  head: {
-    title: "Food Menu",
-  },
+  // head: {
+  //   title: "Food Menu",
+  // },
   data: () => ({
     items: [
       {
@@ -452,23 +453,16 @@ export default {
     mobileItems: ["Order Online", "Book a Table", "Reviews"],
     text: "hello",
     tab: null,
-    checkbox: true,
     radioGroup: 1,
     value: [20, 40],
-    dialog: false,
-    reviewText: "",
   }),
   methods: {
-    openReviewModal() {
-      this.dialog = true; // 모달 열기
-    },
-    closeDialog() {
-      this.dialog = false; // 모달 닫기
-    },
+
     submitReview() {
-      console.log("Review Submitted:", this.reviewText);
-      this.dialog = false; // 리뷰 제출 후 모달 닫기
-    },
+      // 리뷰 제출 로직
+      console.log("Review submitted");
+      this.dialog = false;  // 리뷰 제출 후 모달 닫기
+    }
   },
 };
 </script>

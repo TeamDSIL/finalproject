@@ -24,32 +24,28 @@
           <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
           <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
           </div>
-
-
-          <!-- <v-text-field
-            placeholder="Ralph Awards"
-            outlined
-            dense
-            hide-details=""
-            class="mb-4"
-          ></v-text-field> -->
         </div>
-
-
         <div class="mb-4">
           <p class="text-14 mb-1" style="font-weight: bold;">작성날짜: 2024-01-01</p>
-          <!-- <v-text-field
-            placeholder="Ralph Awards"
-            outlined
-            dense
-            hide-details=""
-            class="mb-4"
-          ></v-text-field> -->
         </div>
         <div class="mb-4">
+  <p class="text-14 mb-1" style="font-weight: bold; ">사진 첨부</p>
+  <v-file-input
+    v-model="file"
+    accept="image/*"
+    outlined
+    dense
+    show-size
+    class="mb-4"
+    label="사진 선택"
+    style="margin-top: 10px;"
+  ></v-file-input>
+</div>
+<div style="margin-top: -30px;"><div class="mb-4">
           <p class="text-14 mb-1" style="font-weight: bold;">내용</p>
           <v-textarea outlined dense hide-details="" class="mb-4"></v-textarea>
-        </div>
+        </div></div>
+        
 
         <div class="mb-4">
           <v-btn block color="primary" class="text-capitalize font-600">
@@ -72,6 +68,25 @@
         </div>
       </div>
     </div>
+    <!-- <v-btn outlined color="primary" small class="review-write-button" @click="dialog = true">
+      리뷰 쓰기2
+      <v-icon right small>mdi-plus</v-icon>
+    </v-btn> -->
+
+    <!-- 모달 창 -->
+    <!-- <v-dialog v-model="dialog" persistent max-width="600px">
+      <v-card>
+        <v-card-title>리뷰 작성</v-card-title>
+        <v-card-text>
+          <v-textarea auto-grow label="리뷰 내용"></v-textarea>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn color="blue darken-1" text @click="dialog = false">취소</v-btn>
+          <v-btn color="blue darken-1" text @click="submitReview">제출</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog> -->
   </div>
 </template>
 
@@ -81,6 +96,9 @@ export default {
   data() {
     return {
       checkbox: false,
+      file: null,
+    // dialog: false,
+
     };
   },
   methods: {
