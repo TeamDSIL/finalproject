@@ -397,7 +397,7 @@ export default {
 }
 
 .time-button {
-  background-color: yellow;
+  background-color: red;
   border-radius: 30px;
   width: 50px;
   height: 40px !important;
