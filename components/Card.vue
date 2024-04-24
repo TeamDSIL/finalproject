@@ -11,7 +11,7 @@
                         flat
                         class="p-absolute top-0 rounded-r-xl rounded-l-0 mt-3"
                         color="primary"
-                    >Flat 30% Off</v-chip>
+                    >Flat 15% Off</v-chip>
                 </div>
                 <div v-else></div>
             </div>
@@ -27,7 +27,7 @@
                     
                 </div>
             </div>
-            <p class="px-4 grey--text text--darken-1"><span class="primary--text f-600 me-1">$20</span> • Cofee, set menu • 15 - 20 min </p>
+            <p class="px-4 grey--text text--darken-1"><span class="primary--text f-600 me-1">${{ cardSection.price }}</span> • {{ cardSection.detail }} • {{ cardSection.waitTime }} </p>
             
         
         </v-card>
