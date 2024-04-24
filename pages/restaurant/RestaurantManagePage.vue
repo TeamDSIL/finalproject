@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h1 >식당관리</h1>
     <RestaurantManageMenu></RestaurantManageMenu>
     </div>
  
