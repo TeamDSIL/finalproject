@@ -208,10 +208,7 @@
                         <div>
                           <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
                           <div class="mt-4">
-                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
-                              <v-icon left small>mdi-thumb-up-outline</v-icon>
-                              Like
-                            </v-btn>
+                            
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
                               <v-icon left small>mdi-comment-text-outline</v-icon>
                               답글달기
@@ -264,10 +261,7 @@
                         <div>
                           <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
                           <div class="mt-4">
-                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
-                              <v-icon left small>mdi-thumb-up-outline</v-icon>
-                              Like
-                            </v-btn>
+
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
                               <v-icon left small>mdi-comment-text-outline</v-icon>
                               Comment
@@ -308,10 +302,7 @@
                         <div>
                           <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
                           <div class="mt-4">
-                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
-                              <v-icon left small>mdi-thumb-up-outline</v-icon>
-                              Like
-                            </v-btn>
+                            
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
                               <v-icon left small>mdi-comment-text-outline</v-icon>
                               Comment
