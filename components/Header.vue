@@ -41,17 +41,27 @@
                       v-bind="attrs"
                       v-on="on"
                     >
-                      <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-                      <span class="d-none d-sm-block">Account</span>
+                      <span class="d-none d-sm-block">로그아웃</span>
                     </v-btn>
+                    <v-btn
+                      
+                      light
+                      text
+                      v-bind="attrs"
+                      v-on="on"
+                    >
+                      <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+                      <span class="d-none d-sm-block">gnlwp96@naver.com</span>
+                    </v-btn>
+                    
                   </template>
 
                   <SignIn />
                 </v-dialog>
 
-                <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
+                <!-- <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
                   <v-icon small>mdi-cart-outline</v-icon>(8)
-                </v-btn>
+                </v-btn> -->
                 
                 <v-app-bar-nav-icon text light @click="drawer = true"></v-app-bar-nav-icon>
         
