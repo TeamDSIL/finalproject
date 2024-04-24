@@ -388,7 +388,7 @@ export default {
 <style scoped>
 .time-buttons-container {
   overflow-x: auto;
-  overflow-y: hidden;
+  overflow-y: hidden; 
   white-space: nowrap;
 }
 
