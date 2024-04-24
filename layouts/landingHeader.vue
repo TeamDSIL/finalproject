@@ -95,7 +95,7 @@
       <div class="mt-15">
         <v-row>
           <v-col cols="12" xl="5" class="mx-auto">
-            <h1 class="white--text text-center display-2 font-weight-regular mb-4">Discover the best food & drinks in <span class="font-weight-bold">New York</span></h1>
+            <h1 class="white--text text-center display-2 font-weight-regular mb-4">실시간 식당 예약 <span class="font-weight-bold">DSIL</span></h1>
             <h4 class="text-h6 white--text text-center font-weight-light mb-5">The meals you love, delivered with care</h4>
           </v-col>
         </v-row>
