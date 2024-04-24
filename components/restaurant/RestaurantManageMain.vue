@@ -28,7 +28,8 @@
         <v-tab-item value="tab-1">
           <v-row>
             <v-col cols="12" class="restaurant-title-img">
-              <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px" style="max-width: 20px; margin-right: 5px;"></v-img>
+              <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px;"></v-img>
               <h3 class="fw-bold">{{ restaurant.name }}</h3>
             </v-col>
           </v-row>
@@ -46,7 +47,8 @@
           <v-row>
             <v-col cols="12">
               <h3>식당 정보 수정</h3>
-              <v-btn style="background-color: rgb(210,63,87); color: white;" v-on:click="goToRestaurantModify">식당수정</v-btn>
+              <v-btn style="background-color: rgb(210,63,87); color: white;"
+                v-on:click="goToRestaurantModify">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -107,15 +109,16 @@
         <v-tab-item value="tab-2">
           <v-row>
             <v-col cols="12" style="display: flex;">
-              <v-img contain :src="require('~/assets/images/reserve-icon.png')" width="20px" style="max-width: 20px; margin-right: 5px;"></v-img>
+              <v-img contain :src="require('~/assets/images/reserve-icon.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px;"></v-img>
               <h3 class="fw-bold"> 예약 전체보기</h3>
             </v-col>
           </v-row>
-          
+
           <v-row>
             <v-col cols="12">
               <h4 class="restaurant-name-title">{{ restaurant.name }}</h4>
-<v-divider></v-divider>
+              <v-divider></v-divider>
               <v-col cols="12">
                 <div slot="boxContent">
                   <div class="px-10">
@@ -162,7 +165,8 @@
               <h3 class="fw-bold">{{ restaurantName }}</h3>
             </v-col> -->
             <v-col cols="12" style="display: flex;">
-              <v-img contain :src="require('~/assets/images/review-icon.png')" width="20px" style="max-width: 20px; margin-right: 5px;"></v-img>
+              <v-img contain :src="require('~/assets/images/review-icon.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px;"></v-img>
               <h3 class="fw-bold"> 리뷰 전체보기</h3>
             </v-col>
             <v-col cols="12">
@@ -171,7 +175,7 @@
 
               </div>
               <v-divider style="margin-bottom: 20px;"></v-divider>
-       
+
               <div slot="boxContent">
                 <div class="px-10">
                   <v-row>
@@ -189,9 +193,10 @@
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
-                          <span v-for="(star, index) in 5" :key="index">
-                            <v-icon small color="warning">mdi-star</v-icon>
+                          <span v-for="index in 5" :key="index">
+                            <img src="~/assets/images/babscore.png" alt="Custom Image" style="width: 20px;">
                           </span>
+
                           <span class="font-weight-bold text-14 ms-2">4.0</span>
                           <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
                         </div>
@@ -206,14 +211,21 @@
                           </v-col>
                         </v-row>
                         <div>
-                          <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
+                          <span class="grey--text text--darken-1 text-14">2 Comments</span>
                           <div class="mt-4">
-                            
-                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
-                              <v-icon left small>mdi-comment-text-outline</v-icon>
-                              답글달기
-                            </v-btn>
-                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
+
+                            <!-- 답글달기 입력 폼 -->
+                            <v-form @submit.prevent="submitReply">
+                              <v-text-field v-model="reply" label="답글 작성" outlined dense class="mb-2"></v-text-field>
+
+                              <!-- 답글달기 버튼 -->
+                              <v-btn color="primary" small @click="submitReply">
+                                <v-icon left small>mdi-comment-text-outline</v-icon>
+                                답글달기
+                              </v-btn>
+                            </v-form>
+                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small
+                              @click="confirmDelete">
                               <v-icon left small>mdi-delete</v-icon>
                               삭제요청
                             </v-btn>
@@ -249,8 +261,8 @@
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
-                          <span v-for="(star, index) in 5" :key="index">
-                            <v-icon small color="warning">mdi-star</v-icon>
+                          <span v-for="index in 5" :key="index">
+                            <img src="~/assets/images/babscore.png" alt="Custom Image" style="width: 20px;">
                           </span>
                           <span class="font-weight-bold text-14 ms-2">4.0</span>
                           <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
@@ -259,14 +271,15 @@
                           않고 구워서 좋아요</h5>
 
                         <div>
-                          <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
+                          <span class="grey--text text--darken-1 text-14">2 Comments</span>
                           <div class="mt-4">
 
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
                               <v-icon left small>mdi-comment-text-outline</v-icon>
                               Comment
                             </v-btn>
-                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
+                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small
+                              @click="confirmDelete">
                               <v-icon left small>mdi-delete</v-icon>
                               삭제요청
                             </v-btn>
@@ -291,8 +304,8 @@
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
-                          <span v-for="(star, index) in 5" :key="index">
-                            <v-icon small color="warning">mdi-star</v-icon>
+                          <span v-for="index in 5" :key="index">
+                            <img src="~/assets/images/babscore.png" alt="Custom Image" style="width: 20px;">
                           </span>
                           <span class="font-weight-bold text-14 ms-2">4.0</span>
                           <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
@@ -300,14 +313,15 @@
                         <h5 class="grey--text text--darken-2 font-weight-regular mb-3">마싯서요</h5>
 
                         <div>
-                          <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
+                          <span class="grey--text text--darken-1 text-14">2 Comments</span>
                           <div class="mt-4">
-                            
+
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
                               <v-icon left small>mdi-comment-text-outline</v-icon>
                               Comment
                             </v-btn>
-                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
+                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small
+                              @click="confirmDelete">
                               <v-icon left small>mdi-delete</v-icon>
                               삭제요청
                             </v-btn>
@@ -354,14 +368,15 @@
 export default {
   data() {
     return {
+      reply: '', // 답글 내용을 바인딩할 데이터
       restaurant: {
-                id: '123', // 예시 ID
-                name: '기영이네 존맛치킨', // 예시 식당명
-                address: '서울시 관악구', // 예시 주소
-                contact: '02-1234-5678', // 수정 가능한 연락처
-                deposit: '5000', // 수정 가능한 예약금
-                image: ''  // 수정 가능한 식당 사진
-            },
+        id: '123', // 예시 ID
+        name: '기영이네 존맛치킨', // 예시 식당명
+        address: '서울시 관악구', // 예시 주소
+        contact: '02-1234-5678', // 수정 가능한 연락처
+        deposit: '5000', // 수정 가능한 예약금
+        image: ''  // 수정 가능한 식당 사진
+      },
       headers: [
         { text: '날짜', value: 'date' },
         { text: '시간', value: 'time' },
@@ -412,8 +427,8 @@ export default {
       radioGroup: 1,
       value: [20, 40],
       selected: null, // 현재 선택된 버튼을 저장
-      
-      
+
+
       reviews: [
         { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
         { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
@@ -446,37 +461,61 @@ export default {
       // 선택된 버튼이 다시 클릭되면 선택 해제, 아니면 선택
       this.selected = this.selected === button ? null : button;
     },
+    confirmDelete() {
+      if (alert('이 삭제 요청은 되돌릴 수 없습니다. 취소시엔 관리자에게 문의하세요.')) {
+        this.deleteReview();
+      }
+    },
+    deleteReview() {
+      //삭제요청하는 로직...구현예정
+      console.log('리뷰 삭제 요청됨')
+    },
+    submitReply() {
+      if (this.reply.trim() !== '') {
+        console.log('답글:', this.reply); // 답글 내용을 콘솔에 출력 (나중에 실제 서버로 전송하는 로직으로 대체)
+        this.reply = ''; // 답글 입력 필드 초기화
+      } else {
+        alert('답글을 입력해주세요.'); // 입력 필드가 비어있을 때 경고
+      }
+    },
   }
 };
 </script>
 
 <style>
 /* 여기에 필요한 스타일 추가 */
-.restaurant-title-img{
+.restaurant-title-img {
   display: flex;
 }
-.restaurant-name-title{
+
+.restaurant-name-title {
   margin-bottom: 20px;
 
 }
-.review-all-title{
+
+.review-all-title {
   margin-bottom: 20px;
 }
-.review-table{
+
+.review-table {
   margin-bottom: 50px;
 }
-.review-title{
+
+.review-title {
   margin-top: 20px;
   margin-bottom: 10px;
 }
-.reserve-title{
+
+.reserve-title {
   margin-top: 20px;
   margin-bottom: 10px;
 }
-.silsigan-use-title{
+
+.silsigan-use-title {
   margin-bottom: 20px;
 }
-.info-edit-title{
+
+.info-edit-title {
   margin-top: 20px;
   margin-bottom: 20px;
 }
