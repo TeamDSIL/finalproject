@@ -186,7 +186,7 @@
 
 
                       <!-- user-post  -->
-                      <div class="mb-6" v-for="review in reviews" :key="review.id">
+                      <div class="mb-6" v-for="review in paginatedReviews" :key="review.id">
                         <div class="d-flex align-center flex-wrap mb-4">
                           <v-avatar size="48" class="me-4">
                             <v-img :src="review.avatar" alt=""></v-img>
@@ -201,24 +201,24 @@
                         <div class="d-flex align-center mb-2">
                           <span v-for="(star, index) in 5" :key="index">
                             <div style="margin-left: 2px;">
-                              <v-img :src="review.babscore" width="20px"
-                                class="fixed-size"></v-img>
+                              <v-img :src="review.babscore" width="20px" class="fixed-size"></v-img>
                             </div>
                           </span>
 
-                          <span class="font-weight-bold text-14 ms-2">{{review.stars}}</span>
+                          <span class="font-weight-bold text-14 ms-2">{{ review.stars }}</span>
                           <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
                         </div>
                         <h5 class="grey--text text--darken-2 font-weight-regular mb-3">{{ review.content }}</h5>
                         <v-row class="mb-2">
-                          <v-col cols="6" lg="6">
+                          <!-- 리뷰 사진의 크기를 조금 줄임 cols 3으로 -->
+                          <v-col cols="3" lg="3">
                             <v-img contain :src="review.image"></v-img>
                           </v-col>
                         </v-row>
 
 
                         <div>
-                          <span class="grey--text text--darken-1 text-14">{{review.replies.length}}개의 답글</span>
+                          <span class="grey--text text--darken-1 text-14">{{ review.replies.length }}개의 답글</span>
                           <div class="mt-4">
 
 
@@ -272,21 +272,25 @@
 
                       </div>
                       <!-- end::user-post  -->
-                      
-                    </v-col>
-                    <v-col cols="12" class="mb-15">
 
+                    </v-col>
+
+                    <!-- 페이지네이션 -->
+                    <v-col cols="12" class="mb-15">
                       <v-row align="center">
                         <v-col cols="12" lg="6">
                           <div class="mb-4 me-3">
-                            <p class="font-weight-normal mb-0 text-14">Showing 1-12 of 29 Reviews
+                            <p class="font-weight-normal mb-0 text-14">
+                              Showing{{ (page - 1) * pageSize + 1 }} to {{ Math.min(page * pageSize, reviews.length) }}
+                              of {{
+                              reviews.length }} Reviews
                             </p>
                           </div>
                         </v-col>
                         <v-col cols="12" lg="6">
                           <div class="mb-4">
-                            <v-pagination class="food-truck-pagination" v-model="page" :length="4"
-                              circle></v-pagination>
+                            <v-pagination class="food-truck-pagination" v-model="page" :length="pageCount"
+                              circle @input="scrollToTop"></v-pagination>
                           </div>
                         </v-col>
                       </v-row>
@@ -378,6 +382,150 @@ export default {
           replies: [],
           showReplyForm: false
         },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "유비",
+          content: "유비 특 기영이 많이 먹음",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "관우",
+          content: "너무 맛있어요요",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "장비",
+          content: "하하하 존맛이군요 ㅠㅠ",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "마초",
+          content: "맛있습니다",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "황충",
+          content: "잘먹었네요 많이파세요",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "조운",
+          content: "맛있음",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "정휘제",
+          content: "어머니 맛있습니다 저 기영이에요",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "이다혜",
+          content: "섭섭해요",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "임태환",
+          content: "맛없는게 아니라 열받은겁니다",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "문상현",
+          content: "오니가 싫어~ 오니가 싫어~",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+        {
+          id: 2,
+          date: "2024.04.05",
+          author: "손혜지",
+          content: "안먹으면 개손해지",
+          avatar: require('~/assets/images/faces/13.jpg'),
+          stars: 3.5,
+          babscore: require('~/assets/images/babscore.png'),
+          image: require('~/assets/images/gallery/foodSix.png'),
+          timestamp: "1 Week Ago",
+          replies: [],
+          showReplyForm: false
+        },
+
       ],
       reply: '',
 
@@ -412,27 +560,9 @@ export default {
         // 예약 목록
       ],
       page: 1,
-      items: [
-        {
-          text: 'Home',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'New York',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'Resturants',
-          disabled: true,
-          href: '/',
-        },
-      ],
-      // formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-      // mobileItems: [
-      //   'Order Online', 'Book a Table', 'Reviews',
-      // ],
+      pageSize: 10,
+pageCount: 0,
+paginatedReviews: [],
       text: 'hello',
       tab: null,
       checkbox: true,
@@ -440,26 +570,16 @@ export default {
       value: [20, 40],
       selected: null, // 현재 선택된 버튼을 저장
 
-
-      review: [
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        { id: 1, date: "2023-04-03", customerName: "삼기영", content: "맛있어요!" },
-        // 리뷰 목록
-      ]
     };
+  },
+  mounted() {
+    this.pageCount = Math.ceil(this.reviews.length / this.pageSize);
+    this.paginateReviews();
   },
   methods: {
     getAvatar(avatarPath) {
-    return require(`${avatarPath}`);
-  },
+      return require(`${avatarPath}`);
+    },
     goToRestaurantManageMain() {
       this.$router.push({ path: '/restaurant/RestaurantManageMainPage' });
     },
@@ -505,8 +625,20 @@ export default {
       };
       review.showReplyForm = false;
     },
-  
-  }
+    paginateReviews() {
+      const startIndex = (this.page - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      this.paginatedReviews = this.reviews.slice(startIndex, endIndex);
+    },
+    scrollToTop() {
+    window.scrollTo(0, 0);
+  },
+  },
+  watch: {
+    page() {
+      this.paginateReviews();
+    }
+  },
 };
 </script>
 
