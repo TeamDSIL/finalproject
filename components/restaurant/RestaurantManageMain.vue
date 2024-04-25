@@ -560,9 +560,32 @@ export default {
         // 예약 목록
       ],
       page: 1,
+
       pageSize: 10,
 pageCount: 0,
 paginatedReviews: [],
+
+      items: [
+        {
+          text: 'Home',
+          disabled: false,
+          href: '/',
+        },
+        {
+          text: 'New York',
+          disabled: false,
+          href: '/', 
+        },
+        {
+          text: 'Resturants',
+          disabled: true, 
+          href: '/',
+        },
+      ],
+      // formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
+      // mobileItems: [
+      //   'Order Online', 'Book a Table', 'Reviews',
+      // ],
       text: 'hello',
       tab: null,
       checkbox: true,
