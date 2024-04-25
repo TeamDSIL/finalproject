@@ -479,7 +479,7 @@ export default {
       this.selected = this.selected === button ? null : button;
     },
     confirmDelete() {
-      if (alert('이 삭제 요청은 되돌릴 수 없습니다. 취소시엔 관리자에게 문의하세요.')) {
+      if (confirm('삭제 요청을 하시겠습니까?')) {
         this.deleteReview();
       }
     },
