@@ -117,9 +117,6 @@
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0 ">
                                                     dvbf@naver.com
                                                 </p>
-
-
-
                                             </div>
 
                                             <v-divider></v-divider>
