@@ -13,11 +13,12 @@
 
         <div class="text-center mb-3">
           <h3 class="mb-3">리뷰 작성</h3>
+      선택한식당아이디:{{ nowId }}선택점수:  {{ babscore }}
           <h5
             class="text-sm font-600 grey--text text--darken-4"
             style="font-weight: 500"
           >
-            우리식당 창원점
+            {{ selectName }}
           </h5>
         </div>
         <v-divider></v-divider>
@@ -46,7 +47,7 @@
         </div>
         <div class="mb-4">
           <p class="text-14 mb-1" style="font-weight: bold">
-            작성날짜: 2024-01-01
+            작성날짜: {{ today }}
           </p>
         </div>
         <div class="mb-4">
@@ -70,10 +71,10 @@
               dense
               hide-details=""
               class="mb-4"
+              v-model="UserReviewContents"
             ></v-textarea>
           </div>
         </div>
-
         <div class="mb-4">
           <v-btn
             block
@@ -85,6 +86,7 @@
           </v-btn>
         </div>
       </div>
+
       <div class="py-4 bg-grey-light">
         <div class="text-center">
           <div class="text-center">
@@ -107,26 +109,42 @@
 export default {
   layout: "session",
   data() {
+    const today = new Date();
+    const formattedDate =
+      today.getFullYear() +
+      "-" +
+      ("0" + (today.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + today.getDate()).slice(-2);
     return {
       checkbox: false,
       file: null,
       stars: [true, false, false, false, false],
-
-      // dialog: false,
+      UserReviewContents: "",
+      nowId: this.$route.params.id,
+      selectName: "우리식당 창원점",
+      today: formattedDate,
+      babscore: '',
     };
   },
   methods: {
+    async created() {
+      const id = this.$route.params.id;
+      // const { data } = await fetchPost(id);
+      // this.title = data.title;
+      // this.contents = data.contents;
+    },
     setRating(selectedIndex) {
       // 모든 별을 초기 상태로 설정
       this.stars = this.stars.map((_, index) => index <= selectedIndex);
+      this.babscore = this.stars.filter(star => star).length;
     },
     async submitForm() {
       try {
         // 비즈니스 로직
-        // const userData = {
-        //   username: this.username,
-        //   password: this.password,
-        // };
+        const userData = {
+          UserReviewContents: this.UserReviewContents,
+        };
         // await this.$store.dispatch('LOGIN', userData);
         this.$router.push("/myDining/MydiningPage");
         // this.goBack();
