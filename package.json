@@ -19,6 +19,7 @@
     "@babel/core": "7.15.5",
     "@babel/preset-env": "7.15.6",
     "@nuxtjs/vuetify": "^1.12.3",
+    "@vue/cli-service": "^5.0.8",
     "fibers": "^5.0.0",
     "sass": "^1.38.1",
     "sass-loader": "^10.2.0"
