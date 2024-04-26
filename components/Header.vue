@@ -9,7 +9,7 @@
             <v-container class="d-flex align-center">
                 <nuxt-link to="/">
                   <v-avatar class="me-10" tile>
-                      <img src="~/assets/images/dsillogoround.png" alt="" style="width: 100px;"/>
+                      <img src="~/assets/images/dsilLogoCut.jpg" alt="" style="width: 100px;"/>
             
                   </v-avatar>
                 </nuxt-link>
@@ -41,27 +41,17 @@
                       v-bind="attrs"
                       v-on="on"
                     >
-                      <span class="d-none d-sm-block">로그아웃</span>
-                    </v-btn>
-                    <v-btn
-                      
-                      light
-                      text
-                      v-bind="attrs"
-                      v-on="on"
-                    >
                       <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-                      <span class="d-none d-sm-block">gnlwp96@naver.com</span>
+                      <span class="d-none d-sm-block">Account</span>
                     </v-btn>
-                    
                   </template>
 
-                  <SignIn />
-                </v-dialog>
+          <LoginPage />
+        </v-dialog>
 
-                <!-- <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
+                <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
                   <v-icon small>mdi-cart-outline</v-icon>(8)
-                </v-btn> -->
+                </v-btn>
                 
                 <v-app-bar-nav-icon text light @click="drawer = true"></v-app-bar-nav-icon>
         
@@ -116,61 +106,60 @@
   
 </template>
 <script>
+
 export default {
-    data() {
-        return {
-            drawer: false,
-            group: null,
-            dialog: false,
-            shoppingCartDrawer: false,
-            items: [
-                {
-                  action: 'mdi-view-dashboard-variant-outline',
-                  active: true,
-                  items: [
-                      { 
-                        title: 'Review',
-                        link: '/dashboard/Review',
-                      },
-                      { 
-                        title: 'Photos',
-                        link: '/dashboard/Photos',
-                      },
-                      { 
-                        title: 'Order List',
-                        link: '/dashboard/OrderList',
-                      },
-                      { 
-                        title: 'Order History',
-                        link: '/dashboard/OrderHistory',
-                      },
-                      { 
-                        title: 'Followers',
-                        link: '/dashboard/Followers',
-                      },
-                      { 
-                        title: 'Bookmarks',
-                        link: '/dashboard/Bookmarks',
-                      },
-                  ],
-                  title: 'Dashboards',
-                },
-                {
-                action: 'mdi-silverware-fork-knife',
-                active: false,
-                  items: [
-                      { title: 'Breakfast & brunch' },
-                      { title: 'New American' },
-                      { title: 'Sushi' },
-                  ],
-                  title: 'Dining',
-                },
-                
-            ]
-        }
+  data() {
+    return {
+      drawer: false,
+      group: null,
+      dialog: false,
+      shoppingCartDrawer: false,
+      items: [
+        {
+          action: 'mdi-view-dashboard-variant-outline',
+          active: true,
+          items: [
+            {
+              title: 'Review',
+              link: '/dashboard/Review',
+            },
+            {
+              title: 'Photos',
+              link: '/dashboard/Photos',
+            },
+            {
+              title: 'Order List',
+              link: '/dashboard/OrderList',
+            },
+            {
+              title: 'Order History',
+              link: '/dashboard/OrderHistory',
+            },
+            {
+              title: 'Followers',
+              link: '/dashboard/Followers',
+            },
+            {
+              title: 'Bookmarks',
+              link: '/dashboard/Bookmarks',
+            },
+          ],
+          title: 'Dashboards',
+        },
+        {
+          action: 'mdi-silverware-fork-knife',
+          active: false,
+          items: [
+            { title: 'Breakfast & brunch' },
+            { title: 'New American' },
+            { title: 'Sushi' },
+          ],
+          title: 'Dining',
+        },
+
+      ]
     }
+  }
 }
 </script>
-<style scoped>
-
-</style>
+<style scoped></style>
