@@ -67,10 +67,10 @@
                   </thead>
                   <tbody>
                     <!-- 5개의 예약만 보여줌 -->
-                    <tr v-for="booking in bookings.slice(0, 5)" :key="booking.id">
-                      <td>{{ booking.date }}</td>
-                      <td>{{ booking.time }}</td>
-                      <td>{{ booking.customerName }}</td>
+                    <tr v-for="reservation in reservations.slice(0, 5)" :key="reservation.id">
+                      <td>{{ reservation.date }}</td>
+                      <td>{{ reservation.time }}</td>
+                      <td>{{ reservation.customerName }}</td>
                     </tr>
                   </tbody>
                 </template>
@@ -127,28 +127,51 @@
                         <!-- <h4>Reservation List</h4> -->
                       </v-col>
                       <v-col cols="12">
-                        <v-data-table :headers="headers" :items="bookings" :items-per-page="10" class="elevation-1">
-                          <template v-slot:item="{ item }">
+                        <v-simple-table class="elevation-1">
+                          <thead>
                             <tr>
+                              <th>Date</th>
+                              <th>Time</th>
+                              <th>Customer Name</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr v-for="item in paginatedReservations" :key="item.id">
                               <td>{{ item.date }}</td>
                               <td>{{ item.time }}</td>
                               <td>{{ item.customerName }}</td>
                             </tr>
-                          </template>
-                        </v-data-table>
+                          </tbody>
+                        </v-simple-table>
                       </v-col>
-                      <v-col cols="12">
-                        <div class="d-flex justify-center align-center justify-sm-space-between flex-wrap">
-                          <div class="mb-4 me-3">
-                            <p class="font-weight-normal mb-0 text-14">Showing 1-10 of 30 Reservations
-                            </p>
-                          </div>
-                          <div class="mb-4">
-                            <v-pagination class="food-truck-pagination" v-model="page" :length="3"
-                              circle></v-pagination>
-                          </div>
-                        </div>
+
+                      <!-- 페이지네이션 -->
+                      <v-col cols="12" class="mb-15">
+                        <v-row align="center">
+                          <v-col cols="12" lg="6">
+                            <div class="mb-4 me-3">
+                              <p class="font-weight-normal mb-0 text-14">
+                                Showing{{ (pageReservation - 1) * pageSize + 1 }} to {{ Math.min(pageReservation *
+                                  pageSize,
+                                  reservations.length)
+                                }}
+                                of {{
+                                  reservations.length }} Reservations
+                              </p>
+                            </div>
+                          </v-col>
+                          <v-col cols="12" lg="6">
+                            <div class="mb-4">
+                              <v-pagination class="food-truck-pagination" v-model="pageReservation"
+                                :length="pageCountReservation" circle @input="srcollToTop"></v-pagination>
+                            </div>
+                          </v-col>
+                        </v-row>
                       </v-col>
+
+
+
+
                     </v-row>
                   </div>
                 </div>
@@ -191,9 +214,6 @@
                           <v-avatar size="48" class="me-4">
                             <v-img :src="review.avatar" alt=""></v-img>
                           </v-avatar>
-                          <!-- <v-avatar size="48" class="me-4">
-  <v-img :src="getAvatar(review.avatar)" alt=""></v-img>
-</v-avatar> -->
                           <div>
                             <h5 class="mb-0">{{ review.author }}</h5>
                           </div>
@@ -281,15 +301,17 @@
                         <v-col cols="12" lg="6">
                           <div class="mb-4 me-3">
                             <p class="font-weight-normal mb-0 text-14">
-                              Showing{{ (page - 1) * pageSize + 1 }} to {{ Math.min(page * pageSize, reviews.length) }}
+                              Showing{{ (pageReview - 1) * pageSize + 1 }} to {{ Math.min(pageReview * pageSize,
+                                reviews.length)
+                              }}
                               of {{
-                              reviews.length }} Reviews
+                                reviews.length }} Reviews
                             </p>
                           </div>
                         </v-col>
                         <v-col cols="12" lg="6">
                           <div class="mb-4">
-                            <v-pagination class="food-truck-pagination" v-model="page" :length="pageCount"
+                            <v-pagination class="food-truck-pagination" v-model="pageReview" :length="pageCountReview"
                               circle @input="scrollToTop"></v-pagination>
                           </div>
                         </v-col>
@@ -542,28 +564,30 @@ export default {
         { text: '시간', value: 'time' },
         { text: '고객 이름', value: 'customerName' }
       ],
-      bookings: [
+      reservations: [
         { id: 1, date: "2023-04-03", time: "18:00", customerName: "정휘제" },
-        { id: 1, date: "2023-04-03", time: "17:00", customerName: "윤여빈" },
-        { id: 1, date: "2023-04-02", time: "18:00", customerName: "문상현" },
-        { id: 1, date: "2023-04-01", time: "18:00", customerName: "윤호상" },
-        { id: 1, date: "2023-04-01", time: "17:00", customerName: "임태환" },
-        { id: 1, date: "2023-03-31", time: "18:00", customerName: "이다혜" },
-        { id: 1, date: "2023-03-30", time: "18:00", customerName: "아카자" },
-        { id: 1, date: "2023-03-29", time: "18:00", customerName: "코주루" },
-        { id: 1, date: "2023-03-28", time: "18:00", customerName: "유비" },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "관우" },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "장비" },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민슥" },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민쇽" },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민샥" },
+        { id: 2, date: "2023-04-03", time: "17:00", customerName: "윤여빈" },
+        { id: 3, date: "2023-04-02", time: "18:00", customerName: "문상현" },
+        { id: 4, date: "2023-04-01", time: "18:00", customerName: "윤호상" },
+        { id: 5, date: "2023-04-01", time: "17:00", customerName: "임태환" },
+        { id: 6, date: "2023-03-31", time: "18:00", customerName: "이다혜" },
+        { id: 7, date: "2023-03-30", time: "18:00", customerName: "아카자" },
+        { id: 8, date: "2023-03-29", time: "18:00", customerName: "코주루" },
+        { id: 9, date: "2023-03-28", time: "18:00", customerName: "유비" },
+        { id: 10, date: "2023-03-27", time: "18:00", customerName: "관우" },
+        { id: 11, date: "2023-03-27", time: "18:00", customerName: "장비" },
+        { id: 12, date: "2023-03-27", time: "18:00", customerName: "구민슥" },
+        { id: 13, date: "2023-03-27", time: "18:00", customerName: "구민쇽" },
+        { id: 14, date: "2023-03-27", time: "18:00", customerName: "구민샥" },
         // 예약 목록
       ],
-      page: 1,
-
+      pageReview: 1,
+      pageReservation: 1,
       pageSize: 10,
-pageCount: 0,
-paginatedReviews: [],
+      pageCountReview: 0,
+      pageCountReservation: 0,
+      paginatedReviews: [],
+      paginatedReservations: [],
 
       items: [
         {
@@ -574,11 +598,11 @@ paginatedReviews: [],
         {
           text: 'New York',
           disabled: false,
-          href: '/', 
+          href: '/',
         },
         {
           text: 'Resturants',
-          disabled: true, 
+          disabled: true,
           href: '/',
         },
       ],
@@ -596,8 +620,10 @@ paginatedReviews: [],
     };
   },
   mounted() {
-    this.pageCount = Math.ceil(this.reviews.length / this.pageSize);
+    this.pageCountReview = Math.ceil(this.reviews.length / this.pageSize);
     this.paginateReviews();
+    this.pageCountReservation = Math.ceil(this.reservations.length / this.pageSize);
+    this.paginateReservations();
   },
   methods: {
     getAvatar(avatarPath) {
@@ -649,17 +675,25 @@ paginatedReviews: [],
       review.showReplyForm = false;
     },
     paginateReviews() {
-      const startIndex = (this.page - 1) * this.pageSize;
+      const startIndex = (this.pageReview - 1) * this.pageSize;
       const endIndex = startIndex + this.pageSize;
       this.paginatedReviews = this.reviews.slice(startIndex, endIndex);
     },
+    paginateReservations() {
+      const startIndex = (this.pageReservation - 1) * this.pageSize;
+      const endIndex = startIndex + this.pageSize;
+      this.paginatedReservations = this.reservations.slice(startIndex, endIndex);
+    },
     scrollToTop() {
-    window.scrollTo(0, 0);
-  },
+      window.scrollTo(0, 0);
+    },
   },
   watch: {
-    page() {
+    pageReview() {
       this.paginateReviews();
+    },
+    pageReservation() {
+      this.paginateReservations();
     }
   },
 };
