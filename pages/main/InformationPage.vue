@@ -1,9 +1,6 @@
 <template>
     <div>
-        tlqkf
-        dadfas
-
-        asdfadsf
+      
         <InformationList></InformationList>
 
     </div>

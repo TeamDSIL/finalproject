@@ -1,8 +1,6 @@
 <template>
     <div>
         <v-container>
-
-
             <v-row>
                 <v-col cols="12" class="mb-10">
                     <v-img class="br-10 d-flex cover-img align-end" cover
@@ -72,23 +70,7 @@
                             <div class="px-10">
                                 <v-row>
                                     <v-col cols="12">
-                                        <div id="direction-btn">
-                                            <h1>회원 정보 관리</h1>
-                                        
-                                            <div id="select-user-owner">
-                                                <v-btn light text v-bind="attrs" v-on="on"
-                                                    class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
-                                                    @click="displayUserInfo">
-                                                    일반
-                                                </v-btn>
-
-                                                <v-btn light text v-bind="attrs" v-on="on"
-                                                    class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
-                                                    @click="displayOwnerInfo">
-                                                    식당
-                                                </v-btn>
-                                            </div>
-                                        </div>
+                                        <h1>리뷰 및 댓글 삭제 관리</h1>
                                     </v-col>
 
                                     <v-col cols="12">
@@ -128,12 +110,6 @@
                                             </div>
                                         </div>
                                     </v-col>
-
-
-
-
-
-
                                 </v-row>
                             </div>
                         </div>
@@ -158,16 +134,7 @@ export default {
         }
     },
     methods: {
-        displayUserInfo() {
-            // 임시 비밀번호 전송 로직 처리
-            console.log('일반 회원 정보 관리');
-            this.step = 1; // 다음 단계로 이동
-        },
-        displayOwnerInfo() {
-            // 임시 비밀번호 인증 로직 처리
-            console.log('식당 관리자 정보 관리');
-            this.step = 2; // 다음 단계로 이동
-        },
+
         performSearch() {
             // 여기에 검색 로직을 구현합니다
             console.log('검색어:', this.searchQuery);
@@ -178,8 +145,7 @@ export default {
 
 </script>
 <style lang="scss">
-#select-user-owner,
-#direction-btn {
+#select-user-owner {
     display: flex;
     flex-direction: row;
 }
@@ -188,7 +154,4 @@ export default {
     white-space: nowrap;
 }
 
-.search-container {
-    margin-top: 20px;
-}
 </style>

@@ -1,6 +1,5 @@
 <template>
     <div>
-      <h1 >관리자 마이페이지</h1>
       <AdminMyForm></AdminMyForm>
     </div>
   </template>
