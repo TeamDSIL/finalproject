@@ -191,14 +191,11 @@
                                                             우편번호
                                                         </div>
                                                     </div>
-
                                                 </div>
 
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0 ">
                                                     01709
                                                 </p>
-
-
                                             </div>
                                             <v-divider></v-divider>
 

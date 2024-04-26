@@ -86,7 +86,7 @@
       <div class="py-4 bg-grey-light">
         <div class="text-center">
           <span class="grey--text text--darken-1">이미 계정이 있으신가요? 
-            <a href="#" class="ms-2 grey--text text--darken-4 font-600">로그인</a>
+            <a @click="gotoLoginPage()" class="ms-2 grey--text text--darken-4 font-600">로그인</a>
           </span>
         </div>
       </div>
@@ -103,6 +103,11 @@ export default {
       checkbox: false,
     }
   },
+  methods: {
+    gotoLoginPage(){
+      this.$router.push('/memberManage/LoginPage');
+    }
+  }
 }
 </script>
 

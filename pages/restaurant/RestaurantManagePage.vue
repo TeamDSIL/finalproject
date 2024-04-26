@@ -1,6 +1,5 @@
 <template>
     <div>
-        <h1 >식당관리</h1>
     <RestaurantManageMenu></RestaurantManageMenu>
     </div>
  
@@ -12,6 +11,8 @@ import RestaurantManageMenu from '@/components/restaurant/RestaurantManageMenu.v
 export default {
   components: {
     RestaurantManageMenu,
+  },
+  created() {
   },
 };
 </script>

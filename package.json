@@ -10,14 +10,16 @@
   },
   "dependencies": {
     "aos": "^2.3.4",
+    "axios": "^1.6.8",
     "core-js": "^3.18.1",
     "nuxt": "^2.15.8",
-    "vuetify": "^2.5.8"
+    "vuetify": "^2.7.2"
   },
   "devDependencies": {
     "@babel/core": "7.15.5",
     "@babel/preset-env": "7.15.6",
-    "@nuxtjs/vuetify": "^1.12.1",
+    "@nuxtjs/vuetify": "^1.12.3",
+    "@vue/cli-service": "^5.0.8",
     "fibers": "^5.0.0",
     "sass": "^1.38.1",
     "sass-loader": "^10.2.0"

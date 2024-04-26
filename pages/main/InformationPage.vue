@@ -1,9 +1,9 @@
 <template>
-    <div>
-      
-        <InformationList></InformationList>
 
-    </div>
+  <div>
+    <InformationList></InformationList>
+  </div>
+
 </template>
 
 <script>
@@ -13,7 +13,6 @@ export default {
   components: {
     InformationList,
   },
+
 };
 </script>
-
-<style></style>
