@@ -5,6 +5,7 @@ export const Restaurants = [
       description: '치킨의 근본 휘기영',
       address: '서울시 관악구',
       contact: '02-1234-5678',
+      table: 10,
       chip: true
     },
     {
@@ -13,6 +14,7 @@ export const Restaurants = [
       description: '전통 전주 요리의 진수, 베칼',
       address: '서울시 관악구',
       contact: '02-8765-4321',
+      table: 20,
       chip: true
     },
     

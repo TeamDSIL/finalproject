@@ -31,6 +31,9 @@
                     <!-- 식당 연락처 (수정 가능) -->
                     <v-text-field v-model="restaurant.contact" label="식당 연락처" outlined></v-text-field>
 
+                    <!-- 식당 테이블 수(수정가능) -->
+                    <v-text-field v-model="restaurant.table" label="테이블 수" outlined></v-text-field>
+
                     <!-- 메뉴 수정 버튼 -->
                     <v-btn color="rgb(255,205,2)" @click="showDialog = true" class="ma-2">
                         메뉴 수정
@@ -69,7 +72,7 @@
                     <!-- 식당 사진 (수정 가능) -->
                     <v-file-input v-model="restaurant.image" label="식당 사진" prepend-icon="mdi-camera"
                         outlined></v-file-input>
-
+                        
                     <!-- 정보 수정 버튼 -->
                     <v-btn color="success" class="ma-2" @click="updateRestaurantInfo">
                         정보 수정
@@ -89,12 +92,13 @@
 export default {
     data() {
         return {
-            showDialog: false, // 다이얼로그 표시 상태
+            showDialog: false, // 다이얼로그(모달) 표시 상태
             restaurant: {
                 id: '123', // 예시 ID
                 name: '기영이네 존맛치킨', // 예시 식당명
                 address: '서울시 관악구', // 예시 주소
                 contact: '02-1234-5678', // 수정 가능한 연락처
+                table: 10,
                 deposit: '5000', // 수정 가능한 예약금
                 image: ''  // 수정 가능한 식당 사진
             },
@@ -140,10 +144,6 @@ export default {
                     href: '/',
                 },
             ],
-            // formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-            // mobileItems: [
-            //   'Order Online', 'Book a Table', 'Reviews',
-            // ],
             text: 'hello',
             tab: null,
             checkbox: true,
