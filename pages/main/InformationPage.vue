@@ -1,7 +1,9 @@
 <template>
+
   <div>
     <InformationList></InformationList>
   </div>
+
 </template>
 
 <script>

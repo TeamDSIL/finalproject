@@ -74,7 +74,7 @@
                                     <v-col cols="12">
                                         <div id="direction-btn">
                                             <h1>회원 정보 관리</h1>
-                                        
+
                                             <div id="select-user-owner">
                                                 <v-btn light text v-bind="attrs" v-on="on"
                                                     class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
@@ -92,26 +92,56 @@
                                     </v-col>
 
                                     <v-col cols="12">
-                                        <div>
-                                            <v-container>
-                                                <!-- 검색 필드 -->
-                                                <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined dense
-                                                    clearable append-icon="mdi-magnify"
-                                                    @keyup.enter="performSearch"></v-text-field>
 
-                                                <!-- 회원 정보 목록 테이블 -->
-                                                <v-data-table :headers="headers" :items="filteredMembers" item-key="id"
-                                                    class="elevation-1">
-                                                    <template v-slot:items="props">
-                                                        <td>{{ props.item.id }}</td>
-                                                        <td>{{ props.item.email }}</td>
-                                                        <td>{{ props.item.name }}</td>
-                                                        <td>{{ props.item.phone }}</td>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-container>
+                                        <div v-if="step === 1">
+                                            <v-col cols="12">
+                                                <div>
+                                                    <v-container>
+                                                        <!-- 검색 필드 -->
+                                                        <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined
+                                                            dense clearable append-icon="mdi-magnify"
+                                                            @keyup.enter="performSearch"></v-text-field>
+
+                                                        <!-- 회원 정보 목록 테이블 -->
+                                                        <v-data-table :headers="headers" :items="filteredMembers"
+                                                            item-key="id" class="elevation-1">
+                                                            <template v-slot:items="props">
+                                                                <td>{{ props.item.id }}</td>
+                                                                <td>{{ props.item.email }}</td>
+                                                                <td>{{ props.item.name }}</td>
+                                                                <td>{{ props.item.phone }}</td>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-container>
+                                                </div>
+
+                                            </v-col>
                                         </div>
 
+                                        <div v-if="step === 2">
+                                            <v-col cols="12">
+                                                <div>
+                                                    <v-container>
+                                                        <!-- 검색 필드 -->
+                                                        <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined
+                                                            dense clearable append-icon="mdi-magnify"
+                                                            @keyup.enter="performSearch"></v-text-field>
+
+                                                        <!-- 회원 정보 목록 테이블 -->
+                                                        <v-data-table :headers="headers" :items="filteredMembers"
+                                                            item-key="id" class="elevation-1">
+                                                            <template v-slot:items="props">
+                                                                <td>{{ props.item.id }}</td>
+                                                                <td>{{ props.item.email }}</td>
+                                                                <td>{{ props.item.name }}</td>
+                                                                <td>{{ props.item.phone }}</td>
+                                                            </template>
+                                                        </v-data-table>
+                                                    </v-container>
+                                                </div>
+
+                                            </v-col>
+                                        </div>
                                     </v-col>
 
                                     <v-col cols="12">
