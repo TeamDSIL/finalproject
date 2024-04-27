@@ -19,8 +19,6 @@
             <v-row>
                 <!-- 식당 정보 수정 폼 -->
                 <v-form>
-                    <!-- 식당 ID (읽기 전용) -->
-                    <v-text-field v-model="restaurant.id" label="식당 ID" outlined readonly></v-text-field>
 
                     <!-- 식당명 (읽기 전용) -->
                     <v-text-field v-model="restaurant.name" label="식당명" outlined readonly></v-text-field>
