@@ -17,6 +17,8 @@
           <v-row>
             <v-col cols="12">
               <h5 class="text-18 test-color">나의 식당^^</h5>
+              <v-btn @click="takeMyPosition">내 위치 보기</v-btn>
+              
 
             </v-col>
             <v-col cols="12" sm="6" md="3" v-for="restaurant in restaurants" :key="restaurant.id">
@@ -45,7 +47,7 @@ import RestaurantManageMain from './RestaurantManageMain.vue';
 export default {
   data() {
     return {
-      restaurants: Restaurants
+      restaurants: Restaurants,
     };
   },
 
@@ -68,7 +70,17 @@ export default {
         crowd: restaurant.crowd,
       }
     });
-  }
+  },
+  takeMyPosition() {
+    navigator.geolocation.getCurrentPosition(function(position) {
+    console.log("위도: " + position.coords.latitude);
+    console.log("경도: " + position.coords.longitude);
+    alert('위도: ' + position.coords.latitude + ', 경도: ' + position.coords.longitude);
+
+  }, function(error) {
+    console.error("Error Code = " + error.code + " - " + error.message);
+  });
+},
   }
 }
 </script>
