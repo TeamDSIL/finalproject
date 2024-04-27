@@ -66,7 +66,7 @@
             <v-col cols="12">
               <h3>식당 정보 수정</h3>
               <v-btn style="background-color: rgb(210,63,87); color: white;"
-                v-on:click="goToRestaurantModify">식당수정</v-btn>
+                v-on:click="goToRestaurantModify(restaurant)">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -681,8 +681,21 @@ export default {
     goToReviewManage() {
       this.$router.push({ path: '/restaurant/ReviewManagePage' });
     },
-    goToRestaurantModify() {
-      this.$router.push({ path: '/restaurant/RestaurantModifyPage' });
+    goToRestaurantModify(restaurant) {
+      this.$router.push({
+      path: `/restaurant/RestaurantModifyPage/${restaurant.id}`,
+      query: {
+        name: restaurant.name,
+        address: restaurant.address,
+        contact: restaurant.contact,
+        description: restaurant.description,
+        image: restaurant.image,
+        chip: restaurant.chip,
+        table: restaurant.table,
+        deposit: restaurant.deposit,
+        crowd: restaurant.crowd,
+      }
+    });
     },
     toggleSelection(crowd) {
     this.restaurant.crowd = crowd;  // 선택된 상태 업데이트
