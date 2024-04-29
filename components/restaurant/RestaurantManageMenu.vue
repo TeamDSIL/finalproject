@@ -17,7 +17,7 @@
           <v-row>
             <v-col cols="12">
               <h5 class="text-18 test-color">나의 식당^^</h5>
-              <v-btn @click="takeMyPosition">내 위치 보기</v-btn>
+              <v-btn @click="takeMyPosition">내주변식당</v-btn>
               
 
             </v-col>
@@ -61,7 +61,7 @@ export default {
       query: {
         name: restaurant.name,
         address: restaurant.address,
-        contact: restaurant.contact,
+        tel: restaurant.tel,
         description: restaurant.description,
         image: restaurant.image,
         chip: restaurant.chip,
@@ -76,6 +76,7 @@ export default {
     console.log("위도: " + position.coords.latitude);
     console.log("경도: " + position.coords.longitude);
     alert('위도: ' + position.coords.latitude + ', 경도: ' + position.coords.longitude);
+    const latitudePosition = position.coords.latitude;
 
   }, function(error) {
     console.error("Error Code = " + error.code + " - " + error.message);

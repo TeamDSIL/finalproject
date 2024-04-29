@@ -27,7 +27,7 @@
                     <v-text-field v-model="restaurant.address" label="식당 주소" outlined readonly></v-text-field>
 
                     <!-- 식당 연락처 (수정 가능) -->
-                    <v-text-field v-model="restaurant.contact" label="식당 연락처" outlined></v-text-field>
+                    <v-text-field v-model="restaurant.tel" label="식당 연락처" outlined></v-text-field>
 
                     <!-- 식당 테이블 수(수정가능) -->
                     <v-text-field v-model="restaurant.table" label="테이블 수" outlined></v-text-field>
@@ -95,7 +95,7 @@ export default {
                 id: this.$route.params.id, // 경로 매개변수에서 ID 가져오기
                 name: this.$route.query.name,
                 address: this.$route.query.address,
-                contact: this.$route.query.contact,
+                tel: this.$route.query.tel,
                 description: this.$route.query.description,
                 image: this.$route.query.image,
                 chip: this.$route.query.chip === 'true', // Boolean으로 변환
