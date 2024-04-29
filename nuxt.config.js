@@ -20,6 +20,25 @@ export default {
   },
 
   // Global page headers: https://go.nuxtjs.dev/config-head
+  router: {
+    extendRoutes(routes, resolve) {
+      // 기존 라우트 수정도 가능
+      // 첫 번째 라우트 수정
+      const manageIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantManageMainPage');
+      if (manageIndex !== -1) {
+        routes[manageIndex].path = '/restaurant/RestaurantManageMainPage/:id';
+      }
+      // 두 번째 라우트 수정
+      const modifyIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantModifyPage');
+      if (modifyIndex !== -1) {
+        routes[modifyIndex].path = '/restaurant/RestaurantModifyPage/:id';
+      }
+      const writeReview = routes.findIndex(route => route.name === 'myDining-WriteReviewPage');
+      if (writeReview !== -1) {
+        routes[writeReview].path = '/myDining/WriteReviewPage/:id';
+      }
+    }
+  },
   head: {
     titleTemplate: '%s - food-truck',
     title: 'food-truck',
@@ -91,6 +110,9 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
+
+      transpile: [({ isLegacy }) => isLegacy && 'axios']
+ ,
     babel:{
       plugins: [
         // ["@babel/plugin-proposal-class-properties", { "loose": true }],
@@ -98,5 +120,9 @@ export default {
         // ["@babel/plugin-proposal-private-property-in-object", { "loose": true }]
       ]
     }  
+  },
+
+  env: {
+    apiURL: process.env.VUE_APP_API_URL
   }
 }

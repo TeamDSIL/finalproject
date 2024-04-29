@@ -1,8 +1,8 @@
 import { instance } from './index';
 
-function test(test) {
-  return instance.post('signup', test);
+function registerReply(reply) {
+  return instance.post('todos', reply);
 }
 
 
-export {  };
+export { registerReply };

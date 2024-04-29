@@ -106,6 +106,8 @@
 </template>
 
 <script>
+import { registerReply } from '@/api/myDining';
+
 export default {
   layout: "session",
   data() {
@@ -141,21 +143,45 @@ export default {
     },
     async submitForm() {
       try {
-        // 비즈니스 로직
-        const userData = {
-          UserReviewContents: this.UserReviewContents,
-        };
-        // await this.$store.dispatch('LOGIN', userData);
-        this.$router.push("/myDining/MydiningPage");
-        // this.goBack();
+        console.log(process.env.VUE_APP_API_URL);
+        const response = await registerReply({
+          name: 'test다!', completed: false,
+        });
+        console.log(response);
       } catch (error) {
-        // 에러 핸들링할 코드
-        // console.log(error.response.data);
-        // this.logMessage = error.response.data;
-      } finally {
-        // this.initForm();
+        // console.log(error.response.data.message);
+        // this.logMessage = error.response.data.message;
       }
     },
+    // async submitForm() {
+    //   try {
+    //     // 비즈니스 로직
+    //     const userData = {
+    //       UserReviewContents: this.UserReviewContents,
+    //     };
+
+
+    //     const todo = { name: 'test다!', completed: false };
+    //   const res = await fetch(`${this.$config.apiURL}/todos`, {
+    //     method: "POST",
+    //     body: JSON.stringify(todo),
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   });
+    //   // const json = await res.json();
+
+    //     // await this.$store.dispatch('LOGIN', userData);
+    //     this.$router.push("/myDining/MydiningPage");
+    //     // this.goBack();
+    //   } catch (error) {
+    //     // 에러 핸들링할 코드
+    //     // console.log(error.response.data);
+    //     // this.logMessage = error.response.data;
+    //   } finally {
+    //     // this.initForm();
+    //   }
+    // },
     goBack() {
       window.history.back(); // 브라우저 이력에서 한 단계 뒤로 갑니다
     },
