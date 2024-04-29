@@ -125,7 +125,7 @@
     <v-dialog v-if="showPaymentModal" v-model="showPaymentModal" persistent width="550px">
       <v-card class="custom-card">
         <v-card-title class="title">
-          예약금 결제
+         <p> 예약금 결제</p>
         </v-card-title>
         <p class="restaurant-name">{{ restaurantName }}</p>
         <v-divider></v-divider>
