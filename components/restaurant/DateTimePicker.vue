@@ -334,7 +334,6 @@ input[type="number"] {
   display: inline-block;
 }
 
-
 .time-button {
   background-color: yellow;
   border-radius: 30px;
