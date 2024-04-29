@@ -5,8 +5,10 @@
         <v-btn v-on="on">예약 날짜 및 시간 선택</v-btn>
       </template>
       <v-card>
+        <!-- 예약 날짜 선택 -->
         <v-date-picker v-model="date" :min="minDate" scrollable locale="ko"></v-date-picker>
         <p style="margin-left: 10px;">예약 시간을 선택해주세요.</p>
+        <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)" :class="[
@@ -17,7 +19,9 @@
             </v-btn>
           </v-row>
         </div>
+        <!-- 인원 수 입력 -->
         <v-text-field v-model="numberOfPeople" label="인원 수" type="number" style="margin-left: 10px;"></v-text-field>
+        <!-- 예약하기 및 닫기 버튼 -->
         <v-card-actions>
           <v-btn color="primary" text @click="set" :disabled="numberOfPeople <= 0">예약하기</v-btn>
           <v-spacer></v-spacer>
@@ -26,7 +30,7 @@
       </v-card>
     </v-dialog>
 
-    <!-- 예약 확인 모달 -->
+ <!-- 예약 확인 모달 -->
     <!-- 예약금이 있는 경우 확인 모달 -->
     <v-dialog v-if="depositAmount" v-model="showConfirmationModal" persistent width="333">
       <v-card>
@@ -119,20 +123,51 @@
 
     <!-- 결제 모달 -->
     <v-dialog v-if="showPaymentModal" v-model="showPaymentModal" persistent width="550px">
-      <v-card>
-        <v-card-title>
-          <span class="headline">예약 정보</span>
+      <v-card class="custom-card">
+        <v-card-title class="title">
+          예약금 결제
         </v-card-title>
+        <p class="restaurant-name">{{ restaurantName }}</p>
+        <v-divider></v-divider>
+        <!-- 타이머 표시 -->
         <v-card-text>
-          <p>{{ formattedDate }} {{ selectedHour }}시 {{ selectedMinute }}분 {{ numberOfPeople }}명</p>
+          <span>남은 시간:</span>
+          <span>{{ timer }}</span>
+          <!-- "새로고침" 버튼 추가 -->
+          <v-btn icon @click="resetTimer">
+            <v-icon>mdi-refresh</v-icon>
+          </v-btn>
         </v-card-text>
+        <!-- 예약 정보 및 밥알 사용 -->
+        <v-card-text>
+          <p class="reservation-details">{{ selectedDateTime }}시 {{ numberOfPeople }}명</p>
+          <p>
+            드실 포인트<br>
+            현재 보유 밥알: {{ totalRiceBallPoints }} 밥알<br>
+            몇 밥알? <input type="number" v-model="riceBallInput" @input="handleInputChange" placeholder="사용할 밥알을 입력해주세요."
+              pattern="[0-9]*">
+          </p>
+        </v-card-text>
+        <!-- 밥알 사용하기 버튼 -->
         <v-card-actions>
-          <v-btn color="primary" text @click="visitAnotherTime">다른 사람이 방문해요</v-btn>
+          <v-btn color="yellow" block @click="payReservationFee">밥알 사용하기</v-btn>
         </v-card-actions>
+        <!-- 예약 정보 및 결제 내역 표시 -->
+        <v-divider></v-divider>
+        <v-card-text class="reservation-info">
+          <span>예약정보</span>{{ selectedDateTime }}시 {{ numberOfPeople }}명<br>
+          <span>결제금액:</span>{{ depositAmount - riceBallInput }}원<br>
+          <span>주문금액</span>{{ depositAmount }}원 <br>
+          <span>밥알</span>{{ riceBallInput }}
+        </v-card-text>
       </v-card>
     </v-dialog>
 
-  </v-col>
+    <v-snackbar v-model="alertSnackbar">
+    {{ alertMessage }}
+    <v-btn color="red" text @click="dismissAlert">닫기</v-btn>
+  </v-snackbar>
+</v-col>
 </template>
 
 <script>
@@ -140,21 +175,25 @@ export default {
   name: "DateTimePicker",
   data() {
     return {
+      timer: '7:00',
+      timerInterval: null,
       date: null,
       modal: false,
       selectedDateTime: null,
       selectedHour: '',
       selectedMinute: '',
+      riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
       riceBallPoints: 100,
-      //예약금, 전체 밥알은 식당,회원 정보 연동되어야함
-      depositAmount: false,
+      depositAmount: 30000,
       totalRiceBallPoints: 4200,
-      selectedButtonIndex: null,
       showConfirmationModal: false,
-      showReservationConfirmationModal: false,
-      showPaymentModal: false // 여기에 showPaymentModal 속성 추가
+      showPaymentModal: false,
+      showReservationConfirmationModal: false, 
+      restaurantName: 'Dsil 식당',
+      alertSnackbar: false,
+      alertMessage: ""
     };
   },
   computed: {
@@ -165,13 +204,6 @@ export default {
       const day = today.getDate();
       return `${year}-${month.toString().padStart(2, '0')}-${day.toString().padStart(2, '0')}`;
     },
-    formattedDate() {
-      if (!this.date) return '';
-      const selectedDate = new Date(this.date);
-      const options = { month: 'short', day: '2-digit', weekday: 'short' };
-      return selectedDate.toLocaleDateString('ko-KR', options);
-    },
-
     calculateDeposit() {
       return this.numberOfPeople * this.depositAmount;
     },
@@ -180,10 +212,45 @@ export default {
     }
   },
   created() {
-    this.totalRiceBallPoints = this.calculateTotalRiceBallPoints
+    this.startTimer();
+    this.totalRiceBallPoints = this.calculateTotalRiceBallPoints;
     this.generateTimeOptions();
   },
+  destroyed() {
+    clearInterval(this.timerInterval);
+  },
   methods: {
+    resetTimer() {
+      this.timer = '7:00';
+      clearInterval(this.timerInterval);
+      this.startTimer();
+    },
+    startTimer() {
+      let duration = 420;
+      this.timerInterval = setInterval(() => {
+        const minutes = Math.floor(duration / 60);
+        const seconds = duration % 60;
+        this.timer = `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+        duration--;
+        if (duration < 0) {
+          clearInterval(this.timerInterval);
+          this.timer = '7:00';
+          this.showConfirmationModal = false;
+          this.alertMessage = "결제 시간이 만료되었습니다.";
+          this.alertSnackbar = true;
+        }
+      }, 1000);
+    },
+    dismissAlert() {
+      this.alertSnackbar = false;
+      this.showPaymentModal = false;
+      this.$router.push('/restaurant/RestaurantReservePage');
+    },
+    handleInputChange() {
+      if (parseInt(this.riceBallInput) > this.totalRiceBallPoints) {
+        this.riceBallInput = this.totalRiceBallPoints;
+      }
+    },
     generateTimeOptions() {
       for (let hour = 0; hour < 24; hour++) {
         for (let minute of [0, 30]) {
@@ -192,12 +259,6 @@ export default {
       }
     },
     selectTime(index) {
-      if (this.selectedButtonIndex !== null) {
-        const buttons = document.querySelectorAll('.time-button');
-        buttons[this.selectedButtonIndex].classList.remove('selected');
-      }
-      const button = document.querySelectorAll('.time-button')[index];
-      button.classList.add('selected');
       this.selectedButtonIndex = index;
       const time = this.timeOptions[index];
       const [hour, minute] = time.split(":");
@@ -227,20 +288,42 @@ export default {
     },
     confirmReservation() {
       if (this.depositAmount) {
-        // 예약금이 있는 경우
-        this.showConfirmationModal = false; // 예약 확인 모달 닫기
-        this.showPaymentModal = true; // 결제 모달 표시
+        this.showConfirmationModal = false;
+        this.showPaymentModal = true;
       } else {
-        // 예약금이 없는 경우
-        this.showConfirmationModal = false; // 예약 확인 모달 닫기
-        this.showReservationConfirmationModal = true; // 바로 예약 확정 모달 표시
+        this.showConfirmationModal = false;
+        this.showReservationConfirmationModal = true;
       }
+    },
+    redirectToReservation() {
+      this.modal = true;
+      clearInterval(this.timerInterval);
+      this.$router.push('/restaurant/RestaurantReservePage');
     }
   }
 };
 </script>
 
 <style scoped>
+.custom-card {
+  background-color: #f9f9f9;
+  /* 매우 옅은 회색 배경색 */
+}
+
+input[type="number"] {
+  /* 네모칸으로 만들기 */
+  border: 1px solid #ccc;
+  padding: 10px;
+  width: 200px;
+  /* 필요에 따라 너비 조정 */
+  height: 30px;
+  /* 필요에 따라 높이 조정 */
+  box-sizing: border-box;
+  /* 패딩과 경계 상자 크기를 요소의 실제 크기로 사용 */
+  border-radius: 5px;
+  /* 둥근 모서리 반경 설정 */
+}
+
 .time-buttons-container {
   overflow-x: auto;
   overflow-y: hidden;
@@ -250,6 +333,7 @@ export default {
 .time-buttons {
   display: inline-block;
 }
+
 
 .time-button {
   background-color: yellow;
