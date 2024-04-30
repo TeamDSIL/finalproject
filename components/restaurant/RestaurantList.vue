@@ -6,14 +6,14 @@
             <v-icon>mdi-chevron-right</v-icon>
           </template>
         </v-breadcrumbs>
-        <div class="d-flex justify-space-between flex-wrap flex-sm-nowrap mb-3">
+        <!-- <div class="d-flex justify-space-between flex-wrap flex-sm-nowrap mb-3">
           <v-tabs class="mb-3">
             <v-tab class="text-capitalize">Delivery</v-tab>
             <v-tab class="text-capitalize">Dining Out</v-tab>
             <v-tab class="text-capitalize">Nightlife</v-tab>
           </v-tabs>
           <v-btn color="primary" class="mb-3">Filter</v-btn>
-        </div>
+        </div> -->
         
 
         <v-row>
@@ -63,7 +63,7 @@
                                 ></v-range-slider>
                             </div>
                         </div>
-
+<div><v-btn color="primary" class="mb-3">적용</v-btn></div>
                     </div>
                     <div slot="boxContent">
                         <div class="px-8">
