@@ -59,7 +59,7 @@
 
               <h4>예약 가능 시간 설정</h4>
               <v-btn v-for="(time, index) in times" :key="time.id" class="ma-2"
-              :style="{ backgroundColor: time.clicked ? 'yellow' : '' }" @click="toggleButton(index)">
+              :style="{color: time.clicked ? 'white' : '', backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '' }" @click="toggleButton(index)">
               {{ time.label }}
             </v-btn>
           </v-col>
