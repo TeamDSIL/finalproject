@@ -1,5 +1,6 @@
 <template>
   <v-col cols="4" sm="6" md="4">
+    <!-- 예약 날짜, 시간 선택하는 모달창 -->
     <v-dialog ref="dialog" v-model="modal" persistent width="290px">
       <template v-slot:activator="{ on }">
         <v-btn v-on="on">예약 날짜 및 시간 선택</v-btn>
@@ -11,10 +12,8 @@
         <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
-            <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)" :class="[
-      'time-button',
-      selectedHour === time.split(':')[0] && selectedMinute === time.split(':')[1] ? 'selected' : ''
-    ]">
+            <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
+              :class="['time-button', selectedHour === time.split(':')[0] && selectedMinute === time.split(':')[1] ? 'selected' : '']">
               {{ time }}
             </v-btn>
           </v-row>
@@ -30,7 +29,7 @@
       </v-card>
     </v-dialog>
 
- <!-- 예약 확인 모달 -->
+    <!-- 예약 확인 모달 -->
     <!-- 예약금이 있는 경우 확인 모달 -->
     <v-dialog v-if="depositAmount" v-model="showConfirmationModal" persistent width="333">
       <v-card>
@@ -125,49 +124,107 @@
     <v-dialog v-if="showPaymentModal" v-model="showPaymentModal" persistent width="550px">
       <v-card class="custom-card">
         <v-card-title class="title">
-         <p> 예약금 결제</p>
+          <p> 예약금 결제</p>
         </v-card-title>
-        <p class="restaurant-name">{{ restaurantName }}</p>
-        <v-divider></v-divider>
+        <v-card-title class="restaurant-name" style="margin-bottom: 10px;">
+          <div style="margin-top: -20px;">{{ restaurantName }}</div>
+        </v-card-title>
+
         <!-- 타이머 표시 -->
-        <v-card-text>
-          <span>남은 시간:</span>
-          <span>{{ timer }}</span>
-          <!-- "새로고침" 버튼 추가 -->
-          <v-btn icon @click="resetTimer">
-            <v-icon>mdi-refresh</v-icon>
-          </v-btn>
+        <v-card-text style="display: inline-block;">
+          <div style="background-color: #B0E2FF; padding: 2px; border-radius: 5px; display: inline-block;">
+            <span style="color: #1E90FF; font-weight: bold; padding-left: 5px;">{{ timer }}</span>
+            <!-- "새로고침" 버튼 추가 -->
+            <v-btn icon @click="resetTimer" style="min-width: auto; margin-left: -3px;">
+              <v-icon>mdi-refresh</v-icon>
+            </v-btn>
+          </div>
+          <span> 7분간 예약 찜! 시간 내 예약을 완료해주세요.</span>
         </v-card-text>
+
         <!-- 예약 정보 및 밥알 사용 -->
-        <v-card-text>
-          <p class="reservation-details">{{ selectedDateTime }}시 {{ numberOfPeople }}명</p>
-          <p>
-            드실 포인트<br>
-            현재 보유 밥알: {{ totalRiceBallPoints }} 밥알<br>
-            몇 밥알? <input type="number" v-model="riceBallInput" @input="handleInputChange" placeholder="사용할 밥알을 입력해주세요."
-              pattern="[0-9]*">
-          </p>
+        <v-card-text style="margin-top: 3px;">
+          <div
+            style="background-color: white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; text-align: center;">
+            <div style="text-align: left;">
+              <p style="font-weight: bold; margin-bottom: 5px;">예약 정보</p>
+              <p class="reservation-details" style="margin-top: 0; margin-bottom: 3px;">{{ selectedDateTime }}시 {{
+      numberOfPeople }}명</p>
+            </div>
+            <!-- 다른 사람이 방문해요 버튼 -->
+            <v-btn color="white" style="border-radius: 15px; display: block; margin: 0 auto;"
+              @click="openVisitorModal">다른
+              사람이 방문해요</v-btn>
+            <div style="margin-top: 10px;">
+              <!-- 방문자 정보 표시 -->
+              <!-- 데이터가 있을 때만 표시하도록 설정합니다. -->
+              <p v-if="visitorName">방문자 성함 : {{ visitorName }}</p>
+              <p v-if="visitorContact">방문자 연락처 : {{ visitorContact }}</p>
+            </div>
+          </div>
+          <p style="margin-top: 10px; font-weight: bold;margin-bottom: 10px;  margin-left: 6px;">드실 포인트</p>
+          <div
+            style="background-color: white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 5px;">
+            <p style="font-weight: bold;">
+              현재 보유 밥알: {{ totalRiceBallPoints }} 밥알<br>
+              몇 밥알? : <input type="number" v-model="riceBallInput" @input="handleInputChange"
+                placeholder="사용할 밥알을 입력해주세요." pattern="[0-9]*">
+            </p>
+            <!-- 밥알 사용하기 버튼 -->
+            <v-btn color="#FFD700" dark
+              style="display: block; margin: 0 auto; min-width: 200px; font-family: 'Garamond', serif; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);"
+              @click="updatePaymentAmount">
+              <span style="font-weight: bold; color: black; font-family: 'Garamond', serif;">밥알 사용하기</span>
+            </v-btn>
+            <br>
+            <span style="font-weight: bold; color: black;">레스토랑 유의사항</span><br>
+            <input type="checkbox" id="reservationPolicy" v-model="reservationPolicyAgreed">
+            <label for="reservationPolicy">[필수] 예약금은 식당에서의 최종 결제 금액에서 차감됩니다.</label>
+          </div>
         </v-card-text>
-        <!-- 밥알 사용하기 버튼 -->
-        <v-card-actions>
-          <v-btn color="yellow" block @click="payReservationFee">밥알 사용하기</v-btn>
-        </v-card-actions>
-        <!-- 예약 정보 및 결제 내역 표시 -->
+
         <v-divider></v-divider>
+        <div style="background-color:white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 91.5%; margin: 20px auto;" >
+        <span style="font-weight: bold; color: black; margin-top: 20px;">고객 요청사항</span>
+    <v-text-field v-model="customerRequest" placeholder="레스토랑에 요청하실 내용을 입력해주세요" outlined dense clearable></v-text-field>
+</div>
+
+        <!-- 예약 정보 및 결제 내역 표시 -->
         <v-card-text class="reservation-info">
           <span>예약정보</span>{{ selectedDateTime }}시 {{ numberOfPeople }}명<br>
-          <span>결제금액:</span>{{ depositAmount - riceBallInput }}원<br>
-          <span>주문금액</span>{{ depositAmount }}원 <br>
-          <span>밥알</span>{{ riceBallInput }}
+          <span>결제 금액: </span>{{ depositAmount * numberOfPeople - riceBallInput }}원<br>
+          <span>예약금 총액: </span>{{ depositAmount * numberOfPeople }}원 <br>
+          <span>사용 밥알: </span>{{ riceBallInput }}밥알
         </v-card-text>
       </v-card>
     </v-dialog>
+    <!-- 방문자 입력 모달 -->
+    <v-dialog v-model="visitorModal" persistent max-width="400px">
+      <v-card>
+        <v-card-title class="headline">방문자 입력</v-card-title>
+        <v-card-text>
+          <!-- 방문자 성함 입력 -->
+          <v-text-field v-model="visitorName" label="방문자 성함" placeholder="방문하실 분의 성함을 입력해 주세요."
+            v-if="showVisitorFields"></v-text-field>
+          <!-- 방문자 연락처 입력 -->
+          <v-text-field v-model="visitorContact" label="방문자 연락처" placeholder="방문하실 분의 휴대폰 번호를 입력해 주세요." type="tel"
+            v-if="showVisitorFields" @blur="formatPhoneNumber" :maxlength="11" pattern="[0-9]*"></v-text-field>
+        </v-card-text>
+        <v-card-actions class="d-flex justify-center">
+          <v-btn style="min-width: 150px; background-color: #D23F57; color: white;" @click="confirmVisitor">확인</v-btn>
+          <v-btn text style="min-width: 150px; background-color: #E0E0E0; color: black;"
+            @click="cancelVisitor">취소</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
-    <v-snackbar v-model="alertSnackbar">
-    {{ alertMessage }}
-    <v-btn color="red" text @click="dismissAlert">닫기</v-btn>
-  </v-snackbar>
-</v-col>
+
+    <!-- 결제 시간 만료 alert창 -->
+    <v-snackbar v-model="alertSnackbar" :timeout="null">
+      {{ alertMessage }}
+      <v-btn color="red" text @click="dismissAlert">닫기</v-btn>
+    </v-snackbar>
+  </v-col>
 </template>
 
 <script>
@@ -190,10 +247,17 @@ export default {
       totalRiceBallPoints: 4200,
       showConfirmationModal: false,
       showPaymentModal: false,
-      showReservationConfirmationModal: false, 
+      showReservationConfirmationModal: false,
       restaurantName: 'Dsil 식당',
       alertSnackbar: false,
-      alertMessage: ""
+      alertMessage: "",
+      visitorName: '',
+      visitorContact: '',
+      visitorModal: false,
+      showVisitorFields: false,
+      paymentAmount: 0,
+      customerRequest: '',
+
     };
   },
   computed: {
@@ -220,13 +284,37 @@ export default {
     clearInterval(this.timerInterval);
   },
   methods: {
+    formatPhoneNumber() {
+      let phoneNumber = this.visitorContact.toString().replace(/\D/g, ''); // 문자열로 변환하고 숫자 이외의 문자 제거
+      phoneNumber = phoneNumber.slice(0, 11); // 최대 11자리까지만 허용
+      if (phoneNumber.length === 11) {
+        this.visitorContact = phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'); // 휴대폰 번호 포맷팅
+      } else {
+        this.visitorContact = phoneNumber; // 11자리가 아니면 그대로 반환
+      }
+    },
+
+    openVisitorModal() {
+      this.showVisitorFields = true;
+      this.visitorModal = true;
+    },
+    confirmVisitor() {
+      this.showVisitorFields = false;
+      this.visitorModal = false;
+    },
+    cancelVisitor() {
+      this.visitorName = '';
+      this.visitorContact = '';
+      this.showVisitorFields = false;
+      this.visitorModal = false;
+    },
     resetTimer() {
       this.timer = '7:00';
       clearInterval(this.timerInterval);
       this.startTimer();
     },
     startTimer() {
-      let duration = 420;
+      let duration = 420; //시간 7분 설정
       this.timerInterval = setInterval(() => {
         const minutes = Math.floor(duration / 60);
         const seconds = duration % 60;
@@ -300,28 +388,29 @@ export default {
       clearInterval(this.timerInterval);
       this.$router.push('/restaurant/RestaurantReservePage');
     }
+  },
+  updatePaymentAmount() {
+    // 밥알 사용하기 버튼을 클릭했을 때만 결제 금액을 업데이트합니다.
+    if (this.riceBallInput.trim() !== '') {
+      this.paymentAmount = this.depositAmount * this.numberOfPeople - parseInt(this.riceBallInput);
+    }
   }
 };
 </script>
 
 <style scoped>
 .custom-card {
-  background-color: #f9f9f9;
-  /* 매우 옅은 회색 배경색 */
+  background-color: rgba(251, 251, 251, 0.89);
 }
 
+
 input[type="number"] {
-  /* 네모칸으로 만들기 */
   border: 1px solid #ccc;
   padding: 10px;
   width: 200px;
-  /* 필요에 따라 너비 조정 */
   height: 30px;
-  /* 필요에 따라 높이 조정 */
   box-sizing: border-box;
-  /* 패딩과 경계 상자 크기를 요소의 실제 크기로 사용 */
   border-radius: 5px;
-  /* 둥근 모서리 반경 설정 */
 }
 
 .time-buttons-container {
@@ -333,6 +422,7 @@ input[type="number"] {
 .time-buttons {
   display: inline-block;
 }
+
 
 .time-button {
   background-color: yellow;
@@ -353,11 +443,14 @@ input[type="number"] {
   background-color: #FFD700;
 }
 
+
 .selected {
   background-color: #007bff !important;
   color: white;
 }
 
+
+/* 로고 관련 설정 */
 .logo-title {
   display: flex;
   align-items: center;
@@ -367,5 +460,16 @@ input[type="number"] {
 .logo-img {
   height: 130px;
   width: 130px;
+}
+
+/* 결제 모달에서 식당 이름 */
+.restaurant-name div {
+  background-color: white;
+  padding: 5px;
+  border: none;
+  border-radius: 5px;
+  margin-bottom: -10px;
+  display: inline-block;
+  width: 500px;
 }
 </style>
