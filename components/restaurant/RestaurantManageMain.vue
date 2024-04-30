@@ -617,7 +617,7 @@ export default {
         description: this.$route.query.description,
         image: this.$route.query.image,
         chip: this.$route.query.chip === 'true', // Boolean으로 변환
-        table: parseInt(this.$route.query.table), // 문자열을 숫자로 변환
+        table: this.$route.query.table, // 문자열을 숫자로 변환
         deposit: this.$route.query.deposit,
         crowd: this.$route.query.crowd,
       },
