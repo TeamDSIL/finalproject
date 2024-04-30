@@ -39,24 +39,23 @@
           <v-checkbox v-model="checkbox">
             <template v-slot:label>
               <div>
-                By signing up, you agree to
-
+                회원가입을 위해,&nbsp;
                 <v-tooltip bottom>
                   <template v-slot:activator="{ on }">
-                    <a target="_blank" href="#" @click.stop v-on="on">
-                      Terms & Condtion
+                    <a target="_blank" href="/main/MainPage" @click.stop v-on="on">
+                      이용약관
                     </a>
                   </template>
-                  Opens in new window
+                  새 창에서 보기
                 </v-tooltip>
-
+                에 동의해야 합니다.
               </div>
             </template>
           </v-checkbox>
         </div>
 
         <div class="mb-4">
-          <v-btn block color="rgb(255,84,82)" class="text-capitalize font-600">
+          <v-btn block color="rgb(255,84,82)" class="primary">
             계정 생성
           </v-btn>
         </div>
@@ -85,7 +84,7 @@
       </div>
       <div class="py-4 bg-grey-light">
         <div class="text-center">
-          <span class="grey--text text--darken-1">이미 계정이 있으신가요? 
+          <span class="grey--text text--darken-1">이미 계정이 있으신가요?
             <a @click="gotoLoginPage()" class="ms-2 grey--text text--darken-4 font-600">로그인</a>
           </span>
         </div>
@@ -104,7 +103,7 @@ export default {
     }
   },
   methods: {
-    gotoLoginPage(){
+    gotoLoginPage() {
       this.$router.push('/memberManage/LoginPage');
     }
   }

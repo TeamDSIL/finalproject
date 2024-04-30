@@ -2,63 +2,6 @@
     <div>
         <v-container>
             <v-row>
-                <v-col cols="12" class="mb-10">
-                    <v-img class="br-10 d-flex cover-img align-end" cover
-                        :src="require('~/assets/images/cover-img.png')"
-                        gradient="to top, rgba(0,0,0,.7), rgba(0,0,0,0)">
-
-                        <div
-                            class="d-flex justify-center justify-md-space-between align-center mx-10 cover-image-content ">
-                            <div class="d-md-flex d-block align-center text-md-left text-center flex-wrap">
-                                <label for="avatarUpload" class="me-4">
-                                    <div class="avatar-upload">
-                                        <v-avatar size="160">
-                                            <img src="~/assets/images/faces/big-avatar.png" alt="">
-                                        </v-avatar>
-                                        <v-btn class="avatar-upload-btn" fab dark small color="grey lighten-4">
-                                            <v-icon color="secondary" dark size="20">
-                                                mdi-camera
-                                            </v-icon>
-                                        </v-btn>
-                                        <input class="d-none" type="file" id="avatarUpload" />
-                                    </div>
-
-                                </label>
-                                <div>
-                                    <h2 class="white--text text-md-left text-center mb-1">윤호상</h2>
-                                    <div class="d-flex mb-1 justify-center justify-md-start">
-                                        <v-icon size="15" class="me-2" color="white">mdi-map-marker</v-icon>
-                                        <h6 class="font-weight-light white--text">서울시 노원구</h6>
-                                    </div>
-                                    <h6 class="font-weight-light white--text">먹고 자는 게 최고</h6>
-                                </div>
-                            </div>
-
-                            <div class="d-none d-md-flex">
-                                <div class="text-center">
-                                    <h2 class="font-weight-bold white--text">24</h2>
-                                    <h6 class="font-weight-regular white--text">리뷰</h6>
-                                </div>
-                                <div class="mx-3">
-                                    <v-divider vertical dark></v-divider>
-                                </div>
-                                <div class="text-center">
-                                    <h2 class="font-weight-bold white--text">45</h2>
-                                    <h6 class="font-weight-regular white--text">사진</h6>
-                                </div>
-                                <div class="mx-3">
-                                    <v-divider vertical dark></v-divider>
-                                </div>
-                                <div class="text-center">
-                                    <h2 class="font-weight-bold white--text">1.6k</h2>
-                                    <h6 class="font-weight-regular white--text">팔로워</h6>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </v-img>
-                </v-col>
                 <v-col cols="12">
                     <Box class="dashboard-box">
                         <div slot="boxSidebar">
@@ -72,19 +15,19 @@
                                         <h1>회원정보</h1>
                                         <div id="position-set">
 
-                                            <v-dialog v-model="dialog" width="500">
+                                            <v-dialog v-model="dialogModify" width="500">
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-btn light text v-bind="attrs" v-on="on"
                                                         class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
-                                                        id="modify-userInfo-btn">
+                                                        id="modify-userInfo-btn" @click="submitForm">
                                                         <span class="d-none d-sm-block">수정</span>
                                                     </v-btn>
                                                 </template>
 
-                                                <UserInfoModifyForm />
+                                                <UserInfoModifyForm @modify="handleModify" />
                                             </v-dialog>
 
-                                            <v-dialog v-model="dialog" width="500">
+                                            <v-dialog v-model="dialogDelete" width="500">
                                                 <template v-slot:activator="{ on, attrs }">
                                                     <v-btn light text v-bind="attrs" v-on="on"
                                                         class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
@@ -253,8 +196,77 @@ export default {
     data() {
         return {
             page: 1,
+            dialogModify: false, // 수정 다이얼로그 열기 여부를 관리하는 데이터 속성
+            dialogDelete: false, // 삭제 다이얼로그 열기 여부를 관리하는 데이터 속성
+            userInfo: {
+                email: 'dvbf@naver.com',
+                name: '윤호상',
+                phone: '+82 10-9677-7048',
+                address: '서울시 노원구 중계동 덕릉로 71길 30, 105동 405호',
+                zipcode: '01709'
+            }
         }
     },
+    methods: {
+        openModifyDialog() {
+            this.dialogModify = true; // 수정 다이얼로그 열기
+        },
+        openDeleteDialog() {
+            this.dialogDelete = true; // 삭제 다이얼로그 열기
+        },
+        closeDialogs() {
+            this.dialogModify = false;
+            this.dialogDelete = false;
+        },
+        sendDataToForm() {
+            // 수정 또는 삭제 다이얼로그가 열릴 때 해당 사용자 정보를 수정 또는 삭제 폼으로 전달
+            return this.userInfo;
+        },
+        submitForm() {
+            const modifiedData = {
+                email: this.email,
+                password: this.password,
+                name: this.name,
+                phone: this.phone,
+                address: this.address,
+                zipcode: this.zipcode
+            };
+            // 수정된 데이터를 부모 컴포넌트에 전달하는 이벤트 발생
+            // handleModify(modifiedData);
+            this.$emit('modify', modifiedData);
+        },
+        handleModify(modifiedData) {
+            // 수정된 데이터를 처리하는 로직을 작성합니다.
+            console.log('수정된 데이터:', modifiedData);
+            // 예를 들어, 이제 이 데이터를 서버로 전송하거나 상태를 업데이트할 수 있습니다.
+        }
+    },
+    watch: {
+        dialogModify(val) {
+            if (!val) {
+                // 수정 다이얼로그가 닫힐 때 사용자 정보 초기화
+                this.userInfo = {
+                    email: '',
+                    name: '',
+                    phone: '',
+                    address: '',
+                    zipcode: ''
+                };
+            }
+        },
+        dialogDelete(val) {
+            if (!val) {
+                // 삭제 다이얼로그가 닫힐 때 사용자 정보 초기화
+                this.userInfo = {
+                    email: '',
+                    name: '',
+                    phone: '',
+                    address: '',
+                    zipcode: ''
+                };
+            }
+        }
+    }
 }
 </script>
 
