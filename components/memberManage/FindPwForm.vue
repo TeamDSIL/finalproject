@@ -22,7 +22,7 @@
                         <v-text-field type="email" id="email" v-model="email" outlined dense hide-details
                             placeholder="dsil@naver.com" class="mb-4"></v-text-field>
                         <v-btn light text v-bind="attrs" v-on="on"
-                            class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0" @click="sendTemporaryPassword">
+                            class="primary" @click="sendTemporaryPassword">
                             임시 비밀번호 받기
                         </v-btn>
                     </div>
@@ -33,7 +33,7 @@
                         <v-text-field type="password" id="tempPassword" v-model="tempPassword" outlined dense
                             hide-details placeholder="임시 비밀번호를 입력하세요" class="mb-4"></v-text-field>
                         <v-btn light text v-bind="attrs" v-on="on"
-                            class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
+                            class="primary"
                             @click="verifyTemporaryPassword">
                             새 비밀번호 설정
                         </v-btn>
@@ -59,7 +59,7 @@
 
 
                         <v-btn light text v-bind="attrs" v-on="on"
-                            class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0" @click="submitPassword"
+                            class="primary" @click="submitPassword"
                             id="submu-ps">
                             확인
                         </v-btn>
@@ -91,11 +91,14 @@ export default {
         sendTemporaryPassword() {
             // 임시 비밀번호 전송 로직 처리
             console.log('임시 비밀번호 전송:', this.email);
+            alert('입력하신 이메일로 임시 비밀번호가 전송됐습니다.');
             this.step = 2; // 다음 단계로 이동
         },
         verifyTemporaryPassword() {
             // 임시 비밀번호 인증 로직 처리
             console.log('임시 비밀번호 인증:', this.tempPassword);
+            alert('인증 되었습니다.');
+            alert('인증되지 않았습니다. 다시 시도해주세요.');
             this.step = 3; // 다음 단계로 이동
         },
         submitPassword() {

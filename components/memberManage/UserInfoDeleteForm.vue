@@ -15,7 +15,7 @@
             </v-text-area>
 
             <div class="mb-4" id="check-read">
-                <v-checkbox v-model="checkbox">
+                <v-checkbox v-model="isChecked">
                     <template v-slot:label>
                         <div>
                             위 유의사항을 확인하였습니다.
@@ -24,13 +24,11 @@
                 </v-checkbox>
             </div>
 
-            <v-dialog v-model="dialog" width="500">
-                <template v-slot:activator="{ on, attrs }">
-                    <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary" @click="openModal">
-                        <span class="d-none d-sm-block">회원탈퇴</span>
-                    </v-btn>
-                </template>
+            <v-btn block color="rgb(255,84,82)" class="primary" @click="openModal" :disabled="!isChecked">
+                <span class="d-none d-sm-block">회원탈퇴</span>
+            </v-btn>
 
+            <v-dialog v-model="dialog" width="500">
                 <CheckUserDeleteForm />
             </v-dialog>
 
@@ -38,34 +36,30 @@
         </div>
     </v-card>
 </template>
+
 <script>
 import CheckUserDeleteForm from '@/components/memberManage/CheckUserDeleteForm.vue';
 
 export default {
-    components:{
+    components: {
         CheckUserDeleteForm,
     },
     data() {
         return {
-            page: 1,
-            dialog: false, // 모달의 초기 상태는 닫힌 상태로 설정
-            checkbox: false, // 체크박스의 상태를 관리하는 변수
+            dialog: false,
+            isChecked: false,
         }
     },
-    methods:{
+    methods: {
         openModal() {
-            // 체크박스가 체크된 경우에만 모달 열기
-            if (this.checkbox) {
-                this.dialog = true; // 모달 열기
+            if (this.isChecked) {
+                this.dialog = true;
             } else {
-                // 체크되지 않았다면 아무 동작도 수행하지 않음
-                // 또는 예외 처리 코드 추가
+                alert('체크박스를 활성화 시켜주세요.');
             }
         },
     }
 }
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>
