@@ -8,7 +8,7 @@ export const Restaurants = [
     table: 10,
     deposit: '10000', // 수정 가능한 예약금
     image: require('~/assets/images/restaurants/kiyeong.jpg'), 
-    chip: true,
+    
     crowd: 'free',
 },
 {
