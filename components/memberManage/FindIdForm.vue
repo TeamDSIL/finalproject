@@ -19,7 +19,7 @@
 
                 <v-dialog v-model="dialog" width="500">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="text-capitalize font-600">
+                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary">
                             <span class="d-none d-sm-block">아이디(이메일) 찾기</span>
                         </v-btn>
                     </template>
@@ -36,7 +36,12 @@
 import FindIdResultForm from '@/components/memberManage/FindIdResultForm.vue';
 
 export default {
-    components:{
+    data() {
+        return {
+            dialog: false  // dialog 속성 추가
+        };
+    },
+    components: {
         FindIdResultForm,
     }
 }
