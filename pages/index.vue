@@ -178,7 +178,7 @@
 <script>
 import { CardSection } from '@/assets/database/data.js';
 export default {
-  layout: 'landingHeader',
+  // layout: 'landingHeader',
   head: {
     title: 'Home'
   },
