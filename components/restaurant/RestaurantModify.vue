@@ -6,7 +6,7 @@
             <v-tabs v-model="tab" class="mb-8">
 
 
-                <v-tab class="text-capitalize" @click="goToRestaurantManageMain">
+                <v-tab class="text-capitalize" @click="goToRestaurantManageMain(restaurant)">
                     식당관리메인
                 </v-tab>
             </v-tabs>
@@ -46,23 +46,31 @@
                         </v-col>
 
                         <!-- 카테고리 -->
-                        <v-col cols="6">
-                            <h5>카테고리</h5>
-                            <v-row>
-                                <v-col cols="6" lg="3" md="4" sm="6" v-for="category in categories" :key="category" class="py-0">
-                                    <v-checkbox v-model="checked" :label="category" class="checkbox-label"></v-checkbox>
-                                </v-col>
-                            </v-row>
+                        <v-col cols="8">
+                            <v-card class="px-10 py-10">
+
+                                <h5>카테고리</h5>
+                                <v-row>
+                                    <v-col cols="6" lg="3" md="4" sm="6" v-for="category in categories" :key="category"
+                                        class="py-0">
+                                        <v-checkbox :label="category" class="checkbox-label"></v-checkbox>
+                                    </v-col>
+                                </v-row>
+                            </v-card>
                         </v-col>
 
                         <!-- 편의시설 -->
-                        <v-col cols="6">
-                            <h5>편의시설</h5>
-                            <v-row>
-                                <v-col cols="6" lg="3" md="4" sm="6" v-for="facility in facilities" :key="facility" class="py-0">
-                                    <v-checkbox v-model="checked" :label="facility" class="checkbox-label"></v-checkbox>
-                                </v-col>
-                            </v-row>
+                        <v-col cols="8">
+                            <v-card class="px-10 py-10">
+                                <h5>편의시설</h5>
+                                <v-row>
+
+                                    <v-col cols="6" lg="3" md="4" sm="6" v-for="facility in facilities" :key="facility"
+                                        class="py-0">
+                                        <v-checkbox :label="facility" class="checkbox-label"></v-checkbox>
+                                    </v-col>
+                                </v-row>
+                            </v-card>
                         </v-col>
 
 
@@ -107,7 +115,7 @@
                         <!-- 식당 사진 (수정 가능) -->
                         <v-col cols="6">
                             <v-file-input v-model="restaurant.image" label="식당 사진" prepend-icon="mdi-camera"
-                            outlined></v-file-input>
+                                outlined></v-file-input>
                         </v-col>
 
                         <!-- 정보 수정 버튼 -->
@@ -152,7 +160,7 @@ export default {
                 description: this.$route.query.description,
                 image: this.$route.query.image,
                 chip: this.$route.query.chip === 'true', // Boolean으로 변환
-                table: parseInt(this.$route.query.table), // 문자열을 숫자로 변환
+                table: this.$route.query.table, // 문자열을 숫자로 변환
                 deposit: this.$route.query.deposit,
                 crowd: this.$route.query.crowd,
             },
@@ -181,7 +189,7 @@ export default {
                 // 예약 목록
             ],
             page: 1,
-            
+
             text: 'hello',
             tab: null,
             checkbox: true,
@@ -206,8 +214,8 @@ export default {
         };
     },
     methods: {
-        goToRestaurantManageMain() {
-            this.$router.push({ path: '/restaurant/RestaurantManageMainPage' });
+        goToRestaurantManageMain(restaurant) {
+            this.$router.push({ path: `/restaurant/RestaurantManageMainPage/${restaurant.id}` });
         },
         goToRestaurantReserveManage() {
             this.$router.push({ path: '/restaurant/RestaurantReserveManagePage' });
