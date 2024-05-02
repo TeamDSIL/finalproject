@@ -170,12 +170,6 @@
               몇 밥알? : <input type="number" v-model="riceBallInput" @input="handleInputChange"
                 placeholder="사용할 밥알을 입력해주세요." pattern="[0-9]*">
             </p>
-            <!-- 밥알 사용하기 버튼 -->
-            <v-btn color="#FFD700" dark
-              style="display: block; margin: 0 auto; min-width: 200px; font-family: 'Garamond', serif; box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.5);"
-              @click="updatePaymentAmount">
-              <span style="font-weight: bold; color: black; font-family: 'Garamond', serif;">밥알 사용하기</span>
-            </v-btn>
             <br>
             <span style="font-weight: bold; color: black;">레스토랑 유의사항</span><br>
             <input type="checkbox" id="reservationPolicy" v-model="reservationPolicyAgreed">
@@ -184,18 +178,485 @@
         </v-card-text>
 
         <v-divider></v-divider>
-        <div style="background-color:white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 91.5%; margin: 20px auto;" >
-        <span style="font-weight: bold; color: black; margin-top: 20px;">고객 요청사항</span>
-    <v-text-field v-model="customerRequest" placeholder="레스토랑에 요청하실 내용을 입력해주세요" outlined dense clearable></v-text-field>
-</div>
+        <div
+          style="background-color:white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 91.5%; margin: 20px auto;">
+          <span style="font-weight: bold; color: black; margin-top: 20px;">고객 요청 사항</span>
+          <div
+            style="background-color:rgba(251, 251, 251, 0.89);; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
+            <textarea rows="4" cols="50" style="resize: none; border: none; background-color: transparent;"
+              placeholder="레스토랑에 요쳥하실 내용을 입력해주세요."></textarea>
+          </div>
+        </div>
+
+        <div
+          style="background-color:white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 91.5%; margin: 20px auto;">
+          <span style="font-weight: bold; color: black;">주문 내용 확인 및 결제 동의</span>
+          <br>
+          <input type="checkbox" id="agreeTerms" v-model="agreeTerms" required>
+          <label for="agreeTerms"> [필수] 취소 및 환불 규정에 동의합니다</label>
+          <div
+            style="background-color:rgba(251, 251, 251, 0.89);; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
+            <textarea readonly rows="4" cols="50" style="resize: none; border: none; background-color: transparent;">
+          2일전 취소 : 100% 환불
+          1일전 취소 : 50% 환불
+          당일 취소 : 환불 불가
+          노쇼 시 : 환불 불가
+        </textarea>
+          </div>
+        </div>
+
+        <div
+          style="background-color:white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 91.5%; margin: 20px auto;">
+          <span style="font-weight: bold; color: black; margin-top: 20px;">개인정보 제 3자 제공 동의</span>
+
+          <!-- 개인 정보 제공 동의문 모달 버튼 -->
+          <v-btn @click="showPrivacyModal" icon>
+            <v-icon>mdi-chevron-right</v-icon>
+          </v-btn>
+
+          <div style="font-size: 11px; color: grey; margin-top: 10px;">(주)드실은 통신판매중개자이며 통신판매의 당사자가 아닙니다.</div>
+          <div style="font-size: 11px; color: grey;">(주)드실은 예약 및 구매관련 통신판매업자가 제공하는 상품, 거래정보 및 거래 등에 대하여 책임을 지지 않습니다.
+          </div>
+        </div>
+
+        <v-dialog v-model="privacyModal" max-width="600">
+          <v-card>
+            <v-card-title>개인정보 처리방침</v-card-title>
+            <v-card-text>
+              <!-- 여기에 동의서 내용을 넣으세요 -->
+              <p>주식회사 드실(이하 "회사"라 한다)은 정보통신망 이용촉진 및 정보보호 등에 관한 법률, 개인정보보호법 등 관련 법령에 따라 이용자의 개인정보를 보호하고, 이와 관련한 고충을 신속하고
+                원활하게
+                처리할 수 있도록 하기 위하여 다음과 같이 개인정보처리방침을 수립합니다.<br>
+                개인정보처리방침은 이용자가 언제나 쉽게 열람할 수 있도록 서비스 초기화면을 통해 공개하고 있으며 관련법령, 지침, 고시 또는 캐치테이블 서비스 정책의 변경에 따라 달라질 수 있습니다.
+              </p>
+              <br>
+              <p style="color: black; font-size: 16px;"><b>1. 개인정보의 수집·이용</b></p>
+              <p>회사는 다음과 같이 이용자의 개인정보를 수집합니다. 처리하고 있는 개인정보는 다음의 수집·이용 목적 이외의 용도로는 활용되지 않으며, 수집·이용 목적이 변경되는 경우에는 개인정보보호법에
+                따라
+                별도의 동의를 받는 등 필요한 조치를 이행합니다.</p><br>
+              <p>1) 회원 정보의 수집·이용목적, 수집항목, 보유·이용기간은 아래와 같습니다.</p><br>
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">구분</th>
+                    <th style="border: 1px solid black;">수집·이용 목적</th>
+                    <th style="border: 1px solid black;">수집 항목</th>
+                    <th style="border: 1px solid black;">보유 및 이용기간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">회원관리</td>
+                    <td style="border: 1px solid black;">회원 식별, 회원제 서비스 제공, 상담 관리, 휴대전화번호 인증</td>
+                    <td style="border: 1px solid black;">닉네임, 이름, 휴대전화 번호, 생년월일, 성별, (선택)프로필이미지</td>
+                    <td style="border: 1px solid black;">목적달성(회원 탈퇴 등) 후 지체없이 파기 (단, 관련법령 및 회사정책에 따라 별도 보관되는 정보는 예외)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">타사 계정 이용</td>
+                    <td style="border: 1px solid black;">회원 식별, 회원제 서비스 제공, 상담 관리, 휴대전화번호 인증</td>
+                    <td style="border: 1px solid black;">휴대전화번호, 닉네임, 이름, 생년월일, (선택)프로필이미지 <br> *수집하는 개인정보 : 휴대전화번호,
+                      닉네임,
+                      이름, 생년월일, (선택)프로필이미지 <br> *회사가 제3자로부터 제공받은 개인정보: 카카오 ID, 이름, (선택)성별, 연령대, 생일, 출생연도; 네이버 ID, 이름,
+                      별명,
+                      휴대전화번호, (선택)성별, 연령대, 생일, 출생연도, 이메일주소; Apple ID, 이메일주소, Apple ID 코드; 페이스북, 사용자 ID</td>
+                    <td style="border: 1px solid black;">목적달성(회원 탈퇴 등) 후 지체없이 파기 (단, 관련법령 및 회사정책에 따라 별도 보관되는 정보는 예외)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">서비스 이용</td>
+                    <td style="border: 1px solid black;">결제 카드 등록 및 관리, 결제 처리, 본인 명의 결제수단 인증, 부정 사용자 차단 및 관리</td>
+                    <td style="border: 1px solid black;">카드정보 : 카드번호, 카드 비밀번호 앞2자리, 유효기간(월/년도) <br> 본인인증 정보 : CI,
+                      휴대전화번호,
+                      생년월일, 성별, 이름, 내/외국인여부</td>
+                    <td style="border: 1px solid black;">서비스 해지시까지</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">서비스 진행상황 안내, 계약 이행 및 약관 변경 등의 고지</td>
+                    <td style="border: 1px solid black;">휴대전화번호, 이메일주소</td>
+                    <td style="border: 1px solid black;">목적달성(회원탈퇴등)후 지체없이 파기</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">(휴대전화 본인인증) 서비스 제공을 위한 이용자 식별, 본인인증</td>
+                    <td style="border: 1px solid black;">회사가 제3자로부터 제공받은 개인정보: 휴대전화번호, CI, DI, 생년월일, 성별, 내/외국인여부</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">회원관리, 불법 및 부정이용 방지, 서비스 이용 기록의 통계 및 분석, 서비스 개선, 신규 서비스 개발</td>
+                    <td style="border: 1px solid black;">수집한 모든 개인정보 항목, 자동 수집 정보</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">문의</td>
+                    <td style="border: 1px solid black;">회원상담, 제휴상담</td>
+                    <td style="border: 1px solid black;">이메일주소, 휴대전화번호, 이름</td>
+                    <td style="border: 1px solid black;">전자 상거래 등에서의 소비자 보호에 대한 법률에 따라 3년간 보관</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p>2) 이용자 정보의 수집·이용목적, 수집항목, 보유 이용기간은 아래와 같습니다.</p>
+
+
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">구분</th>
+                    <th style="border: 1px solid black;">수집·이용 목적</th>
+                    <th style="border: 1px solid black;">수집 항목</th>
+                    <th style="border: 1px solid black;">보유 및 이용기간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">선택적 서비스 이용 [캐치테이블 웹]</td>
+                    <td style="border: 1px solid black;">SMS발송(앱 설치주소) 및 부정이용 방지</td>
+                    <td style="border: 1px solid black;">휴대전화번호</td>
+                    <td style="border: 1px solid black;">목적달성 1일 후 파기</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">[이벤트 페이지]</td>
+                    <td style="border: 1px solid black;">이벤트 응모 및 안내, 경품 지급</td>
+                    <td style="border: 1px solid black;">휴대전화번호</td>
+                    <td style="border: 1px solid black;">이벤트 종료 후 파기</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">[히스토리 연동]</td>
+                    <td style="border: 1px solid black;">방문 매장 방문 정보 연동</td>
+                    <td style="border: 1px solid black;">휴대전화번호<br>방문 매장명<br>방문일시<br>방문 인원</td>
+                    <td style="border: 1px solid black;">서비스 연동 해지 시 파기</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">[연락처 연결]</td>
+                    <td style="border: 1px solid black;">연락처 연동을 통한 친구 추가</td>
+                    <td style="border: 1px solid black;">이용자의 기기에 저장되어있는 휴대전화번호</td>
+                    <td style="border: 1px solid black;">서비스 연동 해지 시 파기</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p>3) 회사 내부 정책에 의하여 수집·이용되는 이용자의 정보는 아래와 같습니다.</p><br>
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">구분</th>
+                    <th style="border: 1px solid black;">수집·이용 목적</th>
+                    <th style="border: 1px solid black;">수집 항목</th>
+                    <th style="border: 1px solid black;">보유 및 이용기간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">회사 내부정책</td>
+                    <td style="border: 1px solid black;">회원가입 남용(부정거래), 서비스 부정사용(허위리뷰, 이벤트 부정혜택 등) 확인 및 방지</td>
+                    <td style="border: 1px solid black;">휴대전화번호, 이메일주소, 기기정보, CI/DI</td>
+                    <td style="border: 1px solid black;">회원탈퇴 후 3년간 보관</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p>4) 서비스 이용과정에서 아래 자동 수집 정보가 생성되어 수집, 저장, 조합, 분석될 수 있습니다.<br>
+                - IP 주소, 쿠키, 서비스 이용 기록, 기기 정보(기기고유번호, OS버전, 모델명, 제조사 정보 등), 광고ID, 통신기록등</p><br>
+              <p>5) 회사는 회원관리, 불법 및 부정이용 방지, 서비스 이용기록 통계 및 분석, 서비스 개선, 신규서비스 개발 목적으로 수집한 모든 개인정보와 자동 수집 정보를 사용할 수 있습니다.
+              </p>
+              <br>
+
+              <p style="color: black; font-size: 16px;"><b>2. 개인정보 제3자 제공</b></p><br>
+              <P>회사는 이용자의 개인정보를 개인정보 수집·이용 목적에서 명시한 범위 내에서 사용하며, 이용자의 사전 동의 없이 개인정보 수집·이용 목적 범위를 초과하여 이용하거나 원칙적으로 이용자의
+                개인정보를
+                제공하지 않습니다. 다만, 아래와 같이 양질의 서비스 제공을 위해 이용자의 개인정보를 협력업체와 공유할 필요가 있는 경우에는 제공 받는 자, 제공목적, 제공정보 항목, 이용 및 보유기간
+                등을
+                회원에게 고지하여 동의를 구하거나 관련법령에 따른 경우는 예외로 합니다.</P><br>
+              <p>① 이용자가 사전에 공개 또는 제3자 제공에 동의한 경우</p>
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">제공받는 자</th>
+                    <th style="border: 1px solid black;">제공목적</th>
+                    <th style="border: 1px solid black;">수집 항목</th>
+                    <th style="border: 1px solid black;">보유·이용기간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">회원이 예약 및 대기를 신청한 레스토랑</td>
+                    <td style="border: 1px solid black;">레스토랑 예약 및 대기 서비스 제공(서비스 계약 이행, 예약 및 대기자 확인, 예약 및 대기 관리, 재방문고객
+                      식별,
+                      고객 상담, 고객 관리, 문의 및 상담) 및 제공거절</td>
+                    <td style="border: 1px solid black;">휴대전화번호, 예약 및 대기자명, 결제정보, 기타 예약 및 대기를 위해 필요한 정보</td>
+                    <td style="border: 1px solid black;">예약 및 대기를 통한 레스토랑 방문일로부터 6개월이 경과한 때까지 보관. 단, (i) 매장이 방문일로부터 2년
+                      이내의
+                      기간을 정해 제공거절목록에 등록한 경우 매장이 제공거절목록 등록을 해제하는 때와 방문일로부터 6개월이 경과한 때 중 나중에 도래하는 때까지 보관하고, (ii) 관계법령에 정해진
+                      규정이
+                      있는 경우 이에 따라 법정기간 동안 보관함</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">고객이 예약 및 대기를 신청하기 위해 사용한 멀티플랫폼 서비스 제공자</td>
+                    <td style="border: 1px solid black;">멀티플랫폼 서비스 App 내에서 레스토랑 예약 및 대기, 이용 기록을 확인, 관리</td>
+                    <td style="border: 1px solid black;">고객을 식별할 수 있는 정보로서 멀티플랫폼 서비스 제공자가 와드에 제공한 정보, 예약 및 대기 신청 정보,
+                      방문일시,
+                      방문인원</td>
+                    <td style="border: 1px solid black;">목적달성(멀티플랫폼 서비스 회원 탈퇴 등)후 지체없이 파기(단, 관련법령에 따라 별도 보관되는 정보는 예외)
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">카드사(삼성 / 현대 / 롯데 / 하나 / 신한 / 비씨 / KB국민 / NH농협 / VISA / MASTERS
+                      /
+                      JCB / AMEX / UNIONPAY)</td>
+                    <td style="border: 1px solid black;">본인명의 결제 수단 인증, 결제 처리, 부정이용 방지</td>
+                    <td style="border: 1px solid black;">카드번호, 카드비밀번호 앞2자리, 유효기간(월/년도), CI, 휴대전화번호,생년월일, 성별</td>
+                    <td style="border: 1px solid black;">카드 등록 해지 시까지(단, 관련법령에 따라 보관되는 정보는 예외)</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p>② 회사는 멀티플랫폼 서비스를 제공하는 사업자(이하 “멀티플랫폼 협력사”라 한다)의 채널을 통해 서비스에 진입하여 예약 및 대기를 이용한 경우 다음의 기준에 따라 정보주체의 동의 없이
+                (i)
+                그 예약 및 대기 이용기록 및 (ii) 정보주체를 식별할 수 있는 정보로서 멀티플랫폼 협력사로부터 제공받은 정보를, 정보주체가 서비스에 진입하기 위해 이용한 멀티플랫폼 협력사에 제공할 수
+                있습니다.
+              </p><br>
+              <p>(1) 당초 수집 목적과의 관련성: 예약 및 대기 이용자에 한하여 해당 예약 및 대기 이용기록을 확인할 수 있도록 하는 것을 목적으로 합니다.</p><br>
+              <p>(2) 예측 가능성: 예약 및 대기 신청 화면에서, 예약 및 대기 이용기록은 파트너 채널에서 확인할 수 있음을 고지하겠습니다.</p><br>
+              <p>(3) 회사는 파트너 서비스 채널이 이미 정보주체의 개인정보를 보유한 점, 예약 및 대기 이용 시 그 이용기록 열람은 반드시 필요한 점, 멀티플랫폼 협력사의 채널에서 이용기록 삭제
+                기능이
+                제공되는 점, 이용기록 연동을 원치 않는 자는 즉시 제공 중단조치를 취하는 점 등을 포함하여 정보주체의 이익이 부당하게 침해되지 아니하도록 고려하였습니다.</p><br>
+              <p>(4) 멀티플랫폼 협력사의 채널에 제공되는 정보는 암호화 등 안전한 조치를 거쳐 전송됩니다.</p><br>
+              <p>③ 관계 법령의 규정에 의거하거나, 수사 목적으로 법령에 정해진 절차와 방법에 따라 수사 기관의 요구가 있는 경우</p><br>
+              <p style="color: black; font-size: 16px;"><b>3.개인정보 처리위탁</b></p><br>
+              <p>① 회사는 원활하고 향상된 서비스를 제공하기 위해서 개인정보 처리 업무를 다른 회사에 위탁할 수 있습니다. 회사는 개인정보 처리 업무 위탁 시 이용자의 개인정보가 안전하게 처리될 수
+                있도록
+                관리·감독하며 다른 목적으로 이용자의 개인정보를 처리하지 않도록 제한합니다.</p><br>
+              <p>② 회사는 아래와 같이 개인정보 처리 업무를 위탁하고 있습니다.</p><br>
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">수탁업체</th>
+                    <th style="border: 1px solid black;">위탁업무 내용</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">나이스페이먼츠㈜</td>
+                    <td style="border: 1px solid black;">전자 결제 처리</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">엑심베이 주식회사</td>
+                    <td style="border: 1px solid black;">해외 카드 결제 처리</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">Adjust</td>
+                    <td style="border: 1px solid black;">사용자의 서비스/상품 이용 통계 및 분석</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">㈜NHN (토스트)</td>
+                    <td style="border: 1px solid black;">휴대폰 문자 메시지(SMS,LMS, App push) 발송 관련 서비스</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">슈어엠</td>
+                    <td style="border: 1px solid black;">카카오 알림톡 서비스</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p style="color: black; font-size: 16px;"><b>4.개인정보의 파기절차 및 방법</b></p><br>
+              <p>① 회사는 이용자의 개인정보를 원칙적으로 보유·이용기간의 경과, 처리목적 달성, 서비스 이용약관에 따른 계약해지 등 개인 정보가 불필요하게 되었을 때에는 지체없이 해당 개인정보를
+                파기합니다.
+              </p><br>
+              <p>② 이용자로부터 동의 받은 개인정보 보유기간이 경과하거나 처리목적이 달성되었음에도 불구하고 다른 법령에 따라 개인정보를 계속 보존하여야 하는 경우에는 해당 개인정보를 별도의
+                데이터베이스(DB)로 옮기거나 보관장소를 달리하여 보존합니다. - 다른 법령에 따라 개인정보를 보관하는 경우는 다음과 같습니다.</p><br>
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">법령</th>
+                    <th style="border: 1px solid black;">항목</th>
+                    <th style="border: 1px solid black;">기간</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">전자상거래 등에서의 소비자보호에 관한 법률</td>
+                    <td style="border: 1px solid black;">계약 또는 청약철회 등에 관한 기록</td>
+                    <td style="border: 1px solid black;">5년</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">전자상거래 등에서의 소비자보호에 관한 법률</td>
+                    <td style="border: 1px solid black;">대금결제 및 재화 등의 공급에 관한 기록</td>
+                    <td style="border: 1px solid black;">5년</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">전자상거래 등에서의 소비자보호에 관한 법률</td>
+                    <td style="border: 1px solid black;">소비자의 불만 또는 분쟁 처리에 관한 기록</td>
+                    <td style="border: 1px solid black;">3년</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">위치정보의 보호 및 이용 등에 관한 법률</td>
+                    <td style="border: 1px solid black;">개인위치정보에 관한 기록</td>
+                    <td style="border: 1px solid black;">6개월</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">전자금융거래법</td>
+                    <td style="border: 1px solid black;">전자금융 거래에 관한 기록</td>
+                    <td style="border: 1px solid black;">5년</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">통신비밀보호법</td>
+                    <td style="border: 1px solid black;">서비스 이용 관련 개인정보(로그기록)</td>
+                    <td style="border: 1px solid black;">3개월</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p>③ 회사는 1년 동안 회사의 서비스를 이용하지 않은 이용자의 개인정보를 파기하거나 별도로 분리하여 저장할 수 있습니다.
+                - 이 경우 회사는 개인정보가 파기되거나 분리되어 저장·관리된다는 사실, 서비스 미이용 기간 만료일, 해당 개인정보의 항목을 공지사항, 전자우편 등의 방법으로 미이용 기간 30일 전에
+                이용자에게
+                알릴 수 있습니다. 이를 위해 이용자는 회사에게 정확한 연락처 정보를 알리거나 수정하여야 합니다.</p><br>
+              <p>④ 개인정보 파기의 절차 및 방법은 다음과 같습니다.
+                - 파기 절차 : 회사는 파기 사유가 발생한 개인정보를 개인정보 보호 책임자의 승인 절차를 거쳐 파기합니다.
+                - 파기 방법 : 회사는 전자적 파일 형태로 기록·저장된 개인정보는 기록을 재생할 수 없도록 기술적인 방법 또는 물리적인 방법을 이용하여 파기하며, 종이에 출력된 개인정보는 분쇄기로
+                분쇄하거나
+                소각등을 통하여 파기합니다.</p><br>
+              <p style="color: black; font-size: 16px;"><b>5.이용자 및 법정대리인의 권리와 그 행사방법</b></p><br>
+              <p>① 이용자가 직접 자신의 개인정보를 조회, 수정, 삭제하는 것을 원칙으로 하며, 회사는 이를 위한 기능을 제공합니다.
+                ② 이용자 및 법정대리인은 개인정보의 조회,수정,삭제를 요청할 수 있으며, 회사는 정책에 따라 본인확인 절차를 거쳐 이를 조치하겠습니다.
+                ③ 이용자께서 개인정보의 오류에 대한 정정을 요구하신 경우에는 정정을 완료하기 전까지 당해 개인정보를 이용 또는 제공하지 않습니다. 또한 잘못된 개인정보를 제3자에게 이미 제공한 경우에는
+                정정
+                처리결과를 제3자에게 지체없이 통지하여 정정이 이루어지도록 하겠습니다.
+                ④ 이용자는 자신의 개인정보를 최신의 상태로 유지해야 하며, 이용자의 부정확한 정보 입력으로 발생하는 문제의 책임은 이용자 자신에게 있습니다.
+                ⑤ 타인의 개인정보를 도용한 회원가입의 경우 이용자 자격을 상실하거나 관련 개인정보보호 법령에 의해 처벌 받을 수 있습니다.
+                ⑥ 이용자는 전자우편, 비밀번호 등에 대한 보안을 유지할 책임이 있으며 제3자에게 이를 양도하거나 대여 할 수 없습니다.</p><br>
+              <p style="color: black; font-size: 16px;"><b>6.개인정보 자동수집장치의 설치/운영 및 거부에 관한 사항</b></p><br>
+              <p>① 온라인 맞춤형 광고
+                (1) 온라인 맞춤형 광고는 이용자의 관심, 흥미, 기호 및 성향 등을 분석/추정한 후 이용자에게 맞춤형으로 제공되는 온라인 광고입니다.
+                (2) 회사는 온라인 맞춤형 광고 사업자가 이용자의 광고 ID및 행태정보를 수집하도록 허용하고 있습니다.
+                - 광고ID는 모바일 OS사업자가 광고 목적으로 모바일 기기에 부여한 정보(ADID, IDFA)입니다.
+                - 행태정보는 앱 사용이력, 구매 및 검색 이력 등에 관한 정보입니다.
+                (3) 이용자가 사이트를 방문하거나 앱을 실행할 때 자동 수집되며, 수집·처리하는 광고 사업자는 아래와 같습니다.
+                - 구글, 페이스북
+                (4) 회사는 온라인 맞춤 광고 제공을 위해 아래와 같이 정보를 제공합니다. 회사는 광고 ID로 개인을 식별할 수 없으며 다른 개인정보를 함께 제공하지 않습니다.
+                - 행태정보를 제공받는 자 : ㈜카카오
+                - 제공하는 행태정보의 항목 : 광고 ID
+                - 행태정보를 제공받는 자의 이용 목적 : 온라인 맞춤 광고 제공
+                (5) 행태정보 수집 및 맞춤형 광고 노출을 원하지 않는 이용자는 아래 방법을 통해 해제할 수 있습니다.
+                - Android : 설정 > google > 광고 > 광고 맞춤 설정 해제
+                - IOS : 설정 > 개인 정보 보호 > 광고 > 광고 추적 제한 ON</p><br>
+              <p style="color: black; font-size: 16px;"><b>7.개인정보의 기술적/관리적 보호대책</b></p><br>
+              <p>회사는 이용자들의 개인정보를 처리함에 있어 개인정보가 분실, 도난, 유출, 변조 또는 훼손되지 않도록 안전성 확보를 위하여 다음과 같은 기술적/관리적 보호대책을 강구하고 있습니다.
+                ① 비밀번호의 암호화
+                이용자의 비밀번호는 일방향 암호화하여 저장 및 관리되고 있으며, 개인정보의 확인, 변경은 비밀번호를 알고 있는 본인에 의해서만 가능합니다.
+                ② 해킹 등에 대비한 대책
+                (1) 회사는 해킹, 컴퓨터 바이러스 등 정보통신망 침입에 의해 이용자의 개인정보가 유출되거나 훼손되는 것을 막기 위해 최선을 다하고 있습니다.
+                (2) 최신 백신 프로그램을 이용하여 이용자들의 개인정보나 자료가 유출되거나 손상되지 않도록 방지하고 있습니다.
+                (3) 만일의 사태에 대비하여 침입차단 시스템을 이용하여 보안에 최선을 다하고 있습니다.
+                (4) 민감한 개인정보는 암호화 통신 등을 통하여 네트워크상에서 개인정보를 안전하게 전송할 수 있도록 하고 있습니다.
+                ③ 개인정보 처리 최소화 및 교육
+                회사는 개인정보 관련 처리 담당자를 최소한으로 제한하며, 개인정보 처리자에 대한 교육 등 관리적 조치를 통해 법령 및 내부방침 등의 준수를 강조하고 있습니다.
+                ④ 개인정보보호 전담담당부서 운영
+                회사는 개인정보의 보호를 위해 개인정보보호 전담부서를 운영하고 있으며, 개인정보처리방침의 이행사항 및 담당자의 준수여부를 확인하여 문제가 발견될 경우 즉시 해결하고 바로 잡을 수 있도록
+                최선을
+                다하고 있습니다.
+
+              </p><br>
+              <p style="color: black; font-size: 16px;"><b>8.개인정보 보호책임자</b></p><br>
+              <p>① 회사는 개인정보 처리에 관한 업무를 총괄해서 책임지고, 개인정보 처리와 관련한 고객님의 불만처리 및 피해구제 등을 위하여 아래와 같이 개인정보 보호책임자 및 개인정보보호 담당자를
+                지정하고
+                있습니다.
+                ② 이용자께서는 회사의 서비스(또는 사업)을 이용하시면서 발생한 모든 개인정보와 관련된 문의, 불만처리, 피해구제 등에 관한 사항을 개인정보 보호책임자 및 담당자에게 문의하실 수
+                있습니다.
+                회사는 이용자의 문의에 대해 지체 없이 답변 및 처리해드릴 것입니다.</p><br>
+
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">구분</th>
+                    <th style="border: 1px solid black;">성명</th>
+                    <th style="border: 1px solid black;">연락처</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">개인정보보호책임자</td>
+                    <td style="border: 1px solid black;">정휘제</td>
+                    <td style="border: 1px solid black;">help@dsil.co.kr</td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">개인정보보호담당자</td>
+                    <td style="border: 1px solid black;">정휘제</td>
+                    <td style="border: 1px solid black;">help@dsil.co.kr</td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p style="color: black; font-size: 16px;"><b>9.기타 개인정보침해에 대한 신고 및 상담</b></p><br>
+              <p>이용자는 아래 이 기관에 대해 개인정보 침해에 대한 피해구제 상담 등을 문의하실 수 있습니다. 아래의 기관은 정보기관 소속으로서, 회사의 자체적인 개인정보 불만처리 또는 개인정보
+                피해구제
+                결과에 만족하지 못하실 경우, 자세한 도움이 필요하실 경우에는 문의하여 주시기 바랍니다.</p><br>
+              <table style="border-collapse: collapse;">
+                <thead>
+                  <tr>
+                    <th style="border: 1px solid black;">기관</th>
+                    <th style="border: 1px solid black;">전화번호</th>
+                    <th style="border: 1px solid black;">웹사이트</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td style="border: 1px solid black;">개인정보 침해신고센터</td>
+                    <td style="border: 1px solid black;">118</td>
+                    <td style="border: 1px solid black;"><a href="https://privacy.kisa.or.kr"
+                        target="_blank">privacy.kisa.or.kr</a></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">대검찰청 사이버범죄수사단</td>
+                    <td style="border: 1px solid black;">1301</td>
+                    <td style="border: 1px solid black;"><a href="https://www.spo.go.kr"
+                        target="_blank">www.spo.go.kr</a>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">경찰청 사이버안전국</td>
+                    <td style="border: 1px solid black;">182</td>
+                    <td style="border: 1px solid black;"><a href="https://www.cyber.go.kr"
+                        target="_blank">www.cyber.go.kr</a></td>
+                  </tr>
+                  <tr>
+                    <td style="border: 1px solid black;">전자거래분쟁조정위원회</td>
+                    <td style="border: 1px solid black;">1661-5714</td>
+                    <td style="border: 1px solid black;"><a href="https://www.ecmc.or.kr"
+                        target="_blank">www.ecmc.or.kr</a>
+                    </td>
+                  </tr>
+                </tbody>
+              </table><br>
+              <p style="color: black; font-size: 16px;"><b>10.고지의 의무</b></p><br>
+              <p>10. 고지의 의무
+                ① 현 개인정보처리방침은 법령, 정부의 정책 또는 회사 내부정책 등 필요에 의하여 변경될 수 있으며, 내용추가, 삭제 및 수정이 있을 시에는 홈페이지의 ‘공지사항’을 통해 고지할
+                것입니다.
+                ② 현 개인정보처리방침은 2024년 05월 02일부터 적용되며, 변경 전의 개인정보처리방침은 공지사항을 통해서 확인하실 수 있습니다.
+                - 공고일자 : 2024년 05월 02일
+                - 시행일자 : 2024년 05월 02일</p>
+
+            </v-card-text>
+            <v-card-actions style="justify-content: flex-end;">
+              <v-btn color="primary" @click="privacyModal = false" class="btn-large">닫기</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
 
         <!-- 예약 정보 및 결제 내역 표시 -->
-        <v-card-text class="reservation-info">
-          <span>예약정보</span>{{ selectedDateTime }}시 {{ numberOfPeople }}명<br>
-          <span>결제 금액: </span>{{ depositAmount * numberOfPeople - riceBallInput }}원<br>
-          <span>예약금 총액: </span>{{ depositAmount * numberOfPeople }}원 <br>
-          <span>사용 밥알: </span>{{ riceBallInput }}밥알
-        </v-card-text>
+        <div
+          style="background-color:white; padding: 10px; border: 1px solid #ccc; border-radius: 5px; width: 91.5%; margin: 20px auto;">
+          <v-card-text class="reservation-info">
+            <div style="display: flex; justify-content: space-between;">
+              <div>
+                <span>예약정보</span><br>
+                <span style="font-weight: bold; font-size: 16px;">결제 금액:</span><br>
+                <span>예약금 총액:</span><br>
+                <span>사용 밥알:</span>
+              </div>
+              <div style="text-align: right;">
+                <span style="font-size: 16px; font-weight: bold;">{{ selectedDateTime }}시 {{ numberOfPeople
+                  }}명</span><br>
+                <span style="font-size: 16px; font-weight: bold; color: red;">{{ depositAmount * numberOfPeople -
+      riceBallInput }}원</span><br>
+                <span>{{ depositAmount * numberOfPeople }}원</span><br>
+                <span>{{ riceBallInput }}밥알</span>
+              </div>
+            </div>
+          </v-card-text>    <div style="text-align: center; margin-top: 20px;">
+            <v-btn color="primary" large width="460px" @click="submitForm" :disabled="!isPaymentButtonEnabled">결제하기</v-btn>
+    </div>
+        </div>
       </v-card>
     </v-dialog>
     <!-- 방문자 입력 모달 -->
@@ -257,10 +718,16 @@ export default {
       showVisitorFields: false,
       paymentAmount: 0,
       customerRequest: '',
-
+      privacyModal: false,
+      reservationPolicyAgreed: false, // 예약 정책 동의 여부를 저장할 변수
+      agreeTerms: false
     };
   },
   computed: {
+    isPaymentButtonEnabled() {
+    // 두 체크박스가 모두 체크되었을 때 결제하기 버튼을 활성화
+    return this.reservationPolicyAgreed && this.agreeTerms;
+  },
     minDate() {
       const today = new Date();
       const year = today.getFullYear();
@@ -284,6 +751,17 @@ export default {
     clearInterval(this.timerInterval);
   },
   methods: {
+    submitForm() {
+    // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
+    if (this.reservationPolicyAgreed && this.agreeTerms) {
+      // 두 체크박스가 모두 체크된 경우 결제하기 버튼 활성화
+      // 여기에 결제 로직을 추가하세요.
+      console.log("결제하기 버튼 활성화");
+    } else {
+      // 두 체크박스 중 하나라도 체크되지 않은 경우 결제하기 버튼 비활성화
+      console.log("두 개의 필수 동의사항에 모두 동의해야 합니다.");
+    }
+  },
     formatPhoneNumber() {
       let phoneNumber = this.visitorContact.toString().replace(/\D/g, ''); // 문자열로 변환하고 숫자 이외의 문자 제거
       phoneNumber = phoneNumber.slice(0, 11); // 최대 11자리까지만 허용
@@ -292,6 +770,9 @@ export default {
       } else {
         this.visitorContact = phoneNumber; // 11자리가 아니면 그대로 반환
       }
+    },
+    showPrivacyModal() {
+      this.privacyModal = true;
     },
 
     openVisitorModal() {
@@ -389,12 +870,6 @@ export default {
       this.$router.push('/restaurant/RestaurantReservePage');
     }
   },
-  updatePaymentAmount() {
-    // 밥알 사용하기 버튼을 클릭했을 때만 결제 금액을 업데이트합니다.
-    if (this.riceBallInput.trim() !== '') {
-      this.paymentAmount = this.depositAmount * this.numberOfPeople - parseInt(this.riceBallInput);
-    }
-  }
 };
 </script>
 
@@ -460,6 +935,13 @@ input[type="number"] {
 .logo-img {
   height: 130px;
   width: 130px;
+}
+
+.btn-large {
+  font-size: 16px !important;
+  /* 버튼 텍스트 크기 */
+  padding: 10px 24px !important;
+  /* 버튼 내용물 패딩 */
 }
 
 /* 결제 모달에서 식당 이름 */

@@ -43,56 +43,77 @@ export default {
             drawer: false,
             group: null,
             items: [
-                {
-                  action: 'mdi-view-dashboard-variant-outline',
-                  active: true,
-                  items: [
-                      { 
-                        title: 'Review',
-                        link: '/dashboard/Review',
-                      },
-                      { 
-                        title: 'Photos',
-                        link: '/dashboard/Photos',
-                      },
-                      { 
-                        title: 'Order List',
-                        link: '/dashboard/OrderList',
-                      },
-                      { 
-                        title: 'Order History',
-                        link: '/dashboard/OrderHistory',
-                      },
-                      { 
-                        title: 'Followers',
-                        link: '/dashboard/Followers',
-                      },
-                      { 
-                        title: 'Bookmarks',
-                        link: '/dashboard/Bookmarks',
-                      },
-                  ],
-                  title: 'Dashboards',
-                },
-                {
+                // {
+                //   action: 'mdi-view-dashboard-variant-outline',
+                //   active: true,
+                //   items: [
+                //       { 
+                //         title: 'Review',
+                //         link: '/dashboard/Review',
+                //       },
+                //       { 
+                //         title: 'Photos',
+                //         link: '/dashboard/Photos',
+                //       },
+                //       { 
+                //         title: 'Order List',
+                //         link: '/dashboard/OrderList',
+                //       },
+                //       { 
+                //         title: 'Order History',
+                //         link: '/dashboard/OrderHistory',
+                //       },
+                //       { 
+                //         title: 'Followers',
+                //         link: '/dashboard/Followers',
+                //       },
+                //       { 
+                //         title: 'Bookmarks',
+                //         link: '/dashboard/Bookmarks',
+                //       },
+                //   ],
+                //   title: 'Dashboards',
+                // },
+              //   {
+              //   action: 'mdi-silverware-fork-knife',
+              //   active: false,
+              //     items: [
+              //         { 
+              //             title: 'Food Menu',
+              //             link: '/resturant/FoodMenu'
+              //         },
+              //         { 
+              //             title: 'Resturant Two Column',
+              //             link: '/resturant/ResturantTwoColumn'
+              //         },
+              //         { 
+              //             title: 'Search Resturant',
+              //             link: '/resturant/SearchResturant'
+              //         },
+                      
+              //     ],
+              //     title: 'Resturant',
+              // },
+              // dsil
+              {
                 action: 'mdi-silverware-fork-knife',
                 active: false,
                   items: [
                       { 
-                          title: 'Food Menu',
-                          link: '/resturant/FoodMenu'
+                          title: '마이다이닝',
+                          link: '/myDining/MydiningPage'
                       },
                       { 
-                          title: 'Resturant Two Column',
-                          link: '/resturant/ResturantTwoColumn'
+                          title: '공지사항',
+                          link: '/main/InformationPage'
                       },
-                      { 
-                          title: 'Search Resturant',
-                          link: '/resturant/SearchResturant'
-                      },
+                      // { 
+                      //     title: '예약알림/밥알알림',
+                      //     link: '/resturant/SearchResturant'
+                      // },
                       
                   ],
-                  title: 'Resturant',
+                  title: 'DsilMenu',
                 },
                 
             ]

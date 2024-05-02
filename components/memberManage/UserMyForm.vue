@@ -5,7 +5,7 @@
                 <v-col cols="12">
                     <Box class="dashboard-box">
                         <div slot="boxSidebar">
-                            <DashboardSidebar />
+                            <UserDashboardSidebar />
                         </div>
 
                         <div slot="boxContent">
@@ -16,16 +16,18 @@
                                         <div id="position-set">
 
                                             <v-dialog v-model="dialogModify" width="500">
-                                                <template v-slot:activator="{ on, attrs }">
-                                                    <v-btn light text v-bind="attrs" v-on="on"
+                                                <template v-slot:activator="{ on }">
+                                                    <v-btn light text v-on="on"
                                                         class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
-                                                        id="modify-userInfo-btn" @click="submitForm">
+                                                        id="modify-userInfo-btn">
                                                         <span class="d-none d-sm-block">수정</span>
                                                     </v-btn>
                                                 </template>
 
-                                                <UserInfoModifyForm @modify="handleModify" />
+                                                <UserInfoModifyForm :userInfo="userInfo" :dialogModify="dialogModify"
+                                                    @modify="handleModify" />
                                             </v-dialog>
+
 
                                             <v-dialog v-model="dialogDelete" width="500">
                                                 <template v-slot:activator="{ on, attrs }">
@@ -36,7 +38,7 @@
                                                     </v-btn>
                                                 </template>
 
-                                                <UserInfoDeleteForm />
+                                                <UserInfoDeleteForm :userInfo="userInfo" />
                                             </v-dialog>
 
                                         </div>
@@ -57,7 +59,7 @@
                                                     </div>
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0 ">
-                                                    dvbf@naver.com
+                                                    {{ userInfo.email }}
                                                 </p>
                                             </div>
 
@@ -75,7 +77,7 @@
 
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
-                                                    윤호상
+                                                    {{ userInfo.name }}
                                                 </p>
 
                                             </div>
@@ -93,7 +95,7 @@
 
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
-                                                    +82 10-9677-7048
+                                                    {{ userInfo.tel }}
                                                 </p>
 
 
@@ -113,7 +115,7 @@
 
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
-                                                    서울시 노원구 중계동 덕릉로 71길 30, 105동 405호
+                                                    {{ userInfo.address }}
                                                 </p>
 
 
@@ -132,7 +134,7 @@
                                                 </div>
 
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0 ">
-                                                    01709
+                                                    {{ userInfo.zipcode }}
                                                 </p>
                                             </div>
                                             <v-divider></v-divider>
@@ -201,11 +203,11 @@ export default {
             userInfo: {
                 email: 'dvbf@naver.com',
                 name: '윤호상',
-                phone: '+82 10-9677-7048',
+                tel: '+82 10-9677-7048',
                 address: '서울시 노원구 중계동 덕릉로 71길 30, 105동 405호',
                 zipcode: '01709'
             }
-        }
+        };
     },
     methods: {
         openModifyDialog() {
@@ -227,7 +229,7 @@ export default {
                 email: this.email,
                 password: this.password,
                 name: this.name,
-                phone: this.phone,
+                tel: this.tel,
                 address: this.address,
                 zipcode: this.zipcode
             };
@@ -241,32 +243,32 @@ export default {
             // 예를 들어, 이제 이 데이터를 서버로 전송하거나 상태를 업데이트할 수 있습니다.
         }
     },
-    watch: {
-        dialogModify(val) {
-            if (!val) {
-                // 수정 다이얼로그가 닫힐 때 사용자 정보 초기화
-                this.userInfo = {
-                    email: '',
-                    name: '',
-                    phone: '',
-                    address: '',
-                    zipcode: ''
-                };
-            }
-        },
-        dialogDelete(val) {
-            if (!val) {
-                // 삭제 다이얼로그가 닫힐 때 사용자 정보 초기화
-                this.userInfo = {
-                    email: '',
-                    name: '',
-                    phone: '',
-                    address: '',
-                    zipcode: ''
-                };
-            }
-        }
-    }
+    // watch: {
+    //     dialogModify(val) {
+    //         if (!val) {
+    //             // 수정 다이얼로그가 닫힐 때 사용자 정보 초기화
+    //             this.userInfo = {
+    //                 email: '',
+    //                 name: '',
+    //                 tel: '',
+    //                 address: '',
+    //                 zipcode: ''
+    //             };
+    //         }
+    //     },
+    //     dialogDelete(val) {
+    //         if (!val) {
+    //             // 삭제 다이얼로그가 닫힐 때 사용자 정보 초기화
+    //             this.userInfo = {
+    //                 email: '',
+    //                 name: '',
+    //                 tel: '',
+    //                 address: '',
+    //                 zipcode: ''
+    //             };
+    //         }
+    //     }
+    // }
 }
 </script>
 
