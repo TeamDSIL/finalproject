@@ -4,7 +4,6 @@
 
     <div>
       <h1>식당관리</h1>
-      <p>식당의 ID: {{ restaurant.id }}</p>
 
       <v-tabs v-model="tab" class="mb-8">
 
@@ -21,56 +20,58 @@
 
         <v-tab class="text-capitalize" href="#tab-3">
           전체리뷰보기
-
+          
         </v-tab>
       </v-tabs>
       <!-- <v-divider></v-divider> -->
-
+      
       <!-- tab-1에 해당하는 화면 -->
       <v-tabs-items v-model="tab">
         <v-tab-item value="tab-1">
-          <v-row>
-            <v-col cols="12" class="restaurant-title-img">
-              <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px"
+            <v-row>
+              <v-col cols="12" class="restaurant-title-img">
+                <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px"
                 style="max-width: 20px; margin-right: 5px;"></v-img>
-              <h3 class="fw-bold">{{ restaurant.name }}</h3>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-col cols="12">
-              <!-- 실시간 이용현황 버튼. 클릭시 컬러 변경되게 설정 -->
-              <h4 class="silsigan-use-title">실시간 이용 현황: {{ restaurant.crowd }}</h4>
-              <v-btn :color="restaurant.crowd === 'free' ? '#1DDB16' : ''" @click="toggleSelection('free')">
-                여유
-              </v-btn>
-              <v-btn :color="restaurant.crowd === 'normal' ? '#FFE400' : ''" @click="toggleSelection('normal')">
-                보통
-              </v-btn>
-              <v-btn :color="restaurant.crowd === 'busy' ? '#FF0000' : ''" @click="toggleSelection('busy')">
-                혼잡
-              </v-btn>
-            </v-col>
+                <h3 class="fw-bold">{{ restaurant.name }}</h3>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12">
+                <!-- 실시간 이용현황 버튼. 클릭시 컬러 변경되게 설정 -->
+                <h4 class="silsigan-use-title">실시간 이용 현황: {{ restaurant.crowd }}</h4>
+                <v-btn :color="restaurant.crowd === 'free' ? '#1DDB16' : ''" @click="toggleSelection('free')">
+                  여유
+                </v-btn>
+                <v-btn :color="restaurant.crowd === 'normal' ? '#FFE400' : ''" @click="toggleSelection('normal')">
+                  보통
+                </v-btn>
+                <v-btn :color="restaurant.crowd === 'busy' ? '#FF0000' : ''" @click="toggleSelection('busy')">
+                  혼잡
+                </v-btn>
+              </v-col>
           </v-row>
           <br>
           <v-divider></v-divider>
           <br>
           <v-row>
             <v-col cols="12">
-
+              
               <h4>예약 가능 시간 설정</h4>
               <v-btn v-for="(time, index) in times" :key="time.id" class="ma-2"
               :style="{color: time.clicked ? 'white' : '', backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '' }" @click="toggleButton(index)">
               {{ time.label }}
             </v-btn>
           </v-col>
-          </v-row>
-          <br>
-          <v-divider></v-divider>
-          <v-row>
+        </v-row>
+        <br>
+        <v-divider></v-divider>
+        <br>
+        <v-row>
             <v-col cols="12">
+
               <h3>식당 정보 수정</h3>
               <v-btn style="background-color: rgb(210,63,87); color: white;"
-                v-on:click="goToRestaurantModify(restaurant)">식당수정</v-btn>
+              v-on:click="goToRestaurantModify(restaurant)">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -84,8 +85,9 @@
                     <tr>
                       <th class="text-left" style="width: 150px;">예약 날짜</th>
                       <th class="text-left" style="width: 100px;">예약 시간</th>
-                      <th class="text-left" style="width: 150px;">고객 이름</th>
-                      <th class="text-left" style="width: 150px;">예약 인원</th>
+                      <th class="text-left" style="width: 100px;">고객 이름</th>
+                      <th class="text-left" style="width: 100px;">예약 인원</th>
+                      <th class="text-left" style="width: 100px;">예약 금액</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -95,6 +97,7 @@
                       <td>{{ reservation.time }}</td>
                       <td>{{ reservation.customerName }}</td>
                       <td>{{ reservation.peopleCount }}</td>
+                      <td>{{ reservation.deposit }}</td>
                     </tr>
                   </tbody>
                 </template>
@@ -130,17 +133,17 @@
             </v-col>
           </v-row>
         </v-tab-item>
-
+        
         <!-- tab-2에 해당하는 화면 -->
         <v-tab-item value="tab-2">
           <v-row>
             <v-col cols="12" style="display: flex;">
               <v-img contain :src="require('~/assets/images/reserve-icon.png')" width="20px"
-                style="max-width: 20px; margin-right: 5px;"></v-img>
+              style="max-width: 20px; margin-right: 5px;"></v-img>
               <h3 class="fw-bold"> 예약 전체보기</h3>
             </v-col>
           </v-row>
-
+          
           <v-row>
             <v-col cols="12">
               <h4 class="restaurant-name-title">{{ restaurant.name }}</h4>
@@ -160,6 +163,7 @@
                               <th>예약 시간</th>
                               <th>고객 이름</th>
                               <th>예약 인원</th>
+                              <th>예약 금액</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -168,6 +172,7 @@
                               <td>{{ item.time }}</td>
                               <td>{{ item.customerName }}</td>
                               <td>{{ item.peopleCount }}</td>
+                              <td>{{ item.deposit }}</td>
                             </tr>
                           </tbody>
                         </v-simple-table>
@@ -630,20 +635,20 @@ export default {
         { text: '고객 이름', value: 'customerName' }
       ],
       reservations: [
-        { id: 1, date: "2023-04-03", time: "18:00", customerName: "정휘제", peopleCount: 2 },
-        { id: 2, date: "2023-04-03", time: "17:00", customerName: "윤여빈", peopleCount: 10 },
-        { id: 3, date: "2023-04-02", time: "18:00", customerName: "문상현", peopleCount: 2 },
-        { id: 4, date: "2023-04-01", time: "18:00", customerName: "윤호상", peopleCount: 2 },
-        { id: 5, date: "2023-04-01", time: "17:00", customerName: "임태환", peopleCount: 4 },
-        { id: 6, date: "2023-03-31", time: "18:00", customerName: "이다혜", peopleCount: 7 },
-        { id: 7, date: "2023-03-30", time: "18:00", customerName: "아카자", peopleCount: 1 },
-        { id: 8, date: "2023-03-29", time: "18:00", customerName: "코주루", peopleCount: 2 },
-        { id: 9, date: "2023-03-28", time: "18:00", customerName: "유비", peopleCount: 2 },
-        { id: 10, date: "2023-03-27", time: "18:00", customerName: "관우", peopleCount: 2 },
-        { id: 11, date: "2023-03-27", time: "18:00", customerName: "장비", peopleCount: 4 },
-        { id: 12, date: "2023-03-27", time: "18:00", customerName: "구민슥", peopleCount: 3 },
-        { id: 13, date: "2023-03-27", time: "18:00", customerName: "구민쇽", peopleCount: 3 },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민샥", peopleCount: 2 },
+        { id: 1, date: "2023-04-03", time: "18:00", customerName: "정휘제", peopleCount: 2, deposit: 60000 },
+        { id: 2, date: "2023-04-03", time: "17:00", customerName: "윤여빈", peopleCount: 10, deposit: 300000 },
+        { id: 3, date: "2023-04-02", time: "18:00", customerName: "문상현", peopleCount: 2, deposit: 60000 },
+        { id: 4, date: "2023-04-01", time: "18:00", customerName: "윤호상", peopleCount: 2, deposit: 60000 },
+        { id: 5, date: "2023-04-01", time: "17:00", customerName: "임태환", peopleCount: 4, deposit: 120000 },
+        { id: 6, date: "2023-03-31", time: "18:00", customerName: "이다혜", peopleCount: 7, deposit: 210000 },
+        { id: 7, date: "2023-03-30", time: "18:00", customerName: "아카자", peopleCount: 1, deposit: 30000 },
+        { id: 8, date: "2023-03-29", time: "18:00", customerName: "코주루", peopleCount: 2, deposit: 60000 },
+        { id: 9, date: "2023-03-28", time: "18:00", customerName: "유비", peopleCount: 2, deposit: 60000 },
+        { id: 10, date: "2023-03-27", time: "18:00", customerName: "관우", peopleCount: 2, deposit: 60000 },
+        { id: 11, date: "2023-03-27", time: "18:00", customerName: "장비", peopleCount: 4, deposit: 120000 },
+        { id: 12, date: "2023-03-27", time: "18:00", customerName: "구민슥", peopleCount: 3, deposit: 90000 },
+        { id: 13, date: "2023-03-27", time: "18:00", customerName: "구민쇽", peopleCount: 3, deposit: 90000 },
+        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민샥", peopleCount: 2, deposit: 60000 },
         // 예약 목록
       ],
       pageReview: 1,
