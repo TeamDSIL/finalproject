@@ -30,7 +30,7 @@ export default {
                     id: 1,
                     icon: 'mdi-account-search-outline',
                     title: '회원 정보 관리',
-                    link: '/memberManage/UserMyPage'
+                    link: '/memberManage/OwnerMyPage'
 
                 },
                 {

@@ -36,9 +36,8 @@
                                                             <td>{{ item.phone }}</td>
                                                             <td>{{ item.address }}</td>
                                                             <td>
-                                                                <nuxt-link to="/memberManage/RegisterRestaurantPage">
-                                                                    <v-btn color="primary" dark v-on="on">등록</v-btn>
-                                                                </nuxt-link>
+                                                                <v-btn color="primary" dark
+                                                                    @click="goToRestaurantManagement(item)">등록</v-btn>
                                                             </td>
                                                         </tr>
                                                     </template>
@@ -60,7 +59,6 @@
                                                 <!-- 페이지네이션 -->
                                                 <v-pagination v-model="currentPage" :length="numberOfPages" circle
                                                     @input="navigateToPage"></v-pagination>
-
 
                                             </div>
                                         </div>
@@ -160,6 +158,22 @@ export default {
         },
     },
     methods: {
+        goToRestaurantManagement(restaurant) {
+            this.$router.push({
+                path: `/memberManage/RegisterRestaurantPage/${restaurant.id}`,
+                query: {
+                    name: restaurant.name,
+                    address: restaurant.address,
+                    tel: restaurant.tel,
+                    description: restaurant.description,
+                    image: restaurant.image,
+                    chip: restaurant.chip,
+                    table: restaurant.table,
+                    deposit: restaurant.deposit,
+                    crowd: restaurant.crowd,
+                },
+            });
+        },
         // 페이지 변경 시 실행되는 이벤트 핸들러
         navigateToPage(newPage) {
             this.currentPage = newPage;

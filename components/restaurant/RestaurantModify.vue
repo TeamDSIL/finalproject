@@ -19,8 +19,6 @@
             <v-row>
                 <!-- 식당 정보 수정 폼 -->
                 <v-form>
-                    <!-- 식당 ID (읽기 전용) -->
-                    <v-text-field v-model="restaurant.id" label="식당 ID" outlined readonly></v-text-field>
 
                     <!-- 식당명 (읽기 전용) -->
                     <v-text-field v-model="restaurant.name" label="식당명" outlined readonly></v-text-field>
@@ -29,7 +27,7 @@
                     <v-text-field v-model="restaurant.address" label="식당 주소" outlined readonly></v-text-field>
 
                     <!-- 식당 연락처 (수정 가능) -->
-                    <v-text-field v-model="restaurant.contact" label="식당 연락처" outlined></v-text-field>
+                    <v-text-field v-model="restaurant.tel" label="식당 연락처" outlined></v-text-field>
 
                     <!-- 식당 테이블 수(수정가능) -->
                     <v-text-field v-model="restaurant.table" label="테이블 수" outlined></v-text-field>
@@ -72,7 +70,7 @@
                     <!-- 식당 사진 (수정 가능) -->
                     <v-file-input v-model="restaurant.image" label="식당 사진" prepend-icon="mdi-camera"
                         outlined></v-file-input>
-                        
+
                     <!-- 정보 수정 버튼 -->
                     <v-btn color="success" class="ma-2" @click="updateRestaurantInfo">
                         정보 수정
@@ -94,13 +92,16 @@ export default {
         return {
             showDialog: false, // 다이얼로그(모달) 표시 상태
             restaurant: {
-                id: '123', // 예시 ID
-                name: '기영이네 존맛치킨', // 예시 식당명
-                address: '서울시 관악구', // 예시 주소
-                contact: '02-1234-5678', // 수정 가능한 연락처
-                table: 10,
-                deposit: '5000', // 수정 가능한 예약금
-                image: ''  // 수정 가능한 식당 사진
+                id: this.$route.params.id, // 경로 매개변수에서 ID 가져오기
+                name: this.$route.query.name,
+                address: this.$route.query.address,
+                tel: this.$route.query.tel,
+                description: this.$route.query.description,
+                image: this.$route.query.image,
+                chip: this.$route.query.chip === 'true', // Boolean으로 변환
+                table: parseInt(this.$route.query.table), // 문자열을 숫자로 변환
+                deposit: this.$route.query.deposit,
+                crowd: this.$route.query.crowd,
             },
             menuItems: [],
             restaurantName: "기영이네 존맛치킨",

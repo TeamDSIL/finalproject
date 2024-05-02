@@ -3,7 +3,11 @@ import { setInterceptors } from './common/interceptors';
 
 function createInstance() {
   return axios.create({
-    baseURL: process.env.VUE_APP_API_URL,
+    // baseURL: process.env.VUE_APP_API_URL,
+    baseURL: process.env.apiURL,
+
+    // baseURL: 'http://localhost:8000',
+
   });
 }
 

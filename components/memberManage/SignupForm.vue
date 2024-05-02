@@ -3,8 +3,8 @@
     <div class="sign-up-form">
       <div class="sign-up-form-container">
         <div class="text-center mb-10">
-          <h3 class="mb-3">DSIL</h3>
-          <h5 class="text-sm font-600 grey--text text--darken-4">Please fill all forms to continued</h5>
+          <h3 class="mb-3">회원가입</h3>
+          <h5 class="text-sm font-600 grey--text text--darken-4">계속하려면 양식에 맞춰 입력해주세요.</h5>
         </div>
         <div class="mb-4">
           <p class="text-14 mb-1">이름</p>
@@ -54,32 +54,13 @@
           </v-checkbox>
         </div>
 
+        <!-- 버튼의 disabled 속성에 checkbox 값을 바인딩하여 활성화 여부를 결정 -->
         <div class="mb-4">
-          <v-btn block color="rgb(255,84,82)" class="primary">
+          <v-btn block color="rgb(255,84,82)" class="primary" :disabled="!checkbox" @click="showAlert">
             계정 생성
           </v-btn>
         </div>
-        <div class="d-flex align-center justify-center w-200 mx-auto mb-4">
-          <v-divider></v-divider>
-          <p class="mx-3 mb-1">또는</p>
-          <v-divider></v-divider>
-
-        </div>
-
-        <div class="mb-4">
-          <v-btn color="rgb(3,199,90)" class="text-capitalize font-600 white--text mb-4 py-5" block>
-            <v-icon left>mdi-facebook</v-icon>
-            네이버로 계속하기
-          </v-btn>
-        </div>
-
-        <div class="mb-4">
-          <v-btn color="#FEE500" class="text-capitalize font-600 white--text mb-0 py-5" block>
-            <v-icon left>mdi-google</v-icon>
-            카카오로 계속하기
-          </v-btn>
-        </div>
-
+        
 
       </div>
       <div class="py-4 bg-grey-light">
@@ -105,6 +86,11 @@ export default {
   methods: {
     gotoLoginPage() {
       this.$router.push('/memberManage/LoginPage');
+    },
+    showAlert() {
+      alert('회원가입이 완료되었습니다.');
+      alert('정보를 다시 입력해주세요.');
+      this.$router.push('/main/MainPage');
     }
   }
 }

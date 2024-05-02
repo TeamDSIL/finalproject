@@ -102,7 +102,7 @@
                                 </p>
 
                                 <nuxt-link
-                                  to="/myDining/WriteReviewPage"
+                                  :to="`/myDining/WriteReviewPage/${reservation.reservation_id}`"
                                   class="text-decoration-none white--text"
                                 >
                                   <v-btn
@@ -111,7 +111,6 @@
                                     class="review-write-button"
                                   >
                                     리뷰 쓰기
-                                    <!-- <v-icon right small>mdi-plus</v-icon> -->
                                   </v-btn>
                                 </nuxt-link>
                               </div>
@@ -327,18 +326,24 @@
                   <v-divider class="my-4"></v-divider>
                   <!-- comment  -->
                   <div class="mb-6">
-                    <div>
-                      <div class="text-14 grey--text text--darken-4 f-600">
-                        사장님
+                    <div v-if="review.ownerdate || review.ownercontents">
+                      <div>
+                        <div class="text-14 grey--text text--darken-4 f-600">
+                          사장님
+                        </div>
+                        <div class="mb-0 text-14 grey--text text--darken-1">
+                          {{ review.ownerdate }}
+                        </div>
                       </div>
-                      <div class="mb-0 text-14 grey--text text--darken-1">
-                        {{ review.ownerdate }}
-                      </div>
+                      <h5 class="grey--text text--darken-2 font-weight-regular">
+                        {{ review.ownercontents }}
+                      </h5>
                     </div>
-                    <h5 class="grey--text text--darken-2 font-weight-regular">
-                      {{ review.ownercontents }}
-                    </h5>
+                    <div v-else class="text-14 grey--text text--darken-1">
+                      아직 사장님 댓글이 없어요.
+                    </div>
                   </div>
+
                   <v-divider></v-divider>
                   <!-- end::comment -->
                 </div>
@@ -364,231 +369,18 @@
 </template>
 
 <script>
+import ReserveRestaurantList from "@/assets/database/myDiningReservation.js";
+import LikeList from "@/assets/database/myDiningLikeLIst.js";
+import ReviewList from "@/assets/database/myDiningReviewList.js";
+
 export default {
   // head: {
   //   title: "Food Menu",
   // },
   data: () => ({
-    reserveRestaurantList: [
-      {
-        reservation_id: 1,
-        name: "우리식당 서울관악점",
-        babscore: 3,
-        baascoreCount: 41,
-        image: require("~/assets/images/4.png"),
-        reservationState: "예약중",
-        people: 5,
-        time: "15:00",
-        deposit: 40000,
-      },
-
-      {
-        reservation_id: 1,
-        name: "느그식당 창원점",
-        babscore: 4,
-        baascoreCount: 36,
-        image: require("~/assets/images/babscore.png"),
-        reservationState: "완료",
-        people: 1,
-        time: "18:00",
-        deposit: 120000,
-      },
-      {
-        reservation_id: 1,
-        name: "느그식당 창원점",
-        babscore: 1,
-        baascoreCount: 11,
-        image: require("~/assets/images/google-play.png"),
-        reservationState: "완료",
-        people: 2,
-        time: "18:00",
-        deposit: 120000,
-      },
-      {
-        reservation_id: 1,
-        name: "느그식당 창원점",
-        babscore: 1,
-        baascoreCount: 11,
-        image: require("~/assets/images/google-play.png"),
-        reservationState: "완료",
-        people: 2,
-        time: "18:00",
-        deposit: 120000,
-      },
-      {
-        reservation_id: 1,
-        name: "느그식당 창원점",
-        babscore: 1,
-        baascoreCount: 11,
-        image: require("~/assets/images/google-play.png"),
-        reservationState: "완료",
-        people: 2,
-        time: "18:00",
-        deposit: 120000,
-      },
-      {
-        reservation_id: 1,
-        name: "느그식당 창원점",
-        babscore: 1,
-        baascoreCount: 11,
-        image: require("~/assets/images/google-play.png"),
-        reservationState: "완료",
-        people: 2,
-        time: "18:00",
-        deposit: 120000,
-      },
-    ],
-    likeList: [
-      {
-        id: 1,
-        name: "백종원의 짜장면집",
-        image: require("~/assets/images/google-play.png"),
-        babscore: 3,
-        baascoreCount: 57,
-        address: "경남창원시 의창구 감계로 342 215동 601호",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "어머니 오징어덮밥이죠?",
-        image: require("~/assets/images/1.png"),
-        babscore: 1,
-        baascoreCount: 12,
-        address: "경남창원시 관악구 의창구 은천로 123-12",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "간다라라마바사!",
-        image: require("~/assets/images/2.png"),
-        babscore: 5,
-        baascoreCount: 90,
-        address: "서울 특별시 잠실 야구장 근처 12-12",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "열혈초등학교 앞집",
-        image: require("~/assets/images/3.png"),
-        babscore: 4,
-        baascoreCount: 90,
-        address: "인천광역시 송도 그 어딘가 6-12",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "열혈초등학교 앞집",
-        image: require("~/assets/images/3.png"),
-        babscore: 4,
-        baascoreCount: 90,
-        address: "인천광역시 송도 그 어딘가 6-12",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "열혈초등학교 앞집",
-        image: require("~/assets/images/3.png"),
-        babscore: 4,
-        baascoreCount: 90,
-        address: "인천광역시 송도 그 어딘가 6-12",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "열혈초등학교 앞집",
-        image: require("~/assets/images/3.png"),
-        babscore: 4,
-        baascoreCount: 90,
-        address: "인천광역시 송도 그 어딘가 6-12",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "열혈초등학교 앞집",
-        image: require("~/assets/images/3.png"),
-        babscore: 4,
-        baascoreCount: 90,
-        address: "인천광역시 송도 그 어딘가 6-12",
-        phone: "010-3423-2344",
-      },
-      {
-        id: 1,
-        name: "열혈초등학교 앞집",
-        image: require("~/assets/images/3.png"),
-        babscore: 4,
-        baascoreCount: 90,
-        address: "인천광역시 송도 그 어딘가 6-12",
-        phone: "010-3423-2344",
-      },
-    ],
-    reviewList: [
-      {
-        id: 1,
-        name: "느그집앞에 근처 식당",
-        image: require("~/assets/images/4.png"),
-        userdate: "2012-12-03",
-        babscore: 3,
-        usercontents:
-          "식당이 깨끗하고 사장님이 맛있고 음식이 깨끗했어요. 강추합니다. 또 가고 싶지 않아요",
-        ownerdate: "2012-12-04",
-        ownercontents: "이건 뭐 욕이가 칭찬이가 ㅋㅋㅋ 시켜줘서 감사합니데이",
-      },
-      {
-        id: 1,
-        name: "느그식당 창원점",
-        image: require("~/assets/images/1.png"),
-        userdate: "2024-01-01",
-        babscore: 5,
-        usercontents:
-          "맛있었어요 .. 근데 음식에서 똥이나와서 다시는 가고싶네요,, 즐거운 하루되세요 전 아니지만 나중에 친구 데려올게요!",
-        ownerdate: "2024-01-01",
-        ownercontents: "감사합니다. 손님.",
-      },
-      {
-        id: 1,
-        name: "느그식당 창원점",
-        image: require("~/assets/images/2.png"),
-        userdate: "2024-01-01",
-        babscore: 5,
-        usercontents:
-          "맛있었어요 .. 근데 음식에서 똥이나와서 다시는 가고싶네요,, 즐거운 하루되세요 전 아니지만 나중에 친구 데려올게요!",
-        ownerdate: "2024-01-01",
-        ownercontents: "감사합니다. 손님.",
-      },
-      {
-        id: 1,
-        name: "느그식당 창원점",
-        image: require("~/assets/images/3.png"),
-        userdate: "2024-01-01",
-        babscore: 5,
-        usercontents:
-          "맛있었어요 .. 근데 음식에서 똥이나와서 다시는 가고싶네요,, 즐거운 하루되세요 전 아니지만 나중에 친구 데려올게요!",
-        ownerdate: "2024-01-01",
-        ownercontents: "감사합니다. 손님.",
-      },
-      {
-        id: 1,
-        name: "느그식당 창원점",
-        image: require("~/assets/images/4.png"),
-        userdate: "2024-01-01",
-        babscore: 5,
-        usercontents:
-          "맛있었어요 .. 근데 음식에서 똥이나와서 다시는 가고싶네요,, 즐거운 하루되세요 전 아니지만 나중에 친구 데려올게요!",
-        ownerdate: "2024-01-01",
-        ownercontents: "감사합니다. 손님.",
-      },
-      {
-        id: 1,
-        name: "느그식당 창원점",
-        image: require("~/assets/images/restaurant_img.png"),
-        userdate: "2024-01-01",
-        babscore: 5,
-        usercontents:
-          "맛있었어요 .. 근데 음식에서 똥이나와서 다시는 가고싶네요,, 즐거운 하루되세요 전 아니지만 나중에 친구 데려올게요!",
-        ownerdate: "2024-01-01",
-        ownercontents: "감사합니다. 손님.",
-      },
-    ],
+    reserveRestaurantList: ReserveRestaurantList,
+    likeList: LikeList,
+    reviewList: ReviewList,
     currentPage: 1,
     currentPage1: 1,
     currentPage2: 1,

@@ -3,12 +3,12 @@
     <div class="log-in-form-container">
       <div class="px-3 px-md-10 py-8 ">
         <h3 class="mb-2 text-center">드실에 오신 걸 환영합니다.</h3>
-        <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">Log in with email & password</h5>
+        <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">이메일과 비밀번호를 입력해주세요.</h5>
         <p class="text-14 mb-1">이메일</p>
-        <v-text-field outlined dense hide-details placeholder="example@mail" class="mb-4"></v-text-field>
+        <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4"></v-text-field>
         <p class="text-14 mb-1">비밀번호</p>
-        <v-text-field outlined dense type="password" hide-details placeholder="********" class="mb-4"></v-text-field>
-        <v-btn block color="rgb(255,84,82)" class="primary">로그인</v-btn>
+        <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4"></v-text-field>
+        <v-btn block color="rgb(255,84,82)" class="primary" href="/main/MainPage">로그인</v-btn>
         <v-col cols="10" lg="8" class="mx-auto">
           <div class="d-flex align-center my-1">
             <v-divider></v-divider>
@@ -18,18 +18,17 @@
         </v-col>
         <v-btn block dark color="rgb(3,199,90)" class="text-capitalize font-600 mb-4">
 
-          <v-icon left class="me-3">mdi-facebook</v-icon>
+          <img src="~/assets/images/naver-icon.png" alt="네이버 아이콘" style="width: 24px; height: 24px; margin-right: 8px;">
           네이버로 로그인
 
         </v-btn>
+
         <v-btn block dark color="#FEE500" class="text-capitalize font-600 mb-4">
-
-          <v-icon left class="me-3">mdi-google</v-icon>
-          <!-- <v-img img=assets/images/kakao_login_medium_wide.png></v-img> -->
+          <img src="~/assets/images/kakao-icon.png" alt="카카오 아이콘" style="width: 24px; height: 24px; margin-right: 8px;">
           카카오로 로그인
-
         </v-btn>
-        <div class="text-14 text-center my-3">계정이 없으신가요? <nuxt-link to="/memberManage/SignupPage"
+
+        <div class="text-14 text-center my-3">아직 드실 회원이 아니신가요? <nuxt-link to="/memberManage/SignupPage"
             class=" grey--text text--darken-4 font-600">회원가입</nuxt-link>
         </div>
 
@@ -78,6 +77,6 @@
 #find-idpw {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-around;
 }
 </style>
