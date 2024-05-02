@@ -2,61 +2,91 @@
   <div
     class="bg-body d-flex flex-column justify-center align-center min-vh-100"
   >
-    <div class="sign-up-card">
+    <form @submit.prevent="submitForm" class="sign-up-card">
       <div class="sign-up-card-container">
         <div class="write-review-logo">
-            <v-img :src="require('~/assets/images/logo.jpg')" class="review-logo"></v-img>
-
+          <v-img
+            :src="require('~/assets/images/logo.jpg')"
+            class="review-logo"
+          ></v-img>
         </div>
 
-        <div class="text-center mb-10">
+        <div class="text-center mb-3">
           <h3 class="mb-3">리뷰 작성</h3>
-          <h5 class="text-sm font-600 grey--text text--darken-4" style="font-weight: 500;">우리식당 창원점</h5>
+      선택한식당아이디:{{ nowId }}선택점수:  {{ babscore }}
+          <h5
+            class="text-sm font-600 grey--text text--darken-4"
+            style="font-weight: 500"
+          >
+            {{ selectName }}
+          </h5>
         </div>
         <v-divider></v-divider>
         <div class="mb-4">
-            <div class="divider"></div>
-          <p class="text-14 mb-1" style="font-weight: bold;">예약한 식당은 어떠셨나요?</p>
+          <div class="divider"></div>
+          <p class="text-14 mb-1" style="font-weight: bold">
+            예약한 식당은 어떠셨나요?
+          </p>
           <div class="babscore">
-            <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
-          <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
-          <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
-          <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
-          <v-img :src="require('~/assets/images/babscore.png')" width="20px" class="fixed-size"></v-img>
+            <span v-for="(isActive, index) in stars" :key="index">
+              <div
+                style="margin-left: 2px; cursor: pointer"
+                @click="setRating(index)"
+              >
+                <v-img
+                  :src="
+                    isActive
+                      ? require('~/assets/images/babscore.png')
+                      : require('~/assets/images/graybab.png')
+                  "
+                  class="fixed-size"
+                ></v-img>
+              </div>
+            </span>
           </div>
-
-
-          <!-- <v-text-field
-            placeholder="Ralph Awards"
+        </div>
+        <div class="mb-4">
+          <p class="text-14 mb-1" style="font-weight: bold">
+            작성날짜: {{ today }}
+          </p>
+        </div>
+        <div class="mb-4">
+          <p class="text-14 mb-1" style="font-weight: bold">사진 첨부</p>
+          <v-file-input
+            v-model="file"
+            accept="image/*"
             outlined
             dense
-            hide-details=""
+            show-size
             class="mb-4"
-          ></v-text-field> -->
+            label="사진 선택"
+            style="margin-top: 10px"
+          ></v-file-input>
         </div>
-
-
-        <div class="mb-4">
-          <p class="text-14 mb-1" style="font-weight: bold;">작성날짜: 2024-01-01</p>
-          <!-- <v-text-field
-            placeholder="Ralph Awards"
-            outlined
-            dense
-            hide-details=""
-            class="mb-4"
-          ></v-text-field> -->
+        <div style="margin-top: -30px">
+          <div class="mb-4">
+            <p class="text-14 mb-1" style="font-weight: bold">내용</p>
+            <v-textarea
+              outlined
+              dense
+              hide-details=""
+              class="mb-4"
+              v-model="UserReviewContents"
+            ></v-textarea>
+          </div>
         </div>
         <div class="mb-4">
-          <p class="text-14 mb-1" style="font-weight: bold;">내용</p>
-          <v-textarea outlined dense hide-details="" class="mb-4"></v-textarea>
-        </div>
-
-        <div class="mb-4">
-          <v-btn block color="primary" class="text-capitalize font-600">
+          <v-btn
+            block
+            color="primary"
+            type="submit"
+            class="text-capitalize font-600"
+          >
             등록하기
           </v-btn>
         </div>
       </div>
+
       <div class="py-4 bg-grey-light">
         <div class="text-center">
           <div class="text-center">
@@ -71,19 +101,87 @@
           </div>
         </div>
       </div>
-    </div>
+    </form>
   </div>
 </template>
 
 <script>
+import { registerReply } from '@/api/myDining';
+
 export default {
   layout: "session",
   data() {
+    const today = new Date();
+    const formattedDate =
+      today.getFullYear() +
+      "-" +
+      ("0" + (today.getMonth() + 1)).slice(-2) +
+      "-" +
+      ("0" + today.getDate()).slice(-2);
     return {
       checkbox: false,
+      file: null,
+      stars: [true, false, false, false, false],
+      UserReviewContents: "",
+      nowId: this.$route.params.id,
+      selectName: "우리식당 창원점",
+      today: formattedDate,
+      babscore: '',
     };
   },
   methods: {
+    async created() {
+      const id = this.$route.params.id;
+      // const { data } = await fetchPost(id);
+      // this.title = data.title;
+      // this.contents = data.contents;
+    },
+    setRating(selectedIndex) {
+      // 모든 별을 초기 상태로 설정
+      this.stars = this.stars.map((_, index) => index <= selectedIndex);
+      this.babscore = this.stars.filter(star => star).length;
+    },
+    async submitForm() {
+      try {
+        console.log(process.env.VUE_APP_API_URL);
+        const response = await registerReply({
+          name: 'test다!', completed: false,
+        });
+        console.log(response);
+      } catch (error) {
+        // console.log(error.response.data.message);
+        // this.logMessage = error.response.data.message;
+      }
+    },
+    // async submitForm() {
+    //   try {
+    //     // 비즈니스 로직
+    //     const userData = {
+    //       UserReviewContents: this.UserReviewContents,
+    //     };
+
+
+    //     const todo = { name: 'test다!', completed: false };
+    //   const res = await fetch(`${this.$config.apiURL}/todos`, {
+    //     method: "POST",
+    //     body: JSON.stringify(todo),
+    //     headers: {
+    //       'Content-Type': 'application/json'
+    //     }
+    //   });
+    //   // const json = await res.json();
+
+    //     // await this.$store.dispatch('LOGIN', userData);
+    //     this.$router.push("/myDining/MydiningPage");
+    //     // this.goBack();
+    //   } catch (error) {
+    //     // 에러 핸들링할 코드
+    //     // console.log(error.response.data);
+    //     // this.logMessage = error.response.data;
+    //   } finally {
+    //     // this.initForm();
+    //   }
+    // },
     goBack() {
       window.history.back(); // 브라우저 이력에서 한 단계 뒤로 갑니다
     },
@@ -92,25 +190,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.review-logo{
-    max-width: 150px; /* 최대 너비 고정 */
+.review-logo {
+  max-width: 150px; /* 최대 너비 고정 */
   max-height: 150px; /* 최대 높이 고정 */
 }
-.write-review-logo{
-    display: flex;
-    justify-content: center;
+.write-review-logo {
+  display: flex;
+  justify-content: center;
 }
-.divider{
-    margin-top: 10px;
+.divider {
+  margin-top: 10px;
 }
-.babscore{
-    display: flex; /* 이 속성을 추가하여 이미지들을 가로로 정렬 */
-  justify-content: left; /* 가운데 정렬 */
+.babscore {
+  display: flex; /* 이 속성을 추가하여 이미지들을 가로로 정렬 */
+  justify-content: center; /* 가운데 정렬 */
   align-items: center; /* 세로축 기준으로 가운데 정렬 */
 }
 .fixed-size {
-  max-width: 20px; /* 최대 너비 고정 */
-  max-height: 20px; /* 최대 높이 고정 */
+  max-width: 40px; /* 최대 너비 고정 */
+  max-height: 40px; /* 최대 높이 고정 */
   margin-right: 3px;
   margin-top: 5px;
 }

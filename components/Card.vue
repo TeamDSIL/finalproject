@@ -11,7 +11,7 @@
                         flat
                         class="p-absolute top-0 rounded-r-xl rounded-l-0 mt-3"
                         color="primary"
-                    >Flat 30% Off</v-chip>
+                    >Flat 15% Off</v-chip>
                 </div>
                 <div v-else></div>
             </div>
@@ -19,15 +19,16 @@
             <div class="pa-4 d-flex justify-space-between align-center">
                 <span class="d-inline-block text-truncate me-3 f-600 text-18 card-title">{{ cardSection.name }}</span>
                 <div class="d-flex align-center card-rating">
-                    <v-icon small color="yellow darken-2" class="me-1">mdi-star</v-icon>
+                    <!-- <v-icon small color="yellow darken-2" class="me-1">mdi-star</v-icon> -->
+                    <img src="../assets/images/babscore.png" width="16" height="16"> 
                     <div class="">
-                        <span class="font-weight-bold text-14">4.5</span>
+                        <span class="font-weight-bold text-14"> 4.5</span>
                         <span class="grey--text text--darken-1 text-14">/5</span>
                     </div>
                     
                 </div>
             </div>
-            <p class="px-4 grey--text text--darken-1"><span class="primary--text f-600 me-1">$20</span> • Cofee, set menu • 15 - 20 min </p>
+            <p class="px-4 grey--text text--darken-1"><span class="primary--text f-600 me-1">${{ cardSection.price }}</span> • {{ cardSection.detail }} • {{ cardSection.waitTime }} </p>
             
         
         </v-card>
