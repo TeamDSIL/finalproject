@@ -59,7 +59,7 @@
 
               <h4>예약 가능 시간 설정</h4>
               <v-btn v-for="(time, index) in times" :key="time.id" class="ma-2"
-              :style="{ backgroundColor: time.clicked ? 'yellow' : '' }" @click="toggleButton(index)">
+              :style="{color: time.clicked ? 'white' : '', backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '' }" @click="toggleButton(index)">
               {{ time.label }}
             </v-btn>
           </v-col>
@@ -82,9 +82,10 @@
                 <template v-slot:default>
                   <thead>
                     <tr>
-                      <th class="text-left">날짜</th>
-                      <th class="text-left">시간</th>
-                      <th class="text-left">고객 이름</th>
+                      <th class="text-left" style="width: 150px;">예약 날짜</th>
+                      <th class="text-left" style="width: 100px;">예약 시간</th>
+                      <th class="text-left" style="width: 150px;">고객 이름</th>
+                      <th class="text-left" style="width: 150px;">예약 인원</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -93,6 +94,7 @@
                       <td>{{ reservation.date }}</td>
                       <td>{{ reservation.time }}</td>
                       <td>{{ reservation.customerName }}</td>
+                      <td>{{ reservation.peopleCount }}</td>
                     </tr>
                   </tbody>
                 </template>
@@ -110,7 +112,8 @@
                     <tr>
                       <th class="text-left" style="width: 150px;">리뷰 날짜</th>
                       <th class="text-left" style="width: 100px;">고객</th>
-                      <th class="text-left" style="width: 300px;">리뷰 내용</th>
+                      <th class="text-left" style="width: 150px;">리뷰 내용</th>
+                      <th class="text-left" style="width: 150px;">밥점</th>
                     </tr>
                   </thead>
                   <tbody>
@@ -119,6 +122,7 @@
                       <td>{{ review.date }}</td>
                       <td>{{ review.author }}</td>
                       <td>{{ review.content }}</td>
+                      <td>{{ review.stars }}</td>
                     </tr>
                   </tbody>
                 </template>
@@ -152,9 +156,10 @@
                         <v-simple-table class="elevation-1">
                           <thead>
                             <tr>
-                              <th>Date</th>
-                              <th>Time</th>
-                              <th>Customer Name</th>
+                              <th>예약 날짜</th>
+                              <th>예약 시간</th>
+                              <th>고객 이름</th>
+                              <th>예약 인원</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -162,6 +167,7 @@
                               <td>{{ item.date }}</td>
                               <td>{{ item.time }}</td>
                               <td>{{ item.customerName }}</td>
+                              <td>{{ item.peopleCount }}</td>
                             </tr>
                           </tbody>
                         </v-simple-table>
@@ -611,7 +617,7 @@ export default {
         description: this.$route.query.description,
         image: this.$route.query.image,
         chip: this.$route.query.chip === 'true', // Boolean으로 변환
-        table: parseInt(this.$route.query.table), // 문자열을 숫자로 변환
+        table: this.$route.query.table, // 문자열을 숫자로 변환
         deposit: this.$route.query.deposit,
         crowd: this.$route.query.crowd,
       },
@@ -624,20 +630,20 @@ export default {
         { text: '고객 이름', value: 'customerName' }
       ],
       reservations: [
-        { id: 1, date: "2023-04-03", time: "18:00", customerName: "정휘제" },
-        { id: 2, date: "2023-04-03", time: "17:00", customerName: "윤여빈" },
-        { id: 3, date: "2023-04-02", time: "18:00", customerName: "문상현" },
-        { id: 4, date: "2023-04-01", time: "18:00", customerName: "윤호상" },
-        { id: 5, date: "2023-04-01", time: "17:00", customerName: "임태환" },
-        { id: 6, date: "2023-03-31", time: "18:00", customerName: "이다혜" },
-        { id: 7, date: "2023-03-30", time: "18:00", customerName: "아카자" },
-        { id: 8, date: "2023-03-29", time: "18:00", customerName: "코주루" },
-        { id: 9, date: "2023-03-28", time: "18:00", customerName: "유비" },
-        { id: 10, date: "2023-03-27", time: "18:00", customerName: "관우" },
-        { id: 11, date: "2023-03-27", time: "18:00", customerName: "장비" },
-        { id: 12, date: "2023-03-27", time: "18:00", customerName: "구민슥" },
-        { id: 13, date: "2023-03-27", time: "18:00", customerName: "구민쇽" },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민샥" },
+        { id: 1, date: "2023-04-03", time: "18:00", customerName: "정휘제", peopleCount: 2 },
+        { id: 2, date: "2023-04-03", time: "17:00", customerName: "윤여빈", peopleCount: 10 },
+        { id: 3, date: "2023-04-02", time: "18:00", customerName: "문상현", peopleCount: 2 },
+        { id: 4, date: "2023-04-01", time: "18:00", customerName: "윤호상", peopleCount: 2 },
+        { id: 5, date: "2023-04-01", time: "17:00", customerName: "임태환", peopleCount: 4 },
+        { id: 6, date: "2023-03-31", time: "18:00", customerName: "이다혜", peopleCount: 7 },
+        { id: 7, date: "2023-03-30", time: "18:00", customerName: "아카자", peopleCount: 1 },
+        { id: 8, date: "2023-03-29", time: "18:00", customerName: "코주루", peopleCount: 2 },
+        { id: 9, date: "2023-03-28", time: "18:00", customerName: "유비", peopleCount: 2 },
+        { id: 10, date: "2023-03-27", time: "18:00", customerName: "관우", peopleCount: 2 },
+        { id: 11, date: "2023-03-27", time: "18:00", customerName: "장비", peopleCount: 4 },
+        { id: 12, date: "2023-03-27", time: "18:00", customerName: "구민슥", peopleCount: 3 },
+        { id: 13, date: "2023-03-27", time: "18:00", customerName: "구민쇽", peopleCount: 3 },
+        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민샥", peopleCount: 2 },
         // 예약 목록
       ],
       pageReview: 1,

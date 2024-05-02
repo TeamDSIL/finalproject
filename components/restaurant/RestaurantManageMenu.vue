@@ -13,7 +13,7 @@
 
       <!-- Restaurant cards display -->
       <v-row class="justify-start">
-        <v-col cols="12" xl="12">
+        <v-col cols="12">
           <v-row>
             <v-col cols="12">
               <h5 class="text-18 test-color">나의 식당^^</h5>
@@ -23,8 +23,8 @@
             </v-col>
             <v-col cols="12" sm="6" md="3" v-for="restaurant in restaurants" :key="restaurant.id">
               <v-card @click="goToRestaurantManagement(restaurant)" class="ma-2">
-                <v-img :src="restaurant.image" heihgt="50px"></v-img>
-                <v-card-title>식당이름: {{ restaurant.name }}</v-card-title>
+                <v-img :src="restaurant.image" style="height: auto;"></v-img>
+                <v-card-title>{{ restaurant.name }}</v-card-title>
                 <v-card-text>{{ restaurant.description }}</v-card-text>
                 <v-card-actions>
                   <v-btn text color="primary">Manage</v-btn>

@@ -75,7 +75,7 @@ export default {
         href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;900&amp;display=swap',
       },
     ],
-  },
+      },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["@/assets/scss/foodtruck.scss"],
