@@ -228,6 +228,7 @@
 import { CardSection } from "@/assets/database/data.js";
 export default {
   layout: "landingHeader",
+
   head: {
     title: "Home",
   },
