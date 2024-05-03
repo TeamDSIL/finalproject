@@ -31,14 +31,20 @@
                                                     <template v-slot:item="{ item }">
                                                         <tr>
                                                             <td>{{ item.id }}</td>
-                                                            <td>{{ item.restaurantName }}</td>
-                                                            <td>{{ item.name }}</td>
-                                                            <td>{{ item.phone }}</td>
-                                                            <td>{{ item.address }}</td>
+                                                            <td>{{ item.email }}</td>
+                                                            <td>{{ item.reply }}</td>
+                                                            <td>{{ item.review }}</td>
                                                             <td>
-                                                                <nuxt-link to="/memberManage/RegisterRestaurantPage">
-                                                                    <v-btn color="primary" dark v-on="on">이동</v-btn>
-                                                                </nuxt-link>
+                                                                <v-dialog max-width="500">
+                                                                    <template v-slot:activator="{ on }">
+                                                                        <v-btn color="primary"
+                                                                            @click="openReviewInfoForm(item)" v-on="on"
+                                                                            :disabled="!item">상세정보</v-btn>
+                                                                    </template>
+
+                                                                    <ReviewInfoForm v-if="showDialog"
+                                                                        :reviewInfo="reviewInfo" />
+                                                                </v-dialog>
                                                             </td>
                                                         </tr>
                                                     </template>
@@ -85,12 +91,15 @@
 <script>
 
 import AdminModifyUserForm from '@/components/memberManage/AdminModifyUserForm.vue';
+import ReviewInfoForm from '@/components/memberManage/ReviewInfoForm.vue';
+
 export default {
     head: {
         title: 'Order List'
     },
     components: {
         AdminModifyUserForm,
+        ReviewInfoForm
     },
     data() {
         return {
@@ -99,49 +108,51 @@ export default {
             searchQuery: '',
             currentPage: 1, // 현재 페이지 번호
             itemsPerPage: 10, // 페이지당 표시할 아이템 수
-            members: [
-                { id: 1, email: 'example1@mail.com', name: 'John Doe', phone: '+1 123-456-7890' },
-                { id: 2, email: 'example2@mail.com', name: 'Jane Doe', phone: '+1 987-654-3210' },
-                { id: 3, email: 'example3@mail.com', name: 'Emily Smith', phone: '+1 555-123-4567' },
-                { id: 4, email: 'example4@mail.com', name: 'Michael Johnson', phone: '+1 555-987-6543' },
-                { id: 5, email: 'example5@mail.com', name: 'Sophia Williams', phone: '+1 555-456-7890' },
-                { id: 6, email: 'example6@mail.com', name: 'James Brown', phone: '+1 555-876-5432' },
-                { id: 7, email: 'example7@mail.com', name: 'Olivia Davis', phone: '+1 555-234-5678' },
-                { id: 8, email: 'example8@mail.com', name: 'William Miller', phone: '+1 555-678-9012' },
-                { id: 9, email: 'example9@mail.com', name: 'Emma Wilson', phone: '+1 555-345-6789' },
-                { id: 10, email: 'example10@mail.com', name: 'Alexander Moore', phone: '+1 555-789-0123' },
-                { id: 11, email: 'example11@mail.com', name: 'Isabella Taylor', phone: '+1 555-456-7890' },
-                { id: 12, email: 'example12@mail.com', name: 'Ethan Anderson', phone: '+1 555-890-1234' },
-                { id: 13, email: 'example13@mail.com', name: 'Mia Thomas', phone: '+1 555-567-8901' },
-                { id: 14, email: 'example14@mail.com', name: 'Daniel Jackson', phone: '+1 555-012-3456' },
-                { id: 15, email: 'example15@mail.com', name: 'Ava White', phone: '+1 555-678-9012' },
-                { id: 16, email: 'example16@mail.com', name: 'Matthew Harris', phone: '+1 555-234-5678' },
-                { id: 17, email: 'example17@mail.com', name: 'Chloe Martin', phone: '+1 555-901-2345' },
-                { id: 18, email: 'example18@mail.com', name: 'Charlotte Thompson', phone: '+1 555-345-6789' },
-                { id: 19, email: 'example19@mail.com', name: 'Liam Garcia', phone: '+1 555-678-9012' },
-                { id: 20, email: 'example20@mail.com', name: 'Amelia Martinez', phone: '+1 555-012-3456' },
-                { id: 21, email: 'example21@mail.com', name: 'Benjamin Robinson', phone: '+1 555-234-5678' },
-                { id: 22, email: 'example22@mail.com', name: 'Harper Clark', phone: '+1 555-345-6789' },
-                { id: 23, email: 'example23@mail.com', name: 'Evelyn Hall', phone: '+1 555-456-7890' },
-                { id: 24, email: 'example24@mail.com', name: 'Lucas Lewis', phone: '+1 555-567-8901' },
-                { id: 25, email: 'example25@mail.com', name: 'Aiden Lee', phone: '+1 555-678-9012' },
+            showDialog: false,
+            reviewInfo: {}, // 리뷰 정보를 저장할 객체 추가
+            reviewInfos: [
+                { id: 1, email: 'example1@mail.com', reply: 'John Doe', review: '+1 123-456-7890' },
+                { id: 2, email: 'example2@mail.com', reply: 'Jane Doe', review: '+1 987-654-3210' },
+                { id: 3, email: 'example3@mail.com', reply: 'Emily Smith', review: '+1 555-123-4567' },
+                { id: 4, email: 'example4@mail.com', reply: 'Michael Johnson', review: '+1 555-987-6543' },
+                { id: 5, email: 'example5@mail.com', reply: 'Sophia Williams', review: '+1 555-456-7890' },
+                { id: 6, email: 'example6@mail.com', reply: 'James Brown', review: '+1 555-876-5432' },
+                { id: 7, email: 'example7@mail.com', reply: 'Olivia Davis', review: '+1 555-234-5678' },
+                { id: 8, email: 'example8@mail.com', reply: 'William Miller', review: '+1 555-678-9012' },
+                { id: 9, email: 'example9@mail.com', reply: 'Emma Wilson', review: '+1 555-345-6789' },
+                { id: 10, email: 'example10@mail.com', reply: 'Alexander Moore', review: '+1 555-789-0123' },
+                { id: 11, email: 'example11@mail.com', reply: 'Isabella Taylor', review: '+1 555-456-7890' },
+                { id: 12, email: 'example12@mail.com', reply: 'Ethan Anderson', review: '+1 555-890-1234' },
+                { id: 13, email: 'example13@mail.com', reply: 'Mia Thomas', review: '+1 555-567-8901' },
+                { id: 14, email: 'example14@mail.com', reply: 'Daniel Jackson', review: '+1 555-012-3456' },
+                { id: 15, email: 'example15@mail.com', reply: 'Ava White', review: '+1 555-678-9012' },
+                { id: 16, email: 'example16@mail.com', reply: 'Matthew Harris', review: '+1 555-234-5678' },
+                { id: 17, email: 'example17@mail.com', reply: 'Chloe Martin', review: '+1 555-901-2345' },
+                { id: 18, email: 'example18@mail.com', reply: 'Charlotte Thompson', review: '+1 555-345-6789' },
+                { id: 19, email: 'example19@mail.com', reply: 'Liam Garcia', review: '+1 555-678-9012' },
+                { id: 20, email: 'example20@mail.com', reply: 'Amelia Martinez', review: '+1 555-012-3456' },
+                { id: 21, email: 'example21@mail.com', reply: 'Benjamin Robinson', review: '+1 555-234-5678' },
+                { id: 22, email: 'example22@mail.com', reply: 'Harper Clark', review: '+1 555-345-6789' },
+                { id: 23, email: 'example23@mail.com', reply: 'Evelyn Hall', review: '+1 555-456-7890' },
+                { id: 24, email: 'example24@mail.com', reply: 'Lucas Lewis', review: '+1 555-567-8901' },
+                { id: 25, email: 'example25@mail.com', reply: 'Aiden Lee', review: '+1 555-678-9012' },
             ],
             headers: [
-                { text: 'ID', align: 'start', value: 'id' },
+                { text: 'No', align: 'start', value: 'id' },
                 { text: '이메일', value: 'email' },
-                { text: '이름', value: 'name' },
-                { text: '전화번호', value: 'phone' },
-                { text: '상세보기', value: 'btn' },
+                { text: '댓글', value: 'reply' },
+                { text: '리뷰', value: 'review' },
+                { text: '상세보기', value: '' },
             ],
         }
     },
     computed: {
         // 검색어를 기반으로 필터링된 회원 정보 반환
         filteredMembers() {
-            return this.members.filter(member =>
-                member.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                member.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                member.phone.includes(this.searchQuery)
+            return this.reviewInfos.filter(review =>
+                review.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                review.reply.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                review.review.toLowerCase().includes(this.searchQuery.toLowerCase())
             );
         },
         displayedMembers() {
@@ -171,6 +182,17 @@ export default {
         },
     },
     methods: {
+        openReviewInfoForm(reviewInfo) {
+            // 선택된 사용자의 모든 정보 저장
+            this.reviewInfo = {
+                id: reviewInfo.id,
+                email: reviewInfo.email,
+                reply: reviewInfo.reply,
+                review: reviewInfo.review
+            };
+            // 다이얼로그 표시
+            this.showDialog = true;
+        },
         navigateToPage(newPage) {
             this.currentPage = newPage;
             // 페이지가 변경될 때마다 현재 페이지에 해당하는 회원 목록을 설정합니다.
