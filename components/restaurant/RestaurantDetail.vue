@@ -441,7 +441,7 @@
     </div>
 </template>
 <script>
-import KakaoMap from '../api/kakaoMap.vue'
+import KakaoMap from '@/components/api/KakaoMap.vue'
 import DateTimePicker from '@/components/restaurant/DateTimePicker.vue';
 export default {
     name: 'App',
@@ -524,7 +524,8 @@ export default {
         value: [20, 40],
         selected: null,
         showModal: false,
-        modal:false
+        modal:false,
+        depositAmount : false
     }),
     computed: {
         // 평균 별점을 계산합니다.
