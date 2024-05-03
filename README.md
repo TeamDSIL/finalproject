@@ -2,7 +2,7 @@
 <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/12f64508-eb42-4496-af3d-bf929662bd71">
 
 ## 레스토랑 예약 시스템 'DSIL'
-> 신세계아이앤씨 1기 파이널프로젝트 팀 'DDJD'<br>
+> 신세계아이앤씨 1기 파이널프로젝트 팀 'WhatDang!'<br>
 > 개발기간 : 2024. 4. 19 ~ 2024. 5.29
 
 ## 프로젝트 소개
@@ -11,6 +11,7 @@
 > 개발 버전:
 
 ## 팀원소개
+<img src="https://github.com/TeamDSIL/finalproject/assets/147921376/8bf1d67d-fa89-4737-a3da-3db81d0c4cff">
 <table>
 <tr>
   <td>
