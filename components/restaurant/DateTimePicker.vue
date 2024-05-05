@@ -6,10 +6,8 @@
         <v-btn v-on="on">예약 날짜 및 시간 선택</v-btn>
       </template>
       <v-card>
-        <!-- 예약 날짜 선택 -->
         <v-date-picker v-model="date" :min="minDate" scrollable locale="ko"></v-date-picker>
         <p style="margin-left: 10px;">예약 시간을 선택해주세요.</p>
-        <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
@@ -18,9 +16,7 @@
             </v-btn>
           </v-row>
         </div>
-        <!-- 인원 수 입력 -->
         <v-text-field v-model="numberOfPeople" label="인원 수" type="number" style="margin-left: 10px;"></v-text-field>
-        <!-- 예약하기 및 닫기 버튼 -->
         <v-card-actions>
           <v-btn color="primary" text @click="set" :disabled="numberOfPeople <= 0">예약하기</v-btn>
           <v-spacer></v-spacer>
@@ -29,8 +25,6 @@
       </v-card>
     </v-dialog>
 
-    <!-- 예약 확인 모달 -->
-    <!-- 예약금이 있는 경우 확인 모달 -->
     <v-dialog v-if="depositAmount" v-model="showConfirmationModal" persistent width="333">
       <v-card>
         <v-card-title class="logo-title">
