@@ -13,7 +13,7 @@
 
         <div class="text-center mb-3">
           <h3 class="mb-3">리뷰 작성</h3>
-      선택한식당아이디:{{ nowId }}선택점수:  {{ babscore }}
+      선택한식당아이디:{{ nowReservationId }}선택점수:  {{ babscore }}
           <h5
             class="text-sm font-600 grey--text text--darken-4"
             style="font-weight: 500"
@@ -107,6 +107,7 @@
 
 <script>
 import { registerReply } from '@/api/myDining';
+import axios from "axios";
 
 export default {
   layout: "session",
@@ -123,10 +124,11 @@ export default {
       file: null,
       stars: [true, false, false, false, false],
       UserReviewContents: "",
-      nowId: this.$route.params.id,
+      nowReservationId: this.$route.params.id,
       selectName: "우리식당 창원점",
       today: formattedDate,
       babscore: '',
+      userEmail: "user02@example.com",
     };
   },
   methods: {
@@ -142,46 +144,31 @@ export default {
       this.babscore = this.stars.filter(star => star).length;
     },
     async submitForm() {
+      const formData = new FormData();
+      formData.append('reviewContents', this.UserReviewContents);
+      formData.append('reservationId', this.nowReservationId);
+      formData.append('registerDate', this.today);
+      formData.append('reviewScore', this.babscore);
+      formData.append('userEmail', this.userEmail); // 이 부분은 현재 로그인한 사용자의 ID로 설정해야 합니다.
+
+      console.log("여기다!~~~~");
+      console.log(formData);
+      if (this.file) {
+        formData.append('file', this.file);
+      }
+
       try {
-        console.log(process.env.VUE_APP_API_URL);
-        const response = await registerReply({
-          name: 'test다!', completed: false,
+        const response = await axios.post('http://localhost:8000/myDining/registerReview', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
         });
-        console.log(response);
+        console.log('등록 성공:', response.data);
+        // 성공 후 필요한 작업 수행, 예를 들어 페이지 이동 등
       } catch (error) {
-        // console.log(error.response.data.message);
-        // this.logMessage = error.response.data.message;
+        console.error('리뷰 등록 중 오류 발생:', error.response ? error.response.data : error);
       }
     },
-    // async submitForm() {
-    //   try {
-    //     // 비즈니스 로직
-    //     const userData = {
-    //       UserReviewContents: this.UserReviewContents,
-    //     };
-
-
-    //     const todo = { name: 'test다!', completed: false };
-    //   const res = await fetch(`${this.$config.apiURL}/todos`, {
-    //     method: "POST",
-    //     body: JSON.stringify(todo),
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     }
-    //   });
-    //   // const json = await res.json();
-
-    //     // await this.$store.dispatch('LOGIN', userData);
-    //     this.$router.push("/myDining/MydiningPage");
-    //     // this.goBack();
-    //   } catch (error) {
-    //     // 에러 핸들링할 코드
-    //     // console.log(error.response.data);
-    //     // this.logMessage = error.response.data;
-    //   } finally {
-    //     // this.initForm();
-    //   }
-    // },
     goBack() {
       window.history.back(); // 브라우저 이력에서 한 단계 뒤로 갑니다
     },

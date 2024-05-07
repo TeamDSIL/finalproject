@@ -54,6 +54,14 @@ export default {
       if (writeReview !== -1) {
         routes[writeReview].path = '/myDining/WriteReviewPage/:id';
       }
+
+      const myDining = routes.findIndex(route => route.name === 'myDining-MydiningPage');
+      if (myDining !== -1) {
+        routes[myDining].path = '/myDining/:id';
+      }
+    }
+  },
+
       const reserveIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantDetailPage');
       if (reserveIndex !== -1) {
         routes[reserveIndex].path = '/restaurant/detail';
@@ -61,6 +69,7 @@ export default {
     },
     },
   
+
 
   head: {
     titleTemplate: '%s - food-truck',
