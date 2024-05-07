@@ -1,146 +1,54 @@
 <template>
     <div>
         <v-container>
-
-
             <v-row>
-                <v-col cols="12" class="mb-10">
-                    <v-img class="br-10 d-flex cover-img align-end" cover
-                        :src="require('~/assets/images/cover-img.png')"
-                        gradient="to top, rgba(0,0,0,.7), rgba(0,0,0,0)">
-
-                        <div
-                            class="d-flex justify-center justify-md-space-between align-center mx-10 cover-image-content ">
-                            <div class="d-md-flex d-block align-center text-md-left text-center flex-wrap">
-                                <label for="avatarUpload" class="me-4">
-                                    <div class="avatar-upload">
-                                        <v-avatar size="160">
-                                            <img src="~/assets/images/faces/big-avatar.png" alt="">
-                                        </v-avatar>
-                                        <v-btn class="avatar-upload-btn" fab dark small color="grey lighten-4">
-                                            <v-icon color="secondary" dark size="20">
-                                                mdi-camera
-                                            </v-icon>
-                                        </v-btn>
-                                        <input class="d-none" type="file" id="avatarUpload" />
-                                    </div>
-
-                                </label>
-                                <div>
-                                    <h2 class="white--text text-md-left text-center mb-1">드실 관리자 계정</h2>
-                                    <div class="d-flex mb-1 justify-center justify-md-start">
-                                        <v-icon size="15" class="me-2" color="white">mdi-map-marker</v-icon>
-                                        <h6 class="font-weight-light white--text">서울특별시 강남구 도곡동 943-2 서한 빌딩 3층</h6>
-                                    </div>
-                                    <h6 class="font-weight-light white--text">이게 관리자 메인 페이지
-                                    </h6>
-                                </div>
-                            </div>
-
-                            <div class="d-none d-md-flex">
-                                <div class="text-center">
-                                    <h2 class="font-weight-bold white--text">24</h2>
-                                    <h6 class="font-weight-regular white--text">뭘</h6>
-                                </div>
-                                <div class="mx-3">
-                                    <v-divider vertical dark></v-divider>
-                                </div>
-                                <div class="text-center">
-                                    <h2 class="font-weight-bold white--text">45</h2>
-                                    <h6 class="font-weight-regular white--text">넣어야</h6>
-                                </div>
-                                <div class="mx-3">
-                                    <v-divider vertical dark></v-divider>
-                                </div>
-                                <div class="text-center">
-                                    <h2 class="font-weight-bold white--text">1.6k</h2>
-                                    <h6 class="font-weight-regular white--text">될까요</h6>
-                                </div>
-                            </div>
-
-                        </div>
-
-                    </v-img>
-                </v-col>
                 <v-col cols="12">
                     <Box class="dashboard-box">
                         <div slot="boxSidebar">
                             <AdminDashBoardSideBar />
-
                         </div>
                         <div slot="boxContent">
                             <div class="px-10">
                                 <v-row>
                                     <v-col cols="12">
-                                        <div id="direction-btn">
-                                            <h1>회원 정보 관리</h1>
-
-                                            <div id="select-user-owner">
-                                                <v-btn light text v-bind="attrs" v-on="on"
-                                                    class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
-                                                    @click="displayUserInfo">
-                                                    일반
-                                                </v-btn>
-
-                                                <v-btn light text v-bind="attrs" v-on="on"
-                                                    class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
-                                                    @click="displayOwnerInfo">
-                                                    식당
-                                                </v-btn>
-                                            </div>
-                                        </div>
+                                        <h1>회원 정보 관리</h1>
                                     </v-col>
 
                                     <v-col cols="12">
+                                        <div>
+                                            <v-container>
+                                                <!-- 검색 필드 -->
+                                                <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined dense
+                                                    clearable append-icon="mdi-magnify"
+                                                    @keyup.enter="performSearch"></v-text-field>
 
-                                        <div v-if="step === 1">
-                                            <v-col cols="12">
-                                                <div>
-                                                    <v-container>
-                                                        <!-- 검색 필드 -->
-                                                        <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined
-                                                            dense clearable append-icon="mdi-magnify"
-                                                            @keyup.enter="performSearch"></v-text-field>
+                                                <!-- 일반 회원 정보 카드 -->
 
-                                                        <!-- 회원 정보 목록 테이블 -->
-                                                        <v-data-table :headers="headers" :items="filteredMembers"
-                                                            item-key="id" class="elevation-1">
-                                                            <template v-slot:items="props">
-                                                                <td>{{ props.item.id }}</td>
-                                                                <td>{{ props.item.email }}</td>
-                                                                <td>{{ props.item.name }}</td>
-                                                                <td>{{ props.item.phone }}</td>
-                                                            </template>
-                                                        </v-data-table>
-                                                    </v-container>
-                                                </div>
-
-                                            </v-col>
-                                        </div>
-
-                                        <div v-if="step === 2">
-                                            <v-col cols="12">
-                                                <div>
-                                                    <v-container>
-                                                        <!-- 검색 필드 -->
-                                                        <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined
-                                                            dense clearable append-icon="mdi-magnify"
-                                                            @keyup.enter="performSearch"></v-text-field>
-
-                                                        <!-- 회원 정보 목록 테이블 -->
-                                                        <v-data-table :headers="headers" :items="filteredMembers"
-                                                            item-key="id" class="elevation-1">
-                                                            <template v-slot:items="props">
-                                                                <td>{{ props.item.id }}</td>
-                                                                <td>{{ props.item.email }}</td>
-                                                                <td>{{ props.item.name }}</td>
-                                                                <td>{{ props.item.phone }}</td>
-                                                            </template>
-                                                        </v-data-table>
-                                                    </v-container>
-                                                </div>
-
-                                            </v-col>
+                                                <v-data-table :headers="headers" :items="displayedMembers"
+                                                    hide-default-footer>
+                                                    <template v-slot:item="{ item }">
+                                                        <tr>
+                                                            <td>{{ item.id }}</td>
+                                                            <td>{{ item.email }}</td>
+                                                            <td>{{ item.name }}</td>
+                                                            <td>{{ item.phone }}</td>
+                                                            <td>
+                                                                <v-dialog max-width="500">
+                                                                    <template v-slot:activator="{ on }">
+                                                                        <v-btn color="primary"
+                                                                            @click="openModifyUserForm(item)" v-on="on"
+                                                                            :disabled="!item">상세정보</v-btn>
+                                                                    </template>
+                                                                    <!-- AdminModifyUserForm 컴포넌트에 selectedUserInfo 전달 -->
+                                                                    <AdminModifyUserForm v-if="showDialog"
+                                                                        :user-info="selectedUserInfo"
+                                                                        @modify-user="handleModifyUser" />
+                                                                </v-dialog>
+                                                            </td>
+                                                        </tr>
+                                                    </template>
+                                                </v-data-table>
+                                            </v-container>
                                         </div>
                                     </v-col>
 
@@ -148,22 +56,17 @@
                                         <div
                                             class="d-flex justify-center align-center justify-sm-space-between flex-wrap">
                                             <div class="mb-4 me-3">
-                                                <p class="font-weight-normal mb-0 text-14">Showing 1-12 of 29
-                                                    Reviews
-                                                </p>
+                                                <p class="font-weight-normal mb-0 text-14">Showing {{ startItemIndex
+                                                    }}-{{ endItemIndex }} of {{
+                                                        filteredMembers.length }} Reviews</p>
                                             </div>
                                             <div class="mb-4">
-                                                <v-pagination class="food-truck-pagination" v-model="page" :length="4"
-                                                    circle></v-pagination>
+                                                <!-- 페이지네이션 -->
+                                                <v-pagination v-model="currentPage" :length="numberOfPages" circle
+                                                    @input="navigateToPage"></v-pagination>
                                             </div>
                                         </div>
                                     </v-col>
-
-
-
-
-
-
                                 </v-row>
                             </div>
                         </div>
@@ -172,48 +75,127 @@
             </v-row>
         </v-container>
         <Footer />
-
     </div>
 </template>
+
 <script>
+import AdminModifyUserForm from '@/components/memberManage/AdminModifyUserForm.vue';
+
 export default {
     head: {
         title: 'Order List'
     },
+    components: {
+        AdminModifyUserForm,
+    },
     data() {
         return {
             page: 1,
-            step: 1, // 초기 단계 설정
             searchQuery: '',
-        }
+            currentPage: 1,
+            itemsPerPage: 10,
+            showDialog: {}, // 다이얼로그 표시 여부를 관리하는 변수 추가
+            selectedUserInfo: {}, // 선택된 사용자 정보를 저장할 변수 추가
+            members: [
+                // 일반 회원 데이터
+                { id: 1, email: 'example1@mail.com', name: 'John Doe', phone: '+1 123-456-7890' },
+                { id: 2, email: 'example2@mail.com', name: 'Jane Doe', phone: '+1 987-654-3210' },
+                { id: 3, email: 'example3@mail.com', name: 'Emily Smith', phone: '+1 555-123-4567' },
+                { id: 4, email: 'example4@mail.com', name: 'Michael Johnson', phone: '+1 555-987-6543' },
+                { id: 5, email: 'example5@mail.com', name: 'Sophia Williams', phone: '+1 555-456-7890' },
+                { id: 6, email: 'example6@mail.com', name: 'James Brown', phone: '+1 555-876-5432' },
+                { id: 7, email: 'example7@mail.com', name: 'Olivia Davis', phone: '+1 555-234-5678' },
+                { id: 8, email: 'example8@mail.com', name: 'William Miller', phone: '+1 555-678-9012' },
+                { id: 9, email: 'example9@mail.com', name: 'Emma Wilson', phone: '+1 555-345-6789' },
+                { id: 10, email: 'example10@mail.com', name: 'Alexander Moore', phone: '+1 555-789-0123' },
+                { id: 11, email: 'example11@mail.com', name: 'Isabella Taylor', phone: '+1 555-456-7890' },
+                { id: 12, email: 'example12@mail.com', name: 'Ethan Anderson', phone: '+1 555-890-1234' },
+                { id: 13, email: 'example13@mail.com', name: 'Mia Thomas', phone: '+1 555-567-8901' },
+                { id: 14, email: 'example14@mail.com', name: 'Daniel Jackson', phone: '+1 555-012-3456' },
+                { id: 15, email: 'example15@mail.com', name: 'Ava White', phone: '+1 555-678-9012' },
+                { id: 16, email: 'example16@mail.com', name: 'Matthew Harris', phone: '+1 555-234-5678' },
+                { id: 17, email: 'example17@mail.com', name: 'Chloe Martin', phone: '+1 555-901-2345' },
+                { id: 18, email: 'example18@mail.com', name: 'Charlotte Thompson', phone: '+1 555-345-6789' },
+                { id: 19, email: 'example19@mail.com', name: 'Liam Garcia', phone: '+1 555-678-9012' },
+                { id: 20, email: 'example20@mail.com', name: 'Amelia Martinez', phone: '+1 555-012-3456' },
+                { id: 21, email: 'example21@mail.com', name: 'Benjamin Robinson', phone: '+1 555-234-5678' },
+                { id: 22, email: 'example22@mail.com', name: 'Harper Clark', phone: '+1 555-345-6789' },
+                { id: 23, email: 'example23@mail.com', name: 'Evelyn Hall', phone: '+1 555-456-7890' },
+                { id: 24, email: 'example24@mail.com', name: 'Lucas Lewis', phone: '+1 555-567-8901' },
+                { id: 25, email: 'example25@mail.com', name: 'Aiden Lee', phone: '+1 555-678-9012' },
+            ],
+            headers: [
+                { text: 'ID', align: 'start', value: 'id' },
+                { text: '이메일', value: 'email' },
+                { text: '이름', value: 'name' },
+                { text: '전화번호', value: 'phone' },
+                { text: '상세보기', value: '' },
+            ],
+        };
+    },
+    computed: {
+        // 필터링된 회원 목록 반환
+        filteredMembers() {
+            return this.members.filter(member =>
+                member.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                member.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                member.phone.includes(this.searchQuery)
+            )
+        },
+        // 현재 페이지에 해당하는 회원 목록 반환
+        displayedMembers() {
+            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
+            const endIndex = this.currentPage * this.itemsPerPage;
+            return this.filteredMembers.slice(startIndex, endIndex);
+        },
+        // 현재 페이지에 해당하는 첫 번째 아이템 인덱스 반환
+        startItemIndex() {
+            return (this.currentPage - 1) * this.itemsPerPage + 1;
+        },
+        // 현재 페이지에 해당하는 마지막 아이템 인덱스 반환
+        endItemIndex() {
+            const endIndex = this.currentPage * this.itemsPerPage;
+            return Math.min(endIndex, this.filteredMembers.length);
+        },
+        // 필터링된 회원 수에 따른 페이지 수 반환
+        numberOfPages() {
+            return Math.ceil(this.filteredMembers.length / this.itemsPerPage);
+        },
     },
     methods: {
-        displayUserInfo() {
-            // 임시 비밀번호 전송 로직 처리
-            console.log('일반 회원 정보 관리');
-            this.step = 1; // 다음 단계로 이동
+        // 페이지 변경 시 실행되는 이벤트 핸들러
+        navigateToPage(newPage) {
+            this.currentPage = newPage;
         },
-        displayOwnerInfo() {
-            // 임시 비밀번호 인증 로직 처리
-            console.log('식당 관리자 정보 관리');
-            this.step = 2; // 다음 단계로 이동
-        },
+        // 검색 수행
         performSearch() {
-            // 여기에 검색 로직을 구현합니다
+            // 여기에 검색 로직을 구현
             console.log('검색어:', this.searchQuery);
-            // 실제 검색 로직을 수행하는 부분을 작성하세요
+            // 실제 검색 로직 수행
         },
-    }
-}
-
+        openModifyUserForm(selectedUser) {
+            // 선택된 사용자의 모든 정보 저장
+            this.selectedUserInfo = {
+                email: selectedUser.email,
+                name: selectedUser.name,
+                phone: selectedUser.phone
+            };
+            // 다이얼로그 표시
+            this.showDialog = true;
+        },
+        // AdminModifyUserForm 컴포넌트에서 발생한 수정된 정보 처리
+        handleModifyUser(modifiedUserInfo) {
+            // 수정된 사용자 정보 처리 로직
+            console.log('수정된 사용자 정보:', modifiedUserInfo);
+            // 다이얼로그 닫기
+            this.showDialog = false;
+            this.$router.push('/memberManage/AdminManageUserPage');
+        }
+    },
+};
 </script>
-<style lang="scss">
-#select-user-owner,
-#direction-btn {
-    display: flex;
-    flex-direction: row;
-}
 
+<style lang="scss">
 #text-nowrap {
     white-space: nowrap;
 }

@@ -7,14 +7,13 @@
 
             <v-dialog v-model="dialog" width="500">
                 <template v-slot:activator="{ on, attrs }">
-                    <nuxt-link to="/main/MainForm">
+                    <nuxt-link to="/main/MainPage">
                         <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary">
                             <span class="d-none d-sm-block">회원탈퇴</span>
                         </v-btn>
                     </nuxt-link>
                 </template>
             </v-dialog>
-
 
         </div>
     </v-card>

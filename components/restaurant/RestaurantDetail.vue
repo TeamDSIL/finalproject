@@ -29,25 +29,40 @@
                 <v-col cols="12" class="mt-4">
                     <div class="d-flex justify-space-between flex-wrap align-center mb-3">
                         <h1 class="me-2">스타벅스</h1>
+
                         <div class="mb-3">
                             <span v-for="(star, index) in 5" :key="index">
-                                <v-icon small color="warning">mdi-star</v-icon>
+                                <img src="../../assets/images/babscore.png" width="16" height="16">
                             </span>
                             <span class="text-14 me-1"> 4.5
                                 <span class="grey--text">(1004)</span>
                             </span>
                         </div>
                     </div>
+
                     <p class="mb-5 text-14">커피, 시그니처 로스터, 가벼운 식사, 패스트 푸드</p>
                     <p class="mb-5 text-18">커피 한 잔에 담긴 작은 행복, 스타벅스</p>
                     <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
                         <v-icon left small color="grey">mdi-map-marker</v-icon>
-                        서울특별시 서초구 남부순환로 339길 53　
-                        <nuxt-link to="" class="grey--text text--darken-3">매장 위치 보기</nuxt-link>
+                        서울특별시 서초구 남부순환로 339길 53
+                        <v-dialog ref="dialog" v-model="modal" width="500px" height="500px">
+                                <!-- 버튼을 클릭하면 모달을 열 수 있음 -->
+                                <template v-slot:activator="{ on }">
+                                    <v-btn v-on="on"  text> 매장 위치 보기 </v-btn>
+                                </template>
+                                <v-card>
+                              <KakaoMap/>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="primary" text @click="modal = false">닫기</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
+                        <!-- <nuxt-link to="" class="grey--text text--darken-3">매장 위치 보기</nuxt-link> -->
                     </div>
                     <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
                         <v-icon left small color="grey">mdi-clock-outline</v-icon>
-                        <span class="primary--text me-2">매장 오픈 시간</span> - Sun - Mon: 9am - 10pm
+                        <span class="primary--text me-2">매장 오픈 시간</span> - Sun - Mon: 9am - 10pm 영업중
                     </div>
                     <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
                         <v-icon left small color="grey">mdi-earth</v-icon>
@@ -65,7 +80,6 @@
 
                     <v-tab class="text-capitalize" href="#tab-1">
                         홈
-
                     </v-tab>
 
                     <v-tab class="text-capitalize" href="#tab-2">
@@ -79,18 +93,82 @@
                     </v-tab>
                     <v-tab class="text-capitalize" href="#tab-4">
                         상세정보
-
                     </v-tab>
                 </v-tabs>
 
                 <v-tabs-items v-model="tab">
                     <v-tab-item value="tab-1">
-                        <h2>웨이팅 현황</h2>
+                        <h2>예약 신청</h2>
+                        <DateTimePicker></DateTimePicker><br><br><br>
+                        <h2>식당 혼잡도</h2>
                         <div class="roundstate">
                             <div class="roundstate-small">여유</div>
                             매장 식사 예약 시 바로 이용 가능합니다.
-                        </div>
+                        </div><br><br>
                         <h2>편의시설</h2>
+                        <div class="icon-container">
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/parking.png" width="50" height="50">
+                                </div>
+                                <div>주차가능</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/valet-parking.png" width="50" height="50">
+                                </div>
+                                <div>발렛파킹</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/smoking.png" width="50" height="50">
+                                </div>
+                                <div>흡연구역</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/dog.png" width="50" height="50">
+                                </div>
+                                <div>애견동반</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/cork.png" width="50" height="50">
+                                </div>
+                                <div>콜키지가능</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/wine-bottle.png" width="50" height="50">
+                                </div>
+                                <div>소믈리에</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/welcome.png" width="50" height="50">
+                                </div>
+                                <div>웰컴키즈존</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/nokids.png" width="50" height="50">
+                                </div>
+                                <div>노키즈존</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/freewifi.png" width="50" height="50">
+                                </div>
+                                <div>와이파이존</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                    <img src="../../assets/images/facility/disable.png" width="50" height="50">
+                                </div>
+                                <div>장애인편의시설</div>
+                            </div>
+                         <br><br>
+                        </div>
                     </v-tab-item>
                     <v-tab-item value="tab-2">
                         <div>
@@ -104,206 +182,236 @@
                                 </tbody>
                             </table>
                             <br>
-                            <v-btn block color="error">
-                                메뉴 전체보기 >
-                            </v-btn>
+                            <v-dialog ref="dialog" v-model="showModal" width="400px">
+                                <!-- 버튼을 클릭하면 모달을 열 수 있음 -->
+                                <template v-slot:activator="{ on }">
+                                    <v-btn block color="error" v-on="on"> 메뉴 전체보기 > </v-btn>
+                                </template>
+                                <v-card>
+                                    <!-- 여기에 사진 삽입 -->
+                                    <img src="../../assets/images/food/pizza.png" width="400px"></img>
+                                    <!-- 메뉴 리스트 드롭다운 -->
+                                    <v-list>
+                                        <v-list-group v-for="item in menuItems" :key="item.name" v-model="item.active"
+                                            no-action>
+                                            <template v-slot:activator>
+                                                <v-list-item-content>
+                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
+                                                    <v-list-item-subtitle>{{ item.priceRange }}</v-list-item-subtitle>
+                                                </v-list-item-content>
+                                            </template>
+                                            <v-list-item v-for="subItem in item.items" :key="subItem.name">
+                                                <v-list-item-content class="space">
+                                                    <v-list-item-title>{{ subItem.name }}</v-list-item-title>
+                                                    <v-list-item-title>{{ subItem.price }}</v-list-item-title>
+                                                </v-list-item-content>
+                                            </v-list-item>
+                                        </v-list-group>
+                                    </v-list>
+                                    <v-card-actions>
+                                        <v-spacer></v-spacer>
+                                        <v-btn color="primary" text @click="showModal=false">닫기</v-btn>
+                                    </v-card-actions>
+                                </v-card>
+                            </v-dialog>
                         </div>
                     </v-tab-item>
 
                     <v-tab-item value="tab-3">
                         <h1>리뷰</h1>
- 
-  <div class="ratings-container">
-    <div class="ratings-container-sub">
-        <img src="~/assets/images/babscore.png" alt="Bob's Score" class="score-image">
-    <div class="score-value">{{ averageScore.toFixed(1)/2 }}</div></div>
-    <div class="rating-bars">
-      <div v-for="(count, index) in ratingsCount.slice().reverse()" :key="index" class="rating-bar-container">
-        <span class="rating-score">{{ 5 - index }}점</span>
-        <div class="rating-bar-background">
-          <div class="rating-bar-fill" :style="{ width: getPercentage(count) + '%' }"></div>
-        </div>
-        <span class="rating-count">{{ count }}</span>
-      </div>
-    </div>
-  </div>
-  <br>
-  <hr>
 
-
-                            <v-col cols="18" lg="12">
-                                <!-- user-post  -->
-                                <div class="mb-6">
-                                    <div class="d-flex align-center flex-wrap mb-4">
-                                        <v-avatar size="48" class="me-4">
-                                            <img src="~/assets/images/faces/8.png" alt="">
-                                        </v-avatar>
-                                        <div>
-                                            <h5 class="mb-0">Abriella Bond</h5>
-                                            <p class="mb-0 text-14 grey--text text--darken-1">2 Reviews, 9 Followers</p>
+                        <div class="ratings-container">
+                            <div class="ratings-container-sub">
+                                <img src="~/assets/images/babscore.png" alt="Bob's Score" class="score-image">
+                                <div class="score-value">{{ averageScore.toFixed(1) / 2 }}</div>
+                            </div>
+                            <div class="rating-bars">
+                                <div v-for="(count, index) in ratingsCount.slice().reverse()" :key="index"
+                                    class="rating-bar-container">
+                                    <span class="rating-score">{{ 5 - index }}점</span>
+                                    <div class="rating-bar-background">
+                                        <div class="rating-bar-fill" :style="{ width: getPercentage(count) + '%' }">
                                         </div>
                                     </div>
-                                    <div class="d-flex align-center mb-2">
-                                        <span v-for="(star, index) in 5" :key="index">
-                                            <v-icon small color="warning">mdi-star</v-icon>
-                                        </span>
-                                        <span class="font-weight-bold text-14 ms-2">4.0</span>
-                                        <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
-                                    </div>
-                                    <h5 class="grey--text text--darken-2 font-weight-regular mb-3">Lorem ipsum dolor sit
-                                        amet,
-                                        consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida
-                                        egestas ac
-                                        account.</h5>
-                                    <v-row class="mb-2">
-                                        <v-col cols="6" lg="6">
-                                            <v-img contain
-                                                :src="require('~/assets/images/gallery/foodFive.png')"></v-img>
-                                        </v-col>
-                                        <v-col cols="6" lg="6">
-                                            <v-img contain
-                                                :src="require('~/assets/images/gallery/foodSix.png')"></v-img>
-                                        </v-col>
-                                    </v-row>
-                                    <div>
-                                        <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
-                                        <div class="mt-4">
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-thumb-up-outline</v-icon>
-                                                Like
-                                            </v-btn>
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-comment-text-outline</v-icon>
-                                                Comment
-                                            </v-btn>
-                                        </div>
-                                    </div>
-                                    <v-divider class="my-4"></v-divider>
-                                    <!-- comment  -->
-                                    <div class="mb-6">
-                                        <div class="d-flex align-center mb-3">
-                                            <v-avatar size="28" class="me-3">
-                                                <img src="~/assets/images/faces/6.png" alt="">
-                                            </v-avatar>
-                                            <div class="text-14 grey--text text--darken-4 f-600">Emmet McDermott</div>
-                                        </div>
-                                        <h5 class="grey--text text--darken-2 font-weight-regular">Lorem ipsum dolor sit
-                                            amet,
-                                            consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae
-                                            gravida egestas
-                                            ac account.</h5>
-                                    </div>
-                                    <div class="mb-6">
-                                        <div class="d-flex align-center mb-3">
-                                            <v-avatar size="28" class="me-3">
-                                                <img src="~/assets/images/faces/7.png" alt="">
-                                            </v-avatar>
-                                            <div class="text-14 grey--text text--darken-4 f-600">Emmet McDermott</div>
-                                        </div>
-                                        <h5 class="grey--text text--darken-2 font-weight-regular">Lorem ipsum dolor sit
-                                            amet,
-                                            consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae
-                                            gravida egestas
-                                            ac account.</h5>
-                                    </div>
-                                    <v-divider></v-divider>
-                                    <!-- end::comment -->
-
+                                    <span class="rating-count">{{ count }}</span>
                                 </div>
-                                <!-- end::user-post  -->
-                                <!-- user-post  -->
-                                <div class="mb-6">
-                                    <div class="d-flex align-center flex-wrap mb-4">
-                                        <v-avatar size="48" class="me-4">
-                                            <img src="~/assets/images/faces/13.jpg" alt="">
-                                        </v-avatar>
-                                        <div>
-                                            <h5 class="mb-0">Abriella Bond</h5>
-                                            <p class="mb-0 text-14 grey--text text--darken-1">2 Reviews, 9 Followers</p>
-                                        </div>
-                                    </div>
-                                    <div class="d-flex align-center mb-2">
-                                        <span v-for="(star, index) in 5" :key="index">
-                                            <v-icon small color="warning">mdi-star</v-icon>
-                                        </span>
-                                        <span class="font-weight-bold text-14 ms-2">4.0</span>
-                                        <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
-                                    </div>
-                                    <h5 class="grey--text text--darken-2 font-weight-regular mb-3">Lorem ipsum dolor sit
-                                        amet,
-                                        consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida
-                                        egestas ac
-                                        account.</h5>
+                            </div>
+                        </div>
+                        <br>
+                        <hr>
 
+
+                        <v-col cols="18" lg="12">
+                            <!-- user-post  -->
+                            <div class="mb-6">
+                                <div class="d-flex align-center flex-wrap mb-4">
+                                    <v-avatar size="48" class="me-4">
+                                        <img src="~/assets/images/faces/8.png" alt="">
+                                    </v-avatar>
                                     <div>
-                                        <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
-                                        <div class="mt-4">
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-thumb-up-outline</v-icon>
-                                                Like
-                                            </v-btn>
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-comment-text-outline</v-icon>
-                                                Comment
-                                            </v-btn>
-                                        </div>
+                                        <h5 class="mb-0">Abriella Bond</h5>
+                                        <p class="mb-0 text-14 grey--text text--darken-1">2 Reviews, 9 Followers</p>
                                     </div>
-                                    <v-divider class="my-4"></v-divider>
-
-
-
                                 </div>
-                                <!-- end::user-post  -->
-                                <!-- user-post  -->
+                                <div class="d-flex align-center mb-2">
+                                    <span v-for="(star, index) in 5" :key="index">
+                                        <v-icon small color="warning">mdi-star</v-icon>
+                                    </span>
+                                    <span class="font-weight-bold text-14 ms-2">4.0</span>
+                                    <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
+                                </div>
+                                <h5 class="grey--text text--darken-2 font-weight-regular mb-3">Lorem ipsum dolor sit
+                                    amet,
+                                    consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida
+                                    egestas ac
+                                    account.</h5>
+                                <v-row class="mb-2">
+                                    <v-col cols="6" lg="6">
+                                        <v-img contain :src="require('~/assets/images/gallery/foodFive.png')"></v-img>
+                                    </v-col>
+                                    <v-col cols="6" lg="6">
+                                        <v-img contain :src="require('~/assets/images/gallery/foodSix.png')"></v-img>
+                                    </v-col>
+                                </v-row>
+                                <div>
+                                    <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
+                                    <div class="mt-4">
+                                        <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                            small>
+                                            <v-icon left small>mdi-thumb-up-outline</v-icon>
+                                            Like
+                                        </v-btn>
+                                        <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                            small>
+                                            <v-icon left small>mdi-comment-text-outline</v-icon>
+                                            Comment
+                                        </v-btn>
+                                    </div>
+                                </div>
+                                <v-divider class="my-4"></v-divider>
+                                <!-- comment  -->
                                 <div class="mb-6">
-                                    <div class="d-flex align-center flex-wrap mb-4">
-                                        <v-avatar size="48" class="me-4">
-                                            <img src="~/assets/images/faces/9.jpg" alt="">
+                                    <div class="d-flex align-center mb-3">
+                                        <v-avatar size="28" class="me-3">
+                                            <img src="~/assets/images/faces/6.png" alt="">
                                         </v-avatar>
-                                        <div>
-                                            <h5 class="mb-0">Abriella Bond</h5>
-                                            <p class="mb-0 text-14 grey--text text--darken-1">2 Reviews, 9 Followers</p>
-                                        </div>
+                                        <div class="text-14 grey--text text--darken-4 f-600">Emmet McDermott</div>
                                     </div>
-                                    <div class="d-flex align-center mb-2">
-                                        <span v-for="(star, index) in 5" :key="index">
-                                            <v-icon small color="warning">mdi-star</v-icon>
-                                        </span>
-                                        <span class="font-weight-bold text-14 ms-2">4.0</span>
-                                        <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
-                                    </div>
-                                    <h5 class="grey--text text--darken-2 font-weight-regular mb-3">Lorem ipsum dolor sit
+                                    <h5 class="grey--text text--darken-2 font-weight-regular">Lorem ipsum dolor sit
                                         amet,
-                                        consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida
-                                        egestas ac
-                                        account.</h5>
-
-                                    <div>
-                                        <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
-                                        <div class="mt-4">
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-thumb-up-outline</v-icon>
-                                                Like
-                                            </v-btn>
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-comment-text-outline</v-icon>
-                                                Comment
-                                            </v-btn>
-                                        </div>
-                                    </div>
-                                    <v-divider class="my-4"></v-divider>
-
-
-
+                                        consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae
+                                        gravida egestas
+                                        ac account.</h5>
                                 </div>
-                                <!-- end::user-post  -->
-                            </v-col>
+                                <div class="mb-6">
+                                    <div class="d-flex align-center mb-3">
+                                        <v-avatar size="28" class="me-3">
+                                            <img src="~/assets/images/faces/7.png" alt="">
+                                        </v-avatar>
+                                        <div class="text-14 grey--text text--darken-4 f-600">Emmet McDermott</div>
+                                    </div>
+                                    <h5 class="grey--text text--darken-2 font-weight-regular">Lorem ipsum dolor sit
+                                        amet,
+                                        consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae
+                                        gravida egestas
+                                        ac account.</h5>
+                                </div>
+                                <v-divider></v-divider>
+                                <!-- end::comment -->
+
+                            </div>
+                            <!-- end::user-post  -->
+                            <!-- user-post  -->
+                            <div class="mb-6">
+                                <div class="d-flex align-center flex-wrap mb-4">
+                                    <v-avatar size="48" class="me-4">
+                                        <img src="~/assets/images/faces/13.jpg" alt="">
+                                    </v-avatar>
+                                    <div>
+                                        <h5 class="mb-0">Abriella Bond</h5>
+                                        <p class="mb-0 text-14 grey--text text--darken-1">2 Reviews, 9 Followers</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-center mb-2">
+                                    <span v-for="(star, index) in 5" :key="index">
+                                        <v-icon small color="warning">mdi-star</v-icon>
+                                    </span>
+                                    <span class="font-weight-bold text-14 ms-2">4.0</span>
+                                    <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
+                                </div>
+                                <h5 class="grey--text text--darken-2 font-weight-regular mb-3">Lorem ipsum dolor sit
+                                    amet,
+                                    consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida
+                                    egestas ac
+                                    account.</h5>
+
+                                <div>
+                                    <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
+                                    <div class="mt-4">
+                                        <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                            small>
+                                            <v-icon left small>mdi-thumb-up-outline</v-icon>
+                                            Like
+                                        </v-btn>
+                                        <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                            small>
+                                            <v-icon left small>mdi-comment-text-outline</v-icon>
+                                            Comment
+                                        </v-btn>
+                                    </div>
+                                </div>
+                                <v-divider class="my-4"></v-divider>
+
+
+
+                            </div>
+                            <!-- end::user-post  -->
+                            <!-- user-post  -->
+                            <div class="mb-6">
+                                <div class="d-flex align-center flex-wrap mb-4">
+                                    <v-avatar size="48" class="me-4">
+                                        <img src="~/assets/images/faces/9.jpg" alt="">
+                                    </v-avatar>
+                                    <div>
+                                        <h5 class="mb-0">Abriella Bond</h5>
+                                        <p class="mb-0 text-14 grey--text text--darken-1">2 Reviews, 9 Followers</p>
+                                    </div>
+                                </div>
+                                <div class="d-flex align-center mb-2">
+                                    <span v-for="(star, index) in 5" :key="index">
+                                        <v-icon small color="warning">mdi-star</v-icon>
+                                    </span>
+                                    <span class="font-weight-bold text-14 ms-2">4.0</span>
+                                    <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
+                                </div>
+                                <h5 class="grey--text text--darken-2 font-weight-regular mb-3">Lorem ipsum dolor sit
+                                    amet,
+                                    consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida
+                                    egestas ac
+                                    account.</h5>
+
+                                <div>
+                                    <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
+                                    <div class="mt-4">
+                                        <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                            small>
+                                            <v-icon left small>mdi-thumb-up-outline</v-icon>
+                                            Like
+                                        </v-btn>
+                                        <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                            small>
+                                            <v-icon left small>mdi-comment-text-outline</v-icon>
+                                            Comment
+                                        </v-btn>
+                                    </div>
+                                </div>
+                                <v-divider class="my-4"></v-divider>
+
+
+
+                            </div>
+                            <!-- end::user-post  -->
+                        </v-col>
                     </v-tab-item>
                     <v-tab-item value="tab-4">
                         <div>
@@ -319,35 +427,74 @@
                             <h4>매장 주소</h4><br>
                             서울특별시 서초구 남부순환로 339번길 53
 
-                          
+
                         </div>
                     </v-tab-item>
                 </v-tabs-items>
             </div>
-        
+
 
 
 
         </v-container>
-        <Location />
         <Footer />
-
     </div>
 </template>
 <script>
+import KakaoMap from '@/components/api/KakaoMap.vue'
+import DateTimePicker from '@/components/restaurant/DateTimePicker.vue';
 export default {
+    name: 'App',
+    components:{
+        KakaoMap,
+        DateTimePicker
+    },
     head: {
         title: 'Food Menu'
     },
     data: () => ({
-        ratingsCount:[1,1,3,6,20],
+        ratingsCount: [1, 1, 3, 6, 20],
         menuItems: [
-            { name: 'PIZZA', priceRange: '20,000 ~ 36,000원' },
-            { name: 'SPAGHETTI', priceRange: '8,500 ~ 9,500원' },
-            { name: 'PASTA', priceRange: '11,000 ~ 13,000원' },
-            { name: 'RICE', priceRange: '11,000 ~ 13,000원' },
-            { name: 'SALADE', priceRange: '6,000 ~ 9,000원' },
-            { name: 'SIDE', priceRange: '500 ~ 2,000원' },
+            {
+                name: 'PIZZA', priceRange: '20,000 ~ 36,000원', active: false,
+                items: [
+                    { name: '콤비네이션', price: '20,000' },
+                    { name: '페퍼로니', price: '18,000' },
+                    { name: '포테이토', price: '22,000' },
+                ]
+            },
+            {
+                name: 'SPAGHETTI', priceRange: '8,500 ~ 9,500원', active: false,
+                items: [
+                    { name: '치즈오븐스파게티', price: '8,500' },
+                    { name: '매콤로제스파게티', price: '9,000' },
+                    { name: '크림베이컨스파게티', price: '9,500' },
+                ]
+            },
+            {
+                name: 'RICE', priceRange: '11,000 ~ 13,000원', active: false,
+                items: [
+                    { name: '콤비네이션', price: '20,000' },
+                    { name: '콤비네이션', price: '20,000' },
+                    { name: '콤비네이션', price: '20,000' },
+                ]
+            },
+            {
+                name: 'SALADE', priceRange: '6,000 ~ 9,000원', active: false,
+                items: [
+                    { name: '콤비네이션', price: '20,000' },
+                    { name: '콤비네이션', price: '20,000' },
+                    { name: '콤비네이션', price: '20,000' },
+                ]
+            },
+            {
+                name: 'SIDE', priceRange: '500 ~ 2,000원', active: false,
+                items: [
+                    { name: '콤비네이션', price: '20,000' },
+                    { name: '콤비네이션', price: '20,000' },
+                    { name: '콤비네이션', price: '20,000' },
+                ]
+            },
         ],
         items: [
             {
@@ -375,29 +522,35 @@ export default {
         checkbox: true,
         radioGroup: 1,
         value: [20, 40],
-        selected:null
+        selected: null,
+        showModal: false,
+        modal:false,
+        depositAmount : false
     }),
     computed: {
-    // 평균 별점을 계산합니다.
-    averageScore() {
-      const totalReviews = this.ratingsCount.length;
-      const scoreSum = this.ratingsCount.reduce((sum, count, index) => {
-        return sum + (count * (5 - index));
-      }, 0);
-      return scoreSum / totalReviews;
-    }
-  },
-  methods: {
-    // 비율을 계산하여 백분율로 변환합니다.
-    getPercentage(count) {
-      const total = this.ratingsCount.reduce((sum, count) => sum + count, 0);
-      return (count / total) * 100;
+        // 평균 별점을 계산합니다.
+        averageScore() {
+            const totalReviews = this.ratingsCount.length;
+            const scoreSum = this.ratingsCount.reduce((sum, count, index) => {
+                return sum + (count * (5 - index));
+            }, 0);
+            return scoreSum / totalReviews;
+        }
     },
-    toggleSelection(button) {
-      // 선택된 버튼이 다시 클릭되면 선택 해제, 아니면 선택
-      this.selected = this.selected === button ? null : button;
+    methods: {
+        // 비율을 계산하여 백분율로 변환합니다.
+        getPercentage(count) {
+            const total = this.ratingsCount.reduce((sum, count) => sum + count, 0);
+            return (count / total) * 100;
+        },
+        toggleSelection(button) {
+            // 선택된 버튼이 다시 클릭되면 선택 해제, 아니면 선택
+            this.selected = this.selected === button ? null : button;
+        },
+        closeModal() {
+            this.modal = false;
+        }
     }
-  }
 }
 </script>
 <style lang="scss">
@@ -418,7 +571,8 @@ export default {
 
     }
 }
-hr{
+
+hr {
     border-bottom: 1px solid #ddd;
 }
 
@@ -440,77 +594,122 @@ hr{
 }
 
 .ratings-container {
-  display: flex;
-  flex-direction:row;
-  align-items: center;
-  width: 80%;
-  padding-left: 20%;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 80%;
+    padding-left: 20%;
 }
+
 .ratings-container-sub {
-  display: flex;
-  flex-direction:column;
-  align-items: center;
-  justify-content: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
 }
 
 .score-image {
-  width: 50px; /* 이미지 크기 조절 */
-  height: auto;
-  margin-right: 10px; /* 오른쪽 여백 추가 */
+    width: 50px;
+    /* 이미지 크기 조절 */
+    height: auto;
+    margin-right: 10px;
+    /* 오른쪽 여백 추가 */
 }
 
 .score-value {
-  font-size: 2em; /* 평균 점수 글씨 크기 */
-  margin-bottom: 10px; /* 아래쪽 여백 추가 */
+    font-size: 2em;
+    /* 평균 점수 글씨 크기 */
+    margin-bottom: 10px;
+    /* 아래쪽 여백 추가 */
 }
 
 .rating-bars {
-  width: 100%;
+    width: 100%;
 }
 
 .rating-bar-container {
-  display: flex;
-  align-items: center;
-  margin-bottom: 4px; /* 바 사이의 여백 */
+    display: flex;
+    align-items: center;
+    margin-bottom: 4px;
+    /* 바 사이의 여백 */
 }
 
 .rating-score {
-  min-width: 30px; /* 별점 점수 폭 고정 */
+    min-width: 30px;
+    /* 별점 점수 폭 고정 */
 }
 
 .rating-bar-background {
-  flex-grow: 1; /* 가로 막대 배경을 가득 채우기 */
-  background-color: #eee;
-  margin: 0 10px; /* 가로 막대 여백 */
-  height: 10px; /* 가로 막대 높이 */
+    flex-grow: 1;
+    /* 가로 막대 배경을 가득 채우기 */
+    background-color: #eee;
+    margin: 0 10px;
+    /* 가로 막대 여백 */
+    height: 10px;
+    /* 가로 막대 높이 */
 }
 
 .rating-bar-fill {
-  background-color: #000;
-  height: 100%;
-  transition: width 0.5s ease;
+    background-color: #000;
+    height: 100%;
+    transition: width 0.5s ease;
 }
 
 .rating-count {
-  min-width: 30px; /* 카운트 숫자 폭 고정 */
-  text-align: right; /* 숫자를 오른쪽으로 정렬 */
+    min-width: 30px;
+    /* 카운트 숫자 폭 고정 */
+    text-align: right;
+    /* 숫자를 오른쪽으로 정렬 */
 }
-.roundstate{
+
+.roundstate {
     display: flex;
-    width: 60%;
+    width: 35%;
     height: 50px;
     border-radius: 50px;
-    border : 2px solid #000;
+    border: 3px solid #000;
     color: FFFFFF;
     align-items: center;
     justify-content: center;
 }
-.roundstate-small{
+
+.roundstate-small {
     width: 50px;
     margin-right: 20px;
     border-radius: 50px;
     background-color: #1DDB16;
     text-align: center;
     color: #eee;
+}
+
+.icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+
+}
+.icon-center{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.icon-item {
+    display: flex;
+    justify-content: center;
+    border: 3.5px solid #000;
+    border-radius: 15%;
+    padding: 5px;
+    width: 70px;
+}
+
+.space {
+    display: flex;
+    /* Flexbox layout을 활성화 */
+    flex-direction: row-reverse;
+    justify-content: right;
+    /* 양쪽 끝에 자식 요소를 배치 */
+    align-items: center;
 }
 </style>
