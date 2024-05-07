@@ -754,7 +754,6 @@ export default {
     clearInterval(this.timerInterval);
   },
   methods: {
-
     cancelPayment() {
     // 예약 취소 메시지 표시
     // 모달 닫기
@@ -835,7 +834,6 @@ export default {
     this.riceBallInput = this.totalRiceBallPoints.toString();
   }
     
-
     },
     generateTimeOptions() {
       for (let hour = 0; hour < 24; hour++) {
