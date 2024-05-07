@@ -300,7 +300,7 @@ export default {
           })
           .catch((error) => {
             console.error("Error deleting the notice:", error);
-            alert("공지사항 삭제 실패입니다: " + error.message); // 실패 알림
+            alert("공지사항 삭제 실패: " + error.message); // 실패 알림
           });
       } else {
         console.log("삭제 취소됩니다."); // 사용자가 삭제를 취소한 경우
