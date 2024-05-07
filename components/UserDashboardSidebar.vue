@@ -30,30 +30,24 @@ export default {
                     id: 1,
                     icon: 'mdi-account-search-outline',
                     title: '회원 정보 관리',
-                    link: '/memberManage/AdminManageUserpage'
+                    link: '/memberManage/UserMyPage'
 
                 },
                 {
                     id: 2,
                     icon: 'mdi-silverware',
-                    title: '식당 정보 관리',
-                    link: '/memberManage/AdminManageRestaurantPage'
+                    title: '마이 다이닝',
+                    link: '/myDining/MydiningPage'
 
                 },
                 {
                     id: 3,
                     icon: 'mdi-clipboard-check-outline',
-                    title: '식당 등록',
-                    link: '/memberManage/AdminRegisterRestaurantPage'
+                    title: '식당 찾기',
+                    link: '/restaurant/RestaurantListPage'
 
                 },
-                {
-                    id: 4,
-                    icon: 'mdi-message-text-outline',
-                    title: '리뷰 및 댓글 삭제 관리',
-                    link: '/memberManage/AdminManageReviewPage'
-
-                },
+                
             ],
             
         }

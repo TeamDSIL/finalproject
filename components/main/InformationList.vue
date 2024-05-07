@@ -33,7 +33,6 @@
             </tr>
           </template>
         </v-data-table>
-        <v-btn @click="goBack">돌아가기</v-btn>
       </v-col>
     </v-row>
     <Footer />
@@ -253,9 +252,6 @@ export default {
     showDetails(item) {
       this.detailsNotice = item;
       this.showDetailsModal = true;
-    },
-    goBack() {
-      this.$router.push("/");
     },
     onFileChanged() {
       const file = this.currentNotice.file; // v-model을 통해 연결된 파일 객체 직접 사용

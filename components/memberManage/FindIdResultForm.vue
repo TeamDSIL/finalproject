@@ -24,7 +24,7 @@
             <v-dialog v-model="dialog" width="500">
                 <template v-slot:activator="{ on, attrs }">
                     <nuxt-link to="/memberManage/LoginPage">
-                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="text-capitalize font-600">
+                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary">
                             <span class="d-none d-sm-block">로그인하러 가기</span>
                         </v-btn>
                     </nuxt-link>
@@ -42,8 +42,6 @@ export default {
         return {
             step: 1, // 초기 단계 설정
             email: '',
-            tempPassword: '',
-            newPassword: '',
             dialog: false,
         };
     }
