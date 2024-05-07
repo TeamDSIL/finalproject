@@ -19,6 +19,10 @@ export default {
       if (writeReview !== -1) {
         routes[writeReview].path = '/myDining/WriteReviewPage/:id';
       }
+      const myDining = routes.findIndex(route => route.name === 'myDining-MydiningPage');
+      if (myDining !== -1) {
+        routes[myDining].path = '/myDining/:id';
+      }
     }
   },
   head: {
