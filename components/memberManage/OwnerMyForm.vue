@@ -12,7 +12,7 @@
                   <h1 class="grey--text text-12 pa-5 text-uppercase font-weight-regular">My 매장</h1>
                   <ul>
                     <li v-for="(item, index) in ownerInfos" :key="index" @click="toggleItem(index)"
-                      :class="{ 'selected': selectedItem === index, 'hover': hoverItem === index }"
+                      :class="{ 'selected': selectedItem === index, 'hover': hoverItem === index, 'my-maechang': true }"
                       class="mb-0 text--darken-1 text-14 mb-3 mb-sm-0 d-none d-sm-block" @mouseover="hoverItem = index"
                       @mouseleave="hoverItem = null">
                       {{ item.매장명 }}
@@ -183,7 +183,7 @@ li:hover p {
   /* 마우스를 올렸을 때 글씨 빨간색으로 변경 */
 }
 
-li:hover:before {
+.my-maechang:hover:before {
   content: '';
   position: absolute;
   left: 0;
@@ -191,7 +191,6 @@ li:hover:before {
   bottom: 0;
   width: 5px;
   background-color: red;
-  /* 마우스를 올렸을 때 왼쪽 테두리 빨간색으로 추가 */
 }
 
 #modify-ownerInfo-btn {
