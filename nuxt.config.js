@@ -6,23 +6,6 @@ export default {
       
       // 기존 라우트 수정도 가능
       // 첫 번째 라우트 수정
-      const manageIndex = routes.findIndex(route => route.name === 'memberManage-RegisterRestaurantPage');
-      if (manageIndex !== -1) {
-        routes[manageIndex].path = '/memberManage/RegisterRestaurantPage/:id';
-      }
-
-      // 두 번째 라우트 수정
-      // const modifyIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantModifyPage');
-      // if (modifyIndex !== -1) {
-      //   routes[modifyIndex].path = '/restaurant/RestaurantModifyPage/:id';
-      // }
-    }
-  },
-  router: {
-    extendRoutes(routes, resolve) {
-      
-      // 기존 라우트 수정도 가능
-      // 첫 번째 라우트 수정
       const manageIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantManageMainPage');
       if (manageIndex !== -1) {
         routes[manageIndex].path = '/restaurant/RestaurantManageMainPage/:id';
@@ -58,14 +41,16 @@ export default {
       if (myDining !== -1) {
         routes[myDining].path = '/myDining/:id';
       }
+      const registerIndex = routes.findIndex(route => route.name === 'memberManage-RegisterRestaurantPage');
+      if (registerIndex !== -1) {
+        routes[registerIndex].path = '/memberManage/RegisterRestaurantPage/:id';
+      }
       const reserveIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantDetailPage');
       if (reserveIndex !== -1) {
         routes[reserveIndex].path = '/restaurant/detail';
       }
     }
   },
-      
-  
 
   head: {
     titleTemplate: '%s - food-truck',
