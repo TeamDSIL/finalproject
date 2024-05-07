@@ -1,7 +1,16 @@
 <template>
   <div>
+    <!-- 이미지 -->
+     <!-- 이미지를 전체 페이지에 랜덤 위치에 고정 -->
+     <!-- <v-img
+      src="@/assets/images/yahoImage.png"
+      :style="yahoStyle"
+      contain
+      height="100px"
+      @click="navigateTo('main-InformationPage')"
+      class="random-image"
+    ></v-img> -->
     <MainForm></MainForm>
-
     <!-- 카테고리 -->
     <div>
       <v-container class="py-15">
@@ -27,7 +36,6 @@
             </div>
           </v-col>
         </v-row>
-
         <!-- 주류 -->
         <v-row>
           <v-col cols="12">
@@ -125,7 +133,6 @@
               </v-card>
             </nuxt-link>
           </v-col>
-
           <!-- 조회 -->
           <v-col cols="12">s
             <div class="d-flex justify-space-between align-end flex-wrap">
@@ -187,7 +194,6 @@
               </div>
             </div>
           </v-col>
-          
           <v-col
             v-for="(item, index) in favorites"
             :key="`favorites-${index}`"
@@ -220,24 +226,23 @@
         </v-row>
       </v-container>
     </div>
-    
+    <roulette></roulette>
     <Footer />
-  </div>
+    </div>
 </template>
 <script>
 import { CardSection } from "@/assets/database/data.js";
+import Roulette from '../components/main/Roulette.vue';
 export default {
+  components: { Roulette },
   layout: "landingHeader",
-
   head: {
     title: "Home",
   },
- 
   data() {
     return {
       CardList: CardSection,
       food: [
-        
         {
           img: require("~/assets/images/food/9.png"),
           name: "한식",
@@ -306,7 +311,6 @@ export default {
           img: require("~/assets/images/food/12.png"),
           name: "데이트",
         },
-      
       ],
       reservation: [
         {
@@ -362,10 +366,8 @@ export default {
           name: "Best Of New York",
         },
       ],
-      
     };
   },
-  
 };
 </script>
 <style lang="scss">

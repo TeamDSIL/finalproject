@@ -37,12 +37,27 @@ export default {
       if (writeReview !== -1) {
         routes[writeReview].path = '/myDining/WriteReviewPage/:id';
       }
+
+      const myDining = routes.findIndex(route => route.name === 'myDining-MydiningPage');
+      if (myDining !== -1) {
+        routes[myDining].path = '/myDining/:id';
+      }
       const registerIndex = routes.findIndex(route => route.name === 'memberManage-RegisterRestaurantPage');
       if (registerIndex !== -1) {
         routes[registerIndex].path = '/memberManage/RegisterRestaurantPage/:id';
       }
     }
   },
+
+      const reserveIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantDetailPage');
+      if (reserveIndex !== -1) {
+        routes[reserveIndex].path = '/restaurant/detail';
+      }
+    },
+    },
+  
+
+
   head: {
     titleTemplate: '%s - food-truck',
     title: 'food-truck',

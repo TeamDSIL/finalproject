@@ -6,8 +6,8 @@
       <div class="d-flex justify-space-between flex-wrap flex-sm-nowrap mb-3">
         <v-tabs class="mb-3">
           <v-tab class="text-capitalize">식당관리</v-tab>
-          <v-tab class="text-capitalize">예약관리</v-tab>
-          <v-tab class="text-capitalize">리뷰관리</v-tab>
+          <v-tab class="text-capitalize">예약전체현황</v-tab>
+          <v-tab class="text-capitalize">전체리뷰보기</v-tab>
         </v-tabs>
       </div>
 
@@ -16,10 +16,7 @@
         <v-col cols="12">
           <v-row>
             <v-col cols="12">
-              <h5 class="text-18 test-color">나의 식당^^</h5>
-              <v-btn @click="takeMyPosition">내주변식당</v-btn>
-              
-
+              <h5 class="text-18 test-color">나의 식당</h5>
             </v-col>
             <v-col cols="12" sm="6" md="3" v-for="restaurant in restaurants" :key="restaurant.id">
               <v-card @click="goToRestaurantManagement(restaurant)" class="ma-2">

@@ -46,6 +46,7 @@
             <p>예약금 <span style="margin-left: 88px;">{{ calculateDeposit }}원</span></p>
             <p style="font-size: 0.8rem; opacity: 0.6;">(결제하기 버튼을 7분 이내로 눌러주세요.)</p>
             <p style="font-size: 0.8rem; opacity: 0.6; color:red">(예약 취소 시, 예약금은 환불 정책에 따라 반환됩니다.)</p>
+
           </div>
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
@@ -124,9 +125,10 @@
     <v-dialog v-if="showPaymentModal" v-model="showPaymentModal" persistent width="550px">
       <v-card class="custom-card">
         <v-card-title class="title">
-          <p> 예약금 결제</p>
-        </v-card-title>
-        <v-card-title class="restaurant-name" style="margin-bottom: 10px;">
+          <p style="margin-top: 2px;">예약금 결제</p>
+      <v-icon @click="cancelPayment" style="position: relative; top: -7px;">mdi-close</v-icon>
+    </v-card-title>
+            <v-card-title class="restaurant-name" style="margin-bottom: 13px;">
           <div style="margin-top: -20px;">{{ restaurantName }}</div>
         </v-card-title>
 
@@ -203,6 +205,7 @@
           노쇼 시 : 환불 불가
         </textarea>
           </div>
+
         </div>
 
         <div
@@ -751,6 +754,13 @@ export default {
     clearInterval(this.timerInterval);
   },
   methods: {
+
+    cancelPayment() {
+    // 예약 취소 메시지 표시
+    // 모달 닫기
+    this.showPaymentModal = false;
+  },
+
     submitForm() {
     // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
     if (this.reservationPolicyAgreed && this.agreeTerms) {
@@ -816,9 +826,16 @@ export default {
       this.$router.push('/restaurant/RestaurantReservePage');
     },
     handleInputChange() {
-      if (parseInt(this.riceBallInput) > this.totalRiceBallPoints) {
-        this.riceBallInput = this.totalRiceBallPoints;
-      }
+
+  if (isNaN(this.riceBallInput) || this.riceBallInput.includes("-")) {
+    this.riceBallInput = this.riceBallInput.replace("-", "");
+  }
+  
+  if (parseInt(this.riceBallInput) > this.totalRiceBallPoints) {
+    this.riceBallInput = this.totalRiceBallPoints.toString();
+  }
+    
+
     },
     generateTimeOptions() {
       for (let hour = 0; hour < 24; hour++) {

@@ -44,7 +44,7 @@
                     <p class="mb-5 text-18">커피 한 잔에 담긴 작은 행복, 스타벅스</p>
                     <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
                         <v-icon left small color="grey">mdi-map-marker</v-icon>
-                        서울특별시 서초구 남부순환로 339길 53　
+                        서울특별시 서초구 남부순환로 339길 53
                         <v-dialog ref="dialog" v-model="modal" width="500px" height="500px">
                                 <!-- 버튼을 클릭하면 모달을 열 수 있음 -->
                                 <template v-slot:activator="{ on }">
@@ -54,7 +54,7 @@
                               <KakaoMap/>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="primary" v-on="on" text @click="closeModal">닫기</v-btn>
+                                        <v-btn color="primary" text @click="modal = false">닫기</v-btn>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
@@ -99,7 +99,7 @@
                 <v-tabs-items v-model="tab">
                     <v-tab-item value="tab-1">
                         <h2>예약 신청</h2>
-                        <v-btn class="roundstate">신청 날짜와 인원을 선택하여 주십시오.</v-btn><br><br><br>
+                        <DateTimePicker></DateTimePicker><br><br><br>
                         <h2>식당 혼잡도</h2>
                         <div class="roundstate">
                             <div class="roundstate-small">여유</div>
@@ -182,15 +182,14 @@
                                 </tbody>
                             </table>
                             <br>
-                            <v-dialog ref="dialog" v-model="modal" width="400px">
+                            <v-dialog ref="dialog" v-model="showModal" width="400px">
                                 <!-- 버튼을 클릭하면 모달을 열 수 있음 -->
                                 <template v-slot:activator="{ on }">
                                     <v-btn block color="error" v-on="on"> 메뉴 전체보기 > </v-btn>
                                 </template>
                                 <v-card>
                                     <!-- 여기에 사진 삽입 -->
-                                    <v-img src="../../assets/images/food/pizza.png" aspect-ratio="1.7"
-                                        class="grey lighten-2" width="400px"></v-img>
+                                    <img src="../../assets/images/food/pizza.png" width="400px"></img>
                                     <!-- 메뉴 리스트 드롭다운 -->
                                     <v-list>
                                         <v-list-group v-for="item in menuItems" :key="item.name" v-model="item.active"
@@ -211,7 +210,7 @@
                                     </v-list>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
-                                        <v-btn color="primary" v-on="on" text @click="closeModal">닫기</v-btn>
+                                        <v-btn color="primary" text @click="showModal=false">닫기</v-btn>
                                     </v-card-actions>
                                 </v-card>
                             </v-dialog>
@@ -442,12 +441,13 @@
     </div>
 </template>
 <script>
-import KakaoMap from '../api/kakaoMap.vue'
-
+import KakaoMap from '@/components/api/KakaoMap.vue'
+import DateTimePicker from '@/components/restaurant/DateTimePicker.vue';
 export default {
     name: 'App',
     components:{
-        KakaoMap
+        KakaoMap,
+        DateTimePicker
     },
     head: {
         title: 'Food Menu'
@@ -523,7 +523,9 @@ export default {
         radioGroup: 1,
         value: [20, 40],
         selected: null,
-        showModal: false
+        showModal: false,
+        modal:false,
+        depositAmount : false
     }),
     computed: {
         // 평균 별점을 계산합니다.

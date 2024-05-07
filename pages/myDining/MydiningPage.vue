@@ -49,29 +49,33 @@
                                 </h5>
 
                                 <span style="display: flex">
-                                  <span
-                                    v-for="(
-                                      star, index
-                                    ) in reservation.babscore"
-                                    :key="index"
-                                  >
-                                    <div style="margin-left: 2px">
-                                      <v-img
-                                        :src="
-                                          require('~/assets/images/babscore.png')
-                                        "
-                                        width="20px"
-                                        class="fixed-size"
-                                      ></v-img>
-                                    </div>
+                                  <span v-for="index in Math.floor(reservation.averageReviewScore)" :key="'full-' + index">
+      <v-img
+        :src="require('~/assets/images/babscore.png')"
+        width="20px"
+        class="fixed-size"
+        alt="Full Star"
+      ></v-img>
+    </span>
+    <!-- 소수점이 있으면 반 별 추가 -->
+    <span v-if="hasHalfStar(reservation.averageReviewScore)">
+      <v-img
+        :src="require('~/assets/images/half-babscore.png')" 
+        width="10px"
+        class="fixed-size"
+        alt="Half Star"
+      ></v-img>
+    </span>
+                                  <span class="font-weight-bold text-14 ms-2">
+                                    {{
+                                      reservation.averageReviewScore.toFixed(1)
+                                    }}
                                   </span>
-                                  <span class="font-weight-bold text-14 ms-2"
-                                    >{{ reservation.babscore }}.0</span
-                                  >
+
                                   <h6
                                     class="ms-3 grey--text text--darken-1 font-weight-light"
                                   >
-                                    ({{ reservation.baascoreCount }})
+                                    ({{ reservation.reviewCount }})
                                   </h6>
                                 </span>
                               </div>
@@ -79,9 +83,12 @@
                                 class="text-uppercase mb-2"
                                 :class="{
                                   'green lighten-2':
-                                    reservation.reservationState === '예약중',
+                                    reservation.reservationState === 'RESERVED',
                                   'blue-grey lighten-4':
-                                    reservation.reservationState === '완료',
+                                    reservation.reservationState ===
+                                    'COMPLETED',
+                                  'red lighten-2':
+                                    reservation.reservationState === 'CANCELED',
                                 }"
                                 text-color="secondary"
                                 small
@@ -90,29 +97,31 @@
                               </v-chip>
                               <div>
                                 <span
-                                  class="text-14 grey--text text--darken-4 me-2 mb-0"
-                                  >시간: {{ reservation.time }}</span
-                                >
+  class="text-14 grey--text text--darken-4 me-2 mb-0"
+  >시간: {{ formatTime(reservation.reservationTime) }}</span
+>
+
                                 <span
                                   class="text-14 grey--text text--darken-4 me-2 mb-0"
-                                  >인원수: {{ reservation.people }}명</span
+                                  >인원수: {{ reservation.peopleCount }}명</span
                                 >
                                 <p class="text-14 primary--text mb-0">
                                   예약금: {{ reservation.deposit }}원
                                 </p>
 
                                 <nuxt-link
-                                  :to="`/myDining/WriteReviewPage/${reservation.reservation_id}`"
-                                  class="text-decoration-none white--text"
-                                >
-                                  <v-btn
-                                    color="primary"
-                                    small
-                                    class="review-write-button"
-                                  >
-                                    리뷰 쓰기
-                                  </v-btn>
-                                </nuxt-link>
+  :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
+  class="text-decoration-none white--text"
+>
+  <v-btn
+    color="primary"
+    small
+    class="review-write-button"
+  >
+    리뷰 쓰기
+  </v-btn>
+</nuxt-link>
+
                               </div>
                               <!-- <p class="text-14 grey--text text--darken-1">(4 Pcs mutton in chicken keema gravy)</p> -->
                             </div>
@@ -372,13 +381,17 @@
 import ReserveRestaurantList from "@/assets/database/myDiningReservation.js";
 import LikeList from "@/assets/database/myDiningLikeLIst.js";
 import ReviewList from "@/assets/database/myDiningReviewList.js";
+import { getReserveList } from "@/api/myDining";
+import axios from "axios";
 
 export default {
   // head: {
   //   title: "Food Menu",
   // },
   data: () => ({
-    reserveRestaurantList: ReserveRestaurantList,
+    // reserveRestaurantList: ReserveRestaurantList,
+    reserveRestaurantList: [],
+    reservations: [],
     likeList: LikeList,
     reviewList: ReviewList,
     currentPage: 1,
@@ -419,6 +432,33 @@ export default {
   },
 
   methods: {
+    formatTime(time) {
+      // 정규식을 사용하여 숫자만 추출
+      const match = time.match(/\d+/);
+      if (match) {
+        const hour = parseInt(match[0], 10); // 숫자로 변환
+        return `오후 ${hour}시`; // "오후 X시" 형식으로 반환
+      }
+      return time; // 매칭되는 숫자가 없으면 원래 문자열 반환
+    },
+    hasHalfStar(score) {
+      // 소수 부분이 0이 아니면 true 반환
+      return (score % 1 !== 0);
+    },
+    fetchReservations() {
+      // URL의 id 파라미터를 가져옵니다
+      const id = this.$route.params.id;
+
+      axios
+        .get(`http://localhost:8000/myDining/${id}`)
+        .then((response) => {
+          // 응답 데이터를 reservations 배열에 저장합니다
+          this.reserveRestaurantList = response.data;
+        })
+        .catch((error) => {
+          console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+        });
+    },
     submitReview() {
       // 리뷰 제출 로직
       console.log("Review submitted");
@@ -442,6 +482,9 @@ export default {
     scrollToTop() {
       window.scrollTo(0, 0); // X 좌표, Y 좌표
     },
+  },
+  created() {
+    this.fetchReservations();
   },
 };
 </script>
