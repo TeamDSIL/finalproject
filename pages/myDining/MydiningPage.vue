@@ -30,7 +30,7 @@
                       <v-col
                         cols="12"
                         v-for="reservation in paginatedData"
-                        :key="reservation.reservation_id"
+                        :key="reservation.reservationId"
                       >
                         <div
                           class="d-flex justify-space-between align-center flex-wrap"
@@ -311,7 +311,7 @@
                 cols="12"
                 lg="6"
                 v-for="review in paginatedData2"
-                :key="review.id"
+                :key="review.reviewId"
               >
                 <!-- user-post  -->
                 <div class="mb-6">
@@ -320,9 +320,9 @@
                       <img :src="review.image" alt="" />
                     </v-avatar>
                     <div>
-                      <h5 class="mb-0">{{ review.name }}</h5>
+                      <h5 class="mb-0">{{ review.restaurantName }}</h5>
                       <p class="mb-0 text-14 grey--text text--darken-1">
-                        {{ review.userdate }}
+                        {{ review.registerDate }}
                       </p>
                     </div>
                     <v-btn
@@ -331,14 +331,14 @@
                       small
                       class="delete-button"
                       style="margin-left: 30px"
-                      @click="requestDelete"
+                      @click="requestDelete(review.reviewId)"
                     >
                       삭제요청
                     </v-btn>
                   </div>
 
                   <div class="d-flex align-center mb-2">
-                    <span v-for="(star, index) in review.babscore" :key="index">
+                    <span v-for="(star, index) in review.score" :key="index">
                       <div style="margin-left: 2px">
                         <v-img
                           :src="require('~/assets/images/babscore.png')"
@@ -348,7 +348,7 @@
                       </div>
                     </span>
                     <span class="font-weight-bold text-14 ms-2"
-                      >{{ review.babscore }}.0</span
+                      >{{ review.score }}.0</span
                     >
                     <!-- <span class="grey--text text--darken-1 text-14 ms-2"
                       >3 Days Ago</span
@@ -357,7 +357,7 @@
                   <h5
                     class="grey--text text--darken-2 font-weight-regular mb-3"
                   >
-                    {{ review.usercontents }}
+                    {{ review.reviewContent }}
                   </h5>
                   <div>
                     <div class="mt-4">
@@ -375,17 +375,17 @@
                   <v-divider class="my-4"></v-divider>
                   <!-- comment  -->
                   <div class="mb-6">
-                    <div v-if="review.ownerdate || review.ownercontents">
+                    <div v-if="review.replyRegisterDate || review.replyContent">
                       <div>
                         <div class="text-14 grey--text text--darken-4 f-600">
                           사장님
                         </div>
                         <div class="mb-0 text-14 grey--text text--darken-1">
-                          {{ review.ownerdate }}
+                          {{ review.replyRegisterDate }}
                         </div>
                       </div>
                       <h5 class="grey--text text--darken-2 font-weight-regular">
-                        {{ review.ownercontents }}
+                        {{ review.replyContent }}
                       </h5>
                     </div>
                     <div v-else class="text-14 grey--text text--darken-1">
@@ -418,17 +418,14 @@
 </template>
 
 <script>
-import LikeList from "@/assets/database/myDiningLikeLIst.js";
-import ReviewList from "@/assets/database/myDiningReviewList.js";
 import axios from "axios";
 
 export default {
   data: () => ({
     reserveRestaurantList: [],
     bookmarksList: [],
+    reviewsList: [],
     reservations: [],
-    likeList: LikeList,
-    reviewList: ReviewList,
     currentPage: 1,
     currentPage1: 1,
     currentPage2: 1,
@@ -459,10 +456,10 @@ export default {
     paginatedData2() {
       let start = (this.currentPage2 - 1) * this.perPage2;
       let end = start + this.perPage2;
-      return this.reviewList.slice(start, end);
+      return this.reviewsList.slice(start, end);
     },
     pageCount2() {
-      return Math.ceil(this.reviewList.length / this.perPage2);
+      return Math.ceil(this.reviewsList.length / this.perPage2);
     },
   },
 
@@ -478,6 +475,17 @@ export default {
       catch (error) {
         console.error("즐겨찾기 취소 중 오류가 발생했습니다.", error);
         alert("즐겨찾기 해제에 실패했습니다.");
+      }
+    },
+    async requestRemeveReview(reviewId) {
+      console.log(reviewId + "삭제할 리뷰아이디");
+      try {
+        const response = await axios.put(
+          `http://localhost:8000/myDining/reviewRemoveRequest/${reviewId}`
+        );
+      } catch (error){
+        console.error("리뷰 취소 신청 중 오류가 발생했습니다.", error);
+        alert("예약 취소에 실패했습니다.");
       }
     },
     async reservationDeny(reservationId) {
@@ -508,6 +516,19 @@ export default {
     hasHalfStar(score) {
       // 소수 부분이 0이 아니면 true 반환
       return score % 1 !== 0;
+    },
+    fetchReviews() {
+      const id = this.$route.params.id;
+      console.log(id+"리뷰");
+      axios
+        .get(`http://localhost:8000/myDining/reviews/${id}`)
+        .then((response) => {
+          this.reviewsList = response.data;
+          console.log(this.reviewsList);
+        })
+        .catch((error) => {
+          console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+      })
     },
     // 예약 리스트 불러오기
     fetchReservations() {
@@ -544,9 +565,9 @@ export default {
       console.log("Review submitted");
       this.dialog = false; // 리뷰 제출 후 모달 닫기
     },
-    requestDelete() {
+    requestDelete(reviewId) {
       if (confirm("진짜 삭제하시겠습니까?")) {
-        console.log("네");
+        this.requestRemeveReview(reviewId);
       }
     },
     requestDeny(reservationId, reservationState) {
@@ -572,6 +593,7 @@ export default {
   created() {
     this.fetchReservations();
     this.fetchBookmarks();
+    this.fetchReviews();
   },
 };
 </script>
