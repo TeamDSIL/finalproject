@@ -93,6 +93,7 @@
               <button
                 @click="goBack"
                 class="grey--text text--darken-4 font-600"
+                type="button"
               >
                 뒤로 가기
               </button>
@@ -131,6 +132,19 @@ export default {
     };
   },
   methods: {
+    fetchReviews() {
+      const id = this.$route.params.id;
+      console.log(id+"리뷰");
+      axios
+        .get(`http://localhost:8000/myDining/reviews/${id}`)
+        .then((response) => {
+          this.reviewsList = response.data;
+          console.log(this.reviewsList);
+        })
+        .catch((error) => {
+          console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+      })
+    },
     async created() {
       const id = this.$route.params.id;
       // const { data } = await fetchPost(id);
@@ -173,6 +187,7 @@ export default {
             }
           );
           console.log("등록 성공:", response.data);
+          this.fetchReviews();
         } catch (error) {
           console.error(
             "리뷰 등록 중 오류 발생:",
