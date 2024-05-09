@@ -29,7 +29,7 @@ export default {
                 {
                     id: 1,
                     icon: 'mdi-account-search-outline',
-                    title: '회원 정보 관리',
+                    title: '마이 페이지',
                     link: '/memberManage/OwnerMyPage'
 
                 },
@@ -42,8 +42,8 @@ export default {
                 },
                 {
                     id: 3,
-                    icon: 'mdi-clipboard-check-outline',
-                    title: '식당 찾기',
+                    icon: 'mdi-lock-check-outline',
+                    title: '비밀번호 변경',
                     link: '/restaurant/RestaurantListPage'
 
                 },
