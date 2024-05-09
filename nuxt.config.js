@@ -54,7 +54,6 @@ export default {
       if (modifyIndex !== -1) {
         routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
       }
-
       const writeReview = routes.findIndex(
         (route) => route.name === "myDining-WriteReviewPage"
       );
