@@ -26,11 +26,11 @@
             <div slot="boxContent">
               <div class="px-10">
                 <v-row>
-                  <v-col cols="12" id="header-info-position">
-                    <h1>회원정보</h1>
+                  <v-col cols="12">
                     <div id="position-set">
+                    <h1>회원정보</h1>
                       <v-dialog v-model="dialogModify" width="500">
-                        <template v-slot:activator="{ on }">
+                        <template v-slot:activator="{ on }" >
                           <v-btn light text v-on="on" class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
                             id="modify-ownerInfo-btn">
                             <span class="d-none d-sm-block">수정</span>
@@ -134,13 +134,9 @@ export default {
 
 <style>
 #position-set {
-  margin-left: 80%;
-}
-
-#header-info-position {
   display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
+  white-space: nowrap;
+  align-items: center;
 }
 
 #bottom-text {
