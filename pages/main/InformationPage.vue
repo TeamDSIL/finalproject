@@ -2,6 +2,7 @@
 
   <div>
     <InformationList></InformationList>
+    
   </div>
 
 </template>

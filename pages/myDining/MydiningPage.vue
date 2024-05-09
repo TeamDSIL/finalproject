@@ -30,14 +30,14 @@
                       <v-col
                         cols="12"
                         v-for="reservation in paginatedData"
-                        :key="reservation.reservation_id"
+                        :key="reservation.reservationId"
                       >
                         <div
                           class="d-flex justify-space-between align-center flex-wrap"
                         >
                           <div class="d-flex flex-wrap">
                             <v-avatar class="me-3" size="150" tile>
-                              <img :src="reservation.image" alt="" />
+                              <img :src="reservation.restaurantImg" alt="" />
                             </v-avatar>
                             <div>
                               <div style="display: flex">
@@ -49,23 +49,38 @@
                                 </h5>
 
                                 <span style="display: flex">
-                                  <span v-for="index in Math.floor(reservation.averageReviewScore)" :key="'full-' + index">
-      <v-img
-        :src="require('~/assets/images/babscore.png')"
-        width="20px"
-        class="fixed-size"
-        alt="Full Star"
-      ></v-img>
-    </span>
-    <!-- 소수점이 있으면 반 별 추가 -->
-    <span v-if="hasHalfStar(reservation.averageReviewScore)">
-      <v-img
-        :src="require('~/assets/images/half-babscore.png')" 
-        width="10px"
-        class="fixed-size"
-        alt="Half Star"
-      ></v-img>
-    </span>
+                                  <span
+                                    v-for="index in Math.floor(
+                                      reservation.averageReviewScore
+                                    )"
+                                    :key="'full-' + index"
+                                  >
+                                    <v-img
+                                      :src="
+                                        require('~/assets/images/babscore.png')
+                                      "
+                                      width="20px"
+                                      class="fixed-size"
+                                      alt="Full Star"
+                                    ></v-img>
+                                  </span>
+                                  <!-- 소수점이 있으면 반 별 추가 -->
+                                  <span
+                                    v-if="
+                                      hasHalfStar(
+                                        reservation.averageReviewScore
+                                      )
+                                    "
+                                  >
+                                    <v-img
+                                      :src="
+                                        require('~/assets/images/half-babscore.png')
+                                      "
+                                      width="10px"
+                                      class="fixed-size"
+                                      alt="Half Star"
+                                    ></v-img>
+                                  </span>
                                   <span class="font-weight-bold text-14 ms-2">
                                     {{
                                       reservation.averageReviewScore.toFixed(1)
@@ -97,9 +112,12 @@
                               </v-chip>
                               <div>
                                 <span
-  class="text-14 grey--text text--darken-4 me-2 mb-0"
-  >시간: {{ formatTime(reservation.reservationTime) }}</span
->
+                                  class="text-14 grey--text text--darken-4 me-2 mb-0"
+                                  >시간:
+                                  {{
+                                    formatTime(reservation.reservationTime)
+                                  }}</span
+                                >
 
                                 <span
                                   class="text-14 grey--text text--darken-4 me-2 mb-0"
@@ -110,18 +128,17 @@
                                 </p>
 
                                 <nuxt-link
-  :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
-  class="text-decoration-none white--text"
->
-  <v-btn
-    color="primary"
-    small
-    class="review-write-button"
-  >
-    리뷰 쓰기
-  </v-btn>
-</nuxt-link>
-
+                                  :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
+                                  class="text-decoration-none white--text"
+                                >
+                                  <v-btn
+                                    color="primary"
+                                    small
+                                    class="review-write-button"
+                                  >
+                                    리뷰 쓰기
+                                  </v-btn>
+                                </nuxt-link>
                               </div>
                               <!-- <p class="text-14 grey--text text--darken-1">(4 Pcs mutton in chicken keema gravy)</p> -->
                             </div>
@@ -133,7 +150,12 @@
                               color="primary"
                               small
                               class="delete-button"
-                              @click="requestDeny"
+                              @click="
+                                requestDeny(
+                                  reservation.reservationId,
+                                  reservation.reservationState
+                                )
+                              "
                             >
                               취소하기
                             </v-btn>
@@ -161,51 +183,70 @@
                     <v-row>
                       <v-col cols="12">
                         <h3 class="fw-bold">나의 즐겨찾기</h3>
+                        
                       </v-col>
                       <v-col
                         cols="12"
                         v-for="like in paginatedData1"
-                        :key="like.reservation_id"
+                        :key="like.bookmarkId"
                       >
                         <div
                           class="d-flex justify-space-between align-center flex-wrap"
                         >
                           <div class="d-flex flex-wrap">
                             <v-avatar class="me-3" size="150" tile>
-                              <img :src="like.image" alt="" />
-                            </v-avatar>
+  <img :src="like.restaurantImg" alt="레스토랑 이미지" />
+</v-avatar>
+
                             <div>
                               <h5 class="f-600 mb-3">{{ like.name }}</h5>
-                              <!-- <v-chip
-                                  class="text-uppercase mb-2"
-                                  text-color="secondary"
-                                  small
-                                  color="grey lighten-4"
-                                  >Must Try</v-chip
-                                > -->
                               <div class="d-flex mb-3">
-                                <span
-                                  v-for="(star, index) in like.babscore"
-                                  :key="index"
-                                >
-                                  <div style="margin-left: 2px">
+                                <span style="display: flex">
+                                  <span
+                                    v-for="index in Math.floor(
+                                      like.averageReviewScore
+                                    )"
+                                    :key="'full-' + index"
+                                  >
                                     <v-img
                                       :src="
                                         require('~/assets/images/babscore.png')
                                       "
                                       width="20px"
                                       class="fixed-size"
+                                      alt="Full Star"
                                     ></v-img>
-                                  </div>
+                                  </span>
+                                  <!-- 소수점이 있으면 반 별 추가 -->
+                                  <span
+                                    v-if="
+                                      hasHalfStar(
+                                        like.averageReviewScore
+                                      )
+                                    "
+                                  >
+                                    <v-img
+                                      :src="
+                                        require('~/assets/images/half-babscore.png')
+                                      "
+                                      width="10px"
+                                      class="fixed-size"
+                                      alt="Half Star"
+                                    ></v-img>
+                                  </span>
+                                  <span class="font-weight-bold text-14 ms-2">
+                                    {{
+                                      like.averageReviewScore.toFixed(1)
+                                    }}
+                                  </span>
+
+                                  <h6
+                                    class="ms-3 grey--text text--darken-1 font-weight-light"
+                                  >
+                                    ({{ like.reviewCount }})
+                                  </h6>
                                 </span>
-                                <span class="font-weight-bold text-14 ms-2"
-                                  >{{ like.babscore }}.0</span
-                                >
-                                <h6
-                                  class="ms-3 grey--text text--darken-1 font-weight-light"
-                                >
-                                  ({{ like.baascoreCount }})
-                                </h6>
+
                               </div>
                               <div>
                                 <p
@@ -216,7 +257,7 @@
                                 <p
                                   class="text-14 grey--text text--darken-4 me-2 mb-0"
                                 >
-                                  전화번호: {{ like.phone }}
+                                  전화번호: {{ like.tel }}
                                 </p>
                                 <v-btn
                                   color="primary"
@@ -242,7 +283,7 @@
                               color="primary"
                               small
                               class="like-delete-button"
-                              @click="requestNoLike"
+                              @click="requestNoLike(like.bookmarkId)"
                             >
                               즐겨찾기 해제
                             </v-btn>
@@ -271,18 +312,18 @@
                 cols="12"
                 lg="6"
                 v-for="review in paginatedData2"
-                :key="review.id"
+                :key="review.reviewId"
               >
                 <!-- user-post  -->
                 <div class="mb-6">
                   <div class="d-flex align-center flex-wrap mb-4">
                     <v-avatar size="48" class="me-4">
-                      <img :src="review.image" alt="" />
+                      <img :src="review.restaurantImg" alt="식당사진" />
                     </v-avatar>
                     <div>
-                      <h5 class="mb-0">{{ review.name }}</h5>
+                      <h5 class="mb-0">{{ review.restaurantName }}</h5>
                       <p class="mb-0 text-14 grey--text text--darken-1">
-                        {{ review.userdate }}
+                        {{ review.registerDate }}
                       </p>
                     </div>
                     <v-btn
@@ -291,14 +332,14 @@
                       small
                       class="delete-button"
                       style="margin-left: 30px"
-                      @click="requestDelete"
+                      @click="requestDelete(review.reviewId)"
                     >
                       삭제요청
                     </v-btn>
                   </div>
 
                   <div class="d-flex align-center mb-2">
-                    <span v-for="(star, index) in review.babscore" :key="index">
+                    <span v-for="(star, index) in review.score" :key="index">
                       <div style="margin-left: 2px">
                         <v-img
                           :src="require('~/assets/images/babscore.png')"
@@ -308,7 +349,7 @@
                       </div>
                     </span>
                     <span class="font-weight-bold text-14 ms-2"
-                      >{{ review.babscore }}.0</span
+                      >{{ review.score }}.0</span
                     >
                     <!-- <span class="grey--text text--darken-1 text-14 ms-2"
                       >3 Days Ago</span
@@ -317,7 +358,7 @@
                   <h5
                     class="grey--text text--darken-2 font-weight-regular mb-3"
                   >
-                    {{ review.usercontents }}
+                    {{ review.reviewContent }}
                   </h5>
                   <div>
                     <div class="mt-4">
@@ -335,22 +376,21 @@
                   <v-divider class="my-4"></v-divider>
                   <!-- comment  -->
                   <div class="mb-6">
-                    <div v-if="review.ownerdate || review.ownercontents">
-                      <div>
-                        <div class="text-14 grey--text text--darken-4 f-600">
-                          사장님
-                        </div>
-                        <div class="mb-0 text-14 grey--text text--darken-1">
-                          {{ review.ownerdate }}
-                        </div>
-                      </div>
-                      <h5 class="grey--text text--darken-2 font-weight-regular">
-                        {{ review.ownercontents }}
-                      </h5>
-                    </div>
-                    <div v-else class="text-14 grey--text text--darken-1">
-                      아직 사장님 댓글이 없어요.
-                    </div>
+                    <div v-if="review.replyContent">
+    <div class="text-14 grey--text text--darken-4 f-600">
+      사장님
+    </div>
+    <div class="mb-0 text-14 grey--text text--darken-1">
+      {{ review.replyRegisterDate }}
+    </div>
+    <h5 class="grey--text text--darken-2 font-weight-regular">
+      {{ review.replyContent }}
+    </h5>
+</div>
+<div v-else class="text-14 grey--text text--darken-1">
+    아직 사장님 댓글이 없어요.
+</div>
+
                   </div>
 
                   <v-divider></v-divider>
@@ -378,22 +418,15 @@
 </template>
 
 <script>
-import ReserveRestaurantList from "@/assets/database/myDiningReservation.js";
-import LikeList from "@/assets/database/myDiningLikeLIst.js";
-import ReviewList from "@/assets/database/myDiningReviewList.js";
-import { getReserveList } from "@/api/myDining";
 import axios from "axios";
 
 export default {
-  // head: {
-  //   title: "Food Menu",
-  // },
   data: () => ({
-    // reserveRestaurantList: ReserveRestaurantList,
+    // testImg: "https://gyeongju.go.kr/upload/content/thumb/20200529/4368708A9CC649CDB1EC5DD0C389804C.jpg",
     reserveRestaurantList: [],
+    bookmarksList: [],
+    reviewsList: [],
     reservations: [],
-    likeList: LikeList,
-    reviewList: ReviewList,
     currentPage: 1,
     currentPage1: 1,
     currentPage2: 1,
@@ -416,22 +449,62 @@ export default {
     paginatedData1() {
       let start = (this.currentPage1 - 1) * this.perPage;
       let end = start + this.perPage;
-      return this.likeList.slice(start, end);
+      return this.bookmarksList.slice(start, end);
     },
     pageCount1() {
-      return Math.ceil(this.likeList.length / this.perPage);
+      return Math.ceil(this.bookmarksList.length / this.perPage);
     },
     paginatedData2() {
       let start = (this.currentPage2 - 1) * this.perPage2;
       let end = start + this.perPage2;
-      return this.reviewList.slice(start, end);
+      return this.reviewsList.slice(start, end);
     },
     pageCount2() {
-      return Math.ceil(this.reviewList.length / this.perPage2);
+      return Math.ceil(this.reviewsList.length / this.perPage2);
     },
   },
 
   methods: {
+    async bookmarkCancle(bookmarkId) {
+      try {
+        const response = await axios.delete(
+          `http://localhost:8000/myDining/bookmark-cancel/${bookmarkId}`,
+        );
+        alert("즐겨찾기가 해제되었습니다.");
+        this.fetchBookmarks();
+      }
+      catch (error) {
+        console.error("즐겨찾기 취소 중 오류가 발생했습니다.", error);
+        alert("즐겨찾기 해제에 실패했습니다.");
+      }
+    },
+    async requestRemeveReview(reviewId) {
+      console.log(reviewId + "삭제할 리뷰아이디");
+      try {
+        const response = await axios.put(
+          `http://localhost:8000/myDining/reviewRemoveRequest/${reviewId}`
+        );
+      } catch (error){
+        console.error("리뷰 취소 신청 중 오류가 발생했습니다.", error);
+        alert("예약 취소에 실패했습니다.");
+      }
+    },
+    async reservationDeny(reservationId) {
+      console.log(reservationId + " 여기");
+      try {
+        const response = await axios.put(
+          `http://localhost:8000/myDining/reservation-cancel/${reservationId}`,
+          {
+            reservationState: "CANCELED",
+          }
+        );
+        alert("예약이 성공적으로 취소되었습니다.");
+        this.fetchReservations();
+      } catch (error) {
+        console.error("예약 취소 중 오류가 발생했습니다:", error);
+        alert("예약 취소에 실패했습니다.");
+      }
+    },
     formatTime(time) {
       // 정규식을 사용하여 숫자만 추출
       const match = time.match(/\d+/);
@@ -443,17 +516,45 @@ export default {
     },
     hasHalfStar(score) {
       // 소수 부분이 0이 아니면 true 반환
-      return (score % 1 !== 0);
+      return score % 1 !== 0;
     },
+    fetchReviews() {
+      const id = this.$route.params.id;
+      console.log(id+"리뷰");
+      axios
+        .get(`http://localhost:8000/myDining/reviews/${id}`)
+        .then((response) => {
+          this.reviewsList = response.data;
+        })
+        .catch((error) => {
+          console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+      })
+    },
+    // 예약 리스트 불러오기
     fetchReservations() {
       // URL의 id 파라미터를 가져옵니다
       const id = this.$route.params.id;
 
       axios
-        .get(`http://localhost:8000/myDining/${id}`)
+        .get(`http://localhost:8000/myDining/reservations/${id}`)
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
+        })
+        .catch((error) => {
+          console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+        });
+    },
+    // 즐겨찾기 리스트 불러오기
+    fetchBookmarks() {
+      // URL의 id 파라미터를 가져옵니다
+      const id = this.$route.params.id;
+
+      axios
+        .get(`http://localhost:8000/myDining/bookmarks/${id}`)
+        .then((response) => {
+          // 응답 데이터를 reservations 배열에 저장합니다
+          this.bookmarksList = response.data;
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
@@ -464,19 +565,25 @@ export default {
       console.log("Review submitted");
       this.dialog = false; // 리뷰 제출 후 모달 닫기
     },
-    requestDelete() {
+    requestDelete(reviewId) {
       if (confirm("진짜 삭제하시겠습니까?")) {
-        console.log("네");
+        this.requestRemeveReview(reviewId);
       }
     },
-    requestDeny() {
+    requestDeny(reservationId, reservationState) {
       if (confirm("진짜 취소하시겠습니까?")) {
-        console.log("네");
+        if (reservationState === "RESERVED") {
+          console.log("네, 예약 ID:", reservationId); // 확인을 위해 예약 ID 로깅
+          this.reservationDeny(reservationId); // reservationDeny 호출
+        }
+        else {
+          alert("예약중인 건만 취소가 가능합니다.")
+        }
       }
     },
-    requestNoLike() {
+    requestNoLike(bookmarkId) {
       if (confirm("진짜 해제하시겠습니까?")) {
-        console.log("네");
+        this.bookmarkCancle(bookmarkId)
       }
     },
     scrollToTop() {
@@ -485,6 +592,8 @@ export default {
   },
   created() {
     this.fetchReservations();
+    this.fetchBookmarks();
+    this.fetchReviews();
   },
 };
 </script>

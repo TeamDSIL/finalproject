@@ -1,58 +1,43 @@
 import colors from 'vuetify/es5/util/colors'
 
-export default {
-  router: {
-    extendRoutes(routes, resolve) {
-      
-      // 기존 라우트 수정도 가능
-      // 첫 번째 라우트 수정
-      const manageIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantManageMainPage');
-      if (manageIndex !== -1) {
-        routes[manageIndex].path = '/restaurant/RestaurantManageMainPage/:id';
-      }
-
-      // 두 번째 라우트 수정
-      const modifyIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantModifyPage');
-      if (modifyIndex !== -1) {
-        routes[modifyIndex].path = '/restaurant/RestaurantModifyPage/:id';
-      }
+module.exports = {  
+  modules: [
+    '@nuxtjs/axios',
+    '@nuxtjs/proxy'
+  ],
+  axios: {
+    proxy: true
+  },
+  proxy: {
+    '/restaurant/payment': {
+      target: 'http://localhost:8081/',
+      changeOrigin: true 
     }
   },
-
-  // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes, resolve) {
       // 기존 라우트 수정도 가능
       // 첫 번째 라우트 수정
-      const manageIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantManageMainPage');
+      const manageIndex = routes.findIndex(route => route.name === 'memberManage-RegisterRestaurantPage');
       if (manageIndex !== -1) {
-        routes[manageIndex].path = '/restaurant/RestaurantManageMainPage/:id';
+        routes[manageIndex].path = '/memberManage/RegisterRestaurantPage/:id';
       }
+
       // 두 번째 라우트 수정
-      const modifyIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantModifyPage');
+      const modifyIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantManageMainPage');
       if (modifyIndex !== -1) {
-        routes[modifyIndex].path = '/restaurant/RestaurantModifyPage/:id';
-      }
-      const writeReview = routes.findIndex(route => route.name === 'myDining-WriteReviewPage');
-      if (writeReview !== -1) {
-        routes[writeReview].path = '/myDining/WriteReviewPage/:id';
+        routes[modifyIndex].path = '/restaurant/RestaurantManageMainPage/:id';
       }
 
-      const myDining = routes.findIndex(route => route.name === 'myDining-MydiningPage');
-      if (myDining !== -1) {
-        routes[myDining].path = '/myDining/:id';
-      }
-      const registerIndex = routes.findIndex(route => route.name === 'memberManage-RegisterRestaurantPage');
-      if (registerIndex !== -1) {
-        routes[registerIndex].path = '/memberManage/RegisterRestaurantPage/:id';
-      }
-
+<<<<<<< HEAD
       const reserveIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantDetailPage');
       if (reserveIndex !== -1) {
         routes[reserveIndex].path = '/restaurant/detail';
       }
     },
     },
+=======
+>>>>>>> f1d7388a454f263a65dd73004674d27906ebc91e
   head: {
     titleTemplate: '%s - food-truck',
     title: 'food-truck',
@@ -72,7 +57,7 @@ export default {
         href: 'https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;900&amp;display=swap',
       },
     ],
-      },
+  },
 
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["@/assets/scss/foodtruck.scss"],
@@ -90,12 +75,7 @@ export default {
 
   // Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
   buildModules: [
-    // https://go.nuxtjs.dev/vuetify
     '@nuxtjs/vuetify',
-  ],
-
-  // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [
   ],
 
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
@@ -107,11 +87,9 @@ export default {
     treeShake: true,
     theme: {
       light: true,
-      
       themes: {
         light: {
           primary: '#D23F57',
-          // accent: '#0F3460',
           secondary: '#0F3460',
           info: colors.teal.lighten1,
           warning: colors.amber.base,
@@ -124,16 +102,7 @@ export default {
 
   // Build Configuration: https://go.nuxtjs.dev/config-build
   build: {
-
-      transpile: [({ isLegacy }) => isLegacy && 'axios']
- ,
-    babel:{
-      plugins: [
-        // ["@babel/plugin-proposal-class-properties", { "loose": true }],
-        // ["@babel/plugin-proposal-private-methods", { "loose": true }],
-        // ["@babel/plugin-proposal-private-property-in-object", { "loose": true }]
-      ]
-    }  
+    transpile: [({ isLegacy }) => isLegacy && 'axios']
   },
 
   env: {
