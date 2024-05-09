@@ -21,8 +21,14 @@
                 <v-col cols="5">
                     <!-- 식당 정보 수정 폼 -->
                     <v-form>
-                        <!-- 식당 ID (읽기 전용) -->
-                        <!-- <v-text-field v-model="restaurant.id" label="식당 ID" outlined readonly></v-text-field> -->
+                        <!-- 회원 ID  -->
+                        <v-text-field v-model="restaurant.id" label="회원 ID" outlined ></v-text-field>
+
+                        <!-- 회원 PW  -->
+                        <v-text-field v-model="restaurant.pw" label="회원 PW" outlined ></v-text-field>
+
+                        <!-- 사업자등록번호  -->
+                        <v-text-field v-model="restaurant.registerNum" label="사업자등록번호" outlined ></v-text-field>
 
                         <!-- 식당명 (읽기 전용) -->
                         <v-text-field v-model="restaurant.name" label="식당명" outlined></v-text-field>
@@ -151,6 +157,8 @@ export default {
             showDialog: false, // 다이얼로그 표시 상태
             restaurant: {
                 id: '', // 예시 ID
+                pw:'',  
+                registerNum: '',
                 name: '', // 예시 식당명
                 address: '', // 예시 주소
                 contact: '', // 수정 가능한 연락처

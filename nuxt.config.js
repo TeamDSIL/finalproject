@@ -46,8 +46,6 @@ export default {
       if (registerIndex !== -1) {
         routes[registerIndex].path = '/memberManage/RegisterRestaurantPage/:id';
       }
-    }
-  },
 
       const reserveIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantDetailPage');
       if (reserveIndex !== -1) {
@@ -55,9 +53,6 @@ export default {
       }
     },
     },
-  
-
-
   head: {
     titleTemplate: '%s - food-truck',
     title: 'food-truck',
