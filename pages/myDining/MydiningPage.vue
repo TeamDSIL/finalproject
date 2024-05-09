@@ -37,7 +37,7 @@
                         >
                           <div class="d-flex flex-wrap">
                             <v-avatar class="me-3" size="150" tile>
-                              <img :src="reservation.image" alt="" />
+                              <img :src="reservation.restaurantImg" alt="" />
                             </v-avatar>
                             <div>
                               <div style="display: flex">
@@ -195,8 +195,9 @@
                         >
                           <div class="d-flex flex-wrap">
                             <v-avatar class="me-3" size="150" tile>
-                              <img :src="like.image" alt="" />
-                            </v-avatar>
+  <img :src="like.restaurantImg" alt="레스토랑 이미지" />
+</v-avatar>
+
                             <div>
                               <h5 class="f-600 mb-3">{{ like.name }}</h5>
                               <div class="d-flex mb-3">
@@ -317,7 +318,7 @@
                 <div class="mb-6">
                   <div class="d-flex align-center flex-wrap mb-4">
                     <v-avatar size="48" class="me-4">
-                      <img :src="review.image" alt="" />
+                      <img :src="review.restaurantImg" alt="식당사진" />
                     </v-avatar>
                     <div>
                       <h5 class="mb-0">{{ review.restaurantName }}</h5>
@@ -375,22 +376,21 @@
                   <v-divider class="my-4"></v-divider>
                   <!-- comment  -->
                   <div class="mb-6">
-                    <div v-if="review.replyRegisterDate || review.replyContent">
-                      <div>
-                        <div class="text-14 grey--text text--darken-4 f-600">
-                          사장님
-                        </div>
-                        <div class="mb-0 text-14 grey--text text--darken-1">
-                          {{ review.replyRegisterDate }}
-                        </div>
-                      </div>
-                      <h5 class="grey--text text--darken-2 font-weight-regular">
-                        {{ review.replyContent }}
-                      </h5>
-                    </div>
-                    <div v-else class="text-14 grey--text text--darken-1">
-                      아직 사장님 댓글이 없어요.
-                    </div>
+                    <div v-if="review.replyContent">
+    <div class="text-14 grey--text text--darken-4 f-600">
+      사장님
+    </div>
+    <div class="mb-0 text-14 grey--text text--darken-1">
+      {{ review.replyRegisterDate }}
+    </div>
+    <h5 class="grey--text text--darken-2 font-weight-regular">
+      {{ review.replyContent }}
+    </h5>
+</div>
+<div v-else class="text-14 grey--text text--darken-1">
+    아직 사장님 댓글이 없어요.
+</div>
+
                   </div>
 
                   <v-divider></v-divider>
@@ -422,6 +422,7 @@ import axios from "axios";
 
 export default {
   data: () => ({
+    // testImg: "https://gyeongju.go.kr/upload/content/thumb/20200529/4368708A9CC649CDB1EC5DD0C389804C.jpg",
     reserveRestaurantList: [],
     bookmarksList: [],
     reviewsList: [],
@@ -524,7 +525,6 @@ export default {
         .get(`http://localhost:8000/myDining/reviews/${id}`)
         .then((response) => {
           this.reviewsList = response.data;
-          console.log(this.reviewsList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
