@@ -13,7 +13,7 @@
 
             <v-spacer></v-spacer>
 
-            <!-- 모달 다이얼로그 변경 -->
+            <!-- 모달 다이얼로그  -->
             <v-dialog v-model="dsilModal" width="600">
               <v-card>
                 <v-card-title>
@@ -130,64 +130,6 @@
     <GoToBtn />
   </v-app>
 </template>
-<!-- <script>
-export default {
-  data: () => ({
-    drawer: false,
-    active: false,
-    dialog: false,
-    dsilModal:false,
-    locations: ['한식', '중식', '일식', '양식', '베트남', '아메리칸', '인도', '기타세계',],
-    meatfoods: ['소고기', '돼지고기', '스테이크', '곱창/막창',],
-    seafoods: ['해물(탕/찜/볶음)', '회/사시미', '초밥', '굴/조개', ],
-    alcoholfoods: ['맥주/호프', '전통주', '이자카야', '와인/칵테일'],
-    whofoods: ['혼자', '친구', '단체모임', '데이트 가족', ],
-    faciitys: ['주차가능', '발렛가능', '콜키지 프리', '콜키지 가능', '웰컴키즈존', '대관 가능', '노키즈존', '전문 소믈리에', '장애인 편의시설', '반려동물 동반', '무료와이파이', '흡연구역',],
-  
-
-    selectedLocation: '',
-    selectedFood: '',
-  }),
-  methods: {
-    toggleNavClass() {
-      if (this.active == false) {
-        return "nav";
-      } else {
-        return "sticky-nav";
-      }
-    },
-    
-    selectLocation(location) {
-      this.selectedLocation = location;
-    },
-    selectFood(food) {
-      this.selectedFood = food;
-    },
-    closeModal() {
-      this.dsilModal = false;
-    },
-    search() {
-      // 검색 로직을 구현하세요
-      console.log(
-        "검색: 위치 - " +
-          this.selectedLocation +
-          ", 음식 - " +
-          this.selectedFood
-      );
-      this.closeModal();
-    },
-  },
-  mounted() {
-    window.document.onscroll = () => {
-      if (window.scrollY > 400) {
-        this.active = true;
-      } else {
-        this.active = false;
-      }
-    };
-  },
-};
-</script> -->
 
 <script>
 export default {
@@ -196,7 +138,21 @@ export default {
     dsilModal: false,
     categories: [
       {
-        name: "위치",
+        name: "산업단지",
+        items: [
+          "여의도-마포",
+          "용산(Y-밸리)",
+          "양제",
+          "수서",
+          "홍릉",
+          "마곡",
+          "가산디지털단지(G-밸리)",
+          "구로디지털단지(G-밸리)",
+        ],
+        selected: [],
+      },
+      {
+        name: "국가별",
         items: [
           "한식",
           "중식",
@@ -263,7 +219,7 @@ export default {
     },
     closeModal() {
       this.dsilModal = false;
-      this.categories.forEach(category => {
+      this.categories.forEach((category) => {
         category.selected = []; // 각 카테고리의 선택 배열을 초기화
       });
     },
@@ -276,19 +232,19 @@ export default {
           selections: c.selected,
         }))
       );
-      this.$router.push("/main/MainPage"); // '검색' 버튼 클릭 시 어떠한 페이지로 리디렉션
+      this.$router.push("/restaurant/RestaurantListPage"); // '검색' 버튼 클릭 시 어떠한 페이지로 리디렉션
       this.closeModal();
     },
   },
   mounted() {
-  window.document.onscroll = () => {
-    if (window.scrollY > 400) {
-      this.active = true;
-    } else {
-      this.active = false;
-    }
-  };
-}
+    window.document.onscroll = () => {
+      if (window.scrollY > 400) {
+        this.active = true;
+      } else {
+        this.active = false;
+      }
+    };
+  },
 };
 </script>
 
