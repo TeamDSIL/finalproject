@@ -42,7 +42,7 @@
                         <!-- 식당 테이블 수(수정가능) -->
                         <v-col cols="6">
 
-                            <v-text-field v-model="restaurant.table" label="테이블 수" outlined></v-text-field>
+                            <v-text-field v-model="restaurant.tableCount" label="테이블 수" outlined></v-text-field>
                         </v-col>
 
                         <!-- 카테고리 -->
@@ -157,10 +157,9 @@ export default {
                 name: this.$route.query.name,
                 address: this.$route.query.address,
                 tel: this.$route.query.tel,
-                description: this.$route.query.description,
-                image: this.$route.query.image,
-                chip: this.$route.query.chip === 'true', // Boolean으로 변환
-                table: this.$route.query.table, // 문자열을 숫자로 변환
+                img: this.$route.query.img,
+                
+                tableCount: this.$route.query.tableCount, // 문자열을 숫자로 변환
                 deposit: this.$route.query.deposit,
                 crowd: this.$route.query.crowd,
             },
