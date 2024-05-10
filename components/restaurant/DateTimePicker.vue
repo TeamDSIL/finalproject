@@ -660,6 +660,11 @@
       </v-card>
     </v-dialog>
 
+    <!-- 결제 완료 이후 데이터 넘어갈때 로딩 스피너 추가 -->
+    <div v-if="showSpinner" class="spinner-overlay">
+      <div class="spinner"></div>
+    </div>
+
 
     <!-- 결제 시간 만료 alert창 -->
     <v-snackbar v-model="alertSnackbar" :timeout="null">
@@ -704,8 +709,8 @@ export default {
       privacyModal: false,
       reservationPolicyAgreed: false, // 예약 정책 동의 여부를 저장할 변수
       agreeTerms: false,
-      htmlContent: '' // 가져온 HTML을 저장할 데이터
-
+      htmlContent: '', // 가져온 HTML을 저장할 데이터
+      showSpinner: false // 스피너 표시 여부를 제어할 변수
     };
   },
   computed: {
@@ -906,8 +911,8 @@ confirmReservation2() {
           IMP.init('imp56476634');
           IMP.request_pay(paymentData, function (rsp) {
             if (rsp.success) {
+              this.showSpinner = true;
               alert("결제 완료 : " + "예약 번호 " +rsp.merchant_uid);
-
               const reservationData = {
                    reservationDate: this.selectedDate,
                    peopleCount: this.numberOfPeople,
@@ -921,9 +926,11 @@ confirmReservation2() {
                   // 결제 정보를 서버에 전송
                   axios.post('http://localhost:8081/restaurant/payment', paymentData)
                     .then(paymentResponse => {
+                      this.showSpinner=false;
+                      this.showPaymentModal=false;
                       console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
                       // 결제 및 예약 정보가 성공적으로 처리되면 페이지 이동
-                      this.$router.push('/restaurant/payment');
+                      this.$router.push('/restaurant/detail');
                     })
                     .catch(paymentError => {
                       console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
@@ -1044,6 +1051,33 @@ input[type="number"] {
   margin-bottom: -10px;
   display: inline-block;
   width: 500px;
+}
+
+.spinner-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.spinner {
+  border: 4px solid rgba(255, 255, 255, 0.3);
+  border-radius: 50%;
+  border-top: 4px solid #ffffff;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
 
