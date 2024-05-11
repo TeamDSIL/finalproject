@@ -1,41 +1,5 @@
 import colors from "vuetify/es5/util/colors";
 export default {
-  router: {
-    extendRoutes(routes, resolve) {
-      // 기존 라우트 수정도 가능
-      // 첫 번째 라우트 수정
-      const manageIndex = routes.findIndex(
-        (route) => route.name === "memberManage-RegisterRestaurantPage"
-      );
-      if (manageIndex !== -1) {
-        routes[manageIndex].path = "/memberManage/RegisterRestaurantPage/:id";
-      }
-      // 두 번째 라우트 수정
-      // const modifyIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantModifyPage');
-      // if (modifyIndex !== -1) {
-      //   routes[modifyIndex].path = '/restaurant/RestaurantModifyPage/:id';
-      // }
-    },
-  },
-  router: {
-    extendRoutes(routes, resolve) {
-      // 기존 라우트 수정도 가능
-      // 첫 번째 라우트 수정
-      const manageIndex = routes.findIndex(
-        (route) => route.name === "restaurant-RestaurantManageMainPage"
-      );
-      if (manageIndex !== -1) {
-        routes[manageIndex].path = "/restaurant/RestaurantManageMainPage/:id";
-      }
-      // 두 번째 라우트 수정
-      const modifyIndex = routes.findIndex(
-        (route) => route.name === "restaurant-RestaurantModifyPage"
-      );
-      if (modifyIndex !== -1) {
-        routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
-      }
-    },
-  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes, resolve) {
@@ -54,18 +18,21 @@ export default {
       if (modifyIndex !== -1) {
         routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
       }
+
       const writeReview = routes.findIndex(
         (route) => route.name === "myDining-WriteReviewPage"
       );
       if (writeReview !== -1) {
         routes[writeReview].path = "/myDining/WriteReviewPage/:id";
       }
+
       const mydiningList = routes.findIndex(
         (route) => route.name === "myDining-MydiningPage"
       );
-      if (writeReview !== -1) {
+      if (mydiningList !== -1) {
         routes[mydiningList].path = "/myDining/MydiningPage/:id";
       }
+
       const reserveIndex = routes.findIndex(
         (route) => route.name === "restaurant-RestaurantDetailPage"
       );
