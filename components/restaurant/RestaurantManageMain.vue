@@ -56,9 +56,13 @@
           <v-row>
             <v-col cols="12">
               <h4>예약 가능 시간 설정</h4>
-              <v-btn v-for="(time, index) in times" :key="time.id" class="ma-2"
+              <v-btn
+                v-for="(time) in times"
+                :key="time.id"
+                class="ma-2"
                 :style="{ color: time.clicked ? 'white' : '', backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '' }"
-                @click="toggleButton(index)">
+                @click="toggleTime(time)"
+              >
                 {{ time.label }}
               </v-btn>
             </v-col>
@@ -108,7 +112,7 @@
           <v-row>
             <v-col cols="12" lg="12">
               <h4 class="review-title">최근 리뷰</h4>
-              <v-simple-table class="review-table" :header="header">
+              <v-simple-table class="review-table">
                 <template v-slot:default>
                   <thead>
                     <tr>
@@ -246,7 +250,7 @@
                             <v-img :src="review.avatar" alt=""></v-img>
                           </v-avatar>
                           <div>
-                            <!-- <h5 class="mb-0">{{ review.author }}</h5> -->
+                            <h5 class="mb-0">{{ review.reservationName }}</h5>
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
@@ -379,34 +383,36 @@ export default {
     this.fetchRestaurantDetails(restaurantId);
     this.fetchReservations(restaurantId);
     this.fetchReviews(restaurantId);
+    this.fetchAvailableTimes(restaurantId);
   },
   data() {
     return {
-      isClicked: false,
+      // isClicked: false,
       times: [
-        { id: 1, label: '오후12:00', clicked: false },
-        { id: 2, label: '오후1:00', clicked: false },
-        { id: 3, label: '오후2:00', clicked: false },
-        { id: 4, label: '오후3:00', clicked: false },
-        { id: 5, label: '오후4:00', clicked: false },
-        { id: 6, label: '오후5:00', clicked: false },
-        { id: 7, label: '오후6:00', clicked: false },
-        { id: 8, label: '오후7:00', clicked: false },
-        { id: 9, label: '오후8:00', clicked: false }
+        { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
+        { id: 2, label: '오후1:00', clicked: false, slot: 'AFTERNOON_1' },
+        { id: 3, label: '오후2:00', clicked: false, slot: 'AFTERNOON_2' },
+        { id: 4, label: '오후3:00', clicked: false, slot: 'AFTERNOON_3' },
+        { id: 5, label: '오후4:00', clicked: false, slot: 'AFTERNOON_4' },
+        { id: 6, label: '오후5:00', clicked: false, slot: 'AFTERNOON_5' },
+        { id: 7, label: '오후6:00', clicked: false, slot: 'AFTERNOON_6' },
+        { id: 8, label: '오후7:00', clicked: false, slot: 'AFTERNOON_7' },
+        { id: 9, label: '오후8:00', clicked: false, slot: 'AFTERNOON_8' },
+        { id: 10, label: '오후9:00', clicked: false, slot: 'AFTERNOON_9' }
       ],
       buttonClicks: Array(9).fill(false),
       showReplyForm: false, // 입력 폼의 표시 상태를 제어하는 데이터 속성
       reply: '',
 
       restaurant: [],
-      headers: [
-        {
-          width: '200px'
-        },
-        { text: '날짜', value: 'date' },
-        { text: '시간', value: 'time' },
-        { text: '고객 이름', value: 'customerName' }
-      ],
+      // headers: [
+      //   {
+      //     width: '200px'
+      //   },
+      //   { text: '날짜', value: 'date' },
+      //   { text: '시간', value: 'time' },
+      //   { text: '고객 이름', value: 'customerName' }
+      // ],
 
       reservations: [],
       reviews: [],
@@ -431,6 +437,32 @@ export default {
   },
 
   methods: {
+    async toggleTime(time) {
+      const restaurantId = this.$route.params.id;
+      if (time.clicked) {
+        try {
+          await axios.delete(`http://localhost:8000/restaurant/${restaurantId}/available-times`, {
+            params: {
+              slot: time.slot
+            }
+          });
+          time.clicked = false;
+        } catch (error) {
+          console.error('Failed to delete available time:', error);
+        }
+      } else {
+        try {
+          const response = await axios.post(`http://localhost:8000/restaurant/${restaurantId}/available-times`, null, {
+            params: {
+              slot: time.slot
+            }
+          });
+          time.clicked = true;
+        } catch (error) {
+          console.error('Failed to create available time:', error);
+        }
+      }
+    },
     async fetchRestaurantDetails(restaurantId) {
       try {
         const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}`);
@@ -452,6 +484,24 @@ export default {
         console.error('예약 목록을 불러오는 데 실패했습니다.', error);
       }
     },
+
+    async fetchAvailableTimes(restaurantId) {
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/available-times`);
+        const availableTimes = response.data;
+
+        // 'times' 배열의 각 요소에 대해 'clicked' 속성을 설정합니다.
+        this.times.forEach(time => {
+          time.clicked = availableTimes.some(at => at.availableTime === time.slot);
+        });
+
+        console.log('예약가능시간 패치 성공');
+      console.log('가져온 예약시간쓰:', availableTimes)
+      } catch (error) {
+        console.error('예약가능시간 패치 실패:', error);
+      }
+    },
+
     async fetchReviews(restaurantId) {
       console.log('리뷰목록을 불러올 식당의 아이디:', restaurantId);
       try {

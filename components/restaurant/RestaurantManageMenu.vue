@@ -57,7 +57,6 @@ export default {
   },
   methods: {
     fetchRestaurants() {
-      console.log('구경끝났으면 꺼져')
       const memberId = 15;
       axios.get(`http://localhost:8000/restaurant/${memberId}/restaurants`)
         .then(response => {
