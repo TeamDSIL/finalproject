@@ -8,7 +8,7 @@
         <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4"></v-text-field>
         <p class="text-14 mb-1">비밀번호</p>
         <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4"></v-text-field>
-        <v-btn block color="rgb(255,84,82)" class="primary" href="/main/MainPage">로그인</v-btn>
+        <v-btn block color="rgb(255,84,82)" class="primary" @click="loginButton">로그인</v-btn>
         <v-col cols="10" lg="8" class="mx-auto">
           <div class="d-flex align-center my-1">
             <v-divider></v-divider>

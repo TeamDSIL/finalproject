@@ -11,9 +11,9 @@
                         <div slot="boxContent">
                             <div class="px-10">
                                 <v-row>
-                                    <v-col cols="12" id="header-info-position">
-                                        <h1>회원정보</h1>
+                                    <v-col cols="12">
                                         <div id="position-set">
+                                            <h1>회원정보</h1>
 
                                             <v-dialog v-model="dialogModify" width="500">
                                                 <template v-slot:activator="{ on }">
@@ -145,7 +145,7 @@
                                     <v-col cols="5">
                                         <v-card class="rice-info-card">
                                             <div class="info-item justify-center">
-                                                <h1>밥알이 몇개고??</h1>
+                                                <h2>밥알이 몇개고??</h2>
                                             </div>
                                             <v-divider></v-divider>
                                             <div class="info-item">
@@ -273,14 +273,10 @@ export default {
 </script>
 
 <style lang="scss">
-#position-set {
-    margin-left: 80%;
-}
-
 #header-info-position {
     display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
+    white-space: nowrap;
+    align-items: center;
 }
 
 .rice-info-card {
