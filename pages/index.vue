@@ -1,7 +1,6 @@
 <template>
   <div>
     <MainForm></MainForm>
-
     <!-- 카테고리 -->
     <div>
       <v-container class="py-15">
@@ -11,14 +10,19 @@
           </v-col>
           <v-col
             v-for="(item, index) in food"
-            :key="index"
+            :key="item.name"
             cols="12"
             lg="3"
             md="4"
             sm="6"
           >
             <div class="text-center">
-              <nuxt-link to="/resturant/FoodMenu" class="text-decoration-none">
+              <nuxt-link
+                :to="`/restaurant/RestaurantListPage/${encodeURIComponent(
+                  item.name
+                )}`"
+                class="text-decoration-none"
+              >
                 <v-avatar size="150" class="mb-4">
                   <img :src="item.img" alt="" />
                 </v-avatar>
@@ -27,7 +31,6 @@
             </div>
           </v-col>
         </v-row>
-
         <!-- 주류 -->
         <v-row>
           <v-col cols="12">
@@ -125,9 +128,9 @@
               </v-card>
             </nuxt-link>
           </v-col>
-
           <!-- 조회 -->
-          <v-col cols="12">s
+          <v-col cols="12"
+            >s
             <div class="d-flex justify-space-between align-end flex-wrap">
               <div>
                 <h2>조회 TOP 10</h2>
@@ -187,7 +190,6 @@
               </div>
             </div>
           </v-col>
-          
           <v-col
             v-for="(item, index) in favorites"
             :key="`favorites-${index}`"
@@ -220,52 +222,47 @@
         </v-row>
       </v-container>
     </div>
-    
+    <roulette></roulette>
     <Footer />
   </div>
 </template>
 <script>
+import axios from "axios";
 import { CardSection } from "@/assets/database/data.js";
-export default {
-  layout: "landingHeader",
+import Roulette from "../components/main/Roulette.vue";
 
+export default {
+  components: { Roulette },
+  layout: "landingHeader",
   head: {
     title: "Home",
   },
- 
   data() {
     return {
       CardList: CardSection,
       food: [
-        
         {
-          img: require("~/assets/images/food/9.png"),
+          img: require("~/assets/images/mainCategory/KOREAN.png"),
           name: "한식",
         },
         {
-          img: require("~/assets/images/food/10.png"),
+          img: require("~/assets/images/mainCategory/CHINESE.jpg"),
           name: "중식",
         },
         {
-          img: require("~/assets/images/food/11.png"),
+          img: require("~/assets/images/mainCategory/JAPANESE.jpg"),
           name: "일식",
         },
         {
-          img: require("~/assets/images/food/12.png"),
+          img: require("~/assets/images/mainCategory/WESTERN.jpg"),
           name: "양식",
         },
-        {
-          img: require("~/assets/images/food/9.png"),
-          name: "베트남",
-        },
+        { img: require("~/assets/images/food/14.png"), name: "베트남" },
         {
           img: require("~/assets/images/food/14.png"),
           name: "아메리칸",
         },
-        {
-          img: require("~/assets/images/food/14.png"),
-          name: "인도",
-        },
+        { img: require("~/assets/images/food/14.png"), name: "인도" },
         {
           img: require("~/assets/images/food/14.png"),
           name: "기타 세계",
@@ -273,6 +270,7 @@ export default {
       ],
       alcohol: [
         {
+          id: 9,
           img: require("~/assets/images/food/9.png"),
           name: "맥주/호프",
         },
@@ -306,7 +304,6 @@ export default {
           img: require("~/assets/images/food/12.png"),
           name: "데이트",
         },
-      
       ],
       reservation: [
         {
@@ -362,10 +359,28 @@ export default {
           name: "Best Of New York",
         },
       ],
-      
+      restaurants: [], // API에서 로드한 식당 데이터를 저장할 배열
     };
   },
-  
+  methods: {
+    fetchRestaurantsByCategory(categoryName) {
+      const serverUrl = "http://localhost:8000"; // 서버 주소 설정
+      const encodeName = encodeURIComponent(categoryName);
+      axios
+        .get(`${serverUrl}/restaurants/category/${encodeName}`)
+        .then((response) => {
+          // 데이터 처리 로직
+          this.restaurants = response.data; // 응답 데이터를 restaurants 배열에 저장
+        })
+        .catch((error) => {
+          console.error("There was an error!", error);
+          this.restaurants = []; // 에러 발생 시 배열 초기화
+        });
+    },
+  },
+  // created() {
+  //   this.fetchRestaurantsByCategory(1); // 예를 들어 한식 카테고리 ID가 1일 때
+  // },
 };
 </script>
 <style lang="scss">

@@ -1,9 +1,12 @@
 <template>
+
   <div id="map" style="width: 100%; height: 350px"></div>
+
 </template>
 <script>
 export default {
   name: "KakaoMap",
+
   beforeMount() {
     if (typeof kakao === "undefined") {
       const script = document.createElement("script");
@@ -17,6 +20,7 @@ export default {
   },
   methods: {
     initializeMap() {
+
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
           (position) => {
@@ -56,3 +60,4 @@ export default {
 };
 </script>
 <style scoped></style>
+

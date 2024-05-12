@@ -1,218 +1,460 @@
 <template>
-    <div>
-        <v-container>
+  <div>
+    <v-container>
+      <v-row>
+        <v-col cols="12">
+          <Box class="dashboard-box">
+            <div slot="boxSidebar">
+              <AdminDashBoardSideBar />
+            </div>
+            <div slot="boxContent">
+              <div class="px-10">
+                <v-row>
+                  <v-col cols="12">
+                    <h1>식당 등록 관리</h1>
+                  </v-col>
 
+                  <v-row>
+                    <v-col cols="12">
+                      <v-card>
+                        <v-card-title> 식당 정보 </v-card-title>
 
-            <v-row>
-                <v-col cols="12">
-                    <Box class="dashboard-box">
-                        <div slot="boxSidebar">
-                            <AdminDashBoardSideBar />
+                        <v-container>
+                          <!-- 식당 정보 수정 폼 -->
+                          <v-form>
+                            <v-row>
+                              <v-col cols="6">
+                                <v-container>
+                                  <!-- 회원 ID  -->
+                                  <v-text-field
+                                    v-model="restaurant.email"
+                                    label="회원 ID"
+                                    outlined
+                                  ></v-text-field>
 
-                        </div>
-                        <div slot="boxContent">
-                            <div class="px-10">
-                                <v-row>
-                                    <v-col cols="12">
-                                        <h1>식당 등록 관리</h1>
+                                  <!-- 회원 PW  -->
+                                  <v-text-field
+                                    v-model="restaurant.password"
+                                    label="회원 PW"
+                                    outlined
+                                  ></v-text-field>
+
+                                  <!-- 사업자등록번호  -->
+                                  <v-text-field
+                                    v-model="restaurant.registerNumber"
+                                    label="사업자등록번호"
+                                    outlined
+                                  ></v-text-field>
+
+                                  <!-- 식당명 (읽기 전용) -->
+                                  <v-text-field
+                                    v-model="restaurant.restaurantName"
+                                    label="식당명"
+                                    outlined
+                                  ></v-text-field>
+
+                                  <v-btn
+                                    @click="sample6_execDaumPostcode"
+                                    style="margin-bottom: 20px"
+                                    small
+                                    color="primary"
+                                    >식당주소 찾기</v-btn
+                                  >
+                                  <v-text-field
+                                    v-model="restaurant.postcode"
+                                    label="우편번호"
+                                    type="text"
+                                    placeholder="우편번호"
+                                  ></v-text-field>
+
+                                  <v-text-field
+                                    v-model="restaurant.dynamicAddress"
+                                    label="주소"
+                                    type="text"
+                                    placeholder="주소"
+                                  ></v-text-field>
+                                  <v-text-field
+                                    v-model="restaurant.detailAddress"
+                                    label="상세주소"
+                                    type="text"
+                                    placeholder="상세주소 입력"
+                                    ref="detailAddress"
+                                  ></v-text-field>
+
+                                  <v-text-field
+                                    v-model="restaurant.extraAddress"
+                                    label="참고항목"
+                                    type="text"
+                                    placeholder="참고항목"
+                                  ></v-text-field>
+                                </v-container>
+                                <!--편의시설 등록 -->
+                                <v-select
+                                  style="margin-top: 12px"
+                                  v-model="restaurant.facilities"
+                                  :items="facilities"
+                                  label="편의시설 선택"
+                                  multiple
+                                  outlined
+                                  attach
+                                  chips
+                                  small-chips
+                                ></v-select>
+                              </v-col>
+
+                              <v-col cols="6">
+                                <v-container>
+                                  <v-text-field
+                                    v-model="restaurant.userName"
+                                    label="이름"
+                                    outlined
+                                  ></v-text-field>
+                                  <v-text-field
+                                    v-model="restaurant.userTel"
+                                    label="사용자 전화번호"
+                                    outlined
+                                  ></v-text-field>
+                                  <v-text-field
+                                    v-model="restaurant.userAddress"
+                                    label="사용자 주소"
+                                    outlined
+                                  ></v-text-field>
+                                  <v-text-field
+                                    v-model="restaurant.restaurantTel"
+                                    label="식당 연락처"
+                                    outlined
+                                  ></v-text-field>
+
+                                  <!-- 식당 테이블 수 -->
+                                  <v-text-field
+                                    v-model="restaurant.tableCount"
+                                    label="테이블 수"
+                                    outlined
+                                  ></v-text-field>
+
+                                  <!-- 예약금 설정 -->
+                                  <v-text-field
+                                    v-model="restaurant.deposit"
+                                    label="예약금 설정"
+                                    outlined
+                                  ></v-text-field>
+                                  <!-- 식당 설명 설정 -->
+                                  <v-textarea
+                                    v-model="restaurant.description"
+                                    label="식당 설명"
+                                    outlined
+                                    rows="5"
+                                    auto-grow
+                                    placeholder="식당에 대한 설명을 입력하세요."
+                                  ></v-textarea>
+
+                                  <!-- 식당 사진 -->
+                                  <v-file-input
+                                    v-model="restaurant.img"
+                                    label="식당 사진"
+                                    prepend-icon="mdi-camera"
+                                    outlined
+                                  ></v-file-input>
+
+                                  <!-- 카테고리 등록 -->
+                                  <v-select
+                                    v-model="restaurant.category"
+                                    :items="categories"
+                                    label="카테고리 선택"
+                                    multiple
+                                    outlined
+                                    attach
+                                    chips
+                                    small-chips
+                                  ></v-select>
+                                </v-container>
+                              </v-col>
+                            </v-row>
+
+                            <v-container>
+                              <div
+                                v-for="(item, index) in restaurant.menuItems"
+                                :key="index"
+                              >
+                                <v-text-field
+                                  v-model="item.name"
+                                  label="메뉴 이름"
+                                  outlined
+                                ></v-text-field>
+                                <v-text-field
+                                  v-model="item.menuInfo"
+                                  label="메뉴 설명"
+                                  outlined
+                                ></v-text-field>
+                                <v-text-field
+                                  v-model="item.price"
+                                  label="메뉴 가격"
+                                  type="number"
+                                  prefix="₩"
+                                  outlined
+                                ></v-text-field>
+                                <v-col cols="12">
+                                  <v-row>
+                                    <v-col cols="10">
+                                      <v-file-input
+                                        v-model="item.photo"
+                                        label="메뉴 사진"
+                                        prepend-icon="mdi-camera"
+                                        outlined
+                                      ></v-file-input
+                                    ></v-col>
+                                    <v-col cols="2">
+                                      <v-btn
+                                        color="primary"
+                                        @click="removeMenuItem(index)"
+                                        class="ma-2"
+                                        >삭제</v-btn
+                                      >
                                     </v-col>
+                                  </v-row>
+                                </v-col>
+                              </div>
+                              <v-btn
+                                color="primary"
+                                @click="addMenuItem"
+                                small
+                                class="ma-2"
+                                >메뉴 항목 추가</v-btn
+                              >
+                            </v-container>
 
-                                    <v-col cols="12">
-                                        <div>
-                                            <v-container>
-                                                <!-- 검색 필드 -->
-                                                <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined dense
-                                                    clearable append-icon="mdi-magnify"
-                                                    @keyup.enter="performSearch"></v-text-field>
-
-                                                <!-- 회원 정보 목록 테이블 -->
-                                                <v-data-table :headers="headers" :items="displayedMembers"
-                                                    hide-default-footer>
-                                                    <template v-slot:item="{ item }">
-                                                        <tr>
-                                                            <td>{{ item.id }}</td>
-                                                            <td>{{ item.restaurantName }}</td>
-                                                            <td>{{ item.name }}</td>
-                                                            <td>{{ item.phone }}</td>
-                                                            <td>{{ item.address }}</td>
-                                                            <td>
-                                                                <v-btn color="primary" dark
-                                                                    @click="goToRestaurantManagement(item)">등록</v-btn>
-                                                            </td>
-                                                        </tr>
-                                                    </template>
-                                                </v-data-table>
-                                            </v-container>
-                                        </div>
-
-                                    </v-col>
-
-                                    <v-col cols="12">
-                                        <div
-                                            class="d-flex justify-center align-center justify-sm-space-between flex-wrap">
-                                            <div class="mb-4 me-3">
-                                                <p class="font-weight-normal mb-0 text-14">Showing {{ startItemIndex
-                                                    }}-{{ endItemIndex }} of {{
-                                                        filteredMembers.length }} Reviews</p>
-                                            </div>
-                                            <div class="mb-4">
-                                                <!-- 페이지네이션 -->
-                                                <v-pagination v-model="currentPage" :length="numberOfPages" circle
-                                                    @input="navigateToPage"></v-pagination>
-
-                                            </div>
-                                        </div>
-                                    </v-col>
-                                </v-row>
-                            </div>
-                        </div>
-                    </Box>
-                </v-col>
-            </v-row>
-        </v-container>
-        <Footer />
-
-    </div>
+                            <!-- 정보 등록 버튼 -->
+                            <v-btn
+                              color="rgb(255,207,2)"
+                              class="ma-2"
+                              @click="SubmitForm"
+                            >
+                              등록
+                            </v-btn>
+                          </v-form>
+                        </v-container>
+                      </v-card>
+                    </v-col>
+                  </v-row>
+                </v-row>
+              </div>
+            </div>
+          </Box>
+        </v-col>
+      </v-row>
+    </v-container>
+    <Footer />
+  </div>
 </template>
 <script>
+import axios from "axios";
 
-import RegisterRestaurantForm from '@/components/memberManage/RegisterRestaurantForm.vue';
 export default {
-    head: {
-        title: 'Order List'
-    },
-    components: {
-        RegisterRestaurantForm,
-    },
-    data() {
-        return {
-            page: 1,
-            step: 1, // 초기 단계 설정
-            searchQuery: '',
-            currentPage: 1, // 현재 페이지 번호
-            itemsPerPage: 10, // 페이지당 표시할 아이템 수
-            members: [
-                { id: 1, restaurantName: 'Restaurant 1', name: 'John Doe', phone: '+1 123-456-7890', address: 'Address 1' },
-                { id: 2, restaurantName: 'Restaurant 2', name: 'Jane Doe', phone: '+1 987-654-3210', address: 'Address 2' },
-                { id: 3, restaurantName: 'Restaurant 3', name: 'Emily Smith', phone: '+1 555-123-4567', address: 'Address 3' },
-                { id: 4, restaurantName: 'Restaurant 4', name: 'Michael Johnson', phone: '+1 555-987-6543', address: 'Address 4' },
-                { id: 5, restaurantName: 'Restaurant 5', name: 'Sophia Williams', phone: '+1 555-456-7890', address: 'Address 5' },
-                { id: 6, restaurantName: 'Restaurant 6', name: 'James Brown', phone: '+1 555-876-5432', address: 'Address 6' },
-                { id: 7, restaurantName: 'Restaurant 7', name: 'Olivia Davis', phone: '+1 555-234-5678', address: 'Address 7' },
-                { id: 8, restaurantName: 'Restaurant 8', name: 'William Miller', phone: '+1 555-678-9012', address: 'Address 8' },
-                { id: 9, restaurantName: 'Restaurant 9', name: 'Emma Wilson', phone: '+1 555-345-6789', address: 'Address 9' },
-                { id: 10, restaurantName: 'Restaurant 10', name: 'Alexander Moore', phone: '+1 555-789-0123', address: 'Address 10' },
-                { id: 11, restaurantName: 'Restaurant 11', name: 'Isabella Taylor', phone: '+1 555-456-7890', address: 'Address 11' },
-                { id: 12, restaurantName: 'Restaurant 12', name: 'Ethan Anderson', phone: '+1 555-890-1234', address: 'Address 12' },
-                { id: 13, restaurantName: 'Restaurant 13', name: 'Mia Thomas', phone: '+1 555-567-8901', address: 'Address 13' },
-                { id: 14, restaurantName: 'Restaurant 14', name: 'Daniel Jackson', phone: '+1 555-012-3456', address: 'Address 14' },
-                { id: 15, restaurantName: 'Restaurant 15', name: 'Ava White', phone: '+1 555-678-9012', address: 'Address 15' },
-                { id: 16, restaurantName: 'Restaurant 16', name: 'Matthew Harris', phone: '+1 555-234-5678', address: 'Address 16' },
-                { id: 17, restaurantName: 'Restaurant 17', name: 'Chloe Martin', phone: '+1 555-901-2345', address: 'Address 17' },
-                { id: 18, restaurantName: 'Restaurant 18', name: 'Charlotte Thompson', phone: '+1 555-345-6789', address: 'Address 18' },
-                { id: 19, restaurantName: 'Restaurant 19', name: 'Liam Garcia', phone: '+1 555-678-9012', address: 'Address 19' },
-                { id: 20, restaurantName: 'Restaurant 20', name: 'Amelia Martinez', phone: '+1 555-012-3456', address: 'Address 20' },
-                { id: 21, restaurantName: 'Restaurant 21', name: 'Benjamin Robinson', phone: '+1 555-234-5678', address: 'Address 21' },
-                { id: 22, restaurantName: 'Restaurant 22', name: 'Harper Clark', phone: '+1 555-345-6789', address: 'Address 22' },
-                { id: 23, restaurantName: 'Restaurant 23', name: 'Evelyn Hall', phone: '+1 555-456-7890', address: 'Address 23' },
-                { id: 24, restaurantName: 'Restaurant 24', name: 'Lucas Lewis', phone: '+1 555-567-8901', address: 'Address 24' },
-                { id: 25, restaurantName: 'Restaurant 25', name: 'Aiden Lee', phone: '+1 555-678-9012', address: 'Address 25' }
-            ],
-            headers: [
-                { text: 'No', align: 'start', value: 'id' },
-                { text: '상호명', value: 'restaurantName' },
-                { text: '사업자명', value: 'name' },
-                { text: '연락처', value: 'phone' },
-                { text: '주소', value: 'address' },
-                { text: '상세보기', value: '' },
-            ],
-        }
-    },
-    computed: {
-        filteredMembers() {
-            return this.members.filter(member =>
-                member.restaurantName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                member.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                member.address.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                member.phone.includes(this.searchQuery)
-            );
-        },
-        // 현재 페이지에 해당하는 회원 목록 반환
-        displayedMembers() {
-            const startIndex = (this.currentPage - 1) * this.itemsPerPage;
-            const endIndex = this.currentPage * this.itemsPerPage;
-            return this.filteredMembers.slice(startIndex, endIndex);
-        },
-        // 현재 페이지에 해당하는 첫 번째 아이템 인덱스 반환
-        startItemIndex() {
-            return (this.currentPage - 1) * this.itemsPerPage + 1;
-        },
-        // 현재 페이지에 해당하는 마지막 아이템 인덱스 반환
-        endItemIndex() {
-            const endIndex = this.currentPage * this.itemsPerPage;
-            return Math.min(endIndex, this.filteredMembers.length);
-        },
-        // 필터링된 회원 수에 따른 페이지 수 반환
-        numberOfPages() {
-            return Math.ceil(this.filteredMembers.length / this.itemsPerPage);
-        },
-    },
-    methods: {
-        goToRestaurantManagement(restaurant) {
-            this.$router.push({
-                path: `/memberManage/RegisterRestaurantPage/${restaurant.id}`,
-                query: {
-                    name: restaurant.name,
-                    address: restaurant.address,
-                    tel: restaurant.tel,
-                    description: restaurant.description,
-                    image: restaurant.image,
-                    chip: restaurant.chip,
-                    table: restaurant.table,
-                    deposit: restaurant.deposit,
-                    crowd: restaurant.crowd,
-                },
-            });
-        },
-        // 페이지 변경 시 실행되는 이벤트 핸들러
-        navigateToPage(newPage) {
-            this.currentPage = newPage;
-        },
-        // 검색 수행
-        performSearch() {
-            // 여기에 검색 로직을 구현
-            console.log('검색어:', this.searchQuery);
-            // 실제 검색 로직 수행
-        },
-        openModifyUserForm(selectedUser) {
-            // 선택된 사용자의 이메일 저장
-            this.selectedUserEmail = selectedUser.email;
-            // 다이얼로그 표시
-            this.showModifyUserForm = true;
-        },
-        // AdminModifyUserForm 컴포넌트에서 발생한 수정된 정보 처리
-        handleModifyUser(modifiedUserInfo) {
-            // 수정된 사용자 정보 처리 로직
-            console.log('수정된 사용자 정보:', modifiedUserInfo);
-            // 다이얼로그 닫기
-            this.showModifyUserForm = false;
-        }
-    },
-}
+  data() {
+    return {
+      showDialog: false, // 다이얼로그 표시 상태
+      restaurant: {
+        email: "",
+        password: "",
+        userName: "",
+        userTel: "",
+        userAddress: "",
 
+        restaurantName: "",
+        registerNumber: "",
+        restaurantTel: "",
+        restaurantAddress: "",
+        tableCount: "",
+        deposit: "",
+        img: null,
+        description: "",
+        category: [],
+        facilities: [],
+        postcode: "",
+        dynamicAddress: "",
+        detailAddress: "",
+        extraAddress: "",
+        menuItems: [],
+      },
+
+      categories: [
+        { text: "한식", value: "KOREAN" },
+        { text: "중식", value: "CHINESE" },
+        { text: "일식", value: "JAPANESE" },
+        { text: "양식", value: "WESTERN" },
+        { text: "베트남식", value: "VIETNAMESE" },
+        { text: "미국식", value: "AMERICAN" },
+        { text: "인도식", value: "INDIAN" },
+        { text: "기타 글로벌 음식", value: "OTHERGLOBALFOOD" },
+        { text: "소고기", value: "BEEF" },
+        { text: "돼지고기", value: "PORK" },
+        { text: "스테이크", value: "STEAK" },
+        { text: "곱창/막창", value: "TRIPE" },
+        { text: "해물탕", value: "SEAFOOD_STEW" },
+        { text: "회", value: "SASHIMI" },
+        { text: "초밥", value: "SUSHI" },
+        { text: "조개류", value: "SHELLFISH" },
+        { text: "맥주", value: "BEER" },
+        { text: "전통주", value: "TRADITIONAL_ALCOHOL" },
+        { text: "이자카야", value: "IZAKAYA" },
+        { text: "와인/칵테일", value: "WINE_COCKTAIL" },
+        { text: "혼자", value: "SOLO" },
+        { text: "친구와 함께", value: "WITH_FRIENDS" },
+        { text: "단체", value: "GROUP_GATHERING" },
+        { text: "데이트", value: "DATE" },
+        { text: "가족", value: "FAMILY" },
+        { text: "가성비", value: "COST_EFFECTIVE" },
+        { text: "여의도/마포", value: "YEOUIDO_MAPO" },
+        { text: "용산 밸리", value: "YONGSAN_VALLEY" },
+        { text: "양재", value: "YANGJAE" },
+        { text: "수서", value: "SUSEO" },
+        { text: "홍릉", value: "HONGNEUNG" },
+        { text: "마곡", value: "MAGOK" },
+        { text: "가산 디지털 밸리", value: "GASAN_DIGITAL_VALLEY" },
+        { text: "구로 디지털 밸리", value: "GURO_DIGITAL_VALLEY" },
+      ],
+      facilities: [
+        { text: "주차 가능", value: "PARKING_AVAILABLE" },
+        { text: "발렛 파킹", value: "VALET_AVAILABLE" },
+        { text: "콜키지 무료", value: "CORKAGE_FREE" },
+        { text: "콜키지 가능", value: "CORKAGE_AVAILABLE" },
+        { text: "어린이 놀이구역", value: "WELCOME_KIDS_ZONE" },
+        { text: "어린이 금지 구역", value: "NO_KIDS_ZONE" },
+        { text: "대관 가능", value: "RENTAL_AVAILABLE" },
+        { text: "소믈리에 서비스", value: "SOMMELIER_AVAILABLE" },
+        { text: "장애인 시설", value: "DISABLED_FACILITIES_AVAILABLE" },
+        { text: "반려동물 동반 가능", value: "PET_FRIENDLY" },
+        { text: "무료 와이파이", value: "FREE_WIFI_AVAILABLE" },
+        { text: "흡연 구역", value: "SMOKING_ZONE" },
+      ],
+
+      page: 1,
+      items: [
+        {
+          text: "Home",
+          disabled: false,
+          href: "/",
+        },
+        {
+          text: "New York",
+          disabled: false,
+          href: "/",
+        },
+        {
+          text: "Resturants",
+          disabled: true,
+          href: "/",
+        },
+      ],
+      text: "hello",
+      tab: null,
+      checkbox: true,
+      radioGroup: 1,
+      value: [20, 40],
+      selected: null, // 현재 선택된 버튼을 저장
+    };
+  },
+  mounted() {
+    const script = document.createElement("script");
+    script.src =
+      "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    document.head.appendChild(script);
+  },
+  methods: {
+    async SubmitForm() {
+      try {
+        this.restaurant.restaurantAddress = `${this.restaurant.dynamicAddress} ${this.restaurant.detailAddress}`;
+        console.log(this.restaurant.restaurantAddress);
+        // RestaurantRegisterDTO 객체를 서버에 전송
+        const response = await axios.post(
+          "http://localhost:8000/memberManage/registerRestaurant",
+          {
+            email: this.restaurant.email,
+            password: this.restaurant.password,
+            userName: this.restaurant.userName,
+            userTel: this.restaurant.userTel,
+            userAddress: this.restaurant.userAddress,
+            restaurantName: this.restaurant.restaurantName,
+            registerNumber: this.restaurant.registerNumber,
+            restaurantTel: this.restaurant.restaurantTel,
+            restaurantAddress: this.restaurant.restaurantAddress,
+            postcode: this.restaurant.postcode,
+            tableCount: this.restaurant.tableCount,
+            deposit: this.restaurant.deposit,
+            img: this.restaurant.img,
+            description: this.restaurant.description,
+            categories: this.restaurant.category,
+            facilities: this.restaurant.facilities,
+            menuDTOs: this.restaurant.menuItems.map((item) => ({
+              name: item.name,
+              price: item.price,
+              img: item.photo,
+              menuInfo: item.menuInfo,
+            })),
+          }
+        );
+
+        console.log("서버 응답:", response);
+        alert("식당 정보가 성공적으로 등록되었습니다.");
+      } catch (error) {
+        console.error("서버로부터 에러 응답:", error);
+        alert("식당 정보 등록에 실패하였습니다.");
+      }
+    },
+    sample6_execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: (data) => {
+          // 데이터를 Vue 인스턴스의 데이터에 직접 할당
+          this.restaurant.postcode = data.zonecode;
+          this.restaurant.dynamicAddress =
+            data.userSelectedType === "R"
+              ? data.roadAddress
+              : data.jibunAddress;
+          this.restaurant.detailAddress = ""; // 상세 주소는 사용자 입력을 위해 초기화
+          this.restaurant.extraAddress =
+            data.bname && /[동|로|가]$/g.test(data.bname) ? data.bname : "";
+
+          // 포커스를 상세 주소 필드로 이동
+          this.$nextTick(() => {
+            this.$refs.detailAddress.focus();
+          });
+        },
+      }).open();
+    },
+    goToRestaurantManageMain() {
+      this.$router.push({ path: "/memberManage/AdminManageRestaurantPage" });
+    },
+    goToRestaurantReserveManage() {
+      this.$router.push({ path: "/restaurant/RestaurantReserveManagePage" });
+    },
+    goToReviewManage() {
+      this.$router.push({ path: "/restaurant/ReviewManagePage" });
+    },
+    toggleSelection(button) {
+      // 선택된 버튼이 다시 클릭되면 선택 해제, 아니면 선택
+      this.selected = this.selected === button ? null : button;
+    },
+    updateRestaurantInfo() {
+      // 정보 업데이트 로직 추가
+      console.log("업데이트된 정보:", this.restaurant);
+    },
+    saveMenu() {
+      console.log("Menu saved:", this.restaurant.menuItems);
+      this.showDialog = false;
+    },
+    addMenuItem() {
+      const newItem = {
+        id: Date.now(), // 메뉴 ID는 현재 시간을 기반으로 자동 생성
+        name: "",
+        photo: null,
+        price: 0,
+      };
+      this.restaurant.menuItems.push(newItem);
+    },
+    removeMenuItem(index) {
+      this.restaurant.menuItems.splice(index, 1);
+    },
+  },
+};
 </script>
-<style lang="scss">
-#select-user-owner,
-#direction-btn {
-    display: flex;
-    flex-direction: row;
-}
-
-#text-nowrap {
-    white-space: nowrap;
-}
-
-.search-container {
-    margin-top: 20px;
-}
-</style>
+<style></style>

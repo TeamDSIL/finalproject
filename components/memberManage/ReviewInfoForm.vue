@@ -14,13 +14,13 @@
         </div>
         <v-divider></v-divider>
         <div class="d-flex mt-3" style="justify-content: flex-start;">
-            <v-icon class="mr-2">mdi-message-text</v-icon>
+            <v-icon class="mr-2 align-baseline">mdi-message-text</v-icon>
             <span class="font-weight-bold mr-2">리뷰:</span>
             <v-text-field v-model="reviewInfo.review" outlined readonly></v-text-field>
         </div>
         <v-divider></v-divider>
         <div class="d-flex mt-3" style="justify-content: flex-start;">
-            <v-icon class="mr-2">mdi-comment</v-icon>
+            <v-icon class="mr-2 align-baseline">mdi-comment</v-icon>
             <span class="font-weight-bold mr-2">댓글:</span>
             <v-text-field v-model="reviewInfo.reply" outlined readonly></v-text-field>
         </div>
@@ -67,4 +67,7 @@ export default {
 }
 </script>
 
-<style></style>
+<style>
+
+</style>
+

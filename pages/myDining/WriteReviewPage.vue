@@ -13,7 +13,6 @@
 
         <div class="text-center mb-3">
           <h3 class="mb-3">리뷰 작성</h3>
-      선택한식당아이디:{{ nowId }}선택점수:  {{ babscore }}
           <h5
             class="text-sm font-600 grey--text text--darken-4"
             style="font-weight: 500"
@@ -94,6 +93,7 @@
               <button
                 @click="goBack"
                 class="grey--text text--darken-4 font-600"
+                type="button"
               >
                 뒤로 가기
               </button>
@@ -106,7 +106,8 @@
 </template>
 
 <script>
-import { registerReply } from '@/api/myDining';
+import { registerReply } from "@/api/myDining";
+import axios from "axios";
 
 export default {
   layout: "session",
@@ -123,13 +124,27 @@ export default {
       file: null,
       stars: [true, false, false, false, false],
       UserReviewContents: "",
-      nowId: this.$route.params.id,
+      nowReservationId: this.$route.params.id,
       selectName: "우리식당 창원점",
       today: formattedDate,
-      babscore: '',
+      babscore: 1,
+      userEmail: "user02@example.com",
     };
   },
   methods: {
+    fetchReviews() {
+      const id = this.$route.params.id;
+      console.log(id+"리뷰");
+      axios
+        .get(`http://localhost:8000/myDining/reviews/${id}`)
+        .then((response) => {
+          this.reviewsList = response.data;
+          console.log(this.reviewsList);
+        })
+        .catch((error) => {
+          console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+      })
+    },
     async created() {
       const id = this.$route.params.id;
       // const { data } = await fetchPost(id);
@@ -139,49 +154,71 @@ export default {
     setRating(selectedIndex) {
       // 모든 별을 초기 상태로 설정
       this.stars = this.stars.map((_, index) => index <= selectedIndex);
-      this.babscore = this.stars.filter(star => star).length;
+      this.babscore = this.stars.filter((star) => star).length;
     },
     async submitForm() {
-      try {
-        console.log(process.env.VUE_APP_API_URL);
-        const response = await registerReply({
-          name: 'test다!', completed: false,
-        });
-        console.log(response);
-      } catch (error) {
-        // console.log(error.response.data.message);
-        // this.logMessage = error.response.data.message;
+      const reviewData = {
+        reviewContents: this.UserReviewContents,
+        reservationId: this.nowReservationId,
+        registerDate: this.today,
+        reviewScore: this.babscore,
+        userEmail: this.userEmail,
+      };
+
+      console.log("Submitting review data:", reviewData);
+
+      if (this.file) {
+        // 파일이 포함된 경우 FormData 사용을 고려하거나 별도의 파일 업로드 로직 구현 필요
+        const formData = new FormData();
+        formData.append("file", this.file);
+        // 기타 필드 추가
+        Object.entries(reviewData).forEach(([key, value]) =>
+          formData.append(key, value)
+        );
+        // 멀티파트 요청으로 보내기
+        try {
+          const response = await axios.post(
+            "http://localhost:8000/myDining/registerReview",
+            formData,
+            {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            }
+          );
+          console.log("등록 성공:", response.data);
+          this.fetchReviews();
+        } catch (error) {
+          console.error(
+            "리뷰 등록 중 오류 발생:",
+            error.response ? error.response.data : error
+          );
+        }
+      } else {
+        // 파일이 없는 경우 JSON 요청으로 보내기
+        try {
+          const response = await axios.post(
+            "http://localhost:8000/myDining/registerReview",
+            reviewData,
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+          alert("등록 성공")
+          console.log("등록 성공:", response.data);
+        } catch (error) {
+          alert("리뷰 등록 중 오류 발생")
+          console.error(
+            "리뷰 등록 중 오류 발생:",
+            error.response ? error.response.data : error
+          );
+        }
       }
+      window.history.back();
     },
-    // async submitForm() {
-    //   try {
-    //     // 비즈니스 로직
-    //     const userData = {
-    //       UserReviewContents: this.UserReviewContents,
-    //     };
 
-
-    //     const todo = { name: 'test다!', completed: false };
-    //   const res = await fetch(`${this.$config.apiURL}/todos`, {
-    //     method: "POST",
-    //     body: JSON.stringify(todo),
-    //     headers: {
-    //       'Content-Type': 'application/json'
-    //     }
-    //   });
-    //   // const json = await res.json();
-
-    //     // await this.$store.dispatch('LOGIN', userData);
-    //     this.$router.push("/myDining/MydiningPage");
-    //     // this.goBack();
-    //   } catch (error) {
-    //     // 에러 핸들링할 코드
-    //     // console.log(error.response.data);
-    //     // this.logMessage = error.response.data;
-    //   } finally {
-    //     // this.initForm();
-    //   }
-    // },
     goBack() {
       window.history.back(); // 브라우저 이력에서 한 단계 뒤로 갑니다
     },
