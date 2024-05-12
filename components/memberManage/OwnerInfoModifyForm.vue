@@ -5,16 +5,16 @@
             <v-divider></v-divider>
             <br>
 
-            <p class="text-14 mb-1">이메일[ID]</p>
+            <!-- <p class="text-14 mb-1">이메일[ID]</p>
             <v-text-field outlined dense hide-details placeholder="example@mail" class="mb-4" readonly
-                v-model="selectedOwnerInfo.이메일"></v-text-field>
+                v-model="selectedOwnerInfo.이메일"></v-text-field> -->
 
             <p class="text-14 mb-1">이름</p>
-            <v-text-field v-model="selectedOwnerInfo.이름" outlined dense placeholder="이름" class="mb-4"></v-text-field>
+            <v-text-field v-model="selectedOwnerInfo.이름" outlined dense placeholder="이름" class="mb-4" readonly></v-text-field>
 
             <p class="text-14 mb-1">매장명</p>
             <v-text-field v-model="selectedOwnerInfo.매장명" outlined dense placeholder="매장명"
-                class="mb-4"></v-text-field>
+                class="mb-4" readonly></v-text-field>
 
             <p class="text-14 mb-1">비밀번호</p>
             <v-text-field v-model="password" outlined dense type="password" hide-details placeholder="********"
@@ -35,9 +35,9 @@
             <v-text-field v-model="selectedOwnerInfo.우편번호" outlined dense placeholder="우편번호"
                 class="mb-4"></v-text-field>
 
-            <p class="text-14 mb-1">사업자등록번호</p>
+            <!-- <p class="text-14 mb-1">사업자등록번호</p>
             <v-text-field v-model="selectedOwnerInfo.사업자등록번호" outlined dense placeholder="사업자등록번호"
-                class="mb-4"></v-text-field>
+                class="mb-4" readonly></v-text-field> -->
 
             <v-btn @click="submitForm" block color="rgb(255,84,82)" class="primary">수정 확인</v-btn>
         </div>

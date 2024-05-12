@@ -55,7 +55,7 @@
                                         class="py-0">
                                         <v-checkbox :label="category" class="checkbox-label"></v-checkbox>
                                     </v-col> -->
-                                    <v-select v-model="restaurant.categories" :items="allCategories" label="카테고리 설정" multiple
+                                    <v-select v-model="categories" :items="allCategories" label="카테고리 설정" multiple
                                         outlined attach chips small-chips></v-select>
                                 </v-row>
                             <!-- </v-card> -->
@@ -72,7 +72,7 @@
                                         <v-checkbox :label="facility" class="checkbox-label"></v-checkbox>
                                     </v-col> -->
 
-                                    <v-select v-model="restaurant.facilities" :items="allFacilities" label="편의시설 선택"
+                                    <v-select v-model="facilities" :items="allFacilities" label="편의시설 선택"
                                         multiple outlined attach chips small-chips></v-select>
                                 </v-row>
                             
@@ -158,9 +158,9 @@ export default {
                 tableCount: this.$route.query.tableCount, // 문자열을 숫자로 변환
                 deposit: this.$route.query.deposit,
                 crowd: this.$route.query.crowd,
-                categories: [],
-                facilities: [],
             },
+            categories: [],
+            facilities: [],
             menuItems: [],
         
             headers: [
@@ -190,7 +190,7 @@ export default {
             try {
                 const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/categories`);
                 const selectedCategories = response.data.map(category => category.name);
-                this.restaurant.categories = selectedCategories;
+                this.categories = selectedCategories;
                 this.allCategories = [
                     { text: '한식', value: 'KOREAN' },
                     { text: '중식', value: 'CHINESE' },
@@ -235,7 +235,7 @@ export default {
             try {
                 const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/facilities`);
                 const selectedFacilities = response.data.map(facility => facility.name);
-                this.restaurant.facilities = selectedFacilities;
+                this.facilities = selectedFacilities;
                 this.allFacilities = [
                     { text: '주차 가능', value: 'PARKING_AVAILABLE' },
                     { text: '발렛 파킹', value: 'VALET_AVAILABLE' },
@@ -290,10 +290,10 @@ export default {
                 tableCount: this.restaurant.tableCount,
                 deposit: this.restaurant.deposit,
                 crowd: this.restaurant.crowd,
-                categories: this.restaurant.categories.map(category => ({
+                categories: this.categories.map(category => ({
                     name: category
                 })),
-                facilities: this.restaurant.facilities.map(facility => ({
+                facilities: this.facilities.map(facility => ({
                     name: facility
                 })),
                 menus: this.menuItems.map(item => ({

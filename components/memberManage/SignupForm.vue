@@ -29,10 +29,14 @@
             class="mb-4"></v-text-field>
         </div>
         <div class="mb-4">
-          <p class="text-14 mb-1">우편번호 입력</p>
-          <v-text-field type="password" placeholder="123-412" outlined dense hide-details=""
+          <p class="text-14 mb-1">주소 입력</p>
+          <v-text-field type="" placeholder="서울시 동작구" outlined dense hide-details=""
             class="mb-4"></v-text-field>
-
+        </div>
+        <div class="mb-4">
+          <p class="text-14 mb-1">우편번호 입력</p>
+          <v-text-field type="" placeholder="123-412" outlined dense hide-details=""
+            class="mb-4"></v-text-field>
         </div>
 
         <div class="mb-4">
@@ -41,7 +45,7 @@
               <div>
                 회원가입을 위해,&nbsp;
                 <v-tooltip bottom>
-                  <template v-slot:activator="{ on }">
+                  <template v-slot:activator="{ on }" >
                     <a target="_blank" href="/main/MainPage" @click.stop v-on="on">
                       이용약관
                     </a>

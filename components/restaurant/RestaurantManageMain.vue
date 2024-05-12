@@ -22,6 +22,10 @@
           전체리뷰보기
 
         </v-tab>
+        <v-tab class="text-capitalize" @click="goToRestaurantManage()">
+          식당선택으로
+
+        </v-tab>
       </v-tabs>
       <!-- <v-divider></v-divider> -->
 
@@ -387,6 +391,7 @@ export default {
   },
   data() {
     return {
+      memberId: 15,
       // isClicked: false,
       times: [
         { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
@@ -534,6 +539,9 @@ export default {
     },
     goToReviewManage() {
       this.$router.push({ path: '/restaurant/ReviewManagePage' });
+    },
+    goToRestaurantManage() {
+      this.$router.push({path: `/restaurant/RestaurantManagePage`});
     },
     goToRestaurantModify(restaurant) {
       this.$router.push({
