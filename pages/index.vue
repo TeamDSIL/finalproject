@@ -97,7 +97,20 @@
         </v-row>
       </v-container>
     </div>
-    <roulette></roulette>
+
+    <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
+    <div :style="randomImageStyle" class="random-image" @click="openRoulette">
+      <img src="@/assets/images/dsil_Characters.png" alt="Dynamic Character" />
+    </div>
+
+    <!-- 모달 창 -->
+    <v-dialog
+      v-model="isRouletteOpen"
+      max-width="600px"
+      @click:outside="isRouletteOpen = false"
+    >
+      <roulette @close="isRouletteOpen = false"></roulette>
+    </v-dialog>
     <Footer />
   </div>
 </template>
@@ -117,6 +130,8 @@ export default {
   data() {
     return {
       CardList: CardSection,
+      isRouletteOpen: false, // 모달 상태
+      randomImageStyle: {}, // 랜덤 이미지 스타일
       food: [
         {
           img: require("~/assets/images/mainCategory/KOREAN.png"),
@@ -205,13 +220,47 @@ export default {
       ],
     };
   },
+  mounted() {
+    this.applyRandomStyle();
+  },
+  methods: {
+    openRoulette() {
+      this.isRouletteOpen = true;
+    },
+    applyRandomStyle() {
+      const maxSize = 150; // 최대 크기
+      const size = Math.random() * maxSize; // 랜덤 크기
+      this.randomImageStyle = {
+        position: "absolute",
+        top: `${Math.random() * 100}%`, // 화면의 범위 내에서 랜덤 위치
+        left: `${Math.random() * 100}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        transform: "translate(-50%, -50%)", // 중심을 기준으로 위치 조정
+      };
+    },
+  },
 };
 </script>
+
 <style lang="scss">
+/* 전역 스타일 */
 .bg-transparent {
   background-color: transparent !important;
 }
 .o-hidden {
   overflow: hidden !important;
+}
+
+/* 전역 스타일로도 컴포넌트 스타일 정의 가능하지만 스코프드 스타일 권장 */
+.image-container {
+  position: relative;
+  height: 100vh; // 화면 전체 높이
+  width: 100vw; // 화면 전체 너비
+}
+.random-image img {
+  display: block; // 이미지 블록 레벨로 설정
+  max-width: 100%; // 이미지 최대 너비 제한
+  height: auto; // 비율 유지
 }
 </style>
