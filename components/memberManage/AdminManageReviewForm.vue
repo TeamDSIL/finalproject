@@ -28,11 +28,12 @@
                                                 <!-- 회원 정보 목록 테이블 -->
                                                 <v-data-table :headers="headers" :items="displayedMembers"
                                                     hide-default-footer>
-                                                    <template v-slot:item="{ item }">
+                                                    <template v-slot:item="{ item }" >
                                                         <tr>
                                                             <td>{{ item.id }}</td>
                                                             <td>{{ item.email }}</td>
                                                             <td>{{ item.reply }}</td>
+                                                            <td>{{ item.restaurantName }}</td>
                                                             <td>{{ item.review }}</td>
                                                             <td>
                                                                 <v-dialog max-width="500">
@@ -111,36 +112,37 @@ export default {
             showDialog: false,
             reviewInfo: {}, // 리뷰 정보를 저장할 객체 추가
             reviewInfos: [
-                { id: 1, email: 'example1@mail.com', reply: 'John Doe', review: '+1 123-456-7890' },
-                { id: 2, email: 'example2@mail.com', reply: 'Jane Doe', review: '+1 987-654-3210' },
-                { id: 3, email: 'example3@mail.com', reply: 'Emily Smith', review: '+1 555-123-4567' },
-                { id: 4, email: 'example4@mail.com', reply: 'Michael Johnson', review: '+1 555-987-6543' },
-                { id: 5, email: 'example5@mail.com', reply: 'Sophia Williams', review: '+1 555-456-7890' },
-                { id: 6, email: 'example6@mail.com', reply: 'James Brown', review: '+1 555-876-5432' },
-                { id: 7, email: 'example7@mail.com', reply: 'Olivia Davis', review: '+1 555-234-5678' },
-                { id: 8, email: 'example8@mail.com', reply: 'William Miller', review: '+1 555-678-9012' },
-                { id: 9, email: 'example9@mail.com', reply: 'Emma Wilson', review: '+1 555-345-6789' },
-                { id: 10, email: 'example10@mail.com', reply: 'Alexander Moore', review: '+1 555-789-0123' },
-                { id: 11, email: 'example11@mail.com', reply: 'Isabella Taylor', review: '+1 555-456-7890' },
-                { id: 12, email: 'example12@mail.com', reply: 'Ethan Anderson', review: '+1 555-890-1234' },
-                { id: 13, email: 'example13@mail.com', reply: 'Mia Thomas', review: '+1 555-567-8901' },
-                { id: 14, email: 'example14@mail.com', reply: 'Daniel Jackson', review: '+1 555-012-3456' },
-                { id: 15, email: 'example15@mail.com', reply: 'Ava White', review: '+1 555-678-9012' },
-                { id: 16, email: 'example16@mail.com', reply: 'Matthew Harris', review: '+1 555-234-5678' },
-                { id: 17, email: 'example17@mail.com', reply: 'Chloe Martin', review: '+1 555-901-2345' },
-                { id: 18, email: 'example18@mail.com', reply: 'Charlotte Thompson', review: '+1 555-345-6789' },
-                { id: 19, email: 'example19@mail.com', reply: 'Liam Garcia', review: '+1 555-678-9012' },
-                { id: 20, email: 'example20@mail.com', reply: 'Amelia Martinez', review: '+1 555-012-3456' },
-                { id: 21, email: 'example21@mail.com', reply: 'Benjamin Robinson', review: '+1 555-234-5678' },
-                { id: 22, email: 'example22@mail.com', reply: 'Harper Clark', review: '+1 555-345-6789' },
-                { id: 23, email: 'example23@mail.com', reply: 'Evelyn Hall', review: '+1 555-456-7890' },
-                { id: 24, email: 'example24@mail.com', reply: 'Lucas Lewis', review: '+1 555-567-8901' },
-                { id: 25, email: 'example25@mail.com', reply: 'Aiden Lee', review: '+1 555-678-9012' },
+                { id: 1, email: 'example1@mail.com', reply: 'John Doe', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 123-456-7890' },
+                { id: 2, email: 'example2@mail.com', reply: 'Jane Doe', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 987-654-3210' },
+                { id: 3, email: 'example3@mail.com', reply: 'Emily Smith', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-123-4567' },
+                { id: 4, email: 'example4@mail.com', reply: 'Michael Johnson', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-987-6543' },
+                { id: 5, email: 'example5@mail.com', reply: 'Sophia Williams', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-456-7890' },
+                { id: 6, email: 'example6@mail.com', reply: 'James Brown', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-876-5432' },
+                { id: 7, email: 'example7@mail.com', reply: 'Olivia Davis', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-234-5678' },
+                { id: 8, email: 'example8@mail.com', reply: 'William Miller', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-678-9012' },
+                { id: 9, email: 'example9@mail.com', reply: 'Emma Wilson', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-345-6789' },
+                { id: 10, email: 'example10@mail.com', reply: 'Alexander Moore', restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-789-0123' },
+                { id: 11, email: 'example11@mail.com', reply: 'Isabella Taylor',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-456-7890' },
+                { id: 12, email: 'example12@mail.com', reply: 'Ethan Anderson',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-890-1234' },
+                { id: 13, email: 'example13@mail.com', reply: 'Mia Thomas', restaurantName: '기영이 숯불 두마리 치킨',review: '+1 555-567-8901' },
+                { id: 14, email: 'example14@mail.com', reply: 'Daniel Jackson', restaurantName: '기영이 숯불 두마리 치킨',review: '+1 555-012-3456' },
+                { id: 15, email: 'example15@mail.com', reply: 'Ava White', restaurantName: '기영이 숯불 두마리 치킨',review: '+1 555-678-9012' },
+                { id: 16, email: 'example16@mail.com', reply: 'Matthew Harris',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-234-5678' },
+                { id: 17, email: 'example17@mail.com', reply: 'Chloe Martin',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-901-2345' },
+                { id: 18, email: 'example18@mail.com', reply: 'Charlotte Thompson',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-345-6789' },
+                { id: 19, email: 'example19@mail.com', reply: 'Liam Garcia',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-678-9012' },
+                { id: 20, email: 'example20@mail.com', reply: 'Amelia Martinez',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-012-3456' },
+                { id: 21, email: 'example21@mail.com', reply: 'Benjamin Robinson',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-234-5678' },
+                { id: 22, email: 'example22@mail.com', reply: 'Harper Clark', restaurantName: '기영이 숯불 두마리 치킨',review: '+1 555-345-6789' },
+                { id: 23, email: 'example23@mail.com', reply: 'Evelyn Hall', restaurantName: '기영이 숯불 두마리 치킨',review: '+1 555-456-7890' },
+                { id: 24, email: 'example24@mail.com', reply: 'Lucas Lewis',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-567-8901' },
+                { id: 25, email: 'example25@mail.com', reply: 'Aiden Lee',restaurantName: '기영이 숯불 두마리 치킨', review: '+1 555-678-9012' },
             ],
             headers: [
                 { text: 'No', align: 'start', value: 'id' },
                 { text: '이메일', value: 'email' },
                 { text: '댓글', value: 'reply' },
+                { text: '매장명', value: 'restaurantName' },
                 { text: '리뷰', value: 'review' },
                 { text: '상세보기', value: '' },
             ],
