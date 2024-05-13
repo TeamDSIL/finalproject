@@ -11,33 +11,33 @@
             <v-text-field outlined dense hide-details placeholder="example@mail" class="mb-4" readonly
                 v-model="userInfo.email"></v-text-field>
 
+            <p class="text-14 mb-1">이름</p>
+            <v-text-field v-model="userInfo.name" outlined dense hide-details placeholder="이름" class="mb-4"></v-text-field>
+
+            <p class="text-14 mb-1">연락처</p>
+            <v-text-field v-model="userInfo.tel" outlined dense hide-details placeholder="연락처" class="mb-4"></v-text-field>
+
+            <p class="text-14 mb-1">주소</p>
+            <v-text-field v-model="userInfo.address" outlined dense hide-details placeholder="주소" class="mb-4"></v-text-field>
+
+            <p class="text-14 mb-1">우편번호</p>
+            <v-text-field v-model="userInfo.postcode" outlined dense hide-details placeholder="우편번호" class="mb-4"></v-text-field>
+
             <p class="text-14 mb-1">비밀번호</p>
-            <v-text-field v-model="password" outlined dense type="password" hide-details placeholder="********"
+            <v-text-field v-model="modifiedPassword" outlined dense hide-details type="password" placeholder="********"
                 class="mb-4"></v-text-field>
 
             <p class="text-14 mb-1">비밀번호 재입력</p>
-            <v-text-field v-model="confirmPassword" outlined dense type="password" hide-details placeholder="********"
+            <v-text-field v-model="confirmPassword" outlined dense hide-details type="password" placeholder="********"
                 class="mb-4"></v-text-field>
 
-            <p class="text-14 mb-1">이름</p>
-            <v-text-field v-model="userInfo.name" outlined dense placeholder="이름" class="mb-4"></v-text-field>
-
-            <p class="text-14 mb-1">연락처</p>
-            <v-text-field v-model="userInfo.tel" outlined dense placeholder="연락처" class="mb-4"></v-text-field>
-
-            <p class="text-14 mb-1">주소</p>
-            <v-text-field v-model="userInfo.address" outlined dense placeholder="주소" class="mb-4"></v-text-field>
-
-            <p class="text-14 mb-1">우편번호</p>
-            <v-text-field v-model="userInfo.zipcode" outlined dense placeholder="우편번호" class="mb-4"></v-text-field>
-
-
-            <v-btn @click="submitForm" block color="rgb(255,84,82)" class="primary">수정 확인</v-btn>
+            <v-btn @click="submitForm" block color="rgb(255,84,82)" class="primary">수정</v-btn>
         </div>
     </v-card>
 </template>
 
 <script>
+import axios from 'axios'; // axios를 import합니다.
 
 export default ({
 
@@ -47,48 +47,63 @@ export default ({
     },
     data() {
         return {
-            password: '', // 수정 필요
-            confirmPassword: '', // 수정 필요
+            modifiedPassword: '',           // 비밀번호
+            confirmPassword: '',    // 비밀번호 확인
             name: '', // 수정 필요
             tel: '', // 수정 필요
             address: '', // 수정 필요
-            zipcode: '' // 수정 필요
+            postcode: '', // 수정 필요
+            point: '',
         };
     },
-    watch: {
-        dialogModify(val) {
-            if (!val) {
-                // 다이얼로그가 닫힐 때 입력 필드 초기화
-                this.resetFields();
-            }
-        }
-    },
     methods: {
-        resetFields() {
-            // 입력 필드 초기화
-            this.password = '';
-            this.confirmPassword = '';
-            this.name = '';
-            this.tel = '';
-            this.address = '';
-            this.zipcode = '';
+        
+        async submitForm() {
+            try {
+                // API 요청을 보내기 전에 비밀번호가 일치하는지 확인
+                if (this.modifiedPassword !== this.confirmPassword) {
+                    // 비밀번호가 일치하지 않으면 에러 메시지를 표시하고 함수 종료
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
+
+                // API 요청을 보내기 전에 데이터 유효성 검사를 수행할 수 있습니다.
+
+                // API 요청을 보낼 데이터 생성
+                const requestData = {
+                    email: this.userInfo.email,
+                    password: this.modifiedPassword,
+                    name: this.userInfo.name,
+                    tel: this.userInfo.tel,
+                    address: this.userInfo.address,
+                    postcode: this.userInfo.postcode,
+                    point: {
+                        id: this.userInfo.point.id,
+                        accmulatePoint: this.userInfo.point.accmulatePoint,
+                        currentPoint: this.userInfo.point.currentPoint,
+                    }
+                };
+
+                // API 요청 보내기~
+                const response = await axios.post('http://localhost:8000/memberManage/userMyPage', requestData);
+
+                // 응답 처리
+                console.log('수정 응답:', response.data);
+
+                // 부모 컴포넌트로 수정된 정보를 전달
+                this.$emit('modify-user', requestData);
+
+                // 모달 창을 닫음
+                this.$emit('close');
+
+                // 수정이 완료되면 이전 페이지로 이동하거나 필요한 작업을 수행할 수 있습니다.
+                this.$router.push('/memberManage/userMyPage');
+
+            } catch (error) {
+                // API 요청 실패 시 에러 처리
+                console.error('수정 요청 실패:', error);
+            }
         },
-        submitForm() {
-            const modifiedData = {
-                password: this.password,
-                name: this.name,
-                tel: this.tel,
-                address: this.address,
-                zipcode: this.zipcode
-            };
-            this.$emit('modify', modifiedData);
-            this.resetFields(); // 입력 필드 초기화
-
-            // 다이얼로그를 닫는 부분을 추가
-            this.$emit('update:dialogModify', false); // 다이얼로그를 닫습니다.
-
-            this.$router.push('/memberManage/UserMyPage');
-        }
     }
 
 })

@@ -1,6 +1,7 @@
 <template>
     <v-card class="pa-4">
         <h1>리뷰 및 댓글 삭제 관리</h1>
+        <v-container>
         <div class="d-flex align-center mt-3">
             <v-icon class="mr-2">mdi-calendar</v-icon>
             <span class="font-weight-bold mr-2">등록날짜:</span>
@@ -8,8 +9,8 @@
         </div>
         <v-divider></v-divider>
         <div class="d-flex align-center">
-            <v-icon class="mr-2">mdi-email</v-icon>
-            <span class="font-weight-bold mr-2">이메일:</span>
+            <v-icon class="mr-2">mdi-account</v-icon>
+            <span class="font-weight-bold mr-2">회원:</span>
             <span>{{ reviewInfo.email }}</span>
         </div>
         <v-divider></v-divider>
@@ -18,13 +19,27 @@
             <span class="font-weight-bold mr-2">리뷰:</span>
             <v-text-field v-model="reviewInfo.review" outlined readonly></v-text-field>
         </div>
+    </v-container>
+        <!-- <v-divider style="border-top: 1px solid black;"></v-divider> -->
+        <v-container>
+        <div class="d-flex align-center mt-3">
+            <v-icon class="mr-2">mdi-calendar</v-icon>
+            <span class="font-weight-bold mr-2">등록날짜:</span>
+            <span>{{ reviewInfo.registDate }}</span>
+        </div>
+        <v-divider></v-divider>
+        <div class="d-flex align-center">
+            <v-icon class="mr-2">mdi-store</v-icon>
+            <span class="font-weight-bold mr-2">사장님:</span>
+            <span>{{ reviewInfo.restaurantName }}</span>
+        </div>
         <v-divider></v-divider>
         <div class="d-flex mt-3" style="justify-content: flex-start;">
             <v-icon class="mr-2 align-baseline">mdi-comment</v-icon>
             <span class="font-weight-bold mr-2">댓글:</span>
             <v-text-field v-model="reviewInfo.reply" outlined readonly></v-text-field>
         </div>
-
+    </v-container>
         <div class="mt-5 d-flex justify-end">
             <v-btn color="secondary" class="mr-4" @click="deleteReview">리뷰 삭제</v-btn>
             <v-btn color="error" class="mr-4" @click="deleteComment">댓글 삭제</v-btn>
