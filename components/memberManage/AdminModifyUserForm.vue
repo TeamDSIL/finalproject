@@ -9,9 +9,30 @@
             <p class="text-14 mb-1">이메일[ID]</p>
             <v-text-field outlined dense hide-details v-model="userInfo.email" class="mb-4" readonly></v-text-field>
 
+            <!-- 이름 -->
+            <p class="text-14 mb-1">이름</p>
+            <v-text-field v-model="userInfo.name" outlined dense  hide-details placeholder="이름" class="mb-4"></v-text-field>
+
+
+            <!-- 포인트 -->
+            <p class="text-14 mb-1">포인트</p>
+            <v-text-field v-model="userInfo.point.currentPoint" outlined dense hide-details placeholder="포인트" class="mb-4"></v-text-field>
+
+            <!-- 연락처 -->
+            <p class="text-14 mb-1">연락처</p>
+            <v-text-field v-model="userInfo.tel" outlined dense hide-details placeholder="연락처" class="mb-4"></v-text-field>
+
+            <!-- 주소 -->
+            <p class="text-14 mb-1">주소</p>
+            <v-text-field v-model="userInfo.address" outlined dense hide-details placeholder="주소" class="mb-4"></v-text-field>
+
+            <!-- 우편번호 -->
+            <p class="text-14 mb-1">우편번호</p>
+            <v-text-field v-model="userInfo.postcode" outlined dense hide-details placeholder="우편번호" class="mb-4"></v-text-field>
+
             <!-- 비밀번호 -->
             <p class="text-14 mb-1">비밀번호</p>
-            <v-text-field v-model="password" outlined dense type="password" hide-details placeholder="********"
+            <v-text-field v-model="modifiedPassword" outlined dense type="password" hide-details placeholder="********"
                 class="mb-4"></v-text-field>
 
             <!-- 비밀번호 재입력 -->
@@ -19,26 +40,10 @@
             <v-text-field v-model="confirmPassword" outlined dense type="password" hide-details placeholder="********"
                 class="mb-4"></v-text-field>
 
-            <!-- 이름 -->
-            <p class="text-14 mb-1">이름</p>
-            <v-text-field v-model="userInfo.name" outlined dense placeholder="이름" class="mb-4"></v-text-field>
-
-            <!-- 연락처 -->
-            <p class="text-14 mb-1">연락처</p>
-            <v-text-field v-model="userInfo.phone" outlined dense placeholder="연락처" class="mb-4"></v-text-field>
-
-            <!-- 주소 -->
-            <p class="text-14 mb-1">주소</p>
-            <v-text-field v-model="userInfo.address" outlined dense placeholder="주소" class="mb-4"></v-text-field>
-
-            <!-- 우편번호 -->
-            <p class="text-14 mb-1">우편번호</p>
-            <v-text-field v-model="userInfo.zipcode" outlined dense placeholder="우편번호" class="mb-4"></v-text-field>
-
             <!-- 수정 확인 버튼 -->
             <div id="modify-delete-btn">
-                <v-btn id="modify-btn" @click="handleModify" block color="rgb(255,84,82)" class="primary">수정</v-btn>
-                <v-btn id="delete-btn" @click="handleDelete" block color="rgb(255,84,82)" class="primary">삭제</v-btn>
+                <v-btn id="modify-btn" @click="handleModify" color="rgb(255,84,82)" class="primary">수정</v-btn>
+                <v-btn id="delete-btn" @click="handleDelete" color="rgb(255,84,82)" class="primary">삭제</v-btn>
             </div>
         </div>
     </v-card>
@@ -46,46 +51,84 @@
 </template>
 
 <script>
+import axios from 'axios'; // axios를 import합니다.
 
 export default {
     props: ['userInfo'], // userInfo prop 추가
     data() {
         return {
-            password: '',           // 비밀번호
+            modifiedPassword: '',           // 비밀번호
             confirmPassword: '',    // 비밀번호 확인
             name: '',               // 이름
-            phone: '',              // 연락처
+            tel: '',              // 연락처
             address: '',            // 주소
-            zipcode: '',            // 우편번호
+            postcode: '',            // 우편번호
+            point: '',
         };
     },
     methods: {
         // 수정 확인 버튼 클릭 시 실행될 메서드
-        handleModify() {
-            // 이 부분에서 수정된 데이터를 사용하거나 처리할 수 있음
-            console.log('수정된 비밀번호:', this.password);
-            console.log('수정된 이름:', this.name);
-            console.log('수정된 연락처:', this.phone);
-            console.log('수정된 주소:', this.address);
-            console.log('수정된 우편번호:', this.zipcode);
+        async handleModify() {
+            try {
+                // API 요청을 보내기 전에 비밀번호가 일치하는지 확인
+                if (this.modifiedPassword !== this.confirmPassword) {
+                    // 비밀번호가 일치하지 않으면 에러 메시지를 표시하고 함수 종료
+                    alert('비밀번호가 일치하지 않습니다.');
+                    return;
+                }
 
-            // 수정된 정보를 부모 컴포넌트로 전달
-            this.$emit('modify-user', {
-                password: this.password,
-                confirmPassword: this.confirmPassword,
-                name: this.name,
-                phone: this.phone,
-                address: this.address,
-                zipcode: this.zipcode
-            });
+                // API 요청을 보내기 전에 데이터 유효성 검사를 수행할 수 있습니다.
 
+                // API 요청을 보낼 데이터 생성
+                const requestData = {
+                    email: this.userInfo.email,
+                    password: this.modifiedPassword,
+                    name: this.userInfo.name,
+                    tel: this.userInfo.tel,
+                    address: this.userInfo.address,
+                    postcode: this.userInfo.postcode,
+                    point: {
+                        id: this.userInfo.point.id,
+                        accmulatePoint: this.userInfo.point.accmulatePoint,
+                        currentPoint: this.userInfo.point.currentPoint,
+                    }
+                };
 
+                // API 요청 보내기~
+                const response = await axios.post('http://localhost:8000/memberManage/adminManageUserPage', requestData);
+
+                // 응답 처리
+                console.log('수정 응답:', response.data);
+
+                // 부모 컴포넌트로 수정된 정보를 전달
+                this.$emit('modify-user', requestData);
+
+                // 모달 창을 닫음
+                this.$emit('close');
+
+                // 수정이 완료되면 이전 페이지로 이동하거나 필요한 작업을 수행할 수 있습니다.
+                this.$router.push('/memberManage/AdminManageUserPage');
+
+            } catch (error) {
+                // API 요청 실패 시 에러 처리
+                console.error('수정 요청 실패:', error);
+            }
+        },
+        async handleDelete() {
+            try {
+                const response = await axios.delete(`http://localhost:8000/memberManage/adminManageUserPage?email=${this.userInfo.email}`);
+
+                // 생략
+                this.$emit('close');
+                // this.$router.push('/memberManage/AdminManageUserPage');
+
+            } catch (error) {
+                // 생략
+                console.error('삭제 요청 실패:', error);
+            }
         }
     }
 }
 </script>
 
-<style scoped>
-
-
-</style>
+<style scoped></style>

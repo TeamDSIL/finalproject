@@ -7,7 +7,7 @@
 
             <v-dialog v-model="dialog" width="500">
                 <template v-slot:activator="{ on, attrs }">
-                    <nuxt-link to="/main/MainPage">
+                    <nuxt-link to="/memberManage/userMyPage">
                         <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary">
                             <span class="d-none d-sm-block">회원탈퇴</span>
                         </v-btn>
@@ -18,3 +18,28 @@
         </div>
     </v-card>
 </template>
+
+<script>
+import axios from 'axios';
+
+export default {
+    props: {
+        userInfo: {
+            type: Object,
+            default: () => ({}),
+        },
+    },
+    methods: {
+        // 수정 확인 버튼 클릭 시 실행될 메서드
+        async handleDelete() {
+            try {
+                const response = await axios.delete(`http://localhost:8000/memberManage/userMyPage?email=${this.userInfo.email}`);
+
+            } catch (error) {
+                // 생략
+                console.error('삭제 요청 실패:', error);
+            }
+        },
+    },
+}
+</script>
