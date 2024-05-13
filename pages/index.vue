@@ -6,7 +6,7 @@
       <v-container class="py-15">
         <v-row>
           <v-col cols="12">
-            <h2>어떤 나라 드실 ?</h2>
+            <h2>드실 음식</h2>
           </v-col>
           <v-col
             v-for="(item, index) in food"
@@ -18,15 +18,15 @@
           >
             <div class="text-center">
               <nuxt-link
-                :to="`/restaurant/RestaurantListPage/${encodeURIComponent(
-                  item.name
-                )}`"
+                :to="`/restaurant/list?category=${item.name}`"
                 class="text-decoration-none"
               >
                 <v-avatar size="150" class="mb-4">
                   <img :src="item.img" alt="" />
                 </v-avatar>
-                <h4 class="grey--text text--darken-2">{{ item.name }}</h4>
+                <h4 class="grey--text text--darken-2">
+                  {{ item.displayName }}
+                </h4>
               </nuxt-link>
             </div>
           </v-col>
@@ -34,22 +34,27 @@
         <!-- 주류 -->
         <v-row>
           <v-col cols="12">
-            <h2>어떤 주류 드실 ?</h2>
+            <h2>드실 주류</h2>
           </v-col>
           <v-col
             v-for="(item, index) in alcohol"
-            :key="index"
+            :key="item.name"
             cols="12"
             lg="3"
             md="4"
             sm="6"
           >
             <div class="text-center">
-              <nuxt-link to="/resturant/FoodMenu" class="text-decoration-none">
+              <nuxt-link
+                :to="`/restaurant/alcohol?category=${item.name}`"
+                class="text-decoration-none"
+              >
                 <v-avatar size="150" class="mb-4">
                   <img :src="item.img" alt="" />
                 </v-avatar>
-                <h4 class="grey--text text--darken-2">{{ item.name }}</h4>
+                <h4 class="grey--text text--darken-2">
+                  {{ item.displayName }}
+                </h4>
               </nuxt-link>
             </div>
           </v-col>
@@ -57,22 +62,27 @@
         <!-- 고객 맞춤형 -->
         <v-row>
           <v-col cols="12">
-            <h2>고객 맞춤형 드실</h2>
+            <h2>고객 맞춤형</h2>
           </v-col>
           <v-col
             v-for="(item, index) in who"
-            :key="index"
+            :key="item.name"
             cols="12"
             lg="3"
             md="4"
             sm="6"
           >
             <div class="text-center">
-              <nuxt-link to="/resturant/FoodMenu" class="text-decoration-none">
+              <nuxt-link
+                :to="`/restaurant/custom?category=${item.name}`"
+                class="text-decoration-none"
+              >
                 <v-avatar size="150" class="mb-4">
                   <img :src="item.img" alt="" />
                 </v-avatar>
-                <h4 class="grey--text text--darken-2">{{ item.name }}</h4>
+                <h4 class="grey--text text--darken-2">
+                  {{ item.displayName }}
+                </h4>
               </nuxt-link>
             </div>
           </v-col>
@@ -110,144 +120,91 @@ export default {
       food: [
         {
           img: require("~/assets/images/mainCategory/KOREAN.png"),
-          name: "한식",
+          name: "KOREAN",
+          displayName: "한식",
         },
         {
           img: require("~/assets/images/mainCategory/CHINESE.jpg"),
-          name: "중식",
+          name: "CHINESE",
+          displayName: "중식",
         },
         {
           img: require("~/assets/images/mainCategory/JAPANESE.jpg"),
-          name: "일식",
+          name: "JAPANESE",
+          displayName: "일식",
         },
         {
           img: require("~/assets/images/mainCategory/WESTERN.jpg"),
-          name: "양식",
+          name: "WESTERN",
+          displayName: "양식",
         },
-        { img: require("~/assets/images/food/14.png"), name: "베트남" },
         {
           img: require("~/assets/images/food/14.png"),
-          name: "아메리칸",
+          name: "VIETNAMESE",
+          displayName: "베트남",
         },
-        { img: require("~/assets/images/food/14.png"), name: "인도" },
         {
           img: require("~/assets/images/food/14.png"),
-          name: "기타 세계",
+          name: "AMERICAN",
+          displayName: "아메리칸",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "INDIAN",
+          displayName: "인도",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "OTHERGLOBALFOOD",
+          displayName: "기타 세계",
         },
       ],
       alcohol: [
         {
-          id: 9,
           img: require("~/assets/images/food/9.png"),
-          name: "맥주/호프",
+          name: "BEER",
+          displayName: "맥주/호프",
         },
         {
           img: require("~/assets/images/food/10.png"),
-          name: "전통주",
+          name: "TRADITIONAL_ALCOHOL",
+          displayName: "전통주",
         },
         {
           img: require("~/assets/images/food/11.png"),
-          name: " 이자카야",
+          name: "IZAKAYA",
+          displayName: "이자카야",
         },
         {
           img: require("~/assets/images/food/12.png"),
-          name: " 와인/칵테일",
+          name: "WINE_COCKTAIL",
+          displayName: "와인/칵테일",
         },
       ],
       who: [
         {
           img: require("~/assets/images/food/9.png"),
-          name: "혼밥",
+          name: "SOLO",
+          displayName: "혼밥",
         },
         {
           img: require("~/assets/images/food/10.png"),
-          name: " 친구",
+          name: "WITH_FRIENDS",
+          displayName: "친구",
         },
         {
           img: require("~/assets/images/food/11.png"),
-          name: "모임/회식",
+          name: "GROUP_GATHERING",
+          displayName: "모임/회식",
         },
         {
           img: require("~/assets/images/food/12.png"),
-          name: "데이트",
+          name: "DATE",
+          displayName: "데이트",
         },
       ],
-      reservation: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Best Of New York",
-        },
-      ],
-      read: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
-        },
-      ],
-      favorites: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
-        },
-      ],
-      restaurants: [], // API에서 로드한 식당 데이터를 저장할 배열
     };
   },
-  methods: {
-    fetchRestaurantsByCategory(categoryName) {
-      const serverUrl = "http://localhost:8000"; // 서버 주소 설정
-      const encodeName = encodeURIComponent(categoryName);
-      axios
-        .get(`${serverUrl}/restaurants/category/${encodeName}`)
-        .then((response) => {
-          // 데이터 처리 로직
-          this.restaurants = response.data; // 응답 데이터를 restaurants 배열에 저장
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          this.restaurants = []; // 에러 발생 시 배열 초기화
-        });
-    },
-  },
-  // created() {
-  //   this.fetchRestaurantsByCategory(1); // 예를 들어 한식 카테고리 ID가 1일 때
-  // },
 };
 </script>
 <style lang="scss">

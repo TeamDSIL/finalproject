@@ -10,11 +10,11 @@ export default {
   data() {
     return {
       imageSrc: require("@/assets/images/dsil_Characters.png"),
-      restaurantAddresses: [], // ë°ì´í„°ë² ì´ìŠ¤ì—ì„œ ë¶ˆëŸ¬ì˜¨ ì£¼ì†Œ ëª©ë¡
+      restaurantAddresses: [],
     };
   },
   beforeMount() {
-    this.loadRestaurantData(); // ë ˆìŠ¤í† ë‘ ë°ì´í„° ë¶ˆëŸ¬ì˜¤ê¸°
+    this.loadRestaurantData();
     if (typeof kakao === "undefined") {
       const script = document.createElement("script");
       script.src =
@@ -37,6 +37,7 @@ export default {
         })
         .catch((error) => console.error("Data load failed:", error));
     },
+    //¸Ê ÃÊ±âÈ­¿Í »ç¿ëÀÚ À§Ä¡ ±â¹İÀÇ Áöµµ »ı¼º ·ÎÁ÷
     initializeMap() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -93,7 +94,7 @@ export default {
                     }).setMap(map);
                   }
                 } else {
-                  console.error("ì£¼ì†Œ ê²€ìƒ‰ ì‹¤íŒ¨:", restaurant.address);
+                  console.error("ÁÖ¼Ò °Ë»ö ½ÇÆĞ:", restaurant.address);
                 }
               });
             });
@@ -106,11 +107,12 @@ export default {
         console.error("This browser doesn't support geolocation");
       }
     },
+    // µÎ ÁÂÇ¥ »çÀÌÀÇ °Å¸® °è»ê ¸Ş¼­µå
     calculateDistance(lat1, lng1, lat2, lng2) {
       function toRad(x) {
         return (x * Math.PI) / 180;
       }
-      var R = 6371; // ì§€êµ¬ì˜ ë°˜ì§€ë¦„(km)
+      var R = 6371;
       var dLat = toRad(lat2 - lat1);
       var dLng = toRad(lng2 - lng1);
       var a =
