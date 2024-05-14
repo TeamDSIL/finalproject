@@ -23,6 +23,7 @@
     <div :class="{ spinning: isSpinning }">
       {{ finalMenu }}
     </div>
+    <v-btn @click="closeModal">닫기</v-btn>
   </div>
 </template>
 
@@ -89,6 +90,9 @@ export default {
       setTimeout(() => {
         this.showFinalResult = true;
       }, 8000);
+    },
+    closeModal() {
+      this.$emit("close");
     },
   },
 };

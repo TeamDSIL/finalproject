@@ -12,16 +12,20 @@
                 v-model="userInfo.email"></v-text-field>
 
             <p class="text-14 mb-1">이름</p>
-            <v-text-field v-model="userInfo.name" outlined dense hide-details placeholder="이름" class="mb-4"></v-text-field>
+            <v-text-field v-model="userInfo.name" outlined dense hide-details placeholder="이름"
+                class="mb-4"></v-text-field>
 
             <p class="text-14 mb-1">연락처</p>
-            <v-text-field v-model="userInfo.tel" outlined dense hide-details placeholder="연락처" class="mb-4"></v-text-field>
+            <v-text-field v-model="userInfo.tel" outlined dense hide-details placeholder="연락처"
+                class="mb-4"></v-text-field>
 
             <p class="text-14 mb-1">주소</p>
-            <v-text-field v-model="userInfo.address" outlined dense hide-details placeholder="주소" class="mb-4"></v-text-field>
+            <v-text-field v-model="userInfo.address" outlined dense hide-details placeholder="주소"
+                class="mb-4"></v-text-field>
 
             <p class="text-14 mb-1">우편번호</p>
-            <v-text-field v-model="userInfo.postcode" outlined dense hide-details placeholder="우편번호" class="mb-4"></v-text-field>
+            <v-text-field v-model="userInfo.postcode" outlined dense hide-details placeholder="우편번호"
+                class="mb-4"></v-text-field>
 
             <p class="text-14 mb-1">비밀번호</p>
             <v-text-field v-model="modifiedPassword" outlined dense hide-details type="password" placeholder="********"
@@ -57,7 +61,7 @@ export default ({
         };
     },
     methods: {
-        
+
         async submitForm() {
             try {
                 // API 요청을 보내기 전에 비밀번호가 일치하는지 확인
@@ -89,7 +93,8 @@ export default ({
 
                 // 응답 처리
                 console.log('수정 응답:', response.data);
-
+                alert('회원 정보가 수정되었습니다.');
+                this.$router.push('/memberManage/userMyPage');
                 // 부모 컴포넌트로 수정된 정보를 전달
                 this.$emit('modify-user', requestData);
 
@@ -97,11 +102,11 @@ export default ({
                 this.$emit('close');
 
                 // 수정이 완료되면 이전 페이지로 이동하거나 필요한 작업을 수행할 수 있습니다.
-                this.$router.push('/memberManage/userMyPage');
 
             } catch (error) {
                 // API 요청 실패 시 에러 처리
                 console.error('수정 요청 실패:', error);
+                alert('회원 정보 수정 실패했습니다.');
             }
         },
     }
