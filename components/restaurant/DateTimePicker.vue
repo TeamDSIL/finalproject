@@ -691,8 +691,8 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
+      depositAmount:30000,
       riceBallPoints: 100,
-      depositAmount: 30000,
       totalRiceBallPoints: 4200,
       showConfirmationModal: false,
       showPaymentModal: false,
@@ -858,7 +858,7 @@ set() {
         const reservationData = {
                reservationDate: this.selectedDate,
                peopleCount: this.numberOfPeople,
-               reservationTime: this.selectedTime
+               reservationTime: this.selectedTime,
           };
           // axios를 사용하여 백엔드로 예약 정보 전송
           axios.post('http://localhost:8081/restaurant/detail', reservationData)
@@ -900,9 +900,9 @@ confirmReservation2() {
           merchant_uid: `${restaurantName}_${Date.now()}_id`,
           name: restaurantName, 
           amount: depositAmount * numberOfPeople - riceBallInput, 
-          buyer_email : "testiamport@naver.com",
-          buyer_name : "홍길동",
-          buyer_tel : "01012341234",
+          buyer_email : "",
+          buyer_name : "",
+          buyer_tel : "",
           paymentTime: new Date().toISOString()
         };
 
@@ -916,7 +916,9 @@ confirmReservation2() {
               const reservationData = {
                    reservationDate: this.selectedDate,
                    peopleCount: this.numberOfPeople,
-                   reservationTime: this.selectedTime
+                   reservationTime: this.selectedTime,
+                   reservationName: this.visitorName,
+                   reservationTel: this.visitorContact
               };
 
               // 예약 정보를 서버에 전송
@@ -924,7 +926,13 @@ confirmReservation2() {
                 .then(reservationResponse => {
                   console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
                   // 결제 정보를 서버에 전송
-                  axios.post('http://localhost:8081/restaurant/payment', paymentData)
+                  const reservationId = reservationResponse.data;
+
+                  axios.post('http://localhost:8081/restaurant/payment', paymentData,{
+                    params: {
+                      reservationId: reservationId
+                    }
+                  })
                     .then(paymentResponse => {
                       this.showSpinner=false;
                       this.showPaymentModal=false;
@@ -964,7 +972,7 @@ confirmReservation2() {
   
     redirectToReservation() {
       this.modal = true;
-      clearInterval(this.timerInterval);
+      clearInterval(this.timerInterval);  
       this.$router.push('/restaurant/detail');
     }
   },
