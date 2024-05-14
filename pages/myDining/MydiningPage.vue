@@ -11,9 +11,7 @@
       <div>
         <v-tabs v-model="tab" class="mb-8">
           <v-tab class="text-capitalize" href="#tab-1"> 예약현황 </v-tab>
-
           <v-tab class="text-capitalize" href="#tab-2"> 즐겨찾기 </v-tab>
-
           <v-tab class="text-capitalize" href="#tab-3"> 나의리뷰 </v-tab>
         </v-tabs>
 
@@ -127,18 +125,23 @@
                                   예약금: {{ reservation.deposit }}원
                                 </p>
 
-                                <nuxt-link
-                                  :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
-                                  class="text-decoration-none white--text"
-                                >
-                                  <v-btn
-                                    color="primary"
-                                    small
-                                    class="review-write-button"
+                                <template v-if="reservation.review === false && reservation.reservationState === 'COMPLETED'">
+                                  <nuxt-link
+                                    :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
+                                    class="text-decoration-none"
                                   >
-                                    리뷰 쓰기
-                                  </v-btn>
-                                </nuxt-link>
+                                    <v-btn color="primary" small class="review-write-button">
+                                      리뷰 쓰기
+                                    </v-btn>
+                                  </nuxt-link>
+                                </template>
+                                <template v-else>
+                                  <div>
+                                    <v-btn color="primary" small class="review-write-button" disabled>
+                                      리뷰 쓰기
+                                    </v-btn>
+                                  </div>
+                                </template>
                               </div>
                               <!-- <p class="text-14 grey--text text--darken-1">(4 Pcs mutton in chicken keema gravy)</p> -->
                             </div>
@@ -355,12 +358,16 @@
                       >3 Days Ago</span
                     > -->
                   </div>
+                  <v-avatar class="me-3" size="150" tile>
+  <img :src="review.reviewImg" alt="레스토랑 이미지" />
+</v-avatar>
                   <h5
                     class="grey--text text--darken-2 font-weight-regular mb-3"
                   >
                     {{ review.reviewContent }}
                   </h5>
                   <div>
+
                     <div class="mt-4">
                       <v-btn
                         class="grey--text text--darken-2 text-capitalize"
@@ -371,30 +378,29 @@
                         <v-icon left small>mdi-comment-text-outline</v-icon>
                         Comment
                       </v-btn>
+
                     </div>
+
                   </div>
                   <v-divider class="my-4"></v-divider>
                   <!-- comment  -->
                   <div class="mb-6">
                     <div v-if="review.replyContent">
-    <div class="text-14 grey--text text--darken-4 f-600">
-      사장님
-    </div>
-    <div class="mb-0 text-14 grey--text text--darken-1">
-      {{ review.replyRegisterDate }}
-    </div>
-    <h5 class="grey--text text--darken-2 font-weight-regular">
-      {{ review.replyContent }}
-    </h5>
-</div>
-<div v-else class="text-14 grey--text text--darken-1">
-    아직 사장님 댓글이 없어요.
-</div>
-
+                      <div class="text-14 grey--text text--darken-4 f-600">
+                        사장님
+                      </div>
+                      <div class="mb-0 text-14 grey--text text--darken-1">
+                        {{ review.replyRegisterDate }}
+                      </div>
+                      <h5 class="grey--text text--darken-2 font-weight-regular">
+                        {{ review.replyContent }}
+                      </h5>
+                    </div>
+                    <div v-else class="text-14 grey--text text--darken-1">
+                      아직 사장님 댓글이 없어요.
+                    </div>
                   </div>
-
                   <v-divider></v-divider>
-                  <!-- end::comment -->
                 </div>
               </v-col>
             </v-row>
@@ -412,7 +418,6 @@
       </div>
     </v-container>
     <div class="mb-4"></div>
-    <!-- <Location /> -->
     <Footer />
   </div>
 </template>
@@ -422,7 +427,6 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    // testImg: "https://gyeongju.go.kr/upload/content/thumb/20200529/4368708A9CC649CDB1EC5DD0C389804C.jpg",
     reserveRestaurantList: [],
     bookmarksList: [],
     reviewsList: [],
@@ -486,7 +490,7 @@ export default {
         );
       } catch (error){
         console.error("리뷰 취소 신청 중 오류가 발생했습니다.", error);
-        alert("예약 취소에 실패했습니다.");
+        alert("리뷰 삭제 요청에 실패했습니다.");
       }
     },
     async reservationDeny(reservationId) {
@@ -520,11 +524,11 @@ export default {
     },
     fetchReviews() {
       const id = this.$route.params.id;
-      console.log(id+"리뷰");
       axios
         .get(`http://localhost:8000/myDining/reviews/${id}`)
         .then((response) => {
           this.reviewsList = response.data;
+   
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
@@ -540,6 +544,7 @@ export default {
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
+          console.log(this.reserveRestaurantList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
@@ -553,7 +558,7 @@ export default {
       axios
         .get(`http://localhost:8000/myDining/bookmarks/${id}`)
         .then((response) => {
-          // 응답 데이터를 reservations 배열에 저장합니다
+          // 응답 데이터를 bookmarksList 배열에 저장합니다
           this.bookmarksList = response.data;
         })
         .catch((error) => {
