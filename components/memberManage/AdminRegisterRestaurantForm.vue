@@ -150,7 +150,8 @@
 
                                   <!-- 식당 사진 -->
                                   <v-file-input
-                                    v-model="restaurant.img"
+                                  v-model="restaurant.img"
+                                  accept="image/*"
                                     label="식당 사진"
                                     prepend-icon="mdi-camera"
                                     outlined
@@ -254,6 +255,7 @@ export default {
     return {
       showDialog: false, // 다이얼로그 표시 상태
       restaurant: {
+        file: null,
         email: "",
         password: "",
         userName: "",
@@ -362,45 +364,55 @@ export default {
   },
   methods: {
     async SubmitForm() {
-      try {
-        this.restaurant.restaurantAddress = `${this.restaurant.dynamicAddress} ${this.restaurant.detailAddress}`;
-        console.log(this.restaurant.restaurantAddress);
-        // RestaurantRegisterDTO 객체를 서버에 전송
-        const response = await axios.post(
-          "http://localhost:8000/memberManage/registerRestaurant",
-          {
-            email: this.restaurant.email,
-            password: this.restaurant.password,
-            userName: this.restaurant.userName,
-            userTel: this.restaurant.userTel,
-            userAddress: this.restaurant.userAddress,
-            restaurantName: this.restaurant.restaurantName,
-            registerNumber: this.restaurant.registerNumber,
-            restaurantTel: this.restaurant.restaurantTel,
-            restaurantAddress: this.restaurant.restaurantAddress,
-            postcode: this.restaurant.postcode,
-            tableCount: this.restaurant.tableCount,
-            deposit: this.restaurant.deposit,
-            img: this.restaurant.img,
-            description: this.restaurant.description,
-            categories: this.restaurant.category,
-            facilities: this.restaurant.facilities,
-            menuDTOs: this.restaurant.menuItems.map((item) => ({
-              name: item.name,
-              price: item.price,
-              img: item.photo,
-              menuInfo: item.menuInfo,
-            })),
-          }
-        );
+  try {
+    this.restaurant.restaurantAddress = `${this.restaurant.dynamicAddress} ${this.restaurant.detailAddress}`;
+    console.log(this.restaurant.restaurantAddress);
 
-        console.log("서버 응답:", response);
-        alert("식당 정보가 성공적으로 등록되었습니다.");
-      } catch (error) {
-        console.error("서버로부터 에러 응답:", error);
-        alert("식당 정보 등록에 실패하였습니다.");
+    // Create a FormData object
+    const formData = new FormData();
+    formData.append('email', this.restaurant.email);
+    formData.append('password', this.restaurant.password);
+    formData.append('userName', this.restaurant.userName);
+    formData.append('userTel', this.restaurant.userTel);
+    formData.append('userAddress', this.restaurant.userAddress);
+    formData.append('restaurantName', this.restaurant.restaurantName);
+    formData.append('registerNumber', this.restaurant.registerNumber);
+    formData.append('restaurantTel', this.restaurant.restaurantTel);
+    formData.append('restaurantAddress', this.restaurant.restaurantAddress);
+    formData.append('postcode', this.restaurant.postcode);
+    formData.append('tableCount', this.restaurant.tableCount);
+    formData.append('deposit', this.restaurant.deposit);
+    formData.append('img', this.restaurant.img); // Assuming img is a File object
+    formData.append('description', this.restaurant.description);
+    formData.append('categories', this.restaurant.category); // Convert to JSON string if it's an array or object
+    formData.append('facilities', this.restaurant.facilities); // Convert to JSON string if it's an array or object
+
+    // Append menu items
+    this.restaurant.menuItems.forEach((item, index) => {
+      formData.append(`menuDTOs[${index}].name`, item.name);
+      formData.append(`menuDTOs[${index}].price`, item.price);
+      formData.append(`menuDTOs[${index}].img`, item.photo); // Assuming photo is a File object
+      formData.append(`menuDTOs[${index}].menuInfo`, item.menuInfo);
+    });
+
+    // Send the form data
+    const response = await axios.post(
+      "http://localhost:8000/memberManage/registerRestaurant",
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        },
       }
-    },
+    );
+
+    console.log("서버 응답:", response);
+    alert("식당 정보가 성공적으로 등록되었습니다.");
+  } catch (error) {
+    console.error("서버로부터 에러 응답:", error);
+    alert("식당 정보 등록에 실패하였습니다.");
+  }
+},
     sample6_execDaumPostcode() {
       new daum.Postcode({
         oncomplete: (data) => {

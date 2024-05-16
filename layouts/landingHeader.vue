@@ -12,47 +12,6 @@
             </nuxt-link>
 
             <v-spacer></v-spacer>
-
-            <!-- 모달 다이얼로그  -->
-            <v-dialog v-model="dsilModal" width="600">
-              <v-card>
-                <v-card-title>
-                  <span class="headline">드실 선택</span>
-                </v-card-title>
-                <v-card-text>
-                  <div
-                    v-for="category in categories"
-                    :key="category.name"
-                    class="my-3"
-                  >
-                    <span class="headline">{{ category.name }}</span>
-                    <div class="button-grid">
-                      <v-btn
-                        v-for="item in category.items"
-                        :key="item"
-                        :color="
-                          category.selected.includes(item)
-                            ? 'blue lighten-3'
-                            : ''
-                        "
-                        text
-                        @click="toggleSelection(category.selected, item)"
-                      >
-                        {{ item }}
-                      </v-btn>
-                    </div>
-                  </div>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="closeModal"
-                    >취소</v-btn
-                  >
-                  <v-btn color="blue darken-1" text @click="search">검색</v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-
             <!-- 햄버거 버튼 요기부터 -->
             <v-app-bar-nav-icon
               class="rounded"
@@ -70,6 +29,47 @@
               </NavbarList>
             </v-navigation-drawer>
             <!-- 요까지 -->
+            <!-- 모달 다이얼로그  -->
+            <v-dialog v-model="dsilModal" width="600">
+              <v-card>
+                <v-card-title>
+                  <span class="headline">드실 선택</span>
+                </v-card-title>
+                <v-card-text>
+                  <div
+                    v-for="category in categories"
+                    :key="category.name"
+                    class="my-3"
+                  >
+                    <span class="headline">{{ category.displayName }}</span>
+                    <div class="button-grid">
+                      <v-btn
+                        v-for="item in category.items"
+                        :key="item.name"
+                        :color="
+                          category.selected.some(
+                            (selected) => selected.name === item.name
+                          )
+                            ? 'blue lighten-3'
+                            : ''
+                        "
+                        text
+                        @click="toggleSelection(category.selected, item)"
+                      >
+                        {{ item.displayName }}
+                      </v-btn>
+                    </div>
+                  </div>
+                </v-card-text>
+                <v-card-actions>
+                  <v-spacer></v-spacer>
+                  <v-btn color="green darken-1" text @click="closeModal"
+                    >취소</v-btn
+                  >
+                  <v-btn color="blue darken-1" text @click="search">검색</v-btn>
+                </v-card-actions>
+              </v-card>
+            </v-dialog>
           </div>
         </v-container>
       </div>
@@ -138,68 +138,103 @@ export default {
     dsilModal: false,
     categories: [
       {
-        name: "산업단지",
+        name: "INDUSTRIAL_DISTRICT",
+        displayName: "드실장소",
         items: [
-          "여의도-마포",
-          "용산(Y-밸리)",
-          "양제",
-          "수서",
-          "홍릉",
-          "마곡",
-          "가산디지털단지(G-밸리)",
-          "구로디지털단지(G-밸리)",
+          { name: "YEOUIDO_MAPO", displayName: "여의도-마포" },
+          { name: "YONGSAN_VALLEY", displayName: "용산(Y-밸리)" },
+          { name: "YANGJAE", displayName: "양제" },
+          { name: "SUSEO", displayName: "수서" },
+          { name: "HONGNEUNG", displayName: "홍릉" },
+          { name: "MAGOK", displayName: "마곡" },
+          {
+            name: "GASAN_DIGITAL_VALLEY",
+            displayName: "가산디지털단지(G-밸리)",
+          },
+          {
+            name: "GURO_DIGITAL_VALLEY",
+            displayName: "구로디지털단지(G-밸리)",
+          },
         ],
         selected: [],
       },
       {
-        name: "국가별",
+        name: "BY_COUNTRY",
+        displayName: "드실 음식",
         items: [
-          "한식",
-          "중식",
-          "일식",
-          "양식",
-          "베트남",
-          "아메리칸",
-          "인도",
-          "기타세계",
+          { name: "KOREAN", displayName: "한식" },
+          { name: "CHINESE", displayName: "중식" },
+          { name: "JAPANESE", displayName: "일식" },
+          { name: "WESTERN", displayName: "양식" },
+          { name: "VIETNAMESE", displayName: "베트남" },
+          { name: "AMERICAN", displayName: "아메리칸" },
+          { name: "INDIAN", displayName: "인도" },
+          { name: "OTHERGLOBALFOOD", displayName: "기타세계" },
         ],
         selected: [],
       },
       {
-        name: "육류",
-        items: ["소고기", "돼지고기", "스테이크", "곱창/막창"],
-        selected: [],
-      },
-      {
-        name: "해물",
-        items: ["해물(탕/찜/볶음)", "회/사시미", "초밥", "굴/조개"],
-        selected: [],
-      },
-      {
-        name: "주류",
-        items: ["맥주/호프", "전통주", "이자카야", "와인/칵테일"],
-        selected: [],
-      },
-      {
-        name: "누구랑",
-        items: ["혼자", "친구", "단체모임", "데이트 가족"],
-        selected: [],
-      },
-      {
-        name: "시설",
+        name: "MEAT",
+        displayName: "드실 고기",
         items: [
-          "주차가능",
-          "발렛가능",
-          "콜키지 프리",
-          "콜키지 가능",
-          "웰컴키즈존",
-          "대관 가능",
-          "노키즈존",
-          "전문 소믈리에",
-          "장애인 편의시설",
-          "반려동물 동반",
-          "무료와이파이",
-          "흡연구역",
+          { name: "BEEF", displayName: "소고기" },
+          { name: "PORK", displayName: "돼지고기" },
+          { name: "STEAK", displayName: "스테이크" },
+          { name: "TRIPE", displayName: "곱창/막창" },
+        ],
+        selected: [],
+      },
+      {
+        name: "SEAFOOD",
+        displayName: "드실 해물",
+        items: [
+          { name: "SEAFOOD_STEW", displayName: "해물(탕/찜/볶음)" },
+          { name: "SASHIMI", displayName: "회/사시미" },
+          { name: "SUSHI", displayName: "초밥" },
+          { name: "SHELLFISH", displayName: "굴/조개" },
+        ],
+        selected: [],
+      },
+      {
+        name: "ALCOHOL",
+        displayName: "드실 주류",
+        items: [
+          { name: "BEER", displayName: "맥주/호프" },
+          { name: "TRADITIONAL_ALCOHOL", displayName: "전통주" },
+          { name: "IZAKAYA", displayName: "이자카야" },
+          { name: "WINE_COCKTAIL", displayName: "와인/칵테일" },
+        ],
+        selected: [],
+      },
+      {
+        name: "WITH_WHO",
+        displayName: "뭘까",
+        items: [
+          { name: "SOLO", displayName: "혼밥" },
+          { name: "WITH_FRIENDS", displayName: "친구" },
+          { name: "GROUP_GATHERING", displayName: "단체모임" },
+          { name: "DATE", displayName: "데이트" },
+          { name: "FAMILY", displayName: "가족" },
+          { name: "COST_EFFECTIVE", displayName: "가성비" },
+        ],
+        selected: [],
+      },
+      {
+        name: "FACILITIES",
+        displayName: "편의시설",
+        items: [
+          { name: "PARKING_AVAILABLE", displayName: "주차가능" },
+          { name: "VALET_AVAILABLE", displayName: "발렛가능" },
+          { name: "CORKAGE_FREE", displayName: "콜키지 프리" },
+          { name: "CORKAGE_ALLOWED", displayName: "콜키지 가능" },
+          { name: "WELCOME_KIDS_ZONE", displayName: "웰컴키즈존" },
+          { name: "PRIVATE_DINING_AVAILABLE", displayName: "대관 가능" },
+          { name: "NO_KIDS_ZONE", displayName: "노키즈존" },
+          { name: "SOMMELIER_AVAILABLE", displayName: "전문 소믈리에" },
+          { name: "ACCESSIBILITY", displayName: "장애인 편의시설" },
+          { name: "PET_FRIENDLY", displayName: "반려동물 동반" },
+          { name: "FREE_WIFI", displayName: "무료와이파이" },
+          { name: "SMOKING_AREA", displayName: "흡연구역" },
         ],
         selected: [],
       },
@@ -210,7 +245,9 @@ export default {
       return this.drawer ? "sticky-nav" : "nav";
     },
     toggleSelection(selectedArray, item) {
-      const index = selectedArray.indexOf(item);
+      const index = selectedArray.findIndex(
+        (selected) => selected.name === item.name
+      );
       if (index > -1) {
         selectedArray.splice(index, 1);
       } else {
@@ -220,19 +257,44 @@ export default {
     closeModal() {
       this.dsilModal = false;
       this.categories.forEach((category) => {
-        category.selected = []; // 각 카테고리의 선택 배열을 초기화
+        category.selected = [];
       });
     },
     search() {
-      // 다중 선택된 데이터를 기반으로 필터링 또는 검색 로직을 수행
-      console.log(
-        "검색 데이터:",
-        this.categories.map((c) => ({
-          category: c.name,
-          selections: c.selected,
-        }))
-      );
-      this.$router.push("/restaurant/RestaurantListPage"); // '검색' 버튼 클릭 시 어떠한 페이지로 리디렉션
+      // 쿼리 파라미터를 담을 객체를 생성합니다.
+      let queryParams = {};
+
+      // 카테고리별로 쿼리 파라미터를 생성합니다.
+      this.categories.forEach((category) => {
+        category.selected.forEach((item) => {
+          // 시설 관련 카테고리는 'facility' 파라미터로, 나머지는 'category' 파라미터로 추가합니다.
+          const paramKey =
+            category.name === "FACILITIES" ? "facility" : "category";
+          // 해당 키에 대한 배열이 없으면 생성합니다.
+          if (!queryParams[paramKey]) {
+            queryParams[paramKey] = [];
+          }
+          // 해당 카테고리 키 배열에 아이템 이름을 추가합니다.
+          queryParams[paramKey].push(item.name);
+        });
+      });
+
+      // 쿼리 파라미터 문자열로 변환합니다.
+      let queryString = Object.keys(queryParams)
+        .map((key) =>
+          queryParams[key]
+            .map((value) => `${key}=${encodeURIComponent(value)}`)
+            .join("&")
+        )
+        .join("&");
+
+      // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
+      const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
+
+      // URL로 리디렉션합니다.
+      window.location.href = searchUrl;
+
+      // 모달 창을 닫습니다.
       this.closeModal();
     },
   },

@@ -153,7 +153,7 @@ export default {
                 name: this.$route.query.name,
                 address: this.$route.query.address,
                 tel: this.$route.query.tel,
-                img: this.$route.query.img,
+                img: null,
 
                 tableCount: this.$route.query.tableCount, // 문자열을 숫자로 변환
                 deposit: this.$route.query.deposit,

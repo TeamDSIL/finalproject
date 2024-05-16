@@ -26,12 +26,13 @@
 
                                                 <v-data-table :headers="headers" :items="displayedMembers"
                                                     hide-default-footer>
-                                                    <template v-slot:item="{ item }">
+                                                    <template v-slot:item="{ item }" >
                                                         <tr>
                                                             <td>{{ item.id }}</td>
                                                             <td>{{ item.email }}</td>
+                                                            <td>{{ item.point ? item.point.currentPoint : 'N/A' }}</td>
                                                             <td>{{ item.name }}</td>
-                                                            <td>{{ item.phone }}</td>
+                                                            <td>{{ item.tel }}</td>
                                                             <td>
                                                                 <v-dialog max-width="500">
                                                                     <template v-slot:activator="{ on }">
@@ -80,6 +81,7 @@
 
 <script>
 import AdminModifyUserForm from '@/components/memberManage/AdminModifyUserForm.vue';
+import axios from 'axios'; // axios를 import합니다.
 
 export default {
     head: {
@@ -96,42 +98,20 @@ export default {
             itemsPerPage: 10,
             showDialog: {}, // 다이얼로그 표시 여부를 관리하는 변수 추가
             selectedUserInfo: {}, // 선택된 사용자 정보를 저장할 변수 추가
-            members: [
-                // 일반 회원 데이터
-                { id: 1, email: 'example1@mail.com', name: 'John Doe', phone: '+1 123-456-7890' },
-                { id: 2, email: 'example2@mail.com', name: 'Jane Doe', phone: '+1 987-654-3210' },
-                { id: 3, email: 'example3@mail.com', name: 'Emily Smith', phone: '+1 555-123-4567' },
-                { id: 4, email: 'example4@mail.com', name: 'Michael Johnson', phone: '+1 555-987-6543' },
-                { id: 5, email: 'example5@mail.com', name: 'Sophia Williams', phone: '+1 555-456-7890' },
-                { id: 6, email: 'example6@mail.com', name: 'James Brown', phone: '+1 555-876-5432' },
-                { id: 7, email: 'example7@mail.com', name: 'Olivia Davis', phone: '+1 555-234-5678' },
-                { id: 8, email: 'example8@mail.com', name: 'William Miller', phone: '+1 555-678-9012' },
-                { id: 9, email: 'example9@mail.com', name: 'Emma Wilson', phone: '+1 555-345-6789' },
-                { id: 10, email: 'example10@mail.com', name: 'Alexander Moore', phone: '+1 555-789-0123' },
-                { id: 11, email: 'example11@mail.com', name: 'Isabella Taylor', phone: '+1 555-456-7890' },
-                { id: 12, email: 'example12@mail.com', name: 'Ethan Anderson', phone: '+1 555-890-1234' },
-                { id: 13, email: 'example13@mail.com', name: 'Mia Thomas', phone: '+1 555-567-8901' },
-                { id: 14, email: 'example14@mail.com', name: 'Daniel Jackson', phone: '+1 555-012-3456' },
-                { id: 15, email: 'example15@mail.com', name: 'Ava White', phone: '+1 555-678-9012' },
-                { id: 16, email: 'example16@mail.com', name: 'Matthew Harris', phone: '+1 555-234-5678' },
-                { id: 17, email: 'example17@mail.com', name: 'Chloe Martin', phone: '+1 555-901-2345' },
-                { id: 18, email: 'example18@mail.com', name: 'Charlotte Thompson', phone: '+1 555-345-6789' },
-                { id: 19, email: 'example19@mail.com', name: 'Liam Garcia', phone: '+1 555-678-9012' },
-                { id: 20, email: 'example20@mail.com', name: 'Amelia Martinez', phone: '+1 555-012-3456' },
-                { id: 21, email: 'example21@mail.com', name: 'Benjamin Robinson', phone: '+1 555-234-5678' },
-                { id: 22, email: 'example22@mail.com', name: 'Harper Clark', phone: '+1 555-345-6789' },
-                { id: 23, email: 'example23@mail.com', name: 'Evelyn Hall', phone: '+1 555-456-7890' },
-                { id: 24, email: 'example24@mail.com', name: 'Lucas Lewis', phone: '+1 555-567-8901' },
-                { id: 25, email: 'example25@mail.com', name: 'Aiden Lee', phone: '+1 555-678-9012' },
-            ],
+            members: [], // API로부터 받아온 회원 정보를 저장할 배열
             headers: [
                 { text: 'ID', align: 'start', value: 'id' },
                 { text: '이메일', value: 'email' },
+                { text: '밥알', value: 'point' },
                 { text: '이름', value: 'name' },
                 { text: '전화번호', value: 'phone' },
                 { text: '상세보기', value: '' },
             ],
         };
+    },
+    created() {
+        // 페이지가 로드될 때 API를 호출하여 회원 정보를 받아옵니다.
+        this.fetchMembers();
     },
     computed: {
         // 필터링된 회원 목록 반환
@@ -139,7 +119,7 @@ export default {
             return this.members.filter(member =>
                 member.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                 member.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-                member.phone.includes(this.searchQuery)
+                member.tel.includes(this.searchQuery)
             )
         },
         // 현재 페이지에 해당하는 회원 목록 반환
@@ -163,6 +143,19 @@ export default {
         },
     },
     methods: {
+        // API를 호출하여 회원 정보를 받아오는 메소드입니다.
+        async fetchMembers() {
+
+            // API 통신을 통해 회원 정보를 받아옵니다.
+            const response = await axios.get('http://localhost:8000/memberManage/adminManageUserPage')
+                .then((response) => {
+                    // 받아온 회원 정보를 members에 저장합니다.
+                    this.members = response.data;
+                })
+                .catch((error) => {
+                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+                })
+        },
         // 페이지 변경 시 실행되는 이벤트 핸들러
         navigateToPage(newPage) {
             this.currentPage = newPage;
@@ -177,8 +170,12 @@ export default {
             // 선택된 사용자의 모든 정보 저장
             this.selectedUserInfo = {
                 email: selectedUser.email,
+                password: selectedUser.password,
                 name: selectedUser.name,
-                phone: selectedUser.phone
+                tel: selectedUser.tel,
+                address: selectedUser.address,
+                postcode: selectedUser.postcode,
+                point: selectedUser.point,
             };
             // 다이얼로그 표시
             this.showDialog = true;
@@ -189,7 +186,8 @@ export default {
             console.log('수정된 사용자 정보:', modifiedUserInfo);
             // 다이얼로그 닫기
             this.showDialog = false;
-            this.$router.push('/memberManage/AdminManageUserPage');
+            // 회원 정보 다시 불러오기
+            this.fetchMembers();
         }
     },
 };
