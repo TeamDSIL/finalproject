@@ -24,7 +24,7 @@
         <v-card-actions>
           <v-btn color="primary" text @click="set" :disabled="numberOfPeople <= 0">예약하기</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click="modal = false">닫기</v-btn>
+          <v-btn color="primary" text @click= cancelReservation()>닫기</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -52,7 +52,7 @@
           <v-btn style="background-color: rgb(210,63,87); margin-left:45px; color: white"
             @click="confirmReservation2">결제하기</v-btn>
           <v-spacer></v-spacer>
-          <v-btn style="background-color: #E0E0E0; margin-right:45px;" text @click="cancelReservation">취소</v-btn>
+          <v-btn style="background-color: #E0E0E0; margin-right:45px;" text @click=cancelReservation()>취소</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -78,7 +78,7 @@
           <v-btn style="background-color: rgb(210,63,87); margin-left:45px; color: white"
             @click="confirmReservation">예약하기</v-btn>
           <v-spacer></v-spacer>
-          <v-btn style="background-color: #E0E0E0; margin-right:45px;" text @click="cancelReservation">취소</v-btn>
+          <v-btn style="background-color: #E0E0E0; margin-right:45px;" text @click=cancelReservation()>취소</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -164,7 +164,7 @@
           <span style="font-weight: bold; color: black; margin-top: 20px;">고객 요청 사항</span>
           <div
             style="background-color:rgba(251, 251, 251, 0.89);; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
-            <textarea rows="4" cols="50" style="resize: none; border: none; background-color: transparent;"
+            <textarea v-model="customerRequest" rows="4" cols="50" style="resize: none; border: none; background-color: transparent;"
               placeholder="레스토랑에 요쳥하실 내용을 입력해주세요."></textarea>
           </div>
         </div>
@@ -691,7 +691,7 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
-      depositAmount:30000,
+      depositAmount:3000,
       riceBallPoints: 100,
       totalRiceBallPoints: 4200,
       showConfirmationModal: false,
@@ -707,10 +707,11 @@ export default {
       paymentAmount: 0,
       customerRequest: '',
       privacyModal: false,
-      reservationPolicyAgreed: false, // 예약 정책 동의 여부를 저장할 변수
+      reservationPolicyAgreed: false,
       agreeTerms: false,
-      htmlContent: '', // 가져온 HTML을 저장할 데이터
-      showSpinner: false // 스피너 표시 여부를 제어할 변수
+      htmlContent: '', 
+      showSpinner: false,
+      customerRequest: ''
     };
   },
   computed: {
@@ -743,6 +744,7 @@ export default {
   methods: {
     cancelPayment() {
       this.showPaymentModal = false;
+      this.resetReservationData();
     },
    
     formatPhoneNumber() {
@@ -845,7 +847,9 @@ set() {
       }
     },
     cancelReservation() {
+      this.modal=false;
       this.showConfirmationModal = false;
+      this.resetReservationData();
     },
       confirmReservation() {
         if (this.depositAmount) {
@@ -859,6 +863,7 @@ set() {
                reservationDate: this.selectedDate,
                peopleCount: this.numberOfPeople,
                reservationTime: this.selectedTime,
+               depositAmount: this.depositAmount
           };
           // axios를 사용하여 백엔드로 예약 정보 전송
           axios.post('http://localhost:8081/restaurant/detail', reservationData)
@@ -888,7 +893,7 @@ confirmReservation2() {
       payment() {
       // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
       if (this.reservationPolicyAgreed && this.agreeTerms) {
-        const depositAmount = this.depositAmount; // depositAmount 변수 정의
+        const depositAmount = this.depositAmount; 
         const numberOfPeople = this.numberOfPeople;
         const riceBallInput = this.riceBallInput;
         const restaurantName = this.restaurantName;
@@ -909,16 +914,16 @@ confirmReservation2() {
         // 결제 함수 정의
         const paymentFunction = () => {
           IMP.init('imp56476634');
-          IMP.request_pay(paymentData, function (rsp) {
+          IMP.request_pay(paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
             if (rsp.success) {
               this.showSpinner = true;
-              alert("결제 완료 : " + "예약 번호 " +rsp.merchant_uid);
               const reservationData = {
                    reservationDate: this.selectedDate,
                    peopleCount: this.numberOfPeople,
                    reservationTime: this.selectedTime,
                    reservationName: this.visitorName,
-                   reservationTel: this.visitorContact
+                   reservationTel: this.visitorContact, 
+                   requestContent: this.customerRequest
               };
 
               // 예약 정보를 서버에 전송
@@ -939,6 +944,8 @@ confirmReservation2() {
                       console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
                       // 결제 및 예약 정보가 성공적으로 처리되면 페이지 이동
                       this.$router.push('/restaurant/detail');
+                      alert("결제 완료 : " + "예약 번호 " +rsp.merchant_uid);
+                      this.resetReservationData();
                     })
                     .catch(paymentError => {
                       console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
@@ -951,7 +958,7 @@ confirmReservation2() {
               alert("(" + rsp.error_msg + ")");
               window.location.href = 'http://localhost:3000/restaurant/detail';
             }
-          }.bind(this)); // 화살표 함수를 사용하여 외부 스코프의 this를 참조하도록 수정
+          });
         }
 
         // 스크립트를 먼저 로드합니다.
@@ -969,6 +976,21 @@ confirmReservation2() {
         console.log("두 개의 필수 동의사항에 모두 동의해야 합니다.");
       }
     },
+    resetReservationData() {
+    // 예약 및 결제 정보 초기화
+    this.selectedDate = '';
+    this.numberOfPeople = 1;
+    this.selectedTime = '';
+    this.visitorName = '';
+    this.visitorContact = '';
+    this.customerRequest = '';
+    this.riceBallInput = 0;
+    this.reservationPolicyAgreed = false;
+    this.agreeTerms = false;
+    this.date = '';
+        this.selectedHour = '';
+        this.selectedMinute = '';
+},
   
     redirectToReservation() {
       this.modal = true;
