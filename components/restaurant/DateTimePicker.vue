@@ -679,6 +679,9 @@ import axios from 'axios';
 
 export default {
   name: "DateTimePicker",
+  props: {
+    restaurantName: String
+  },
   data() {
     return {
       timer: '7:00',
@@ -697,7 +700,6 @@ export default {
       showConfirmationModal: false,
       showPaymentModal: false,
       showReservationConfirmationModal: false,
-      restaurantName: '뭐지',
       alertSnackbar: false,
       alertMessage: "",
       visitorName: '',
