@@ -49,33 +49,33 @@
                         <v-col cols="8">
                             <!-- <v-card class="px-10 py-10"> -->
 
-                                <!-- <h5>카테고리</h5> -->
-                                <v-row>
-                                    <!-- <v-col cols="6" lg="3" md="4" sm="6" v-for="category in categories" :key="category"
+                            <!-- <h5>카테고리</h5> -->
+                            <v-row>
+                                <!-- <v-col cols="6" lg="3" md="4" sm="6" v-for="category in categories" :key="category"
                                         class="py-0">
                                         <v-checkbox :label="category" class="checkbox-label"></v-checkbox>
                                     </v-col> -->
-                                    <v-select v-model="categories" :items="allCategories" label="카테고리 설정" multiple
-                                        outlined attach chips small-chips></v-select>
-                                </v-row>
+                                <v-select v-model="restaurant.categories" :items="allCategories" label="카테고리 설정"
+                                    multiple outlined attach chips small-chips></v-select>
+                            </v-row>
                             <!-- </v-card> -->
                         </v-col>
 
                         <!-- 편의시설 -->
                         <v-col cols="8">
-                            
-                                <!-- <h5>편의시설</h5> -->
-                                <v-row>
 
-                                    <!-- <v-col cols="6" lg="3" md="4" sm="6" v-for="facility in facilities" :key="facility"
+                            <!-- <h5>편의시설</h5> -->
+                            <v-row>
+
+                                <!-- <v-col cols="6" lg="3" md="4" sm="6" v-for="facility in facilities" :key="facility"
                                         class="py-0">
                                         <v-checkbox :label="facility" class="checkbox-label"></v-checkbox>
                                     </v-col> -->
 
-                                    <v-select v-model="facilities" :items="allFacilities" label="편의시설 선택"
-                                        multiple outlined attach chips small-chips></v-select>
-                                </v-row>
-                            
+                                <v-select v-model="restaurant.facilities" :items="allFacilities" label="편의시설 선택"
+                                    multiple outlined attach chips small-chips></v-select>
+                            </v-row>
+
                         </v-col>
 
 
@@ -158,17 +158,17 @@ export default {
                 tableCount: this.$route.query.tableCount, // 문자열을 숫자로 변환
                 deposit: this.$route.query.deposit,
                 crowd: this.$route.query.crowd,
+                categories: [],
+                facilities: [],
             },
-            categories: [],
-            facilities: [],
             menuItems: [],
-        
+
             headers: [
                 { text: '날짜', value: 'date' },
                 { text: '시간', value: 'time' },
                 { text: '고객 이름', value: 'customerName' }
             ],
-            
+
             page: 1,
 
             text: 'hello',
@@ -190,7 +190,7 @@ export default {
             try {
                 const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/categories`);
                 const selectedCategories = response.data.map(category => category.name);
-                this.categories = selectedCategories;
+                this.restaurant.categories = selectedCategories;
                 this.allCategories = [
                     { text: '한식', value: 'KOREAN' },
                     { text: '중식', value: 'CHINESE' },
@@ -235,7 +235,7 @@ export default {
             try {
                 const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/facilities`);
                 const selectedFacilities = response.data.map(facility => facility.name);
-                this.facilities = selectedFacilities;
+                this.restaurant.facilities = selectedFacilities;
                 this.allFacilities = [
                     { text: '주차 가능', value: 'PARKING_AVAILABLE' },
                     { text: '발렛 파킹', value: 'VALET_AVAILABLE' },
@@ -280,40 +280,67 @@ export default {
             // 선택된 버튼이 다시 클릭되면 선택 해제, 아니면 선택
             this.selected = this.selected === button ? null : button;
         },
-        async updateRestaurantInfo() {
-            const restaurantData = {
-                id: this.restaurant.id,
-                name: this.restaurant.name,
-                address: this.restaurant.address,
-                tel: this.restaurant.tel,
-                img: this.restaurant.img,
-                tableCount: this.restaurant.tableCount,
-                deposit: this.restaurant.deposit,
-                crowd: this.restaurant.crowd,
-                categories: this.categories.map(category => ({
-                    name: category
-                })),
-                facilities: this.facilities.map(facility => ({
-                    name: facility
-                })),
-                menus: this.menuItems.map(item => ({
-                    name: item.name,
-                    menuInfo: item.menuInfo,
-                    price: item.price,
-                    img: item.img,
-                }))
-            };
 
-            await axios.put(`http://localhost:8000/restaurant/${this.restaurant.id}`, restaurantData)
-                .then(response => {
-                    console.log('식당 정보가 성공적으로 업데이트되었습니다:', response.data);
-                    alert('식당 정보가 성공적으로 업데이트되었습니다.');
-                })
-                .catch(error => {
-                    console.error('식당 정보 업데이트 중 오류가 발생했습니다:', error);
-                    alert('식당 정보 업데이트 중 오류가 발생했습니다.');
-                });
-        },
+        //바꾼다잉여기까지.
+        //이제 되니까 건들지마쇼잉
+
+        async updateRestaurantInfo() {
+    const restaurantData = {
+        id: this.restaurant.id,
+        name: this.restaurant.name,
+        address: this.restaurant.address,
+        tel: this.restaurant.tel,
+        tableCount: this.restaurant.tableCount,
+        deposit: this.restaurant.deposit,
+        crowd: this.restaurant.crowd,
+        categories: this.restaurant.categories.map(category => ({
+            name: category
+        })),
+        facilities: this.restaurant.facilities.map(facility => ({
+            name: facility
+        })),
+        menus: this.menuItems.map(item => ({
+            name: item.name,
+            menuInfo: item.menuInfo,
+            price: item.price,
+            img: item.img instanceof File ? null : item.img,
+        })),
+    };
+
+    const formData = new FormData();
+    formData.append('restaurantData', JSON.stringify(restaurantData));
+
+    if (this.restaurant.img instanceof File) {
+        formData.append('image', this.restaurant.img);
+    }
+
+    // 메뉴 이미지 파일을 FormData에 추가
+    this.menuItems.forEach((item, index) => {
+        if (item.img instanceof File) {
+            formData.append(`menuImages`, item.img);
+        }
+    });
+
+    // 디버깅 목적으로 FormData의 내용을 출력
+    for (let pair of formData.entries()) {
+        console.log(`${pair[0]}, ${pair[1]}`);
+    }
+
+    await axios.put(`http://localhost:8000/restaurant/${this.restaurant.id}`, formData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    })
+    .then(response => {
+        console.log('식당 정보가 성공적으로 업데이트되었습니다:', response.data);
+        alert('식당 정보가 성공적으로 업데이트되었습니다.');
+    })
+    .catch(error => {
+        console.error('식당 정보 업데이트 중 오류가 발생했습니다:', error);
+        alert('식당 정보 업데이트 중 오류가 발생했습니다.');
+    });
+}
+,
         saveMenu() {
             console.log('Menu saved:', this.menuItems);
             this.showDialog = false;
