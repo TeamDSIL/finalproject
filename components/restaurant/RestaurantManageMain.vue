@@ -22,6 +22,12 @@
           전체리뷰보기
 
         </v-tab>
+
+
+        <v-tab class="text-capitalize" @click="goToRestaurantManage">
+          처음으로
+
+        </v-tab>
       </v-tabs>
       <!-- <v-divider></v-divider> -->
 
@@ -354,6 +360,10 @@
             </v-col>
           </v-row>
         </v-tab-item>
+
+
+
+
       </v-tabs-items>
     </div>
     <Footer />
@@ -363,34 +373,37 @@
 <script>
 import axios from 'axios';
 
+
 export default {
-  props: {
-    id: {
-      type: Number,
-      required: true
+  
+  // props: {
+  //   id: {
+  //     type: Number,
+  //     required: true
+  //   },
+  //   name: {
+  //     type: String,
+  //     required: true
+  //   },
+  //   address: {
+    //     type: String,
+    //     required: true
+    //   },
+    // },
+    created() {
+      const restaurantId = this.$route.params.id;
+      this.fetchRestaurantDetails(restaurantId);
+      this.fetchReservations(restaurantId);
+      this.fetchReviews(restaurantId);
+      this.fetchAvailableTimes(restaurantId);
     },
-    name: {
-      type: String,
-      required: true
-    },
-    address: {
-      type: String,
-      required: true
-    },
-  },
-  created() {
-    const restaurantId = this.$route.params.id;
-    this.fetchRestaurantDetails(restaurantId);
-    this.fetchReservations(restaurantId);
-    this.fetchReviews(restaurantId);
-    this.fetchAvailableTimes(restaurantId);
-  },
-  data() {
-    return {
-      // isClicked: false,
-      times: [
-        { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
-        { id: 2, label: '오후1:00', clicked: false, slot: 'AFTERNOON_1' },
+    data() {
+      return {
+        // isClicked: false,
+        
+        times: [
+          { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
+          { id: 2, label: '오후1:00', clicked: false, slot: 'AFTERNOON_1' },
         { id: 3, label: '오후2:00', clicked: false, slot: 'AFTERNOON_2' },
         { id: 4, label: '오후3:00', clicked: false, slot: 'AFTERNOON_3' },
         { id: 5, label: '오후4:00', clicked: false, slot: 'AFTERNOON_4' },
@@ -403,21 +416,21 @@ export default {
       buttonClicks: Array(9).fill(false),
       showReplyForm: false, // 입력 폼의 표시 상태를 제어하는 데이터 속성
       reply: '',
-
+      
       restaurant: [],
       // headers: [
-      //   {
-      //     width: '200px'
-      //   },
-      //   { text: '날짜', value: 'date' },
-      //   { text: '시간', value: 'time' },
-      //   { text: '고객 이름', value: 'customerName' }
-      // ],
-
-      reservations: [],
-      reviews: [],
-
-      pageReview: 1,
+        //   {
+          //     width: '200px'
+          //   },
+          //   { text: '날짜', value: 'date' },
+          //   { text: '시간', value: 'time' },
+          //   { text: '고객 이름', value: 'customerName' }
+          // ],
+          
+          reservations: [],
+          reviews: [],
+          
+          pageReview: 1,
       pageReservation: 1,
       pageSize: 10,
       pageCountReview: 0,
@@ -437,6 +450,8 @@ export default {
   },
 
   methods: {
+    // 통계 데이터를 가져오는 메서드
+    
     async toggleTime(time) {
       const restaurantId = this.$route.params.id;
       if (time.clicked) {
@@ -529,11 +544,17 @@ export default {
     goToRestaurantManageMain() {
       this.$router.push({ path: '/restaurant/RestaurantManageMainPage' });
     },
+    goToRestaurantManage() {
+      this.$router.push({ path: '/restaurant/RestaurantManagePage' });
+    },
     goToRestaurantReserveManage() {
       this.$router.push({ path: '/restaurant/RestaurantReserveManagePage' });
     },
     goToReviewManage() {
       this.$router.push({ path: '/restaurant/ReviewManagePage' });
+    },
+    goToRestaurantManage() {
+      this.$router.push({path: `/restaurant/RestaurantManagePage`});
     },
     goToRestaurantModify(restaurant) {
       this.$router.push({
@@ -627,6 +648,7 @@ export default {
     }
   },
   mounted() {
+    
     // this.pageCountReview = Math.ceil(this.reviews.length / this.pageSize);
     // this.paginateReviews();
     // this.pageCountReservation = Math.ceil(this.reservations.length / this.pageSize);
@@ -680,4 +702,5 @@ export default {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
 </style>
