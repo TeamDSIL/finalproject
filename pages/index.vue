@@ -91,11 +91,11 @@
     </div>
     <!-- section-2  4,8-->
     <div>
-      <v-container class="py-15">
-        <v-row>
-          <Topten></Topten>
-        </v-row>
-      </v-container>
+      <!-- <v-container class="py-15">
+        <v-row> -->
+      <Topten></Topten>
+      <!-- </v-row>
+      </v-container> -->
     </div>
 
     <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
