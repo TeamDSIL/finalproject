@@ -8,35 +8,34 @@
             </v-breadcrumbs>
             <v-row dense>
                 <v-col cols="12" xl="6" lg="6">
-                    <v-img width="100%" height="100%" :src="require('~/assets/images/gallery/bigFood.png')"></v-img>
                 </v-col>
                 <v-col cols="12" xl="6" lg="6">
                     <v-row dense>
                         <v-col cols="6" xl="6">
-                            <v-img contain :src="require('~/assets/images/gallery/foodOne.png')"></v-img>
                         </v-col>
                         <v-col cols="6" xl="6">
-                            <v-img contain :src="require('~/assets/images/gallery/foodTwo.png')"></v-img>
                         </v-col>
                         <v-col cols="6" xl="6">
-                            <v-img contain :src="require('~/assets/images/gallery/foodThree.png')"></v-img>
                         </v-col>
                         <v-col cols="6" xl="6">
-                            <v-img contain :src="require('~/assets/images/gallery/foodFour.png')"></v-img>
                         </v-col>
                     </v-row>
                 </v-col>
                 <v-col cols="12" class="mt-4">
                     <div class="d-flex justify-space-between flex-wrap align-center mb-3">
-                        <h1 class="me-2">{{restaurantDetails.name}}</h1>
+                        <h1 class="me-2">{{ restaurantDetails.name }}</h1>
 
-                        <div class="mb-3">
-                            <span v-for="(star, index) in 5" :key="index">
-                                <img src="../../assets/images/babscore.png" width="16" height="16">
-                            </span>
-                            <span class="text-14 me-1"> 4.5
-                                <span class="grey--text">(1004)</span>
-                            </span>
+                        <div class="titleflex">
+                            <div class="mb-3">
+                                <span v-for="(star, index) in 5" :key="index">
+                                </span>
+                                <span class="text-14 me-1"> 4.5
+                                    <span class="grey--text">(1004)</span>
+                                </span>
+                            </div>
+                            <div :class="{ 'favorite-dark': !isToggled, 'favorite-color': isToggled }"
+                                @click="toggleImage">
+                            </div>
                         </div>
                     </div>
 
@@ -44,22 +43,21 @@
                     <p class="mb-5 text-18">커피 한 잔에 담긴 작은 행복, 스타벅스</p>
                     <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
                         <v-icon left small color="grey">mdi-map-marker</v-icon>
-                        {{restaurantDetails.address}}
+                        {{ restaurantDetails.address }}
                         <v-dialog ref="dialog" v-model="modal" width="500px" height="500px">
                             <!-- 버튼을 클릭하면 모달을 열 수 있음 -->
                             <template v-slot:activator="{ on }">
                                 <v-btn v-on="on" text> 매장 위치 보기 </v-btn>
                             </template>
                             <v-card>
-                                <KakaoMap />
+                                <KakaoMap1 />
                                 <v-card-actions>
                                     <v-spacer></v-spacer>
                                     <v-btn color="primary" text @click="modal = false">닫기</v-btn>
                                 </v-card-actions>
                             </v-card>
                         </v-dialog>
-                        <!-- <nuxt-link to="" class="grey--text text--darken-3">매장 위치 보기</nuxt-link> -->
-                    </div>
+                                        </div>
                     <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
                         <v-icon left small color="grey">mdi-clock-outline</v-icon>
                         <span class="primary--text me-2">매장 오픈 시간</span> - Sun - Mon: 9am - 10pm 영업중
@@ -104,75 +102,76 @@
                         <div class="roundstate">
                             <div :class="crowdClass">
                                 <span v-if="restaurantDetails.crowd === 'BUSY'">혼잡</span>
-      <span v-else-if="restaurantDetails.crowd === 'NORMAL'">보통</span>
-      <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">여유</span>
-    </div>
-    <span v-if="restaurantDetails.crowd === 'BUSY'">웨이팅이 길게 발생할 수 있습니다.</span>
-      <span v-else-if="restaurantDetails.crowd === 'NORMAL'">약간의 웨이팅이 발생할 수 있습니다.</span>
-      <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">매장 식사 이용 시 바로 입장 가능합니다.</span>
+                                <span v-else-if="restaurantDetails.crowd === 'NORMAL'">보통</span>
+                                <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">여유</span>
+                            </div>
+                            <span v-if="restaurantDetails.crowd === 'BUSY'">웨이팅이 길게 발생할 수 있습니다.</span>
+                            <span v-else-if="restaurantDetails.crowd === 'NORMAL'">약간의 웨이팅이 발생할 수 있습니다.</span>
+                            <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">매장 식사 이용 시 바로 입장 가능합니다.</span>
                         </div><br><br>
                         <h2>편의시설</h2>
                         <div class="icon-container">
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/parking.png" width="50" height="50">
                                 </div>
                                 <div>주차가능</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/valet-parking.png" width="50" height="50">
                                 </div>
                                 <div>발렛파킹</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/smoking.png" width="50" height="50">
                                 </div>
                                 <div>흡연구역</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/dog.png" width="50" height="50">
                                 </div>
                                 <div>애견동반</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/cork.png" width="50" height="50">
                                 </div>
                                 <div>콜키지가능</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/wine-bottle.png" width="50" height="50">
                                 </div>
                                 <div>소믈리에</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/welcome.png" width="50" height="50">
                                 </div>
                                 <div>웰컴키즈존</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/nokids.png" width="50" height="50">
                                 </div>
                                 <div>노키즈존</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/freewifi.png" width="50" height="50">
                                 </div>
                                 <div>와이파이존</div>
                             </div>
                             <div class="icon-center">
                                 <div class="icon-item">
-                                    <img src="../../assets/images/facility/disable.png" width="50" height="50">
                                 </div>
                                 <div>장애인편의시설</div>
                             </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                </div>
+                                <div>렌탈 가능</div>
+                            </div>
+                            <div class="icon-center">
+                                <div class="icon-item">
+                                </div>
+                                <div>콜키지 프리</div>
+                            </div>
+
                         </div>
                     </v-tab-item>
                     <v-tab-item value="tab-2">
@@ -190,28 +189,19 @@
                             <v-dialog ref="dialog" v-model="showModal" width="400px">
                                 <!-- 버튼을 클릭하면 모달을 열 수 있음 -->
                                 <template v-slot:activator="{ on }">
-                                    <v-btn block color="error" v-on="on"> 메뉴 전체보기 > </v-btn>
+                                    <v-btn block color="error" v-on="on"> 메뉴 상세보기 > </v-btn>
                                 </template>
                                 <v-card>
                                     <!-- 여기에 사진 삽입 -->
-                                    <img src="../../assets/images/food/pizza.png" width="400px"></img>
                                     <!-- 메뉴 리스트 드롭다운 -->
-                                    <v-list>
-                                        <v-list-group v-for="item in menuItems" :key="item.name" v-model="item.active"
-                                            no-action>
-                                            <template v-slot:activator>
-                                                <v-list-item-content>
-                                                    <v-list-item-title>{{ item.name }}</v-list-item-title>
-                                                    <v-list-item-subtitle>{{ item.priceRange }}</v-list-item-subtitle>
-                                                </v-list-item-content>
-                                            </template>
-                                            <v-list-item v-for="subItem in item.items" :key="subItem.name">
-                                                <v-list-item-content class="space">
-                                                    <v-list-item-title>{{ subItem.name }}</v-list-item-title>
-                                                    <v-list-item-title>{{ subItem.price }}</v-list-item-title>
-                                                </v-list-item-content>
-                                            </v-list-item>
-                                        </v-list-group>
+                                    <v-list v-for="item in menus" :key="item.name">
+                                        <v-list-item class="titleflex">
+                                            <v-list-item-title class="menuflex-container">
+                                                <div class="left">{{ item.name }}</div>
+                                                <div class="right">{{ item.price }}</div>
+                                            </v-list-item-title>
+                                            <v-list-item-subtitle class="sub">{{ item.menu_info }}</v-list-item-subtitle>
+                                        </v-list-item>
                                     </v-list>
                                     <v-card-actions>
                                         <v-spacer></v-spacer>
@@ -227,7 +217,6 @@
 
                         <div class="ratings-container">
                             <div class="ratings-container-sub">
-                                <img src="~/assets/images/babscore.png" alt="Bob's Score" class="score-image">
                                 <div class="score-value">{{ averageScore.toFixed(1) / 2 }}</div>
                             </div>
                             <div class="rating-bars">
@@ -251,7 +240,6 @@
                             <div class="mb-6">
                                 <div class="d-flex align-center flex-wrap mb-4">
                                     <v-avatar size="48" class="me-4">
-                                        <img src="~/assets/images/faces/8.png" alt="">
                                     </v-avatar>
                                     <div>
                                         <h5 class="mb-0">Abriella Bond</h5>
@@ -272,10 +260,8 @@
                                     account.</h5>
                                 <v-row class="mb-2">
                                     <v-col cols="6" lg="6">
-                                        <v-img contain :src="require('~/assets/images/gallery/foodFive.png')"></v-img>
                                     </v-col>
                                     <v-col cols="6" lg="6">
-                                        <v-img contain :src="require('~/assets/images/gallery/foodSix.png')"></v-img>
                                     </v-col>
                                 </v-row>
                                 <div>
@@ -298,7 +284,6 @@
                                 <div class="mb-6">
                                     <div class="d-flex align-center mb-3">
                                         <v-avatar size="28" class="me-3">
-                                            <img src="~/assets/images/faces/6.png" alt="">
                                         </v-avatar>
                                         <div class="text-14 grey--text text--darken-4 f-600">Emmet McDermott</div>
                                     </div>
@@ -311,7 +296,6 @@
                                 <div class="mb-6">
                                     <div class="d-flex align-center mb-3">
                                         <v-avatar size="28" class="me-3">
-                                            <img src="~/assets/images/faces/7.png" alt="">
                                         </v-avatar>
                                         <div class="text-14 grey--text text--darken-4 f-600">Emmet McDermott</div>
                                     </div>
@@ -383,18 +367,15 @@
                                     </div>
                                 </div>
                                 <div class="d-flex align-center mb-2">
-                                    <span v-for="(star, index) in 5" :key="index">
+                                    <span v-for="(review, index) in reviews" :key="index">
                                         <v-icon small color="warning">mdi-star</v-icon>
-                                    </span>
-                                    <span class="font-weight-bold text-14 ms-2">4.0</span>
-                                    <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
-                                </div>
-                                <h5 class="grey--text text--darken-2 font-weight-regular mb-3">Lorem ipsum dolor sit
-                                    amet,
-                                    consectetur adipiscing elit. Varius massa id ut mattis. Facilisis vitae gravida
-                                    egestas ac
-                                    account.</h5>
-
+                                    
+                                    <span class="font-weight-bold text-14 ms-2">{{review.score}}</span>
+                                    <span class="grey--text text--darken-1 text-14 ms-2">{{review.registerDate}}</span>
+                            
+                                
+                                <h5 class="grey--text text--darken-2 font-weight-regular mb-3">{{review.content}}</h5>
+                            </span></div>
                                 <div>
                                     <span class="grey--text text--darken-1 text-14">4 Likes, 2 Comments</span>
                                     <div class="mt-4">
@@ -413,16 +394,15 @@
                                 <v-divider class="my-4"></v-divider>
 
 
-
                             </div>
-                            <!-- end::user-post  -->
+                          end::user-post 
                         </v-col>
                     </v-tab-item>
                     <v-tab-item value="tab-4">
                         <div>
                             <h1>상세정보</h1><br>
                             <h4>전화번호</h4><br>
-                            <v-icon color="green">mdi-phone</v-icon> {{restaurantDetails.tel}}<br><br>
+                            <v-icon color="green">mdi-phone</v-icon> {{ restaurantDetails.tel }}<br><br>
                             <h4>매장 소개</h4><br>
                             국내산 임실치즈를 사용해 만든 피자 전문점입니다. 적절한 도우와 여러가지 토핑이 어우러져 피자 고유의 맛을 느낄 수 있습니다.<br><br>
                             <h4>영업시간 및 정기 휴무</h4><br>
@@ -430,7 +410,7 @@
                             20:30 라스트오더<br>
                             정기 휴무 : 매주 일<br><br>
                             <h4>매장 주소</h4><br>
-                            {{restaurantDetails.address}}
+                            {{ restaurantDetails.address }}
 
 
                         </div>
@@ -438,21 +418,18 @@
                 </v-tabs-items>
             </div>
 
-
-
-
         </v-container>
         <Footer />
     </div>
 </template>
 <script>
 import axios from 'axios';
-import KakaoMap from '@/components/api/KakaoMap.vue'
+import KakaoMap1 from '@/components/api/kakaoMap.vue'
 import DateTimePicker from '@/components/restaurant/DateTimePicker.vue';
 export default {
     name: 'App',
     components: {
-        KakaoMap,
+        KakaoMap1,
         DateTimePicker
     },
     head: {
@@ -460,62 +437,20 @@ export default {
     },
     data: () => ({
         ratingsCount: [1, 1, 3, 6, 20],
-        // menuItems: [
-        //     {
-        //         name: 'PIZZA', priceRange: '20,000 ~ 36,000원', active: false,
-        //         items: [
-        //             { name: '콤비네이션', price: '20,000' },
-        //             { name: '페퍼로니', price: '18,000' },
-        //             { name: '포테이토', price: '22,000' },
-        //         ]
-        //     },
-        //     {
-        //         name: 'SPAGHETTI', priceRange: '8,500 ~ 9,500원', active: false,
-        //         items: [
-        //             { name: '치즈오븐스파게티', price: '8,500' },
-        //             { name: '매콤로제스파게티', price: '9,000' },
-        //             { name: '크림베이컨스파게티', price: '9,500' },
-        //         ]
-        //     },
-        //     {
-        //         name: 'RICE', priceRange: '11,000 ~ 13,000원', active: false,
-        //         items: [
-        //             { name: '콤비네이션', price: '20,000' },
-        //             { name: '콤비네이션', price: '20,000' },
-        //             { name: '콤비네이션', price: '20,000' },
-        //         ]
-        //     },
-        //     {
-        //         name: 'SALADE', priceRange: '6,000 ~ 9,000원', active: false,
-        //         items: [
-        //             { name: '콤비네이션', price: '20,000' },
-        //             { name: '콤비네이션', price: '20,000' },
-        //             { name: '콤비네이션', price: '20,000' },
-        //         ]
-        //     },
-        //     {
-        //         name: 'SIDE', priceRange: '500 ~ 2,000원', active: false,
-        //         items: [
-        //             { name: '콤비네이션', price: '20,000' },
-        //             { name: '콤비네이션', price: '20,000' },
-        //             { name: '콤비네이션', price: '20,000' },
-        //         ]
-        //     },
-        // ],
         items: [
             {
-                text: 'Home',
-                disabled: false,
-                href: '/',
-            },
-            {
-                text: 'New York',
-                disabled: false,
-                href: '/',
-            },
-            {
-                text: 'Resturants',
+                text: '메인화면',
                 disabled: true,
+                href: 'localhost:3000/',
+            },
+            {
+                text: '식당 검색 리스트',
+                disabled: true,
+                href: 'localhost:3000/restaurant/list',
+            },
+            {
+                text: '식당 상세보기',
+                disabled: false,
                 href: '/',
             },
         ],
@@ -528,6 +463,8 @@ export default {
         modal: false,
         depositAmount: false,
         menus: [],
+        reviews:[],
+        isToggled: false,
     }),
     computed: {
         // 평균 별점을 계산합니다.
@@ -540,37 +477,52 @@ export default {
         },
         restaurantDetails() {
             const restaurantId = this.$route.params.id;
-      const found = this.menus.find(menu => menu.restaurant_id === Number(restaurantId));
-      return found ? {
-        name: found.restaurant_name,
-        address: found.restaurant_address,
-        deposit: found.restaurant_deposit,
-        tel : found.restaurant_tel,
-        crowd : found.restaurant_crowd
-      } : {
-        name: 'Restaurant not found',
-        address: '',
-        deposit: '',
-        tel : '',
-        crowd : ''
-      };
-    },
-    crowdClass() {
-      // crowd 값에 따라 다른 클래스 이름을 반환
-      switch (this.restaurantDetails.crowd) {
-        case 'BUSY':
-          return 'busy';
-        case 'NORMAL':
-          return 'normal';
-        case 'AVAILABLE':
-          return 'available';
-        default:
-          return ''; // 기본적으로 아무 클래스도 적용하지 않음
-      }
-    }
+            const found = this.menus.find(menu => menu.restaurant_id === Number(restaurantId));
+            return found ? {
+                name: found.restaurant_name,
+                address: found.restaurant_address,
+                deposit: found.restaurant_deposit,
+                tel: found.restaurant_tel,
+                crowd: found.restaurant_crowd,
+            } : {
+                name: 'Restaurant not found',
+                address: '',
+                deposit: '',
+                tel: '',
+                crowd: ''
+            };
+        },
+        restaurantReviews() {
+            const restaurantId = this.$route.params.id;
+            const found = this.reviews.find(review => review.restaurant_id === Number(restaurantId));
+            return found ? {
+                content: found.content,
+                registerDate: found.registerDate,
+                score: found.score,
+                
+            } : {
+                content: 'Restaurant not found',
+                registerDate: '',
+                score: ''
+            };
+        },
+        crowdClass() {
+            // crowd 값에 따라 다른 클래스 이름을 반환
+            switch (this.restaurantDetails.crowd) {
+                case 'BUSY':
+                    return 'busy';
+                case 'NORMAL':
+                    return 'normal';
+                case 'AVAILABLE':
+                    return 'available';
+                default:
+                    return ''; // 기본적으로 아무 클래스도 적용하지 않음
+            }
+        }
     },
     created() {
         this.fetchMenus();
+        this.fetchReviews();
     },
     methods: {
         // 비율을 계산하여 백분율로 변환합니다.
@@ -590,12 +542,25 @@ export default {
             axios.get(`http://localhost:8000/restaurant/detail/${id}`)
                 .then(response => {
                     this.menus = response.data;
-                    console.log(this.menus)
 
                 })
                 .catch(error => {
-                    console.log('메뉴 데이터를 불러올 수 없습니다.')
                 });
+        },
+        fetchReviews() {
+            const id = this.$route.params.id;
+            axios.get(`http://localhost:8000/restaurant/detail/review/${id}`)
+                .then(response => {
+                    this.reviews = response.data;
+
+                })
+                .catch(error => {
+                });
+        },
+
+   
+        toggleImage() {
+            this.isToggled = !this.isToggled;
         }
     }
 }
@@ -729,6 +694,7 @@ hr {
     color: #eee;
     margin-left: 20px;
 }
+
 .normal {
     width: 50px;
     margin-right: 20px;
@@ -738,6 +704,7 @@ hr {
     color: #eee;
     margin-left: 20px;
 }
+
 .busy {
     width: 50px;
     margin-right: 20px;
@@ -747,6 +714,7 @@ hr {
     color: #eee;
     margin-left: 20px;
 }
+
 .icon-container {
     display: flex;
     align-items: center;
@@ -777,5 +745,42 @@ hr {
     justify-content: right;
     /* 양쪽 끝에 자식 요소를 배치 */
     align-items: center;
+}
+
+.favorite-dark {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+}
+
+.favorite-color {
+    width: 50px;
+    height: 50px;
+    background-size: cover;
+}
+
+.titleflex {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+}
+.menuflex-container {
+  display: flex;
+  justify-content: space-between; /* 양 끝에 요소를 배치 */
+  width: 100%; /* 컨테이너를 전체 너비로 확장 */
+}
+
+.left {
+  text-align: left; /* 왼쪽 정렬 */
+}
+
+.right {
+  text-align: right; /* 오른쪽 정렬 */
+}
+.sub{
+    white-space :pre-wrap;
+    word-wrap: break-word;
+    text-align: left; /* 왼쪽 정렬 */
 }
 </style>
