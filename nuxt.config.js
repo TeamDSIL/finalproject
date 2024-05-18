@@ -28,6 +28,14 @@ module.exports = {
       if (modifyIndex !== -1) {
         routes[modifyIndex].path = '/restaurant/RestaurantManageMainPage/:id';
       }
+      const detailIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantDetailPage');
+      if (modifyIndex !== -1) {
+        routes[modifyIndex].path = '/restaurant/detail/:id';
+      }
+      const listIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantListPage');
+      if (modifyIndex !== -1) {
+        routes[modifyIndex].path = '/restaurant/list';
+      }
     }
   },
 

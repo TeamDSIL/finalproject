@@ -33,7 +33,7 @@
               <div>
                 <h1>지도</h1>
                 <!-- 추가적인 컨텐츠 -->
-                <KakaoMap />
+                <MainMap />
               </div>
             </v-tab-item>
           </v-tabs-items>
@@ -44,11 +44,11 @@
 </template>
 
 <script>
-import KakaoMap from "../api/MainMap.vue";
+import MainMap from "../api/MainMap.vue";
 
 export default {
   name: "App",
-  components: { KakaoMap },
+  components: { MainMap },
   data() {
     return {
       tab: "tab-1",

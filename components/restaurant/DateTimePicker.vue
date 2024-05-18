@@ -765,68 +765,47 @@ export default {
     payment() {
   // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
   if (this.reservationPolicyAgreed && this.agreeTerms) {
-    // 백엔드에서 payment.html을 가져옵니다.
-    axios.get('/restaurant/payment')
-      .then(response => {
-        // HTML 파일을 가져왔을 때 실행될 부분입니다.
-        const htmlContent = response.data;
-
-        // HTML 파일을 파싱하여 DOM으로 변환합니다.
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, 'text/html');
-
-        // HTML을 현재 페이지에 적용합니다.
-        document.body.innerHTML = htmlContent;
-
-        // 스크립트를 먼저 로드합니다.
-        const impScript = document.createElement('script');
-        impScript.src = 'https://cdn.iamport.kr/js/iamport.payment-1.2.0.js';
-        document.head.appendChild(impScript);
-
-        // 스크립트 로드 후에 실행합니다.
-        impScript.onload = function() {
-          // IMP 스크립트가 로드된 후에 payment 함수를 호출합니다.
-          paymentFunction();
-        };
-
-        const depositAmount = this.depositAmount; // depositAmount 변수 정의
-        const numberOfPeople = this.numberOfPeople;
-        const riceBallInput = this.riceBallInput;
-        const restaurantName = this.restaurantName;
-        // payment 함수 정의
-        function paymentFunction() {
-          // 아임포트 초기화와 결제 요청을 진행합니다.
-          IMP.init('imp56476634');// 아임포트 관리자 콘솔에서 확인한 '가맹점 식별코드' 입력
-          IMP.request_pay({// param
-            pg: "kakaopay.TC0ONETIME", // pg사명 or pg사명.CID (잘못 입력할 경우, 기본 PG사가 띄워짐)
-            pay_method: "card", // 지불 방법
-            merchant_uid: "test8_id", // 가맹점 주문번호 (아임포트를 사용하는 가맹점에서 중복되지 않은 임의의 문자열을 입력)
-            name: restaurantName, 
-            amount: depositAmount * numberOfPeople - riceBallInput, 
-            buyer_email : "testiamport@naver.com",
-            buyer_name : "홍길동",
-            buyer_tel : "01012341234"
-          }, function (rsp) { // callback
-            if (rsp.success) {
-              alert("완료 -> imp_uid : "+rsp.imp_uid+" / merchant_uid(orderKey) : " +rsp.merchant_uid);
-              this.showReservationConfirmationModal= true;
-            } else {
-              alert("실패 : 코드("+rsp.error_code+") / 메세지(" + rsp.error_msg + ")");
-              window.location.href = 'http://localhost:3000/restaurant/RestaurantDetailPage';
-            }
-          });
+    const depositAmount = this.depositAmount; // depositAmount 변수 정의
+    const numberOfPeople = this.numberOfPeople;
+    const riceBallInput = this.riceBallInput;
+    const restaurantName = this.restaurantName;
+    // payment 함수 정의
+    function paymentFunction() {
+      // 아임포트 초기화와 결제 요청을 진행합니다.
+      IMP.init('imp56476634');// 아임포트 관리자 콘솔에서 확인한 '가맹점 식별코드' 입력
+      IMP.request_pay({// param
+        pg: "kakaopay.TC0ONETIME", // pg사명 or pg사명.CID (잘못 입력할 경우, 기본 PG사가 띄워짐)
+        pay_method: "card", // 지불 방법
+        merchant_uid: "test8_id", // 가맹점 주문번호 (아임포트를 사용하는 가맹점에서 중복되지 않은 임의의 문자열을 입력)
+        name: restaurantName,
+        amount: depositAmount * numberOfPeople - riceBallInput,
+        buyer_email : "testiamport@naver.com",
+        buyer_name : "홍길동",
+        buyer_tel : "01012341234"
+      }, function (rsp) { // callback
+        if (rsp.success) {
+          alert("완료 -> imp_uid : "+rsp.imp_uid+" / merchant_uid(orderKey) : " +rsp.merchant_uid);
+          this.showReservationConfirmationModal= true;
+        } else {
+          alert("실패 : 코드("+rsp.error_code+") / 메세지(" + rsp.error_msg + ")");
+          window.location.href = 'http://localhost:3000/restaurant/RestaurantDetailPage';
         }
-      })
-      .catch(error => {
-        // HTML 파일을 가져오는 데 실패했을 때 실행될 부분입니다.
-        console.error('Error fetching HTML:', error);
       });
+    }
+    // 스크립트를 먼저 로드합니다.
+    const impScript = document.createElement('script');
+    impScript.src = 'https://cdn.iamport.kr/js/iamport.payment-1.2.0.js';
+    document.head.appendChild(impScript);
+    // 스크립트 로드 후에 실행합니다.
+    impScript.onload = function() {
+      // IMP 스크립트가 로드된 후에 payment 함수를 호출합니다.
+      paymentFunction();
+    };
   } else {
     // 두 체크박스 중 하나라도 체크되지 않은 경우 결제하기 버튼 비활성화
     console.log("두 개의 필수 동의사항에 모두 동의해야 합니다.");
   }
 },
-
 
     formatPhoneNumber() {
       let phoneNumber = this.visitorContact.toString().replace(/\D/g, ''); // 문자열로 변환하고 숫자 이외의 문자 제거

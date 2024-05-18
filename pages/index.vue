@@ -1,15 +1,5 @@
 <template>
   <div>
-    <!-- 이미지 -->
-     <!-- 이미지를 전체 페이지에 랜덤 위치에 고정 -->
-     <!-- <v-img
-      src="@/assets/images/yahoImage.png"
-      :style="yahoStyle"
-      contain
-      height="100px"
-      @click="navigateTo('main-InformationPage')"
-      class="random-image"
-    ></v-img> -->
     <MainForm></MainForm>
     <!-- 카테고리 -->
     <div>
@@ -20,18 +10,23 @@
           </v-col>
           <v-col
             v-for="(item, index) in food"
-            :key="index"
+            :key="item.name"
             cols="12"
             lg="3"
             md="4"
             sm="6"
           >
             <div class="text-center">
-              <nuxt-link to="/resturant/FoodMenu" class="text-decoration-none">
+              <nuxt-link
+                :to="`/restaurant/list?category=${item.name}`"
+                class="text-decoration-none"
+              >
                 <v-avatar size="150" class="mb-4">
                   <img :src="item.img" alt="" />
                 </v-avatar>
-                <h4 class="grey--text text--darken-2">{{ item.name }}</h4>
+                <h4 class="grey--text text--darken-2">
+                  {{ item.displayName }}
+                </h4>
               </nuxt-link>
             </div>
           </v-col>
@@ -88,151 +83,18 @@
     <div>
       <v-container class="py-15">
         <v-row>
-          <v-col cols="12">
-            <!-- 예약 -->
-            <div class="d-flex justify-space-between align-end flex-wrap">
-              <div>
-                <h2>예약 TOP 10</h2>
-                <h6 class="grey--text grey--lighten-3 font-weight-regular">
-                  최근 7일간 예약 TOP 10의 식당 리스트를 제공합니다.
-                </h6>
-              </div>
-              <div>
-                <nuxt-link to="" class="text-decoration-none"
-                  >View all collections</nuxt-link
-                >
-              </div>
-            </div>
-          </v-col>
-          <v-col
-            v-for="(item, index) in reservation"
-            :key="`reservation-${index}`"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
-          >
-            <nuxt-link
-              to="/resturant/SearchResturant"
-              class="text-decoration-none"
-            >
-              <v-card class="br-10">
-                <v-img
-                  :src="item.img"
-                  gradient="to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 1)"
-                  class="p-relative"
-                >
-                  <div class="p-absolute bottom-0 pa-5">
-                    <h5 class="white--text">{{ item.name }}</h5>
-                    <div class="d-flex">
-                      <p class="text-sm white--text mb-0">30 Places</p>
-                      <v-icon small color="white">mdi-chevron-right</v-icon>
-                    </div>
-                  </div>
-                </v-img>
-              </v-card>
-            </nuxt-link>
-          </v-col>
-          <!-- 조회 -->
-          <v-col cols="12">s
-            <div class="d-flex justify-space-between align-end flex-wrap">
-              <div>
-                <h2>조회 TOP 10</h2>
-                <h6 class="grey--text grey--lighten-3 font-weight-regular">
-                  최근 1일간 조회 TOP 10의 식당 리스트를 제공합니다.
-                </h6>
-              </div>
-              <div>
-                <nuxt-link to="" class="text-decoration-none"
-                  >View all collections</nuxt-link
-                >
-              </div>
-            </div>
-          </v-col>
-          <v-col
-            v-for="(item, index) in read"
-            :key="`read-${index}`"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
-          >
-            <nuxt-link
-              to="/resturant/SearchResturant"
-              class="text-decoration-none"
-            >
-              <v-card class="br-10">
-                <v-img
-                  :src="item.img"
-                  gradient="to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 1)"
-                  class="p-relative"
-                >
-                  <div class="p-absolute bottom-0 pa-5">
-                    <h5 class="white--text">{{ item.name }}</h5>
-                    <div class="d-flex">
-                      <p class="text-sm white--text mb-0">30 Places</p>
-                      <v-icon small color="white">mdi-chevron-right</v-icon>
-                    </div>
-                  </div>
-                </v-img>
-              </v-card>
-            </nuxt-link>
-          </v-col>
-          <!-- 즐겨찾기 -->
-          <v-col cols="12">
-            <div class="d-flex justify-space-between align-end flex-wrap">
-              <div>
-                <h2>즐겨찾기 TOP 10</h2>
-                <h6 class="grey--text grey--lighten-3 font-weight-regular">
-                  최근 7일간 즐겨찾기 TOP 10의 식당 리스트를 제공합니다.
-                </h6>
-              </div>
-              <div>
-                <nuxt-link to="" class="text-decoration-none"
-                  >View all collections</nuxt-link
-                >
-              </div>
-            </div>
-          </v-col>
-          <v-col
-            v-for="(item, index) in favorites"
-            :key="`favorites-${index}`"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
-          >
-            <nuxt-link
-              to="/resturant/SearchResturant"
-              class="text-decoration-none"
-            >
-              <v-card class="br-10">
-                <v-img
-                  :src="item.img"
-                  gradient="to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 1)"
-                  class="p-relative"
-                >
-                  <div class="p-absolute bottom-0 pa-5">
-                    <h5 class="white--text">{{ item.name }}</h5>
-                    <div class="d-flex">
-                      <p class="text-sm white--text mb-0">30 Places</p>
-                      <v-icon small color="white">mdi-chevron-right</v-icon>
-                    </div>
-                  </div>
-                </v-img>
-              </v-card>
-            </nuxt-link>
-          </v-col>
+         
         </v-row>
       </v-container>
     </div>
     <roulette></roulette>
     <Footer />
-    </div>
+  </div>
 </template>
 <script>
+import axios from "axios";
 import { CardSection } from "@/assets/database/data.js";
-import Roulette from '../components/main/Roulette.vue';
+import Roulette from "../components/main/Roulette.vue";
 export default {
   components: { Roulette },
   layout: "landingHeader",
@@ -244,40 +106,49 @@ export default {
       CardList: CardSection,
       food: [
         {
-          img: require("~/assets/images/food/9.png"),
-          name: "한식",
-        },
-        {
-          img: require("~/assets/images/food/10.png"),
-          name: "중식",
-        },
-        {
-          img: require("~/assets/images/food/11.png"),
-          name: "일식",
-        },
-        {
-          img: require("~/assets/images/food/12.png"),
-          name: "양식",
-        },
-        {
-          img: require("~/assets/images/food/9.png"),
-          name: "베트남",
+          img: require("~/assets/images/food/14.png"),
+          name: "KOREAN",
+          displayName: "한식",
         },
         {
           img: require("~/assets/images/food/14.png"),
-          name: "아메리칸",
+          name: "CHINESE",
+          displayName: "중식",
         },
         {
           img: require("~/assets/images/food/14.png"),
-          name: "인도",
+          name: "JAPANESE",
+          displayName: "일식",
         },
         {
           img: require("~/assets/images/food/14.png"),
-          name: "기타 세계",
+          name: "WESTERN",
+          displayName: "양식",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "VIETNAMESE",
+          displayName: "베트남",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "AMERICAN",
+          displayName: "아메리칸",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "INDIAN",
+          displayName: "인도",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "OTHERGLOBALFOOD",
+          displayName: "기타 세계",
         },
       ],
       alcohol: [
         {
+          id: 9,
           img: require("~/assets/images/food/9.png"),
           name: "맥주/호프",
         },
@@ -310,60 +181,6 @@ export default {
         {
           img: require("~/assets/images/food/12.png"),
           name: "데이트",
-        },
-      ],
-      reservation: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Best Of New York",
-        },
-      ],
-      read: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
-        },
-      ],
-      favorites: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
         },
       ],
     };

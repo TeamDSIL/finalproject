@@ -3,58 +3,70 @@
 </template>
 
 <script>
+import axios from 'axios';
 export default {
-  name: "KakaoMap",
+  name: "kakaoMap",
   data() {
     return {
-      map: null,
+      restaurantAddresses: [] // 데이터베이스에서 불러온 주소 목록
     };
   },
+  mounted(){
+    this.loadRestaurantData();
+  }
+  ,
   beforeMount() {
     if (typeof kakao === "undefined") {
       const script = document.createElement("script");
       script.src =
-        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=14990ceeda7bda522ce249ebea04a26e";
+        "//dapi.kakao.com/v2/maps/sdk.js?autoload=false&appkey=14990ceeda7bda522ce249ebea04a26e&libraries=services";
       script.onload = () => kakao.maps.load(this.initializeMap);
+      script.onerror = () => console.error("Kakao Map script load failed.");
       document.head.appendChild(script);
     } else {
-      this.initializeMap();
+      kakao.maps.load(this.initializeMap);
     }
   },
   methods: {
-    initializeMap() {
-      const container = this.$el;
-      const options = {
-        center: new kakao.maps.LatLng(33.450701, 126.570667),
-        level: 3,
-      };
-      this.map = new kakao.maps.Map(container, options);
-      var geocoder = new kakao.maps.services.Geocoder();
-      geocoder.addressSearch("남부순환로 339길 53", function (result, status) {
-        // 정상적으로 검색이 완료됐으면
-        if (status === kakao.maps.services.Status.OK) {
-          var coords = new kakao.maps.LatLng(result[0].y, result[0].x);
-          console.log(coords);
-
-          // 결과값으로 받은 위치를 마커로 표시합니다
-          var marker = new kakao.maps.Marker({
-            position: coords,
-          });
-
-          this.map.setCenter(coords);
-          marker.setMap(this.map);
-        } else {
-          console.error(status);
-        }
+    loadRestaurantData(){
+      const id = this.$route.params.id;
+      axios.get(`http://localhost:8000/restaurant/detail/${id}`)
+      .then(response => {
+        this.restaurantAddresses = response.data.map(item => item.restaurant_address);
+        console.log(this.restaurantAddresses);
+        this.initializeMap();
       });
     },
-  },
-  destroyed() {
-    document
-      .querySelectorAll('script[src*="dapi.kakao.com"]')
-      .forEach((script) => {
-        script.parentNode.removeChild(script);
+    initializeMap() {
+      if (typeof kakao !== 'undefined' && kakao.maps) {
+        const mapContainer = document.getElementById('map'),
+      mapOptions = {
+        center: new kakao.maps.LatLng(37.499267, 127.026337),
+        level: 3,
+      };
+      const map = new kakao.maps.Map(mapContainer, mapOptions);
+      const geocoder = new kakao.maps.services.Geocoder();
+
+      this.restaurantAddresses.forEach(address => {
+      geocoder.addressSearch(address, (result, status) => {
+        // 정상적으로 검색이 완료됐으면
+        if (status === kakao.maps.services.Status.OK) {
+          const coords = new kakao.maps.LatLng(result[0].y, result[0].x);
+          const marker = new kakao.maps.Marker({
+            map : map,
+            position : coords
+          });
+          console.log(coords);
+          map.setCenter(coords);
+        } else {
+          console.error('주소 검색 실패 : 유효하지않은 주소', address);
+        }
       });
-  },
-};
+    });
+  }else {
+    console.log('카카오 지도 API 로드 실패...');
+  }
+}
+  }
+}
 </script>
