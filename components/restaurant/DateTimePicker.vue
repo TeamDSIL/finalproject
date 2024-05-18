@@ -946,14 +946,15 @@ confirmReservation2() {
       // 결제 정보 설정
       this.paymentData = {
         pg: "kakaopay.TC0ONETIME",
-        pay_method: "card",
+        pay_method: totalAmount === 0 ? "point" : "card",
         merchant_uid: merchantUid,
         name: this.restaurantName,
         amount: totalAmount,
         buyer_email: "",
         buyer_name: "",
         buyer_tel: "",
-        paymentTime: new Date().toISOString()
+        paymentTime: new Date().toISOString(),
+        pointUsage: riceBallInput
       };
 
       this.reservationData = {
@@ -969,19 +970,38 @@ confirmReservation2() {
       // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
       if (totalAmount === 0) {
         this.showSpinner = true;
+        const pointData ={
+          ...this.paymentData,
+          pay_method: "point",
+          pointUsage: riceBallInput
+        }
         axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
-          .then(reservationResponse => {
+        .then(reservationResponse => {
             console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
-            this.showSpinner = false;
-            this.showPaymentModal = false;
-            this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
-            alert("예약이 완료되었습니다.");
-            this.resetReservationData();
-          })
-          .catch(reservationError => {
+            // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
+            const reservationId = reservationResponse.data;
+            axios.post('http://localhost:8000/restaurant/payment', pointData,{
+              params:{
+                reservationId: reservationId
+              }
+            })
+                .then(paymentResponse => {
+                    this.showSpinner = false;
+                    this.showPaymentModal = false;
+                    console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
+                    this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
+                    alert("예약 및 결제가 완료되었습니다.");
+                    this.resetReservationData();
+                })
+                .catch(paymentError => {
+                    console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
+                    this.showSpinner = false;
+                });
+        })
+        .catch(reservationError => {
             console.error('예약 정보를 서버에 전송하는 중에 오류가 발생했습니다:', reservationError);
             this.showSpinner = false;
-          });
+        });
       } else {
         // 결제 함수 정의
         const paymentFunction = () => {
