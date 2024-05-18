@@ -20,58 +20,68 @@
 
         <v-tab class="text-capitalize" href="#tab-3">
           전체리뷰보기
-          
+
+        </v-tab>
+
+
+        <v-tab class="text-capitalize" @click="goToRestaurantManage">
+          처음으로
+
         </v-tab>
       </v-tabs>
       <!-- <v-divider></v-divider> -->
-      
+
       <!-- tab-1에 해당하는 화면 -->
       <v-tabs-items v-model="tab">
         <v-tab-item value="tab-1">
-            <v-row>
-              <v-col cols="12" class="restaurant-title-img">
-                <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px"
+          <v-row>
+            <v-col cols="12" class="restaurant-title-img">
+              <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px"
                 style="max-width: 20px; margin-right: 5px;"></v-img>
-                <h3 class="fw-bold">{{ restaurant.name }}</h3>
-              </v-col>
-            </v-row>
-            <v-row>
-              <v-col cols="12">
-                <!-- 실시간 이용현황 버튼. 클릭시 컬러 변경되게 설정 -->
-                <h4 class="silsigan-use-title">실시간 이용 현황: {{ restaurant.crowd }}</h4>
-                <v-btn :color="restaurant.crowd === 'free' ? '#1DDB16' : ''" @click="toggleSelection('free')">
-                  여유
-                </v-btn>
-                <v-btn :color="restaurant.crowd === 'normal' ? '#FFE400' : ''" @click="toggleSelection('normal')">
-                  보통
-                </v-btn>
-                <v-btn :color="restaurant.crowd === 'busy' ? '#FF0000' : ''" @click="toggleSelection('busy')">
-                  혼잡
-                </v-btn>
-              </v-col>
+              <h3 class="fw-bold">{{ restaurant.name }}</h3>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12">
+              <!-- 실시간 이용현황 버튼. 클릭시 컬러 변경되게 설정 -->
+              <h4 class="silsigan-use-title">실시간 이용 현황: {{ restaurant.crowd }}</h4>
+              <v-btn :color="restaurant.crowd === 'AVAILABLE' ? '#1DDB16' : ''" @click="toggleSelection('AVAILABLE')">
+                여유
+              </v-btn>
+              <v-btn :color="restaurant.crowd === 'NORMAL' ? '#FFE400' : ''" @click="toggleSelection('NORMAL')">
+                보통
+              </v-btn>
+              <v-btn :color="restaurant.crowd === 'BUSY' ? '#FF0000' : ''" @click="toggleSelection('BUSY')">
+                혼잡
+              </v-btn>
+            </v-col>
           </v-row>
           <br>
           <v-divider></v-divider>
           <br>
           <v-row>
             <v-col cols="12">
-              
               <h4>예약 가능 시간 설정</h4>
-              <v-btn v-for="(time, index) in times" :key="time.id" class="ma-2"
-              :style="{color: time.clicked ? 'white' : '', backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '' }" @click="toggleButton(index)">
-              {{ time.label }}
-            </v-btn>
-          </v-col>
-        </v-row>
-        <br>
-        <v-divider></v-divider>
-        <br>
-        <v-row>
+              <v-btn
+                v-for="(time) in times"
+                :key="time.id"
+                class="ma-2"
+                :style="{ color: time.clicked ? 'white' : '', backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '' }"
+                @click="toggleTime(time)"
+              >
+                {{ time.label }}
+              </v-btn>
+            </v-col>
+          </v-row>
+          <br>
+          <v-divider></v-divider>
+          <br>
+          <v-row>
             <v-col cols="12">
 
               <h3>식당 정보 수정</h3>
               <v-btn style="background-color: rgb(210,63,87); color: white;"
-              v-on:click="goToRestaurantModify(restaurant)">식당수정</v-btn>
+                v-on:click="goToRestaurantModify(restaurant)">식당수정</v-btn>
             </v-col>
           </v-row>
           <br>
@@ -87,17 +97,16 @@
                       <th class="text-left" style="width: 100px;">예약 시간</th>
                       <th class="text-left" style="width: 100px;">고객 이름</th>
                       <th class="text-left" style="width: 100px;">예약 인원</th>
-                      <th class="text-left" style="width: 100px;">예약 금액</th>
+
                     </tr>
                   </thead>
                   <tbody>
                     <!-- 5개의 예약만 보여줌 -->
                     <tr v-for="reservation in reservations.slice(0, 5)" :key="reservation.id">
-                      <td>{{ reservation.date }}</td>
-                      <td>{{ reservation.time }}</td>
-                      <td>{{ reservation.customerName }}</td>
+                      <td>{{ reservation.reservationDate }}</td>
+                      <td>{{ reservation.reservationTime }}</td>
+                      <td>{{ reservation.reservationName }}</td>
                       <td>{{ reservation.peopleCount }}</td>
-                      <td>{{ reservation.deposit }}</td>
                     </tr>
                   </tbody>
                 </template>
@@ -109,12 +118,12 @@
           <v-row>
             <v-col cols="12" lg="12">
               <h4 class="review-title">최근 리뷰</h4>
-              <v-simple-table class="review-table" :header="header">
+              <v-simple-table class="review-table">
                 <template v-slot:default>
                   <thead>
                     <tr>
                       <th class="text-left" style="width: 150px;">리뷰 날짜</th>
-                      <th class="text-left" style="width: 100px;">고객</th>
+                      <!-- <th class="text-left" style="width: 100px;">고객</th> -->
                       <th class="text-left" style="width: 150px;">리뷰 내용</th>
                       <th class="text-left" style="width: 150px;">밥점</th>
                     </tr>
@@ -122,10 +131,10 @@
                   <tbody>
                     <!-- 5개의 리뷰만 보여줌 -->
                     <tr v-for="review in reviews.slice(0, 5)" :key="review.id">
-                      <td>{{ review.date }}</td>
-                      <td>{{ review.author }}</td>
+                      <td>{{ review.registerDate }}</td>
+                      <!-- <td>{{ review.resrvation.memberId }}</td> -->
                       <td>{{ review.content }}</td>
-                      <td>{{ review.stars }}</td>
+                      <td>{{ review.score }}</td>
                     </tr>
                   </tbody>
                 </template>
@@ -133,17 +142,17 @@
             </v-col>
           </v-row>
         </v-tab-item>
-        
+
         <!-- tab-2에 해당하는 화면 -->
         <v-tab-item value="tab-2">
           <v-row>
             <v-col cols="12" style="display: flex;">
               <v-img contain :src="require('~/assets/images/reserve-icon.png')" width="20px"
-              style="max-width: 20px; margin-right: 5px;"></v-img>
+                style="max-width: 20px; margin-right: 5px;"></v-img>
               <h3 class="fw-bold"> 예약 전체보기</h3>
             </v-col>
           </v-row>
-          
+
           <v-row>
             <v-col cols="12">
               <h4 class="restaurant-name-title">{{ restaurant.name }}</h4>
@@ -163,16 +172,15 @@
                               <th>예약 시간</th>
                               <th>고객 이름</th>
                               <th>예약 인원</th>
-                              <th>예약 금액</th>
                             </tr>
                           </thead>
                           <tbody>
                             <tr v-for="item in paginatedReservations" :key="item.id">
-                              <td>{{ item.date }}</td>
-                              <td>{{ item.time }}</td>
-                              <td>{{ item.customerName }}</td>
+                              <td>{{ item.reservationDate }}</td>
+                              <td>{{ item.reservationTime }}</td>
+                              <td>{{ item.reservationName }}</td>
                               <td>{{ item.peopleCount }}</td>
-                              <td>{{ item.deposit }}</td>
+
                             </tr>
                           </tbody>
                         </v-simple-table>
@@ -227,7 +235,7 @@
             </v-col>
             <v-col cols="12">
               <div class="review-all-title">
-                <h4 class="fw-bold"> {{ $route.query.name }}</h4>
+                <h4 class="fw-bold"> {{ restaurant.name }}</h4>
 
               </div>
 
@@ -248,30 +256,30 @@
                             <v-img :src="review.avatar" alt=""></v-img>
                           </v-avatar>
                           <div>
-                            <h5 class="mb-0">{{ review.author }}</h5>
+                            <h5 class="mb-0">{{ review.reservationName }}</h5>
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
                           <span v-for="(star, index) in 5" :key="index">
                             <div style="margin-left: 2px;">
-                              <v-img :src="review.babscore" width="20px" class="fixed-size"></v-img>
+                              <v-img :src="review.bobscore" width="20px" class="fixed-size"></v-img>
                             </div>
                           </span>
 
-                          <span class="font-weight-bold text-14 ms-2">{{ review.stars }}</span>
+                          <span class="font-weight-bold text-14 ms-2">{{ review.score }}</span>
                           <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
                         </div>
                         <h5 class="grey--text text--darken-2 font-weight-regular mb-3">{{ review.content }}</h5>
                         <v-row class="mb-2">
                           <!-- 리뷰 사진의 크기를 조금 줄임 cols 3으로 -->
                           <v-col cols="3" lg="3">
-                            <v-img contain :src="review.image"></v-img>
+                            <v-img contain :src="review.img"></v-img>
                           </v-col>
                         </v-row>
 
 
                         <div>
-                          <span class="grey--text text--darken-1 text-14">{{ review.replies.length }}개의 답글</span>
+                          <!-- <span class="grey--text text--darken-1 text-14">{{ review.reply.length }}개의 답글</span> -->
                           <div class="mt-4">
 
 
@@ -280,25 +288,24 @@
                               답글달기
                             </v-btn>
                             <div>
-
                               <v-form v-show="review.showReplyForm" @submit.prevent="submitReply(review.id)">
                                 <v-text-field v-model="reply" label="답글 작성" outlined dense></v-text-field>
                                 <v-btn color="primary" small type="submit">등록</v-btn>
                               </v-form>
                             </div>
 
-                            <div v-if="showReplyForm">
+                            <!-- <div v-if="showReplyForm">
                               <v-form @submit.prevent="submitReply">
                                 <v-text-field v-model="reply" label="답글 작성" outlined dense class="mb-2"></v-text-field>
-                                <!-- 답글 등록 버튼 -->
+                              
                                 <v-btn color="primary" small type="submit">
                                   <v-icon left small>mdi-send</v-icon>
                                   등록
                                 </v-btn>
                               </v-form>
-                            </div>
+                            </div> -->
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small
-                              @click="confirmDelete">
+                              @click="confirmDelete(review.id)">
                               <v-icon left small>mdi-delete</v-icon>
                               삭제요청
                             </v-btn>
@@ -313,11 +320,7 @@
                             </v-avatar>
                             <div class="text-14 grey--text text--darken-4 f-600">사장님의 답글</div>
                           </div>
-
-                          <div v-for="reply in review.replies" :key="reply.id">
-
-                            <p>{{ reply.content }}</p>
-                          </div>
+                          <p>{{ review.replyContent }}</p>
                         </div>
 
                         <v-divider></v-divider>
@@ -357,6 +360,10 @@
             </v-col>
           </v-row>
         </v-tab-item>
+
+
+
+
       </v-tabs-items>
     </div>
     <Footer />
@@ -364,294 +371,66 @@
 </template>
 
 <script>
+import axios from 'axios';
+
 
 export default {
-  props: {
-    id: {
-      type: Number,
-      required: true
+  
+  // props: {
+  //   id: {
+  //     type: Number,
+  //     required: true
+  //   },
+  //   name: {
+  //     type: String,
+  //     required: true
+  //   },
+  //   address: {
+    //     type: String,
+    //     required: true
+    //   },
+    // },
+    created() {
+      const restaurantId = this.$route.params.id;
+      this.fetchRestaurantDetails(restaurantId);
+      this.fetchReservations(restaurantId);
+      this.fetchReviews(restaurantId);
+      this.fetchAvailableTimes(restaurantId);
     },
-    name: {
-      type: String,
-      required: true
-    },
-    address: {
-      type: String,
-      required: true
-    },
-  },
-  created() {
-
-  },
-  data() {
-    return {
-      isClicked: false,
-      times: [
-        { id: 1, label: '오후12:00', clicked: false },
-        { id: 2, label: '오후1:00', clicked: false },
-        { id: 3, label: '오후2:00', clicked: false },
-        { id: 4, label: '오후3:00', clicked: false },
-        { id: 5, label: '오후4:00', clicked: false },
-        { id: 6, label: '오후5:00', clicked: false },
-        { id: 7, label: '오후6:00', clicked: false },
-        { id: 8, label: '오후7:00', clicked: false },
-        { id: 9, label: '오후8:00', clicked: false }
+    data() {
+      return {
+        // isClicked: false,
+        
+        times: [
+          { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
+          { id: 2, label: '오후1:00', clicked: false, slot: 'AFTERNOON_1' },
+        { id: 3, label: '오후2:00', clicked: false, slot: 'AFTERNOON_2' },
+        { id: 4, label: '오후3:00', clicked: false, slot: 'AFTERNOON_3' },
+        { id: 5, label: '오후4:00', clicked: false, slot: 'AFTERNOON_4' },
+        { id: 6, label: '오후5:00', clicked: false, slot: 'AFTERNOON_5' },
+        { id: 7, label: '오후6:00', clicked: false, slot: 'AFTERNOON_6' },
+        { id: 8, label: '오후7:00', clicked: false, slot: 'AFTERNOON_7' },
+        { id: 9, label: '오후8:00', clicked: false, slot: 'AFTERNOON_8' },
+        { id: 10, label: '오후9:00', clicked: false, slot: 'AFTERNOON_9' }
       ],
       buttonClicks: Array(9).fill(false),
       showReplyForm: false, // 입력 폼의 표시 상태를 제어하는 데이터 속성
-      reviews: [
-        {
-          id: 1,
-          date: "2024.04.05",
-          author: "윤호상",
-          content: "역시 치킨 근본은 기영이네여 ㄷㄷ 제가 여지껏 먹어본 치킨중에 정말 손에 꼽습니다요 앞으로도 번창하시고 맛있는 치킨 많이많이 팔아주세요 우헤헤헤헿헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤헤",
-          avatar: require("@/assets/images/faces/9.jpg"), // 상대 경로를 저장
-          stars: 4.0,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodFive.png'),
-          timestamp: "3 Days Ago",
-          replies: [
-            { id: 1, content: "오늘도 감사합니다" }
-          ],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "윤호하",
-          content: "중남자 특 기영이 안먹음",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "윤호중",
-          content: "좌남자 특 기영이 먹음",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "윤호좌",
-          content: "하남자 특 기영이 매우 많이 먹음",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "윤호우",
-          content: "우남자 특 기영이 많이 먹음",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "유비",
-          content: "유비 특 기영이 많이 먹음",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "관우",
-          content: "너무 맛있어요요",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "장비",
-          content: "하하하 존맛이군요 ㅠㅠ",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "마초",
-          content: "맛있습니다",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "황충",
-          content: "잘먹었네요 많이파세요",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "조운",
-          content: "맛있음",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "정휘제",
-          content: "어머니 맛있습니다 저 기영이에요",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "이다혜",
-          content: "섭섭해요",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "임태환",
-          content: "맛없는게 아니라 열받은겁니다",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "문상현",
-          content: "오니가 싫어~ 오니가 싫어~",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-        {
-          id: 2,
-          date: "2024.04.05",
-          author: "손혜지",
-          content: "안먹으면 개손해지",
-          avatar: require('~/assets/images/faces/13.jpg'),
-          stars: 3.5,
-          babscore: require('~/assets/images/babscore.png'),
-          image: require('~/assets/images/gallery/foodSix.png'),
-          timestamp: "1 Week Ago",
-          replies: [],
-          showReplyForm: false
-        },
-
-      ],
       reply: '',
-
-      restaurant: {
-        id: this.$route.params.id, // 경로 매개변수에서 ID 가져오기
-        name: this.$route.query.name,
-        address: this.$route.query.address,
-        tel: this.$route.query.tel,
-        description: this.$route.query.description,
-        image: this.$route.query.image,
-        chip: this.$route.query.chip === 'true', // Boolean으로 변환
-        table: this.$route.query.table, // 문자열을 숫자로 변환
-        deposit: this.$route.query.deposit,
-        crowd: this.$route.query.crowd,
-      },
-      headers: [
-        {
-          width: '200px'
-        },
-        { text: '날짜', value: 'date' },
-        { text: '시간', value: 'time' },
-        { text: '고객 이름', value: 'customerName' }
-      ],
-      reservations: [
-        { id: 1, date: "2023-04-03", time: "18:00", customerName: "정휘제", peopleCount: 2, deposit: 60000 },
-        { id: 2, date: "2023-04-03", time: "17:00", customerName: "윤여빈", peopleCount: 10, deposit: 300000 },
-        { id: 3, date: "2023-04-02", time: "18:00", customerName: "문상현", peopleCount: 2, deposit: 60000 },
-        { id: 4, date: "2023-04-01", time: "18:00", customerName: "윤호상", peopleCount: 2, deposit: 60000 },
-        { id: 5, date: "2023-04-01", time: "17:00", customerName: "임태환", peopleCount: 4, deposit: 120000 },
-        { id: 6, date: "2023-03-31", time: "18:00", customerName: "이다혜", peopleCount: 7, deposit: 210000 },
-        { id: 7, date: "2023-03-30", time: "18:00", customerName: "아카자", peopleCount: 1, deposit: 30000 },
-        { id: 8, date: "2023-03-29", time: "18:00", customerName: "코주루", peopleCount: 2, deposit: 60000 },
-        { id: 9, date: "2023-03-28", time: "18:00", customerName: "유비", peopleCount: 2, deposit: 60000 },
-        { id: 10, date: "2023-03-27", time: "18:00", customerName: "관우", peopleCount: 2, deposit: 60000 },
-        { id: 11, date: "2023-03-27", time: "18:00", customerName: "장비", peopleCount: 4, deposit: 120000 },
-        { id: 12, date: "2023-03-27", time: "18:00", customerName: "구민슥", peopleCount: 3, deposit: 90000 },
-        { id: 13, date: "2023-03-27", time: "18:00", customerName: "구민쇽", peopleCount: 3, deposit: 90000 },
-        { id: 1, date: "2023-03-27", time: "18:00", customerName: "구민샥", peopleCount: 2, deposit: 60000 },
-        // 예약 목록
-      ],
-      pageReview: 1,
+      
+      restaurant: [],
+      // headers: [
+        //   {
+          //     width: '200px'
+          //   },
+          //   { text: '날짜', value: 'date' },
+          //   { text: '시간', value: 'time' },
+          //   { text: '고객 이름', value: 'customerName' }
+          // ],
+          
+          reservations: [],
+          reviews: [],
+          
+          pageReview: 1,
       pageReservation: 1,
       pageSize: 10,
       pageCountReview: 0,
@@ -659,27 +438,7 @@ export default {
       paginatedReviews: [],
       paginatedReservations: [],
 
-      items: [
-        {
-          text: 'Home',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'New York',
-          disabled: false,
-          href: '/',
-        },
-        {
-          text: 'Resturants',
-          disabled: true,
-          href: '/',
-        },
-      ],
-      // formSelectItems: ['Foo', 'Bar', 'Fizz', 'Buzz'],
-      // mobileItems: [
-      //   'Order Online', 'Book a Table', 'Reviews',
-      // ],
+
       text: 'hello',
       tab: null,
       checkbox: true,
@@ -689,24 +448,113 @@ export default {
 
     };
   },
-  mounted() {
-    this.pageCountReview = Math.ceil(this.reviews.length / this.pageSize);
-    this.paginateReviews();
-    this.pageCountReservation = Math.ceil(this.reservations.length / this.pageSize);
-    this.paginateReservations();
-  },
+
   methods: {
+    // 통계 데이터를 가져오는 메서드
+    
+    async toggleTime(time) {
+      const restaurantId = this.$route.params.id;
+      if (time.clicked) {
+        try {
+          await axios.delete(`http://localhost:8000/restaurant/${restaurantId}/available-times`, {
+            params: {
+              slot: time.slot
+            }
+          });
+          time.clicked = false;
+        } catch (error) {
+          console.error('Failed to delete available time:', error);
+        }
+      } else {
+        try {
+          const response = await axios.post(`http://localhost:8000/restaurant/${restaurantId}/available-times`, null, {
+            params: {
+              slot: time.slot
+            }
+          });
+          time.clicked = true;
+        } catch (error) {
+          console.error('Failed to create available time:', error);
+        }
+      }
+    },
+    async fetchRestaurantDetails(restaurantId) {
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}`);
+        this.restaurant = response.data;
+        console.log('Restaurant details fetched successfully');
+      } catch (error) {
+        console.error('Failed to fetch restaurant details:', error);
+      }
+    },
+    async fetchReservations(restaurantId) {
+      console.log('예약목록을 불러올 식당의 아이디:', restaurantId);
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/reservations`);
+        this.reservations = response.data;
+        console.log('불러온 예약목록들: ', this.reservations);
+        this.pageCountReservation = Math.ceil(this.reservations.length / this.pageSize);
+        this.paginateReservations(); // 데이터 로드 후 페이지네이션 실행
+      } catch (error) {
+        console.error('예약 목록을 불러오는 데 실패했습니다.', error);
+      }
+    },
+
+    async fetchAvailableTimes(restaurantId) {
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/available-times`);
+        const availableTimes = response.data;
+
+        // 'times' 배열의 각 요소에 대해 'clicked' 속성을 설정합니다.
+        this.times.forEach(time => {
+          time.clicked = availableTimes.some(at => at.availableTime === time.slot);
+        });
+
+        console.log('예약가능시간 패치 성공');
+      console.log('가져온 예약시간쓰:', availableTimes)
+      } catch (error) {
+        console.error('예약가능시간 패치 실패:', error);
+      }
+    },
+
+    async fetchReviews(restaurantId) {
+      console.log('리뷰목록을 불러올 식당의 아이디:', restaurantId);
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/reviews`);
+        this.reviews = response.data.map(review => {
+          return {
+            ...review,
+            showReplyForm: false,
+            reply: '',
+          };
+        });
+        console.log('불러온 리뷰목록들: ', this.reviews);
+        this.pageCountReview = Math.ceil(this.reviews.length / this.pageSize);
+        this.paginateReviews();
+
+      } catch (error) {
+        console.error('리뷰 목록을 불러오는 데 실패했습니다.', error);
+      }
+    },
+
+
     getAvatar(avatarPath) {
       return require(`${avatarPath}`);
     },
     goToRestaurantManageMain() {
       this.$router.push({ path: '/restaurant/RestaurantManageMainPage' });
     },
+    goToRestaurantManage() {
+      this.$router.push({ path: '/restaurant/RestaurantManagePage' });
+    },
     goToRestaurantReserveManage() {
       this.$router.push({ path: '/restaurant/RestaurantReserveManagePage' });
     },
     goToReviewManage() {
       this.$router.push({ path: '/restaurant/ReviewManagePage' });
+    },
+    goToRestaurantManage() {
+      this.$router.push({path: `/restaurant/RestaurantManagePage`});
     },
     goToRestaurantModify(restaurant) {
       this.$router.push({
@@ -715,46 +563,72 @@ export default {
           name: restaurant.name,
           address: restaurant.address,
           tel: restaurant.tel,
-          description: restaurant.description,
-          image: restaurant.image,
-          chip: restaurant.chip,
-          table: restaurant.table,
+          img: restaurant.img,
+          tableCount: restaurant.tableCount,
           deposit: restaurant.deposit,
           crowd: restaurant.crowd,
         }
       });
     },
-    toggleSelection(crowd) {
-      this.restaurant.crowd = crowd;  // 선택된 상태 업데이트
-    },
-    confirmDelete() {
-      if (confirm('삭제 요청을 하시겠습니까?')) {
-        this.deleteReview();
+    async toggleSelection(crowd) {
+      try {
+        const response = await axios.patch(`http://localhost:8000/restaurant/${this.restaurant.id}/crowd`, null, {
+          params: {
+            status: crowd,
+          },
+        });
+        this.restaurant.crowd = response.data.crowd;
+        console.log('Crowd status updated successfully');
+        console.log('변경된 혼잡도: ', this.restaurant.crowd);
+      } catch (error) {
+        console.error('식당 혼잡도 업데이트 실패:', error);
       }
     },
-    deleteReview() {
-      //삭제요청하는 로직...구현예정
-      console.log('리뷰 삭제 요청됨')
+
+
+    confirmDelete(reviewId) {
+      if (confirm('삭제 요청을 하시겠습니까?')) {
+        this.deleteReview(reviewId);
+      }
     },
+    async deleteReview(reviewId) {
+      try {
+        const response = await axios.patch(`http://localhost:8000/restaurant/reviews/${reviewId}/delete-status`, null, {
+          params: {
+            deleteStatus: true
+          }
+        });
+        
+        console.log('리뷰 삭제 요청 성공:', response.data);
+      // 리뷰 목록을 새로 고침
+      const restaurantId = this.$route.params.id;
+      await this.fetchReviews(restaurantId);
+    } catch (error) {
+      console.error('리뷰 삭제 요청 실패:', error);
+    }
+  },
+
     toggleReplyForm(reviewId) {
       const review = this.reviews.find(r => r.id === reviewId);
+      console.log('방금 누른 리뷰 아이디:', reviewId)
       review.showReplyForm = !review.showReplyForm;  // 해당 리뷰의 폼 표시 상태 토글
       this.reply = '';
     },
-    submitReply(reviewId) {
-      const review = this.reviews.find(r => r.id === reviewId);
-      if (this.reply.trim()) {
-        review.replies.push({
-          id: review.replies.length + 1,
-          content: this.reply,
-          timestamp: new Date().toLocaleDateString()
-        });
-        console.log('답글:', this.reply); // 답글 내용을 콘솔에 출력 (나중에 실제 서버로 전송하는 로직으로 대체)
-        this.reply = ''; // 답글 입력 필드 초기화
-      } else {
-        alert('답글을 입력해주세요.'); // 입력 필드가 비어있을 때 경고
-      };
-      review.showReplyForm = false;
+    async submitReply(reviewId) {
+      try {
+        const response = await axios.post(`http://localhost:8000/restaurant/reviews/${reviewId}`, { content: this.reply });
+        const reply = response.data;
+        const review = this.reviews.find(r => r.id === reviewId);
+        review.reply = reply;
+        review.showReplyForm = false;
+        console.log('답글 작성 성공!:', reply);
+        this.reply = ''; // 입력 필드 초기화
+        // 답글 작성 후 리뷰 목록을 다시 불러옵니다.
+        const restaurantId = this.$route.params.id;
+        await this.fetchReviews(restaurantId);
+      } catch (error) {
+        console.error('답글 작성 실패!:', error);
+      }
     },
     paginateReviews() {
       const startIndex = (this.pageReview - 1) * this.pageSize;
@@ -772,6 +646,13 @@ export default {
     toggleButton(index) {
       this.times[index].clicked = !this.times[index].clicked;
     }
+  },
+  mounted() {
+    
+    // this.pageCountReview = Math.ceil(this.reviews.length / this.pageSize);
+    // this.paginateReviews();
+    // this.pageCountReservation = Math.ceil(this.reservations.length / this.pageSize);
+    // this.paginateReservations();
   },
   watch: {
     pageReview() {
@@ -821,4 +702,5 @@ export default {
   margin-top: 20px;
   margin-bottom: 20px;
 }
+
 </style>

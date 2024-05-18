@@ -29,7 +29,7 @@
             </v-btn>
 
             <v-dialog v-model="dialog" width="500">
-                <CheckUserDeleteForm />
+                <CheckUserDeleteForm :userInfo="userInfo" />
             </v-dialog>
 
 
@@ -43,6 +43,12 @@ import CheckUserDeleteForm from '@/components/memberManage/CheckUserDeleteForm.v
 export default {
     components: {
         CheckUserDeleteForm,
+    },
+    props: {
+        userInfo: {
+            type: Object,
+            default: () => ({}),
+        },
     },
     data() {
         return {

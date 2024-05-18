@@ -1,22 +1,14 @@
 <template>
-  <div
-    class="bg-body d-flex flex-column justify-center align-center min-vh-100"
-  >
+  <div class="bg-body d-flex flex-column justify-center align-center min-vh-100">
     <form @submit.prevent="submitForm" class="sign-up-card">
       <div class="sign-up-card-container">
         <div class="write-review-logo">
-          <v-img
-            :src="require('~/assets/images/logo.jpg')"
-            class="review-logo"
-          ></v-img>
+          <v-img :src="require('~/assets/images/logo.jpg')" class="review-logo"></v-img>
         </div>
 
         <div class="text-center mb-3">
           <h3 class="mb-3">리뷰 작성</h3>
-          <h5
-            class="text-sm font-600 grey--text text--darken-4"
-            style="font-weight: 500"
-          >
+          <h5 class="text-sm font-600 grey--text text--darken-4" style="font-weight: 500">
             {{ selectName }}
           </h5>
         </div>
@@ -28,16 +20,9 @@
           </p>
           <div class="babscore">
             <span v-for="(isActive, index) in stars" :key="index">
-              <div
-                style="margin-left: 2px; cursor: pointer"
-                @click="setRating(index)"
-              >
+              <div style="margin-left: 2px; cursor: pointer" @click="setRating(index)">
                 <v-img
-                  :src="
-                    isActive
-                      ? require('~/assets/images/babscore.png')
-                      : require('~/assets/images/graybab.png')
-                  "
+                  :src="isActive ? require('~/assets/images/babscore.png') : require('~/assets/images/graybab.png')"
                   class="fixed-size"
                 ></v-img>
               </div>
@@ -75,12 +60,7 @@
           </div>
         </div>
         <div class="mb-4">
-          <v-btn
-            block
-            color="primary"
-            type="submit"
-            class="text-capitalize font-600"
-          >
+          <v-btn block color="primary" type="submit" class="text-capitalize font-600">
             등록하기
           </v-btn>
         </div>
@@ -93,6 +73,7 @@
               <button
                 @click="goBack"
                 class="grey--text text--darken-4 font-600"
+                type="button"
               >
                 뒤로 가기
               </button>
@@ -105,8 +86,7 @@
 </template>
 
 <script>
-import { registerReply } from "@/api/myDining";
-import axios from "axios";
+import axios from 'axios';
 
 export default {
   layout: "session",
@@ -131,79 +111,43 @@ export default {
     };
   },
   methods: {
-    async created() {
-      const id = this.$route.params.id;
-      // const { data } = await fetchPost(id);
-      // this.title = data.title;
-      // this.contents = data.contents;
-    },
     setRating(selectedIndex) {
       // 모든 별을 초기 상태로 설정
       this.stars = this.stars.map((_, index) => index <= selectedIndex);
       this.babscore = this.stars.filter((star) => star).length;
     },
     async submitForm() {
-      const reviewData = {
-        reviewContents: this.UserReviewContents,
-        reservationId: this.nowReservationId,
-        registerDate: this.today,
-        reviewScore: this.babscore,
-        userEmail: this.userEmail,
-      };
-
-      console.log("Submitting review data:", reviewData);
+      const formData = new FormData();
+      formData.append('reviewContents', this.UserReviewContents);
+      formData.append('reservationId', this.nowReservationId);
+      formData.append('registerDate', this.today);
+      formData.append('reviewScore', this.babscore);
+      formData.append('userEmail', this.userEmail);
 
       if (this.file) {
-        // 파일이 포함된 경우 FormData 사용을 고려하거나 별도의 파일 업로드 로직 구현 필요
-        const formData = new FormData();
-        formData.append("file", this.file);
-        // 기타 필드 추가
-        Object.entries(reviewData).forEach(([key, value]) =>
-          formData.append(key, value)
-        );
-        // 멀티파트 요청으로 보내기
-        try {
-          const response = await axios.post(
-            "http://localhost:8000/myDining/registerReview",
-            formData,
-            {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            }
-          );
-          console.log("등록 성공:", response.data);
-        } catch (error) {
-          console.error(
-            "리뷰 등록 중 오류 발생:",
-            error.response ? error.response.data : error
-          );
-        }
-      } else {
-        // 파일이 없는 경우 JSON 요청으로 보내기
-        try {
-          const response = await axios.post(
-            "http://localhost:8000/myDining/registerReview",
-            reviewData,
-            {
-              headers: {
-                "Content-Type": "application/json",
-              },
-            }
-          );
-          alert("등록 성공")
-          console.log("등록 성공:", response.data);
-        } catch (error) {
-          alert("리뷰 등록 중 오류 발생")
-          console.error(
-            "리뷰 등록 중 오류 발생:",
-            error.response ? error.response.data : error
-          );
-        }
+        formData.append('file', this.file);
       }
-      window.history.back();
-    },
 
+      try {
+        const response = await axios.post('http://localhost:8000/myDining/registerReview', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        });
+
+        if (response.status === 200) {
+          alert('등록 및 파일 업로드 성공');
+          console.log(response.data);
+          this.file = null; // 파일 업로드 성공 후 v-file-input 초기화
+          window.history.back();
+        } else {
+          alert('등록 또는 파일 업로드 실패');
+        }
+      } catch (error) {
+        console.error('등록 또는 파일 업로드 중 오류 발생:', error);
+        alert('등록 또는 파일 업로드 중 오류 발생');
+      }
+    },
     goBack() {
       window.history.back(); // 브라우저 이력에서 한 단계 뒤로 갑니다
     },

@@ -1,12 +1,11 @@
 <template>
     <div>
     <RestaurantList></RestaurantList>
-    </div>
-  
+  </div>
 </template>
 
 <script>
-import RestaurantList from '@/components/restaurant/RestaurantList.vue';
+import RestaurantList from "@/components/restaurant/RestaurantList.vue";
 
 export default {
   components: {

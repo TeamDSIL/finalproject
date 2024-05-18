@@ -1,7 +1,6 @@
 <template>
-  <div id="map" style="width: 500px; height: 500px"></div>
+  <div id="map" style="width: 100%; height: 350px"></div>
 </template>
-
 <script>
 import axios from 'axios';
 export default {
@@ -24,6 +23,7 @@ export default {
       script.onerror = () => console.error("Kakao Map script load failed.");
       document.head.appendChild(script);
     } else {
+      kakao.maps.load(this.initializeMap);
       kakao.maps.load(this.initializeMap);
     }
   },
@@ -70,3 +70,4 @@ export default {
   }
 }
 </script>
+<style scoped></style>

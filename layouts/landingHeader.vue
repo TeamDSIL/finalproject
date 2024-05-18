@@ -109,12 +109,13 @@
                   class="white flex-1 ps-5"
                   type="text"
                   placeholder="Search for restaurant "
+                  v-model="searchQuery"
                 />
                 <v-btn
-                  to="/resturant/ResturantTwoColumn"
                   x-large
                   color="primary"
                   class="rounded-l-0 text-capitalize"
+                  @click="search"
                 >
                   Search
                 </v-btn>
@@ -128,11 +129,13 @@
     <GoToBtn />
   </v-app>
 </template>
+
 <script>
 export default {
   data: () => ({
     drawer: false,
     dsilModal: false,
+    searchQuery: "",
     categories: [
       {
         name: "INDUSTRIAL_DISTRICT",
@@ -260,6 +263,12 @@ export default {
     search() {
       // 쿼리 파라미터를 담을 객체를 생성합니다.
       let queryParams = {};
+
+      // 입력된 검색어 처리
+      if (this.searchQuery.trim() !== "") {
+        queryParams["search"] = [encodeURIComponent(this.searchQuery.trim())]; // 배열로 저장
+      }
+
       // 카테고리별로 쿼리 파라미터를 생성합니다.
       this.categories.forEach((category) => {
         category.selected.forEach((item) => {
@@ -274,18 +283,20 @@ export default {
           queryParams[paramKey].push(item.name);
         });
       });
+
       // 쿼리 파라미터 문자열로 변환합니다.
       let queryString = Object.keys(queryParams)
-        .map((key) =>
-          queryParams[key]
-            .map((value) => `${key}=${encodeURIComponent(value)}`)
-            .join("&")
+        .map(
+          (key) => queryParams[key].map((value) => `${key}=${value}`).join("&") // 배열을 이용해 join 함수 호출
         )
         .join("&");
+
       // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
       const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
+
       // URL로 리디렉션합니다.
       window.location.href = searchUrl;
+
       // 모달 창을 닫습니다.
       this.closeModal();
     },

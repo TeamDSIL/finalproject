@@ -103,7 +103,7 @@
                 <v-tabs-items v-model="tab">
                     <v-tab-item value="tab-1">
                         <h2>예약 신청</h2>
-                        <DateTimePicker></DateTimePicker><br><br><br>
+                        <DateTimePicker :restaurantName="restaurantDetails.name"/><br><br><br>
                         <h2>식당 혼잡도</h2>
                         <div class="roundstate">
                             <div :class="crowdClass">
