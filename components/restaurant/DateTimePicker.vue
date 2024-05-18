@@ -838,7 +838,7 @@ export default {
     dismissAlert() {
       this.alertSnackbar = false;
       this.showPaymentModal = false;
-      this.$router.push('/restaurant/detail');
+      this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
     },
     handleInputChange() {
       if (isNaN(this.riceBallInput) || this.riceBallInput.includes("-")) {
@@ -938,15 +938,17 @@ confirmReservation2() {
       const depositAmount = this.depositAmount;
       const numberOfPeople = this.numberOfPeople;
       const riceBallInput = this.riceBallInput;
-      const restaurantName = this.restaurantName;
       const totalAmount = depositAmount * numberOfPeople - riceBallInput;
+      const merchantUid = `${this.restaurantName}${Date.now()}`
+
+      console.log(merchantUid);
 
       // 결제 정보 설정
-      const paymentData = {
+      this.paymentData = {
         pg: "kakaopay.TC0ONETIME",
         pay_method: "card",
-        merchant_uid: `${restaurantName}_${Date.now()}_id`,
-        name: restaurantName,
+        merchant_uid: merchantUid,
+        name: this.restaurantName,
         amount: totalAmount,
         buyer_email: "",
         buyer_name: "",
@@ -954,7 +956,7 @@ confirmReservation2() {
         paymentTime: new Date().toISOString()
       };
 
-      const reservationData = {
+      this.reservationData = {
         peopleCount: this.numberOfPeople,
         reservationDate: this.selectedDate,
         reservationTime: this.selectedTime,
@@ -967,12 +969,12 @@ confirmReservation2() {
       // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
       if (totalAmount === 0) {
         this.showSpinner = true;
-        axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
+        axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
           .then(reservationResponse => {
             console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
             this.showSpinner = false;
             this.showPaymentModal = false;
-            this.$router.push('/restaurant/detail');
+            this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
             alert("예약이 완료되었습니다.");
             this.resetReservationData();
           })
@@ -984,18 +986,18 @@ confirmReservation2() {
         // 결제 함수 정의
         const paymentFunction = () => {
           IMP.init('imp56476634');
-          IMP.request_pay(paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
+          IMP.request_pay(this.paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
             if (rsp.success) {
               this.showSpinner = true;
 
               // 예약 정보를 서버에 전송
-              axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
+              axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
                 .then(reservationResponse => {
                   console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
                   // 결제 정보를 서버에 전송
                   const reservationId = reservationResponse.data;
 
-                  axios.post('http://localhost:8000/restaurant/payment', paymentData, {
+                  axios.post('http://localhost:8000/restaurant/payment', this.paymentData, {
                     params: {
                       reservationId: reservationId
                     }
@@ -1005,8 +1007,8 @@ confirmReservation2() {
                       this.showPaymentModal = false;
                       console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
                       // 결제 및 예약 정보가 성공적으로 처리되면 페이지 이동
-                      this.$router.push('/restaurant/detail');
-                      alert("결제 완료 : " + "예약 번호 " + rsp.merchant_uid);
+                      this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
+                      alert("결제 완료 : " + "고객님의 예약이 완료되었습니다.");
                       this.resetReservationData();
                     })
                     .catch(paymentError => {
@@ -1020,7 +1022,7 @@ confirmReservation2() {
                 });
             } else {
               alert("(" + rsp.error_msg + ")");
-              window.location.href = 'http://localhost:3000/restaurant/detail';
+              this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
             }
           });
         }
@@ -1031,8 +1033,7 @@ confirmReservation2() {
         document.head.appendChild(impScript);
 
         // 스크립트 로드 후에 실행합니다.
-        impScript.onload = function() {
-          // IMP 스크립트가 로드된 후에 payment 함수를 호출합니다.
+        impScript.onload = () => {
           paymentFunction();
         };
       }
@@ -1041,7 +1042,7 @@ confirmReservation2() {
       console.log("두 개의 필수 동의사항에 모두 동의해야 합니다.");
     }
   },
-    resetReservationData() {
+  resetReservationData() {
     // 예약 및 결제 정보 초기화
     this.selectedDate = '';
     this.numberOfPeople = 1;
@@ -1056,11 +1057,11 @@ confirmReservation2() {
         this.selectedHour = '';
         this.selectedMinute = '';
 },
-  
+
     redirectToReservation() {
       this.modal = true;
       clearInterval(this.timerInterval);  
-      this.$router.push('/restaurant/detail');
+      this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
     }
   },
 };

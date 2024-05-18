@@ -194,7 +194,6 @@
                                 </template>
                                 <v-card>
                                     <!-- 여기에 사진 삽입 -->
-                                    <img src="../../assets/images/food/pizza.png" width="400px"></img>
                                     <!-- 메뉴 리스트 드롭다운 -->
                                     <v-list>
                                         <v-list-group v-for="item in menuItems" :key="item.name" v-model="item.active"
