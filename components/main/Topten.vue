@@ -10,7 +10,7 @@
         v-for="(item, index) in currentTopViews"
         :key="item.restaurantId"
       >
-        <v-card>
+        <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
           <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
@@ -28,7 +28,7 @@
         v-for="(item, index) in currentTopBookmarks"
         :key="item.restaurantId"
       >
-        <v-card>
+        <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
           <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
@@ -46,7 +46,7 @@
         v-for="(item, index) in currentTopReservations"
         :key="item.restaurantId"
       >
-        <v-card>
+        <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
           <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
@@ -157,6 +157,9 @@ export default {
         item.rank = index + 1;
         return item;
       });
+    },
+    goToRestaurantDetail(restaurantId) {
+      this.$router.push(`/restaurant/detail/${restaurantId}`);
     },
   },
 };
