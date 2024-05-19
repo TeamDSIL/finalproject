@@ -143,6 +143,12 @@ export default {
         );
       }, 3000);
     },
+    addRanks(dataArray) {
+      return dataArray.map((item, index) => {
+        item.rank = index + 1;
+        return item;
+      });
+    },
     getCircularItems(dataArray, startIndex, numItems) {
       let totalItems = dataArray.length;
       let items = [];
@@ -152,12 +158,7 @@ export default {
       }
       return items;
     },
-    addRanks(dataArray) {
-      return dataArray.map((item, index) => {
-        item.rank = index + 1;
-        return item;
-      });
-    },
+
     goToRestaurantDetail(restaurantId) {
       this.$router.push(`/restaurant/detail/${restaurantId}`);
     },

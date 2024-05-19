@@ -85,8 +85,6 @@
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" text @click="closeModal">취소</v-btn>
-          <!-- <v-btn color="green" text @click="submitNotice">등록</v-btn> -->
-          <!-- 등록 버튼 -->
           <v-btn
             color="green"
             text
@@ -129,10 +127,9 @@
                 <!-- 이미지 파일이 있을 경우 이미지 미리보기를 표시 -->
                 <v-img
                   v-if="
-                    detailsNotice.filePath &&
-                    detailsNotice.filePath.startsWith('data:image')
+                    detailsNotice.img && detailsNotice.img.startsWith('http')
                   "
-                  :src="detailsNotice.filePath"
+                  :src="detailsNotice.img"
                   alt="첨부 이미지"
                   height="200"
                 >
@@ -140,10 +137,9 @@
                 <!-- 파일 이름을 표시 -->
                 <v-text-field
                   v-if="
-                    detailsNotice.filePath &&
-                    !detailsNotice.filePath.startsWith('data:image')
+                    detailsNotice.img && !detailsNotice.img.startsWith('http')
                   "
-                  v-model="detailsNotice.filePath"
+                  v-model="detailsNotice.img"
                   label="첨부 파일"
                   readonly
                   prepend-icon="mdi-paperclip"
@@ -163,6 +159,7 @@
 
 <script>
 import axios from "axios";
+
 export default {
   data() {
     return {
@@ -178,12 +175,14 @@ export default {
         title: "",
         contents: "",
         filePath: null,
+        postDate: null,
       },
       detailsNotice: {
         category: "",
         title: "",
         contents: "",
-        filePath: null,
+        img: "",
+        postDate: "",
       },
       editingNotice: null,
       noticeCategorys: ["공지", "이벤트"],
@@ -215,6 +214,7 @@ export default {
         title: "",
         contents: "",
         filePath: null,
+        postDate: null,
       };
       this.editingNotice = null;
       this.showCreateNoticeModal = true;
@@ -230,17 +230,34 @@ export default {
         title: "",
         contents: "",
         filePath: null,
+        postDate: null,
       };
       this.imageUrl = null; // 이미지 URL 초기화
     },
 
     // 공지사항 생성하기
     createNotice() {
-      // 현재 날짜를 ISO 형식의 문자열로 설정
-      this.currentNotice.postDate = new Date().toISOString().split("T")[0]; // YYYY-MM-DD 형식
+      const formData = new FormData();
+      const noticeData = {
+        ...this.currentNotice,
+        postDate: new Date().toISOString().split("T")[0], // 현재 날짜를 설정
+      };
+      formData.append(
+        "inform",
+        new Blob([JSON.stringify(noticeData)], {
+          type: "application/json",
+        })
+      );
+      if (this.currentNotice.filePath) {
+        formData.append("file", this.currentNotice.filePath);
+      }
 
       axios
-        .post("http://localhost:8000/informs/", this.currentNotice)
+        .post("http://localhost:8000/informs/", formData, {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        })
         .then((response) => {
           this.notices.push(response.data);
           this.closeModal();
@@ -252,19 +269,33 @@ export default {
         });
     },
 
-    editNotice(item) {
-      // 현재 수정하고자 하는 공지사항의 정보를 currentNotice에 저장
-      this.currentNotice = { ...item };
-      this.editingNotice = item; // 수정 모드 활성화를 위해 저장
-      this.showCreateNoticeModal = true; // 수정 모달 창 열기
-    },
-
     // 공지사항 수정하기
     updateNotice() {
+      const formData = new FormData();
+      const noticeData = {
+        ...this.currentNotice,
+        postDate:
+          this.currentNotice.postDate || new Date().toISOString().split("T")[0], // 현재 날짜를 설정
+      };
+      formData.append(
+        "inform",
+        new Blob([JSON.stringify(noticeData)], {
+          type: "application/json",
+        })
+      );
+      if (this.currentNotice.filePath) {
+        formData.append("file", this.currentNotice.filePath);
+      }
+
       axios
         .put(
           `http://localhost:8000/informs/${this.editingNotice.id}`,
-          this.currentNotice
+          formData,
+          {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          }
         )
         .then((response) => {
           const index = this.notices.findIndex(
@@ -280,12 +311,6 @@ export default {
           console.error("Error updating the notice:", error);
           alert("공지사항 업데이트 실패: " + error.message);
         });
-    },
-
-    //공지사항 상세보기
-    showDetails(item) {
-      this.detailsNotice = item;
-      this.showDetailsModal = true;
     },
 
     // 공지사항 삭제하기
@@ -318,6 +343,18 @@ export default {
       } else {
         this.imageUrl = null; // 선택된 파일이 이미지가 아닐 경우 URL을 null로 설정
       }
+    },
+
+    showDetails(item) {
+      this.detailsNotice = { ...item };
+      this.showDetailsModal = true;
+    },
+
+    editNotice(item) {
+      this.currentNotice = { ...item };
+      this.editingNotice = item;
+      this.showCreateNoticeModal = true;
+      this.imageUrl = item.img || null;
     },
   },
 };
