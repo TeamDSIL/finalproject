@@ -99,7 +99,7 @@
                 <v-tabs-items v-model="tab">
                     <v-tab-item value="tab-1">
                         <h2>예약 신청</h2>
-                        <DateTimePicker></DateTimePicker><br><br><br>
+                        <DateTimePicker :restaurantName="restaurantDetails.name"/><br><br><br>
                         <h2>식당 혼잡도</h2>
                         <div class="roundstate">
                             <div :class="crowdClass">
@@ -194,7 +194,6 @@
                                 </template>
                                 <v-card>
                                     <!-- 여기에 사진 삽입 -->
-                                    <img src="../../assets/images/food/pizza.png" width="400px"></img>
                                     <!-- 메뉴 리스트 드롭다운 -->
                                     <v-list>
                                         <v-list-group v-for="item in menuItems" :key="item.name" v-model="item.active"

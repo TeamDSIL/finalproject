@@ -1,7 +1,6 @@
 <template>
   <div>
     <v-container>
-
       <!-- Tabs for different management aspects -->
       <div class="d-flex justify-space-between flex-wrap flex-sm-nowrap mb-3">
         <v-tabs class="mb-3">
@@ -20,9 +19,8 @@
             </v-col>
             <v-col cols="12" sm="6" md="3" v-for="restaurant in restaurants" :key="restaurant.id">
               <v-card @click="goToRestaurantManagement(restaurant)" class="ma-2">
-                <v-img :src="restaurant.img" style="height: auto;"></v-img>
+                <v-img :src="restaurant.img" height="200px" class="restaurant-image"></v-img>
                 <v-card-title>{{ restaurant.name }}</v-card-title>
-                
                 <v-card-actions>
                   <v-btn text color="primary">Manage</v-btn>
                 </v-card-actions>
@@ -40,14 +38,10 @@
 import RestaurantManageMain from './RestaurantManageMain.vue';
 import axios from 'axios';
 
-
 export default {
   data() {
     return {
-      // restaurants: Restaurants,
-
       restaurants: [],
-
     };
   },
 
@@ -68,7 +62,7 @@ export default {
     },
 
     goToRestaurantManagement(restaurant) {
-      this.$router.push({path: `/restaurant/RestaurantManageMainPage/${restaurant.id}`});
+      this.$router.push({ path: `/restaurant/RestaurantManageMainPage/${restaurant.id}` });
     },
 
     takeMyPosition() {
@@ -82,12 +76,34 @@ export default {
         console.error("Error Code = " + error.code + " - " + error.message);
       });
     },
-    
+
   },
   created() {
-      this.fetchRestaurants();
-    },
+    this.fetchRestaurants();
+  },
 }
 </script>
 
-<style></style>
+<style>
+.restaurant-manage {
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+}
+
+.tabs {
+  background-color: #ffffff;
+  border-bottom: 2px solid #ddd;
+}
+
+.v-card {
+  height: 100%;
+}
+
+.restaurant-image {
+  object-fit: cover;
+}
+</style>
+
+
+<!-- 여기도 지금 스타일을 약간 변경했다. 그.. 식당사진의 크기를 균일하게 바꾸는 작업을 했다. -->
