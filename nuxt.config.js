@@ -1,5 +1,9 @@
 import colors from "vuetify/es5/util/colors";
 export default {
+  server: {
+    host: '0.0.0.0', // 모든 IP 주소에서 접근 가능
+    port: 3000      // 원하는 포트 번호
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes, resolve) {
