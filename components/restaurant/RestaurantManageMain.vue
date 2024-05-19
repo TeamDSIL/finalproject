@@ -508,7 +508,7 @@ export default {
           const month = new Date(this.year, 0, (week - 1) * 7 + 1).getMonth() + 1;
           const weekOfMonth = Math.ceil(((week - 1) * 7 + 1 - 1) / 7) + 1;
           return {
-            period: `${month}월 ${weekOfMonth}주`,
+            period: `${this.year}년 ${weekOfMonth}주`,
             count: response.data[week],
           };
         });
@@ -805,8 +805,7 @@ export default {
   font-size: 2em;
   color: #555;
   font-weight: bold;
-  display: flex;
-  justify-content: right;
+  
 }
 
 </style>
