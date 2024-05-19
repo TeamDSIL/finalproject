@@ -225,7 +225,6 @@
                                 </template>
                                 <v-card>
                                     <!-- 여기에 사진 삽입 -->
-                                    <img src="../../assets/images/food/pizza.png" width="400px"></img>
                                     <!-- 메뉴 리스트 드롭다운 -->
                                     <v-list v-for="item in menus" :key="item.name">
                                         <v-list-item class="titleflex">
