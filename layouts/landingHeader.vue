@@ -16,7 +16,7 @@
             <v-app-bar-nav-icon
               class="rounded"
               tile
-              color="red"
+              color="primary"
               @click="drawer = true"
             ></v-app-bar-nav-icon>
             <v-navigation-drawer width="320" v-model="drawer" fixed temporary>
@@ -50,7 +50,7 @@
                           category.selected.some(
                             (selected) => selected.name === item.name
                           )
-                            ? 'blue lighten-3'
+                            ? 'primary'
                             : ''
                         "
                         text
@@ -63,10 +63,10 @@
                 </v-card-text>
                 <v-card-actions>
                   <v-spacer></v-spacer>
-                  <v-btn color="green darken-1" text @click="closeModal"
+                  <v-btn color="blue darken-1" text @click="closeModal"
                     >취소</v-btn
                   >
-                  <v-btn color="blue darken-1" text @click="search">검색</v-btn>
+                  <v-btn color="primary" text @click="search">검색</v-btn>
                 </v-card-actions>
               </v-card>
             </v-dialog>
