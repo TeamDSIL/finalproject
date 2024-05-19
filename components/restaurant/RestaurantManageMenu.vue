@@ -37,7 +37,6 @@
 </template>
 
 <script>
-import { Restaurants } from '~/assets/database/RestaurantData.js';
 import RestaurantManageMain from './RestaurantManageMain.vue';
 import axios from 'axios';
 
