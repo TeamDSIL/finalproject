@@ -24,13 +24,6 @@ export default {
         routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
       }
 
-      const writeReview = routes.findIndex(
-        (route) => route.name === "myDining-WriteReviewPage"
-      );
-      if (writeReview !== -1) {
-        routes[writeReview].path = "/myDining/WriteReviewPage/:id";
-      }
-
       const mydiningList = routes.findIndex(
         (route) => route.name === "myDining-MydiningPage"
       );

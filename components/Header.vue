@@ -8,11 +8,15 @@
       >
           <v-container class="d-flex align-center">
               <nuxt-link to="/">
-                <v-avatar class="me-10" tile>
-                    <img src="~/assets/images/dsillogoround.png" alt="" style="width: 100px;"/>
-                </v-avatar>
+                <!-- <v-avatar class="me-10" tile> -->
+                    <img src="~/assets/images/DSILnewLOGO.png" alt="" style="width: 100px; margin-left: 10px;"/>
+                <!-- </v-avatar> -->
               </nuxt-link>
-              <div class="form-location flex-grow-1 d-none d-md-flex border rounded ">
+              <!-- <span style="font-weight: bold; margin-left: 8px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-size: 1em; padding: 10px; border-radius: 5px; ">
+        DSIL: 실시간예약
+    </span> -->
+
+              <div class="form-location flex-grow-1 d-none d-md-flex border rounded " style="margin-left: 30px;">
                 <div class=" d-flex align-center ps-5">
                   <v-icon small left>mdi-map-marker</v-icon>
                   <span class="grey--text text--darken-1 me-3">New York</span>
@@ -26,6 +30,9 @@
                 </v-btn>
               </div>
               <v-spacer></v-spacer>
+
+
+              
               <v-dialog
                 v-model="dialog"
                 width="500"
@@ -57,7 +64,7 @@
               <v-app-bar-nav-icon text light @click="drawer = true"></v-app-bar-nav-icon>
           </v-container>
       </v-app-bar>
-      <v-navigation-drawer
+      <!-- <v-navigation-drawer
         width="320"
         v-model="shoppingCartDrawer"
         fixed
@@ -81,7 +88,7 @@
               </v-btn>
             </div>
           </template>
-      </v-navigation-drawer>
+      </v-navigation-drawer> -->
       <v-navigation-drawer
         width="320"
         v-model="drawer"

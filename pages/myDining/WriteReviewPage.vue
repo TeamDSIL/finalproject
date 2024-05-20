@@ -2,13 +2,13 @@
   <div class="bg-body d-flex flex-column justify-center align-center min-vh-100">
     <form @submit.prevent="submitForm" class="sign-up-card">
       <div class="sign-up-card-container">
-        <div class="write-review-logo">
-          <v-img :src="require('~/assets/images/logo.jpg')" class="review-logo"></v-img>
+        <div class="write-review-logo" style="margin-bottom: 20px;">
+          <v-img :src="require('~/assets/images/DSILnewLOGO.png')" class="review-logo"></v-img>
         </div>
-
+     
         <div class="text-center mb-3">
-          <h3 class="mb-3">리뷰 작성</h3>
-          <h5 class="text-sm font-600 grey--text text--darken-4" style="font-weight: 500">
+          <h3 class="mb-3" style="color:rgb(210, 63, 87)">리뷰 작성</h3>
+          <h5 class="text-sm font-600 grey--text text--darken-4" style="font-weight: bold; font-size: small;" >
             {{ selectName }}
           </h5>
         </div>
@@ -103,8 +103,8 @@ export default {
       file: null,
       stars: [true, false, false, false, false],
       UserReviewContents: "",
-      nowReservationId: this.$route.params.id,
-      selectName: "우리식당 창원점",
+      nowReservationId: this.$route.query.reservationId,
+      selectName:this.$route.query.name,
       today: formattedDate,
       babscore: 1,
       userEmail: "user02@example.com",
