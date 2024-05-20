@@ -1,6 +1,7 @@
 import colors from "vuetify/es5/util/colors";
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
+  
   router: {
     extendRoutes(routes, resolve) {
       // 기존 라우트 수정도 가능

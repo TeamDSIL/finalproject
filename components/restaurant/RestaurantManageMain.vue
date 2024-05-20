@@ -61,33 +61,35 @@
             </v-col>
           </v-row>
           <br>
+          <br>
           <v-divider></v-divider>
           <br>
+        
           <v-row>
             <v-col cols="12">
               <h4>예약 가능 시간 설정</h4>
-              <v-btn
-                v-for="(time) in times"
-                :key="time.id"
-                class="ma-2"
+              <br>
+              <v-btn v-for="(time) in times" :key="time.id" class="ma-2"
                 :style="{ color: time.clicked ? 'white' : '', backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '' }"
-                @click="toggleTime(time)"
-              >
+                @click="toggleTime(time)">
                 {{ time.label }}
               </v-btn>
             </v-col>
           </v-row>
+          <br>
           <br>
           <v-divider></v-divider>
           <br>
           <v-row>
             <v-col cols="12">
 
-              <h3>식당 정보 수정</h3>
+              <h4>식당 정보 수정</h4>
+              <br>
               <v-btn style="background-color: rgb(210,63,87); color: white;"
                 v-on:click="goToRestaurantModify(restaurant)">식당수정</v-btn>
             </v-col>
           </v-row>
+          <br>
           <br>
           <v-divider></v-divider>
           <v-row>
@@ -108,7 +110,7 @@
                     <!-- 5개의 예약만 보여줌 -->
                     <tr v-for="reservation in reservations.slice(0, 5)" :key="reservation.id">
                       <td>{{ reservation.reservationDate }}</td>
-                      <td>{{ reservation.reservationTime }}</td>
+                      <td>{{ formatReservationTime(reservation.reservationTime) }}</td>
                       <td>{{ reservation.reservationName }}</td>
                       <td>{{ reservation.peopleCount }}</td>
                     </tr>
@@ -117,6 +119,7 @@
               </v-simple-table>
             </v-col>
           </v-row>
+          <br>
           <br>
           <v-divider></v-divider>
           <v-row>
@@ -181,7 +184,7 @@
                           <tbody>
                             <tr v-for="item in paginatedReservations" :key="item.id">
                               <td>{{ item.reservationDate }}</td>
-                              <td>{{ item.reservationTime }}</td>
+                              <td>{{ formatReservationTime(item.reservationTime) }}</td>
                               <td>{{ item.reservationName }}</td>
                               <td>{{ item.peopleCount }}</td>
 
@@ -369,27 +372,30 @@
         <!-- 탭4에 해당하는화면 -->
         <v-tab-item value="tab-4">
           <v-container>
-    <div class="reservation-stats">
-      <v-row>
-        <v-col cols="12">
-          <h3 class="fw-bold mb-4">예약 통계</h3>
-          <v-btn @click="fetchMonthlyStats" color="primary" class="mb-4">월별 통계 보기</v-btn>
-          <v-btn @click="fetchWeeklyStats" color="primary" class="mb-4">주간 통계 보기</v-btn>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <div class="stats-container">
-            <div v-for="stat in stats" :key="stat.period" class="stat-card">
-              <div class="stat-period">{{ stat.period }}</div>
-              <div class="stat-count">{{ stat.count }} 건</div>
+            <div class="reservation-stats">
+              <v-row>
+                <v-col cols="12">
+                  <h3 class="fw-bold mb-4">예약 통계</h3>
+                  <v-btn @click="fetchMonthlyStats" color="primary" class="mb-4">월별 통계 보기</v-btn>
+                  <v-btn @click="fetchWeeklyStats" color="primary" class="mb-4">주간 통계 보기</v-btn>
+                </v-col>
+              </v-row>
+              <v-row>
+                <v-col cols="12">
+                  <div class="stats-container">
+                    <div v-for="stat in stats" :key="stat.period" class="stat-card">
+                      <div class="stat-period">{{ stat.period }}</div>
+                      <v-progress-circular :value="stat.count" :size="100" :width="15" color="primary"
+                        class="stat-progress">
+                        <span class="stat-count">{{ stat.count }}건</span>
+                      </v-progress-circular>
+                    </div>
+                  </div>
+                </v-col>
+              </v-row>
             </div>
-          </div>
-        </v-col>
-      </v-row>
-    </div>
-  </v-container>
-          </v-tab-item>
+          </v-container>
+        </v-tab-item>
 
 
 
@@ -404,43 +410,30 @@ import axios from 'axios';
 
 
 export default {
-  
-  // props: {
-  //   id: {
-  //     type: Number,
-  //     required: true
-  //   },
-  //   name: {
-  //     type: String,
-  //     required: true
-  //   },
-  //   address: {
-    //     type: String,
-    //     required: true
-    //   },
-    // },
-    created() {
-      const restaurantId = this.$route.params.id;
-      this.fetchRestaurantDetails(restaurantId);
-      this.fetchReservations(restaurantId);
-      this.fetchReviews(restaurantId);
-      this.fetchAvailableTimes(restaurantId);
-      this.year = new Date().getFullYear();
-    },
-    data() {
-      return {
-        // isClicked: false,
-        stats: [],
+
+  created() {
+    const restaurantId = this.$route.params.id;
+    this.fetchRestaurantDetails(restaurantId);
+    this.fetchReservations(restaurantId);
+    this.fetchReviews(restaurantId);
+    this.fetchAvailableTimes(restaurantId);
+    this.year = new Date().getFullYear();
+  },
+  data() {
+    return {
+      // isClicked: false,
+      stats: [],
       headers: [
         { text: '기간', value: 'period' },
         { text: '예약 건수', value: 'count' },
       ],
       restaurantId: null,
       year: null,
-        
-        times: [
-          { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
-          { id: 2, label: '오후1:00', clicked: false, slot: 'AFTERNOON_1' },
+      tab: null,
+
+      times: [
+        { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
+        { id: 2, label: '오후1:00', clicked: false, slot: 'AFTERNOON_1' },
         { id: 3, label: '오후2:00', clicked: false, slot: 'AFTERNOON_2' },
         { id: 4, label: '오후3:00', clicked: false, slot: 'AFTERNOON_3' },
         { id: 5, label: '오후4:00', clicked: false, slot: 'AFTERNOON_4' },
@@ -453,21 +446,13 @@ export default {
       buttonClicks: Array(9).fill(false),
       showReplyForm: false, // 입력 폼의 표시 상태를 제어하는 데이터 속성
       reply: '',
-      
+
       restaurant: [],
-      // headers: [
-        //   {
-          //     width: '200px'
-          //   },
-          //   { text: '날짜', value: 'date' },
-          //   { text: '시간', value: 'time' },
-          //   { text: '고객 이름', value: 'customerName' }
-          // ],
-          
-          reservations: [],
-          reviews: [],
-          
-          pageReview: 1,
+
+      reservations: [],
+      reviews: [],
+
+      pageReview: 1,
       pageReservation: 1,
       pageSize: 10,
       pageCountReview: 0,
@@ -516,10 +501,10 @@ export default {
         console.error('Failed to fetch weekly stats:', error);
       }
     },
-  
 
 
-    
+
+
     async toggleTime(time) {
       const restaurantId = this.$route.params.id;
       if (time.clicked) {
@@ -579,7 +564,7 @@ export default {
         });
 
         console.log('예약가능시간 패치 성공');
-      console.log('가져온 예약시간쓰:', availableTimes)
+        console.log('가져온 예약시간쓰:', availableTimes)
       } catch (error) {
         console.error('예약가능시간 패치 실패:', error);
       }
@@ -604,7 +589,21 @@ export default {
         console.error('리뷰 목록을 불러오는 데 실패했습니다.', error);
       }
     },
-
+    formatReservationTime(time) {
+      const timeMap = {
+        'AFTERNOON_12': '오후12:00',
+        'AFTERNOON_1': '오후1:00',
+        'AFTERNOON_2': '오후2:00',
+        'AFTERNOON_3': '오후3:00',
+        'AFTERNOON_4': '오후4:00',
+        'AFTERNOON_5': '오후5:00',
+        'AFTERNOON_6': '오후6:00',
+        'AFTERNOON_7': '오후7:00',
+        'AFTERNOON_8': '오후8:00',
+        'AFTERNOON_9': '오후9:00'
+      };
+      return timeMap[time] || time;
+    },
 
     getAvatar(avatarPath) {
       return require(`${avatarPath}`);
@@ -622,7 +621,7 @@ export default {
       this.$router.push({ path: '/restaurant/ReviewManagePage' });
     },
     goToRestaurantManage() {
-      this.$router.push({path: `/restaurant/RestaurantManagePage`});
+      this.$router.push({ path: `/restaurant/RestaurantManagePage` });
     },
     goToRestaurantModify(restaurant) {
       this.$router.push({
@@ -666,15 +665,15 @@ export default {
             deleteStatus: true
           }
         });
-        
+
         console.log('리뷰 삭제 요청 성공:', response.data);
-      // 리뷰 목록을 새로 고침
-      const restaurantId = this.$route.params.id;
-      await this.fetchReviews(restaurantId);
-    } catch (error) {
-      console.error('리뷰 삭제 요청 실패:', error);
-    }
-  },
+        // 리뷰 목록을 새로 고침
+        const restaurantId = this.$route.params.id;
+        await this.fetchReviews(restaurantId);
+      } catch (error) {
+        console.error('리뷰 삭제 요청 실패:', error);
+      }
+    },
 
     toggleReplyForm(reviewId) {
       const review = this.reviews.find(r => r.id === reviewId);
@@ -716,7 +715,7 @@ export default {
     }
   },
   mounted() {
-    
+
     // this.pageCountReview = Math.ceil(this.reviews.length / this.pageSize);
     // this.paginateReviews();
     // this.pageCountReservation = Math.ceil(this.reservations.length / this.pageSize);
@@ -742,6 +741,10 @@ export default {
 .restaurant-name-title {
   margin-bottom: 20px;
 
+}
+.section-title {
+  font-size: 1.5em;
+  margin-bottom: 20px;
 }
 
 .review-all-title {
@@ -787,11 +790,12 @@ export default {
 }
 
 .stat-card {
-  background-color: #f9f9f9;
+  background-color: white;
   border-radius: 8px;
   padding: 16px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  width: calc(33.333% - 16px); /* 3 columns layout with 16px gap */
+  width: calc(20% - 16px);
+  /* 3 columns layout with 16px gap */
   box-sizing: border-box;
 }
 
@@ -805,10 +809,12 @@ export default {
   font-size: 2em;
   color: #555;
   font-weight: bold;
-  
-}
+  display: flex;
+  justify-content: right;
 
+}
 </style>
 
 
 <!-- 통계부분을 수정하고 있습니다......화이팅. -->
+<!-- 여기서부터 chartjs를 사용해보도록 하겠다. 여기부터 차트제이에스여~~ -->
