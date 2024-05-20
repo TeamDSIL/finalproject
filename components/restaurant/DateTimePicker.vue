@@ -1,13 +1,13 @@
 <template>
   <v-col cols="4" sm="6" md="4">
     <!-- 예약 날짜, 시간 선택하는 모달창 -->
-    <v-dialog ref="dialog" v-model="modal" persistent width="290px">
+    <v-dialog ref="dialog" v-model="modal" persistent width="330px">
       <template v-slot:activator="{ on }">
         <v-btn v-on="on">예약 날짜 및 시간 선택</v-btn>
       </template>
       <v-card>
         <!-- 예약 날짜 선택 -->
-        <v-date-picker v-model="date" :min="minDate" scrollable locale="ko"></v-date-picker>
+        <v-date-picker v-model="date" :min="minDate" scrollable locale="ko" full-width></v-date-picker>
         <p style="margin-left: 10px;">예약 시간을 선택해주세요.</p>
         <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
@@ -28,6 +28,7 @@
         </v-card-actions>
       </v-card>
     </v-dialog>
+
 
     <!-- 예약 확인 모달 -->
     <!-- 예약금이 있는 경우 확인 모달 -->
@@ -105,7 +106,7 @@
       <v-card class="custom-card">
         <v-card-title class="title">
           <p style="margin-top: 2px;">예약금 결제</p>
-      <v-icon @click="cancelPayment" style="position: relative; top: -7px;">mdi-close</v-icon>
+          <v-icon @click="cancelPayment" style="position: absolute; right: 20px; top: 20px;">mdi-close</v-icon>
     </v-card-title>
             <v-card-title class="restaurant-name" style="margin-bottom: 13px;">
           <div style="margin-top: -20px;">{{ restaurantName }}</div>
@@ -694,7 +695,7 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
-      depositAmount:2000,
+      depositAmount:100,
       riceBallPoints: 100,
       totalRiceBallPoints: 4200,
       showConfirmationModal: false,
@@ -849,11 +850,9 @@ export default {
       }
     },
     generateTimeOptions() {
-      for (let hour = 0; hour < 24; hour++) {
-        for (let minute of [0, 30]) {
-          this.timeOptions.push(`${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`);
-        }
-      }
+      for (let hour = 12; hour <= 21; hour++) {
+    this.timeOptions.push(`${hour.toString().padStart(2, '0')}:00`);
+  }
     },
     selectTime(index) {
       this.selectedButtonIndex = index;
@@ -862,26 +861,32 @@ export default {
       this.selectedHour = hour;
       this.selectedMinute = minute;
     },
-set() {
-  if (this.date && this.selectedHour && this.selectedMinute && this.numberOfPeople > 0) { 
-    const dateTime = new Date(this.date);
-    dateTime.setHours(parseInt(this.selectedHour));
-    dateTime.setMinutes(parseInt(this.selectedMinute)); 
-    
-    
-    // dateTime.toLocaleDateString과 toLocaleTimeString을 사용하여 포맷팅 
-    this.selectedDate = `${dateTime.getFullYear()}-${(dateTime.getMonth()+1).toString().padStart(2, '0')}-${dateTime.getDate().toString().padStart(2, '0')}`;
-    this.selectedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
-    
-    // 날짜와 시간을 조합 (하이픈 없이) 및 추가 문자열 조정 
-    this.selectedDateTime = `${this.selectedDate} ${this.selectedTime}`; 
-    this.selectedDateTime = this.selectedDateTime.replace(/(\d{4})(\d{2})(\d{2})/, '$1-$2-$3');
+    timeToEnum(time) {
+      const [hour] = time.split(":").map(Number);
+      let period = "AFTERNOON";
 
-    this.showConfirmationModal = true; // 확정 모달 창 표시 
-  } 
-  
-  this.modal = false; // 기존 모달 창은 닫기 
-  }, 
+      if (hour >= 12 && hour <= 21) {
+        let hourEnum = hour === 12 ? 12 : hour - 12;
+        return `${period}_${hourEnum}`;
+      } else {
+        throw new Error("Invalid time period");
+      }
+    },
+    set() {
+      if (this.date && this.selectedHour && this.selectedMinute && this.numberOfPeople > 0) {
+        const dateTime = new Date(this.date);
+        dateTime.setHours(parseInt(this.selectedHour));
+        dateTime.setMinutes(parseInt(this.selectedMinute));
+
+        this.selectedDate = `${dateTime.getFullYear()}-${(dateTime.getMonth() + 1).toString().padStart(2, '0')}-${dateTime.getDate().toString().padStart(2, '0')}`;
+        this.selectedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
+
+        this.selectedDateTime = `${this.selectedDate} ${this.selectedTime}`;
+        this.showConfirmationModal = true; // 확정 모달 창 표시
+      }
+
+      this.modal = false; // 기존 모달 창은 닫기
+    },
     handleTouchMove(event) {
       if (Math.abs(event.touches[0].clientY - event.touches[0].pageY) > 10) {
         event.preventDefault();
@@ -900,10 +905,12 @@ set() {
           this.showConfirmationModal = false;
           this.showReservationConfirmationModal = true;
 
+          const timeEnum = this.timeToEnum(`${this.selectedHour}:${this.selectedMinute}`);
+
         const reservationData = {
                reservationDate: this.selectedDate,
                peopleCount: this.numberOfPeople,
-               reservationTime: this.selectedTime,
+               reservationTime: timeEnum,
                depositAmount: this.depositAmount,
                restaurantId: this.$route.params.id
           };
@@ -945,7 +952,7 @@ confirmReservation2() {
 
       // 결제 정보 설정
       this.paymentData = {
-        pg: "kakaopay.TC0ONETIME",
+        pg: 'html5_inicis',
         pay_method: totalAmount === 0 ? "point" : "card",
         merchant_uid: merchantUid,
         name: this.restaurantName,
@@ -957,10 +964,12 @@ confirmReservation2() {
         pointUsage: riceBallInput
       };
 
+      const timeEnum = this.timeToEnum(`${this.selectedHour}:${this.selectedMinute}`);
+
       this.reservationData = {
         peopleCount: this.numberOfPeople,
         reservationDate: this.selectedDate,
-        reservationTime: this.selectedTime,
+        reservationTime: timeEnum,
         reservationName: this.visitorName,
         reservationTel: this.visitorContact,
         requestContent: this.customerRequest,
@@ -1088,10 +1097,12 @@ confirmReservation2() {
 </script>
 
 <style scoped>
+ .v-date-picker-table {
+    width: 350px;
+  }
 .custom-card {
   background-color: rgba(251, 251, 251, 0.89);
 }
-
 
 input[type="number"] {
   border: 1px solid #ccc;
