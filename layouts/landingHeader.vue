@@ -10,7 +10,6 @@
                 <img src="~/assets/images/dsillogoround.png" alt="" />
               </v-avatar>
             </nuxt-link>
-
             <v-spacer></v-spacer>
             <!-- 햄버거 버튼 요기부터 -->
             <v-app-bar-nav-icon
@@ -106,7 +105,6 @@
                     >
                   </v-btn>
                 </div>
-
                 <input
                   class="white flex-1 ps-5"
                   type="text"
@@ -314,7 +312,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss">
 .hero-section {
   background-image: url("@/assets/images/dsil-header-bg.png");
@@ -327,3 +324,10 @@ export default {
   margin: 4px;
 }
 </style>
+
+
+
+
+
+
+

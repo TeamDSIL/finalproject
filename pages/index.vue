@@ -97,12 +97,10 @@
       <!-- </v-row>
       </v-container> -->
     </div>
-
     <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
     <div :style="randomImageStyle" class="random-image" @click="openRoulette">
       <img src="@/assets/images/dsil_Characters.png" alt="Dynamic Character" />
     </div>
-
     <!-- 모달 창 -->
     <v-dialog
       v-model="isRouletteOpen"
@@ -119,10 +117,8 @@ import axios from "axios";
 import { CardSection } from "@/assets/database/data.js";
 import Roulette from "../components/main/Roulette.vue";
 import Topten from "../components/main/Topten.vue";
-
 export default {
   components: { Roulette, Topten },
-
   layout: "landingHeader",
   head: {
     title: "Home",
@@ -242,7 +238,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss">
 /* 전역 스타일 */
 .bg-transparent {
@@ -251,7 +246,6 @@ export default {
 .o-hidden {
   overflow: hidden !important;
 }
-
 /* 전역 스타일로도 컴포넌트 스타일 정의 가능하지만 스코프드 스타일 권장 */
 .image-container {
   position: relative;
