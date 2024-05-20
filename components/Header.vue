@@ -15,6 +15,7 @@
               <!-- <span style="font-weight: bold; margin-left: 8px; text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); font-size: 1em; padding: 10px; border-radius: 5px; ">
         DSIL: 실시간예약
     </span> -->
+
               <div class="form-location flex-grow-1 d-none d-md-flex border rounded " style="margin-left: 30px;">
                 <div class=" d-flex align-center ps-5">
                   <v-icon small left>mdi-map-marker</v-icon>
@@ -29,6 +30,9 @@
                 </v-btn>
               </div>
               <v-spacer></v-spacer>
+
+
+              
               <v-dialog
                 v-model="dialog"
                 width="500"

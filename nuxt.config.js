@@ -1,10 +1,11 @@
 import colors from "vuetify/es5/util/colors";
 export default {
   server: {
-    host: '0.0.0.0', // 모든 IP 주소에서 접근 가능
-    port: 3000      // 원하는 포트 번호
+    host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
+    port: 3000, // 원하는 포트 번호
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
+  
   router: {
     extendRoutes(routes, resolve) {
       // 기존 라우트 수정도 가능
@@ -29,15 +30,21 @@ export default {
       if (mydiningList !== -1) {
         routes[mydiningList].path = "/myDining/MydiningPage/:id";
       }
-
-      const reserveIndex = routes.findIndex(
+      const detailIndex = routes.findIndex(
         (route) => route.name === "restaurant-RestaurantDetailPage"
       );
-      if (reserveIndex !== -1) {
-        routes[reserveIndex].path = "/restaurant/detail";
+      if (detailIndex !== -1) {
+        routes[detailIndex].path = "/restaurant/detail/:id";
+      }
+      const listIndex = routes.findIndex(
+        (route) => route.name === "restaurant-RestaurantListPage"
+      );
+      if (listIndex !== -1) {
+        routes[listIndex].path = "/restaurant/list";
       }
     },
   },
+
   head: {
     titleTemplate: "%s - food-truck",
     title: "food-truck",

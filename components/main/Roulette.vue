@@ -4,7 +4,7 @@
       <v-btn
         v-for="menu in menus"
         :key="menu.name"
-        :color="menu.selected ? 'yellow' : 'grey'"
+        :color="menu.selected ? 'primary' : 'white'"
         @click="toggleMenu(menu)"
         >{{ menu.name }}</v-btn
       >
@@ -20,9 +20,7 @@
       >메뉴 고르기 시작!</v-btn
     >
     <div v-if="finalMenu" class="final-menu">최종 메뉴: {{ finalMenu }}</div>
-    <div :class="{ spinning: isSpinning }">
-      {{ finalMenu }}
-    </div>
+
     <v-btn @click="closeModal">닫기</v-btn>
   </div>
 </template>
@@ -47,7 +45,7 @@ export default {
       ],
       selectedMenus: [],
       finalMenu: "",
-      isSpinning: false, // 이 상태를 추가해야 합니다.
+      isSpinning: false,
       showFinalResult: false,
     };
   },
@@ -112,7 +110,7 @@ export default {
 .menu-selection .v-btn {
   margin: 0.5rem;
   border-color: #e0e0e0;
-  color: grey;
+  color: red;
 }
 
 .menu-selection .v-btn.black--text {

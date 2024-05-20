@@ -13,7 +13,6 @@
           <v-img :src="require('~/assets/images/DSILnewLOGO.png')" class="review-logo" width="150px"></v-img>
         </div>
             </nuxt-link>
-
             <v-spacer></v-spacer>
             <!-- 햄버거 버튼 요기부터 -->
             <v-app-bar-nav-icon
@@ -109,7 +108,6 @@
                     >
                   </v-btn>
                 </div>
-
                 <input
                   class="white flex-1 ps-5"
                   type="text"
@@ -317,11 +315,10 @@ export default {
   },
 };
 </script>
-
 <style lang="scss">
 .hero-section {
-  // background-image: url("@/assets/images/dsil-header-bg.png");
-  // background-size: cover;
+  background-image: url("@/assets/images/dsil-header-bg.png");
+  background-size: cover;
   .nav {
     display: none;
   }
@@ -330,3 +327,10 @@ export default {
   margin: 4px;
 }
 </style>
+
+
+
+
+
+
+
