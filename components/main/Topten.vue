@@ -1,8 +1,8 @@
 <template>
   <v-container>
     <!-- Top 10 조회 -->
-    <h1>Top 10 조회</h1>
-    <v-row>
+    <span style="font-size: xx-large; font-weight: bold;">TOP 10 조회</span>
+    <v-row style="margin-top: 10px; margin-bottom: 10px;">
       <v-col
         cols="12"
         sm="6"
@@ -12,14 +12,14 @@
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
-          <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
+          <v-card-title><span style="color: #D32F2F; font-weight: bold;">{{ item.rank }}위 &nbsp;</span> {{ item.name }}</v-card-title>
           <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
         </v-card>
       </v-col>
     </v-row>
     <!-- Top 10 북마크 -->
-    <h1>Top 10 북마크</h1>
-    <v-row>
+    <span style="font-size: xx-large; font-weight: bold;">TOP 10 북마크</span>
+    <v-row style="margin-top: 10px; margin-bottom: 10px;">
       <v-col
         cols="12"
         sm="6"
@@ -29,14 +29,14 @@
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
-          <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
+          <v-card-title><span style="color: #D32F2F; font-weight: bold;">{{ item.rank }}위 &nbsp;</span> {{ item.name }}</v-card-title>
           <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
         </v-card>
       </v-col>
     </v-row>
     <!-- Top 10 예약 -->
-    <h1>Top 10 예약</h1>
-    <v-row>
+    <span style="font-size: xx-large; font-weight: bold;">TOP 10 예약</span>
+    <v-row style="margin-top: 10px; margin-bottom: 10px;">
       <v-col
         cols="12"
         sm="6"
@@ -46,7 +46,7 @@
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
-          <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
+          <v-card-title><span style="color: #D32F2F; font-weight: bold;">{{ item.rank }}위 &nbsp;</span> {{ item.name }}</v-card-title>
           <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
         </v-card>
       </v-col>

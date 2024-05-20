@@ -293,13 +293,17 @@
                                   리뷰 보기
                                   <!-- <v-icon right small>mdi-plus</v-icon> -->
                                 </v-btn>
-                                <v-btn
-                                  color="primary"
-                                  small
-                                  class="detail-read-view"
-                                >
-                                  자세히 보기
-                                </v-btn>
+                                <nuxt-link :to="`/restaurant/detail/${like.restaurantId}`">
+  <v-btn
+    color="primary"
+    small
+    class="detail-read-view"
+  >
+    자세히 보기
+  </v-btn>
+</nuxt-link>
+
+
                               </div>
                             </div>
                           </div>
@@ -578,6 +582,7 @@ export default {
         .then((response) => {
           // 응답 데이터를 bookmarksList 배열에 저장합니다
           this.bookmarksList = response.data;
+          console.log("북마크데이터~~",this.bookmarksList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
