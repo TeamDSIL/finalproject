@@ -17,7 +17,6 @@
         </v-card>
       </v-col>
     </v-row>
-
     <!-- Top 10 북마크 -->
     <h1>Top 10 북마크</h1>
     <v-row>
@@ -35,7 +34,6 @@
         </v-card>
       </v-col>
     </v-row>
-
     <!-- Top 10 예약 -->
     <h1>Top 10 예약</h1>
     <v-row>
@@ -55,10 +53,8 @@
     </v-row>
   </v-container>
 </template>
-
 <script>
 import axios from "axios";
-
 export default {
   data() {
     return {
@@ -158,24 +154,20 @@ export default {
       }
       return items;
     },
-
     goToRestaurantDetail(restaurantId) {
       this.$router.push(`/restaurant/detail/${restaurantId}`);
     },
   },
 };
 </script>
-
 <style scoped>
 .v-container {
   margin-bottom: 40px; /* 각 섹션의 하단 여백을 40px로 설정 */
 }
-
 .v-card {
   max-width: 100%;
   margin-bottom: 20px; /* 카드 간의 간격을 20px로 설정 */
 }
-
 .v-img {
   width: 100%; /* 이미지가 카드 너비에 맞도록 설정 */
 }

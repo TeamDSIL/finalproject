@@ -91,147 +91,16 @@
     </div>
     <!-- section-2  4,8-->
     <div>
-      <v-container class="py-15">
-        <v-row>
-          <v-col cols="12">
-            <!-- 예약 -->
-            <div class="d-flex justify-space-between align-end flex-wrap">
-              <div>
-                <h2>예약 TOP 10</h2>
-                <h6 class="grey--text grey--lighten-3 font-weight-regular">
-                  최근 7일간 예약 TOP 10의 식당 리스트를 제공합니다.
-                </h6>
-              </div>
-              <div>
-                <nuxt-link to="" class="text-decoration-none"
-                  >View all collections</nuxt-link
-                >
-              </div>
-            </div>
-          </v-col>
-          <v-col
-            v-for="(item, index) in reservation"
-            :key="`reservation-${index}`"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
-          >
-            <nuxt-link
-              to="/resturant/SearchResturant"
-              class="text-decoration-none"
-            >
-              <v-card class="br-10">
-                <v-img
-                  :src="item.img"
-                  gradient="to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 1)"
-                  class="p-relative"
-                >
-                  <div class="p-absolute bottom-0 pa-5">
-                    <h5 class="white--text">{{ item.name }}</h5>
-                    <div class="d-flex">
-                      <p class="text-sm white--text mb-0">30 Places</p>
-                      <v-icon small color="white">mdi-chevron-right</v-icon>
-                    </div>
-                  </div>
-                </v-img>
-              </v-card>
-            </nuxt-link>
-          </v-col>
-          <!-- 조회 -->
-          <v-col cols="12">s
-            <div class="d-flex justify-space-between align-end flex-wrap">
-              <div>
-                <h2>조회 TOP 10</h2>
-                <h6 class="grey--text grey--lighten-3 font-weight-regular">
-                  최근 1일간 조회 TOP 10의 식당 리스트를 제공합니다.
-                </h6>
-              </div>
-              <div>
-                <nuxt-link to="" class="text-decoration-none"
-                  >View all collections</nuxt-link
-                >
-              </div>
-            </div>
-          </v-col>
-          <v-col
-            v-for="(item, index) in read"
-            :key="`read-${index}`"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
-          >
-            <nuxt-link
-              to="/resturant/SearchResturant"
-              class="text-decoration-none"
-            >
-              <v-card class="br-10">
-                <v-img
-                  :src="item.img"
-                  gradient="to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 1)"
-                  class="p-relative"
-                >
-                  <div class="p-absolute bottom-0 pa-5">
-                    <h5 class="white--text">{{ item.name }}</h5>
-                    <div class="d-flex">
-                      <p class="text-sm white--text mb-0">30 Places</p>
-                      <v-icon small color="white">mdi-chevron-right</v-icon>
-                    </div>
-                  </div>
-                </v-img>
-              </v-card>
-            </nuxt-link>
-          </v-col>
-          <!-- 즐겨찾기 -->
-          <v-col cols="12">
-            <div class="d-flex justify-space-between align-end flex-wrap">
-              <div>
-                <h2>즐겨찾기 TOP 10</h2>
-                <h6 class="grey--text grey--lighten-3 font-weight-regular">
-                  최근 7일간 즐겨찾기 TOP 10의 식당 리스트를 제공합니다.
-                </h6>
-              </div>
-              <div>
-                <nuxt-link to="" class="text-decoration-none"
-                  >View all collections</nuxt-link
-                >
-              </div>
-            </div>
-          </v-col>
-          <v-col
-            v-for="(item, index) in favorites"
-            :key="`favorites-${index}`"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
-          >
-            <nuxt-link
-              to="/resturant/SearchResturant"
-              class="text-decoration-none"
-            >
-              <v-card class="br-10">
-                <v-img
-                  :src="item.img"
-                  gradient="to bottom, rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 0), rgba(0,0,0, 1)"
-                  class="p-relative"
-                >
-                  <div class="p-absolute bottom-0 pa-5">
-                    <h5 class="white--text">{{ item.name }}</h5>
-                    <div class="d-flex">
-                      <p class="text-sm white--text mb-0">30 Places</p>
-                      <v-icon small color="white">mdi-chevron-right</v-icon>
-                    </div>
-                  </div>
-                </v-img>
-              </v-card>
-            </nuxt-link>
-          </v-col>
-        </v-row>
-      </v-container>
+      <!-- <v-container class="py-15">
+        <v-row> -->
+      <Topten></Topten>
+      <!-- </v-row>
+      </v-container> -->
     </div>
-
+    <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
+    <div :style="randomImageStyle" class="random-image" @click="openRoulette">
+      <img src="@/assets/images/dsil_Characters.png" alt="Dynamic Character" />
+    </div>
     <!-- 모달 창 -->
     <v-dialog
       v-model="isRouletteOpen"
@@ -246,10 +115,10 @@
 <script>
 import axios from "axios";
 import { CardSection } from "@/assets/database/data.js";
-import Roulette from '../components/main/Roulette.vue';
+import Roulette from "../components/main/Roulette.vue";
+import Topten from "../components/main/Topten.vue";
 export default {
   components: { Roulette, Topten },
-
   layout: "landingHeader",
   head: {
     title: "Home",
@@ -261,20 +130,24 @@ export default {
       randomImageStyle: {}, // 랜덤 이미지 스타일
       food: [
         {
-          img: require("~/assets/images/food/9.png"),
-          name: "한식",
+          img: require("~/assets/images/mainCategory/KOREAN.png"),
+          name: "KOREAN",
+          displayName: "한식",
         },
         {
-          img: require("~/assets/images/food/10.png"),
-          name: "중식",
+          img: require("~/assets/images/mainCategory/CHINESE.jpg"),
+          name: "CHINESE",
+          displayName: "중식",
         },
         {
-          img: require("~/assets/images/food/11.png"),
-          name: "일식",
+          img: require("~/assets/images/mainCategory/JAPANESE.jpg"),
+          name: "JAPANESE",
+          displayName: "일식",
         },
         {
-          img: require("~/assets/images/food/12.png"),
-          name: "양식",
+          img: require("~/assets/images/mainCategory/WESTERN.jpg"),
+          name: "WESTERN",
+          displayName: "양식",
         },
         {
           img: require("~/assets/images/food/14.png"),
@@ -299,7 +172,6 @@ export default {
       ],
       alcohol: [
         {
-          id: 9,
           img: require("~/assets/images/food/9.png"),
           name: "BEER",
           displayName: "맥주/호프",
@@ -338,61 +210,8 @@ export default {
         },
         {
           img: require("~/assets/images/food/12.png"),
-          name: "데이트",
-        },
-      ],
-      reservation: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Best Of New York",
-        },
-      ],
-      read: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
-        },
-      ],
-      favorites: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
+          name: "DATE",
+          displayName: "데이트",
         },
       ],
     };
@@ -419,7 +238,6 @@ export default {
   },
 };
 </script>
-
 <style lang="scss">
 /* 전역 스타일 */
 .bg-transparent {
@@ -428,7 +246,6 @@ export default {
 .o-hidden {
   overflow: hidden !important;
 }
-
 /* 전역 스타일로도 컴포넌트 스타일 정의 가능하지만 스코프드 스타일 권장 */
 .image-container {
   position: relative;
