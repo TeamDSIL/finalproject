@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import KakaoMap from "../api/MainMap.vue";
+import MainMap from "../api/MainMap.vue";
 
 export default {
   name: "App",
