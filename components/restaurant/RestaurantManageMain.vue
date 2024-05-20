@@ -22,6 +22,10 @@
           전체리뷰보기
 
         </v-tab>
+        <v-tab class="text-capitalize" href="#tab-4">
+          예약통계보기
+
+        </v-tab>
 
 
         <v-tab class="text-capitalize" @click="goToRestaurantManage">
@@ -44,7 +48,7 @@
           <v-row>
             <v-col cols="12">
               <!-- 실시간 이용현황 버튼. 클릭시 컬러 변경되게 설정 -->
-              <h4 class="silsigan-use-title">실시간 이용 현황: {{ restaurant.crowd }}</h4>
+              <h4 class="silsigan-use-title">실시간 이용 현황</h4>
               <v-btn :color="restaurant.crowd === 'AVAILABLE' ? '#1DDB16' : ''" @click="toggleSelection('AVAILABLE')">
                 여유
               </v-btn>
@@ -362,6 +366,31 @@
         </v-tab-item>
 
 
+        <!-- 탭4에 해당하는화면 -->
+        <v-tab-item value="tab-4">
+          <v-container>
+    <div class="reservation-stats">
+      <v-row>
+        <v-col cols="12">
+          <h3 class="fw-bold mb-4">예약 통계</h3>
+          <v-btn @click="fetchMonthlyStats" color="primary" class="mb-4">월별 통계 보기</v-btn>
+          <v-btn @click="fetchWeeklyStats" color="primary" class="mb-4">주간 통계 보기</v-btn>
+        </v-col>
+      </v-row>
+      <v-row>
+        <v-col cols="12">
+          <div class="stats-container">
+            <div v-for="stat in stats" :key="stat.period" class="stat-card">
+              <div class="stat-period">{{ stat.period }}</div>
+              <div class="stat-count">{{ stat.count }} 건</div>
+            </div>
+          </div>
+        </v-col>
+      </v-row>
+    </div>
+  </v-container>
+          </v-tab-item>
+
 
 
       </v-tabs-items>
@@ -396,10 +425,18 @@ export default {
       this.fetchReservations(restaurantId);
       this.fetchReviews(restaurantId);
       this.fetchAvailableTimes(restaurantId);
+      this.year = new Date().getFullYear();
     },
     data() {
       return {
         // isClicked: false,
+        stats: [],
+      headers: [
+        { text: '기간', value: 'period' },
+        { text: '예약 건수', value: 'count' },
+      ],
+      restaurantId: null,
+      year: null,
         
         times: [
           { id: 1, label: '오후12:00', clicked: false, slot: 'AFTERNOON_12' },
@@ -451,6 +488,37 @@ export default {
 
   methods: {
     // 통계 데이터를 가져오는 메서드
+    async fetchMonthlyStats() {
+      const restaurantId = this.$route.params.id;
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/monthly/${restaurantId}/${this.year}`);
+        this.stats = Object.keys(response.data).map(month => ({
+          period: `${month}월`,
+          count: response.data[month],
+        }));
+      } catch (error) {
+        console.error('Failed to fetch monthly stats:', error);
+      }
+    },
+    async fetchWeeklyStats() {
+      const restaurantId = this.$route.params.id;
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/weekly/${restaurantId}/${this.year}`);
+        this.stats = Object.keys(response.data).map(week => {
+          const month = new Date(this.year, 0, (week - 1) * 7 + 1).getMonth() + 1;
+          const weekOfMonth = Math.ceil(((week - 1) * 7 + 1 - 1) / 7) + 1;
+          return {
+            period: `${this.year}년 ${weekOfMonth}주`,
+            count: response.data[week],
+          };
+        });
+      } catch (error) {
+        console.error('Failed to fetch weekly stats:', error);
+      }
+    },
+  
+
+
     
     async toggleTime(time) {
       const restaurantId = this.$route.params.id;
@@ -703,4 +771,44 @@ export default {
   margin-bottom: 20px;
 }
 
+
+/* 여기부터통계관련 */
+
+.reservation-stats {
+  padding: 20px;
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+.stats-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+}
+
+.stat-card {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: calc(33.333% - 16px); /* 3 columns layout with 16px gap */
+  box-sizing: border-box;
+}
+
+.stat-period {
+  font-size: 1em;
+  /* font-weight: bold; */
+}
+
+.stat-count {
+  margin-top: 8px;
+  font-size: 2em;
+  color: #555;
+  font-weight: bold;
+  
+}
+
 </style>
+
+
+<!-- 통계부분을 수정하고 있습니다......화이팅. -->
