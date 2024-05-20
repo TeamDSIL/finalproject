@@ -36,15 +36,17 @@ export default {
       if (mydiningList !== -1) {
         routes[mydiningList].path = "/myDining/MydiningPage/:id";
       }
-
-      const reserveIndex = routes.findIndex(
-        (route) => route.name === "restaurant-RestaurantDetailPage"
-      );
-      if (reserveIndex !== -1) {
-        routes[reserveIndex].path = "/restaurant/detail";
+      const detailIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantDetailPage');
+      if (modifyIndex !== -1) {
+        routes[modifyIndex].path = '/restaurant/detail/:id';
       }
-    },
+      const listIndex = routes.findIndex(route => route.name === 'restaurant-RestaurantListPage');
+      if (modifyIndex !== -1) {
+        routes[modifyIndex].path = '/restaurant/list';
+      }
+    }
   },
+
   head: {
     titleTemplate: "%s - food-truck",
     title: "food-truck",
