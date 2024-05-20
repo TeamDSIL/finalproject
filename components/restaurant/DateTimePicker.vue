@@ -13,8 +13,9 @@
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
-              :class="['time-button', selectedHour === time.split(':')[0] && selectedMinute === time.split(':')[1] ? 'selected' : '']">
-              {{ time }}
+            :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
+      :disabled="isDisabled(time)">
+      {{ time }}
             </v-btn>
           </v-row>
         </div>
@@ -106,7 +107,7 @@
       <v-card class="custom-card">
         <v-card-title class="title">
           <p style="margin-top: 2px;">예약금 결제</p>
-          <v-icon @click="cancelPayment" style="position: absolute; right: 20px; top: 20px;">mdi-close</v-icon>
+          <v-icon @click="cancelPayment" style="position: absolute; right: 9px; top: 20px;">mdi-close</v-icon>
     </v-card-title>
             <v-card-title class="restaurant-name" style="margin-bottom: 13px;">
           <div style="margin-top: -20px;">{{ restaurantName }}</div>
@@ -714,10 +715,20 @@ export default {
       agreeTerms: false,
       htmlContent: '', 
       showSpinner: false,
-      customerRequest: ''
+      customerRequest: '',
+      selectedButtonIndex: null,
+    currentTime: new Date(),
+    selectedDate: new Date(), 
     };
   },
+  mounted(){
+    this.generateTimeOptions();
+  },
   watch: {
+    selectedDate(newVal) {
+    // 선택된 날짜가 변경될 때마다 현재 시간을 갱신
+    this.currentTime = new Date();
+  },
     showConfirmationModal(newVal) {
       if (newVal) {
         this.startTimer();
@@ -855,12 +866,36 @@ export default {
   }
     },
     selectTime(index) {
-      this.selectedButtonIndex = index;
-      const time = this.timeOptions[index];
-      const [hour, minute] = time.split(":");
-      this.selectedHour = hour;
-      this.selectedMinute = minute;
-    },
+    if (this.isDisabled(this.timeOptions[index])) return;
+
+    this.selectedButtonIndex = index;
+    const time = this.timeOptions[index];
+    const [hour, minute] = time.split(":");
+    this.selectedHour = hour;
+    this.selectedMinute = minute;
+  },
+  isDisabled(time) {
+    const [hour, minute] = time.split(":").map(Number);
+    const currentHour = this.currentTime.getHours();
+    const currentMinute = this.currentTime.getMinutes();
+
+    const selectedDate = new Date(this.date); // 선택한 날짜로부터 Date 객체 생성
+    const currentDate = new Date();
+
+    const isToday = selectedDate.toDateString() === currentDate.toDateString();
+
+    if (isToday) {
+      if (hour < currentHour || (hour === currentHour && minute < currentMinute)) {
+        return true;
+      }
+    }
+
+    return false;
+  },
+  isSelected(time) {
+    const [hour, minute] = time.split(":");
+    return this.selectedHour === hour && this.selectedMinute === minute;
+  },
     timeToEnum(time) {
       const [hour] = time.split(":").map(Number);
       let period = "AFTERNOON";
