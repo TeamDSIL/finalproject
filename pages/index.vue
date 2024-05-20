@@ -123,7 +123,7 @@ import Topten from "../components/main/Topten.vue";
 export default {
   components: { Roulette, Topten },
 
-  layout: "landingHeader",
+  // layout: "landingHeader",
   head: {
     title: "Home",
   },

@@ -1,13 +1,16 @@
 <template>
   <div>
     <v-container style="margin-bottom: 30px">
+      <v-col cols="12" class="restaurant-title-img">
+        <v-img contain :src="require('~/assets/images/mydiningRestaurant.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px;"></v-img>
       <div
         class="ps-0 text-primary"
         style="font-size: larger; font-weight: bold"
       >
         마이다이닝
       </div>
-
+    </v-col>
       <div>
         <v-tabs v-model="tab" class="mb-8">
           <v-tab class="text-capitalize" href="#tab-1"> 예약현황 </v-tab>
@@ -131,10 +134,10 @@
                                     reservation.reservationState === 'COMPLETED'
                                   "
                                 >
-                                  <nuxt-link
-                                    :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
-                                    class="text-decoration-none"
-                                  >
+                                <nuxt-link
+  :to="{ path: '/myDining/WriteReviewPage', query: { reservationId: reservation.reservationId, name: reservation.name } }"
+  class="text-decoration-none"
+>
                                     <v-btn
                                       color="primary"
                                       small
@@ -548,7 +551,7 @@ export default {
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
-          console.log(this.reserveRestaurantList);
+          console.log("레저베이션"+this.reserveRestaurantList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);

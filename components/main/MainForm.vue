@@ -12,7 +12,7 @@
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <div>
-                <h1>Home Content</h1>
+                <!-- <h1>Home Content</h1> -->
                 <!-- 추가적인 컨텐츠 -->
                 <!-- <div style="width: 100%; height: 350px"> -->
                 <v-carousel hide-delimiters height="350px">
