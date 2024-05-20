@@ -5,8 +5,7 @@
       <div class="d-flex justify-space-between flex-wrap flex-sm-nowrap mb-3">
         <v-tabs class="mb-3">
           <v-tab class="text-capitalize">식당관리</v-tab>
-          <v-tab class="text-capitalize">예약전체현황</v-tab>
-          <v-tab class="text-capitalize">전체리뷰보기</v-tab>
+          
         </v-tabs>
       </div>
 
@@ -19,8 +18,8 @@
             </v-col>
             <v-col cols="12" sm="6" md="3" v-for="restaurant in restaurants" :key="restaurant.id">
               <v-card @click="goToRestaurantManagement(restaurant)" class="ma-2">
-                <v-img :src="restaurant.img" height="200px" class="restaurant-image"></v-img>
-                <v-card-title>{{ restaurant.name }}</v-card-title>
+                <v-img :src="restaurant.img" height="300px" class="restaurant-image"></v-img>
+                <v-card-title style="font-weight: bold;">{{ restaurant.name }}</v-card-title>
                 <v-card-actions>
                   <v-btn text color="primary">Manage</v-btn>
                 </v-card-actions>
@@ -30,6 +29,9 @@
         </v-col>
       </v-row>
     </v-container>
+    <br>
+    <br>
+    <br>
     <Footer />
   </div>
 </template>

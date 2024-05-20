@@ -5,6 +5,7 @@ export default {
     port: 3000, // 원하는 포트 번호
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
+  
   router: {
     extendRoutes(routes, resolve) {
       // 기존 라우트 수정도 가능
