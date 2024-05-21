@@ -26,7 +26,7 @@
       </v-col>
     </v-row>
     <!-- Top 10 북마크 -->
-    <span style="font-size: xx-large; font-weight: bold">TOP 10 북마크</span>
+    <span style="font-size: xx-large; font-weight: bold">TOP 10 즐겨찾기</span>
     <v-row style="margin-top: 10px; margin-bottom: 10px">
       <v-col
         cols="12"

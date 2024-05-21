@@ -14,8 +14,8 @@
 
         <v-dialog v-model="dsilModal" width="600">
           <v-card>
-            <v-card-title>
-              <span class="headline">드실 선택</span>
+            <v-card-title >
+              <span style="font-size: large; font-weight: bold; margin-top: 10px;">빠른 검색</span>
             </v-card-title>
             <v-card-text>
               <div
@@ -23,18 +23,25 @@
                 :key="category.name"
                 class="my-3"
               >
-                <span class="headline">{{ category.displayName }}</span>
-                <div class="button-grid">
+              <div style="margin-bottom: 10px; display: flex;"><v-img
+                contain
+                :src="require(`~/assets/images/clikCategory/${ category.img }.png`)"
+                width="20px"
+                style="max-width: 20px; margin-right: 5px"
+              ></v-img><span style="font-weight: bold; font-size: large; color: black;">{{ category.displayName }}</span></div>
+                
+                <div class="button-grid" >
                   <v-btn
                     v-for="item in category.items"
                     :key="item.name"
-                    :color="
-                      category.selected.some(
+                    :class="{
+                      'btn-selected': category.selected.some(
                         (selected) => selected.name === item.name
-                      )
-                        ? 'primary'
-                        : ''
-                    "
+                      ),
+                      'btn-unselected': !category.selected.some(
+                        (selected) => selected.name === item.name
+                      ),
+                    }"
                     text
                     @click="toggleSelection(category.selected, item)"
                   >
@@ -51,7 +58,7 @@
           </v-card>
         </v-dialog>
 
-        <
+        
         <div
           class="search-bar-container flex-grow-1 d-none d-md-flex border rounded"
         >
@@ -61,11 +68,13 @@
             large
             text
             class="text-capitalize rounded-0"
+            width="120px"
+            style="background-color: rgb(210, 63, 87);"
             @click="dsilModal = true"
           >
             <!-- <v-icon small>mdi-crosshairs-gps</v-icon> -->
-            <span class="grey--text text--darken-4 font-weight-regular"
-              >드실</span
+            <span  style="color: white; font-weight: bold;"
+              >빠른검색하기</span
             >
           </v-btn>
           <input
@@ -73,6 +82,7 @@
             type="text"
             placeholder="카테고리 및 음식이름을 입력해주세요"
             v-model="searchQuery"
+            @keyup.enter="search"
           />
           <v-btn
             icon
@@ -80,6 +90,7 @@
             tile
             class="rounded-l-0 text-capitalize"
             @click="search"
+            width="100px"
             >Search
             <!-- <v-icon small>mdi-magnify</v-icon> -->
           </v-btn>
@@ -148,62 +159,6 @@
   </div>
 </template>
 <script>
-// export default {
-//   data() {
-//       return {
-//           drawer: false,
-//           group: null,
-//           dialog: false,
-//         // shoppingCartDrawer: false,
-//           dsilModal: false,
-//     searchQuery: "",
-//           items: [
-//               {
-//                 action: 'mdi-view-dashboard-variant-outline',
-//                 active: true,
-//                 items: [
-//                     {
-//                       title: 'Review',
-//                       link: '/dashboard/Review',
-//                     },
-//                     {
-//                       title: 'Photos',
-//                       link: '/dashboard/Photos',
-//                     },
-//                     {
-//                       title: 'Order List',
-//                       link: '/dashboard/OrderList',
-//                     },
-//                     {
-//                       title: 'Order History',
-//                       link: '/dashboard/OrderHistory',
-//                     },
-//                     {
-//                       title: 'Followers',
-//                       link: '/dashboard/Followers',
-//                     },
-//                     {
-//                       title: 'Bookmarks',
-//                       link: '/dashboard/Bookmarks',
-//                     },
-//                 ],
-//                 title: 'Dashboards',
-//               },
-//               {
-//               action: 'mdi-silverware-fork-knife',
-//               active: false,
-//                 items: [
-//                     { title: 'Breakfast & brunch' },
-//                     { title: 'New American' },
-//                     { title: 'Sushi' },
-//                 ],
-//                 title: 'Dining',
-//               },
-//           ]
-//       }
-//   }
-// }
-
 export default {
   data: () => ({
     drawer: false,
@@ -213,6 +168,7 @@ export default {
     categories: [
       {
         name: "INDUSTRIAL_DISTRICT",
+        img: "location",
         displayName: "드실장소",
         items: [
           { name: "YEOUIDO_MAPO", displayName: "여의도-마포" },
@@ -234,6 +190,7 @@ export default {
       },
       {
         name: "BY_COUNTRY",
+        img: "forkknife",
         displayName: "드실 음식",
         items: [
           { name: "KOREAN", displayName: "한식" },
@@ -249,6 +206,7 @@ export default {
       },
       {
         name: "MEAT",
+        img: "meet",
         displayName: "드실 고기",
         items: [
           { name: "BEEF", displayName: "소고기" },
@@ -260,6 +218,7 @@ export default {
       },
       {
         name: "SEAFOOD",
+        img: "seafood",
         displayName: "드실 해물",
         items: [
           { name: "SEAFOOD_STEW", displayName: "해물(탕/찜/볶음)" },
@@ -271,6 +230,7 @@ export default {
       },
       {
         name: "ALCOHOL",
+        img: "drink",
         displayName: "드실 주류",
         items: [
           { name: "BEER", displayName: "맥주/호프" },
@@ -282,7 +242,8 @@ export default {
       },
       {
         name: "WITH_WHO",
-        displayName: "뭘까",
+        img: "peoples",
+        displayName: "고객 맞춤",
         items: [
           { name: "SOLO", displayName: "혼밥" },
           { name: "WITH_FRIENDS", displayName: "친구" },
@@ -295,6 +256,7 @@ export default {
       },
       {
         name: "FACILITIES",
+        img: "convinience",
         displayName: "편의시설",
         items: [
           { name: "PARKING_AVAILABLE", displayName: "주차가능" },
@@ -389,5 +351,17 @@ export default {
 <style scoped>
 .button-grid .v-btn {
   margin: 4px;
+}
+
+.btn-selected {
+  background-color: rgb(210, 63, 87) !important;
+  color: white !important;
+  border: 1px solid rgb(210, 63, 87) !important;
+}
+
+.btn-unselected {
+  background-color: white !important;
+  color: rgb(210, 63, 87) !important;
+  border: 1px solid rgb(210, 63, 87) !important;
 }
 </style>
