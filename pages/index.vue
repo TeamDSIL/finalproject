@@ -1,5 +1,6 @@
 <template>
   <div>
+    <!-- <header></header> -->
     <MainForm></MainForm>
     <!-- 카테고리 -->
     <div>
@@ -100,6 +101,7 @@
     <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
     <div :style="randomImageStyle" class="random-image" @click="openRoulette">
       <img src="@/assets/images/dsil_Characters.png" alt="Dynamic Character" />
+      <div class="info-text">메뉴를 추천해 드릴게요.</div>
     </div>
     <!-- 모달 창 -->
     <v-dialog
@@ -119,7 +121,8 @@ import Roulette from "../components/main/Roulette.vue";
 import Topten from "../components/main/Topten.vue";
 export default {
   components: { Roulette, Topten },
-  layout: "landingHeader",
+  // layout: "landingHeader",
+  layout: "Header",
   head: {
     title: "Home",
   },
@@ -224,8 +227,9 @@ export default {
       this.isRouletteOpen = true;
     },
     applyRandomStyle() {
+      const minSize = 50;
       const maxSize = 150; // 최대 크기
-      const size = Math.random() * maxSize; // 랜덤 크기
+      const size = Math.random() * (maxSize - minSize) + minSize; // 최소 크기에서 최대 크기 사이의 랜덤 크기
       this.randomImageStyle = {
         position: "absolute",
         top: `${Math.random() * 100}%`, // 화면의 범위 내에서 랜덤 위치
@@ -252,9 +256,46 @@ export default {
   height: 100vh; // 화면 전체 높이
   width: 100vw; // 화면 전체 너비
 }
+
+.random-image {
+  position: relative;
+  display: inline-block; // 이미지와 텍스트를 컨테이너에 맞게 배치
+  cursor: pointer;
+  width: 100%; // 폭을 명시적으로 지정
+  min-height: 150px; // 최소 높이 지정
+}
+
 .random-image img {
   display: block; // 이미지 블록 레벨로 설정
   max-width: 100%; // 이미지 최대 너비 제한
   height: auto; // 비율 유지
+}
+
+/* 추가적인 컴포넌트 스코프드 스타일 */
+.image-container {
+  cursor: pointer;
+  display: inline-block; // 이미지와 텍스트를 컨테이너에 맞게 배치
+}
+.image-container img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.info-text {
+  position: absolute;
+  top: 0; // 상단에 위치
+  left: 50%; // 수평 중앙에 위치
+  transform: translate(-50%, -100%); // 중앙에서 위로 이동
+  padding: 8px 12px;
+  background-color: #d23f57; // 말풍선 배경
+  color: white; // 텍스트 색상
+  border-radius: 8px; // 둥근 모서리
+  z-index: 1000; // 높은 z-index
+  visibility: hidden; // 초기에 숨김
+  white-space: nowrap;
+}
+
+.random-image:hover .info-text {
+  visibility: visible; // hover 시에만 텍스트 보이게 설정
 }
 </style>

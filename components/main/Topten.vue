@@ -13,7 +13,7 @@
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
-          <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
+          <v-card-text>{{ item.description }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -30,7 +30,7 @@
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
-          <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
+          <v-card-text>{{ item.description }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -47,7 +47,7 @@
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
-          <v-card-text>여기에 설명이 들어갈 수 있습니다.</v-card-text>
+          <v-card-text>{{ item.description }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -170,5 +170,11 @@ export default {
 }
 .v-img {
   width: 100%; /* 이미지가 카드 너비에 맞도록 설정 */
+}
+.v-card-text {
+  height: 60px; /* 카드 텍스트 영역의 높이를 고정 */
+  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
+  text-overflow: ellipsis; /* 넘치는 텍스트는 말줄임표로 표시 */
+  white-space: nowrap; /* 텍스트를 한 줄로 표시 */
 }
 </style>
