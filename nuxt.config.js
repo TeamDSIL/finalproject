@@ -1,46 +1,7 @@
 import colors from "vuetify/es5/util/colors";
+
 export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
-  router: {
-    extendRoutes(routes, resolve) {
-      // 기존 라우트 수정도 가능
-      // 첫 번째 라우트 수정
-      const manageIndex = routes.findIndex(
-        (route) => route.name === "restaurant-RestaurantManageMainPage"
-      );
-      if (manageIndex !== -1) {
-        routes[manageIndex].path = "/restaurant/RestaurantManageMainPage/:id";
-      }
-      // 두 번째 라우트 수정
-      const modifyIndex = routes.findIndex(
-        (route) => route.name === "restaurant-RestaurantModifyPage"
-      );
-      if (modifyIndex !== -1) {
-        routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
-      }
-
-      const writeReview = routes.findIndex(
-        (route) => route.name === "myDining-WriteReviewPage"
-      );
-      if (writeReview !== -1) {
-        routes[writeReview].path = "/myDining/WriteReviewPage/:id";
-      }
-
-      const mydiningList = routes.findIndex(
-        (route) => route.name === "myDining-MydiningPage"
-      );
-      if (mydiningList !== -1) {
-        routes[mydiningList].path = "/myDining/MydiningPage/:id";
-      }
-
-      const reserveIndex = routes.findIndex(
-        (route) => route.name === "restaurant-RestaurantDetailPage"
-      );
-      if (reserveIndex !== -1) {
-        routes[reserveIndex].path = "/restaurant/detail";
-      }
-    },
-  },
   head: {
     titleTemplate: "%s - food-truck",
     title: "food-truck",
@@ -57,14 +18,16 @@ export default {
       { rel: "icon", type: "image/x-icon", href: "" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;900&amp;display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;900&display=swap",
       },
     ],
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["@/assets/scss/foodtruck.scss"],
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/plugins/axios.js', // 추가된 플러그인 경로
+  ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: {
     dirs: ["~/components", "~/components/session"],
@@ -75,7 +38,13 @@ export default {
     "@nuxtjs/vuetify",
   ],
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: [
+    '@nuxtjs/axios', // Axios 모듈 추가
+  ],
+  // Axios 모듈 설정
+  axios: {
+    baseURL: process.env.apiURL || 'http://localhost:8000', // 환경 변수 또는 기본 URL 설정
+  },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
@@ -111,5 +80,30 @@ export default {
   },
   env: {
     apiURL: process.env.VUE_APP_API_URL,
+  },
+  router: {
+    extendRoutes(routes, resolve) {
+      // 기존 라우트 수정
+      const manageIndex = routes.findIndex(route => route.name === "restaurant-RestaurantManageMainPage");
+      if (manageIndex !== -1) {
+        routes[manageIndex].path = "/restaurant/RestaurantManageMainPage/:id";
+      }
+      const modifyIndex = routes.findIndex(route => route.name === "restaurant-RestaurantModifyPage");
+      if (modifyIndex !== -1) {
+        routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
+      }
+      const writeReview = routes.findIndex(route => route.name === "myDining-WriteReviewPage");
+      if (writeReview !== -1) {
+        routes[writeReview].path = "/myDining/WriteReviewPage/:id";
+      }
+      const mydiningList = routes.findIndex(route => route.name === "myDining-MydiningPage");
+      if (mydiningList !== -1) {
+        routes[mydiningList].path = "/myDining/MydiningPage/:id";
+      }
+      const reserveIndex = routes.findIndex(route => route.name === "restaurant-RestaurantDetailPage");
+      if (reserveIndex !== -1) {
+        routes[reserveIndex].path = "/restaurant/detail";
+      }
+    },
   },
 };
