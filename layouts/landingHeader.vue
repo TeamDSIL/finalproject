@@ -6,9 +6,12 @@
         <v-container>
           <div class="d-flex align-center mt-6 mb-10 navbar-container">
             <nuxt-link to="/">
-              <v-avatar tile>
-                <img src="~/assets/images/dsillogoround.png" alt="" />
-              </v-avatar>
+              <!-- <v-avatar tile>
+                <img src="~/assets/images/DSIL!3.png" alt="" />
+              </v-avatar> -->
+              <div class="write-review-logo" style="margin-bottom: 20px;">
+          <v-img :src="require('~/assets/images/DSILnewLOGO.png')" class="review-logo" width="150px"></v-img>
+        </div>
             </nuxt-link>
             <v-spacer></v-spacer>
             <!-- 햄버거 버튼 요기부터 -->

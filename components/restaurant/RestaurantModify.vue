@@ -155,7 +155,6 @@
 
 <script>
 import axios from 'axios';
-
 export default {
   data() {
     return {
@@ -314,20 +313,16 @@ export default {
         })),
       };
       console.log("restaurantData에 들어가는 메뉴이미지:", this.menuItems);
-
       const formData = new FormData();
       formData.append('restaurantData', JSON.stringify(restaurantData));
-
       if (this.restaurant.img instanceof File) {
         formData.append('image', this.restaurant.img);
       }
-
       this.menuItems.forEach((item) => {
         if (item.img instanceof File) {
           formData.append(`menuImages[${item.name}]`, item.img);
         }
       });
-
       try {
         const response = await axios.put(`http://localhost:8000/restaurant/${this.restaurant.id}`, formData);
         console.log('식당 정보가 성공적으로 업데이트되었습니다:', response.data);
@@ -356,86 +351,65 @@ export default {
   },
 };
 </script>
-
 <style>
 .restaurant-manage {
   padding: 20px;
-  background-color: #ffffff; /* 배경색을 하얀색으로 설정 */
+  background-color: #FFFFFF; /* 배경색을 하얀색으로 설정 */
   border-radius: 8px;
 }
-
 .tabs {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
   border-bottom: 2px solid #ddd;
 }
-
 .v-text-field,
 .v-select,
 .v-file-input {
   margin-bottom: 16px;
-  background-color: #ffffff; /* 수정 가능한 input 박스의 기본 배경색을 하얀색으로 설정 */
+  background-color: #FFFFFF; /* 수정 가능한 input 박스의 기본 배경색을 하얀색으로 설정 */
 }
-
 .v-text-field input,
 .v-select input,
 .v-file-input input {
-  background-color: #ffffff;
+  background-color: #FFFFFF;
 }
-
 .v-text-field input:focus,
 .v-select input:focus,
 .v-file-input input:focus {
-  background-color: #ffffff; /* 커서 클릭 시 하얀색으로 변경 */
+  background-color: #FFFFFF; /* 커서 클릭 시 하얀색으로 변경 */
 }
-
 .v-btn {
   border-radius: 8px;
   font-weight: bold;
 }
-
 .v-btn.primary {
-  background-color: #1976d2;
+  background-color: #1976D2;
   color: #fff;
 }
-
 .v-btn.red {
-  background-color: #e53935;
+  background-color: #E53935;
   color: #fff;
 }
-
 .v-btn.success {
-  background-color: #43a047;
+  background-color: #43A047;
   color: #fff;
 }
-
 .v-dialog .v-card {
   border-radius: 12px;
 }
-
 .headline {
   font-size: 1.5rem;
   font-weight: bold;
 }
-
 .v-card-title {
   padding: 16px;
-  background-color: #f5f5f5;
+  background-color: #F5F5F5;
   font-weight: bold;
 }
-
 .v-card-text {
   padding: 16px;
 }
-
 .v-card-actions {
   padding: 16px;
-  background-color: #f5f5f5;
+  background-color: #F5F5F5;
 }
 </style>
-
-  
-  
-  
-  
-
-<!-- 디자인 수정합니다 스타일이요. 스타일 수정하는거에요 스타일.  -->

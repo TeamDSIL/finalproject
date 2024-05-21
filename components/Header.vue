@@ -5,7 +5,7 @@
         <nuxt-link to="/">
           <v-avatar class="me-10" tile>
             <img
-              src="~/assets/images/dsillogoround.png"
+              src="~/assets/images/DSILnewLOGO.png"
               alt=""
               style="width: 100px"
             />

@@ -1,13 +1,20 @@
 <template>
   <div>
     <v-container style="margin-bottom: 30px">
-      <div
-        class="ps-0 text-primary"
-        style="font-size: larger; font-weight: bold"
-      >
-        마이다이닝
-      </div>
-
+      <v-col cols="12" class="restaurant-title-img">
+        <v-img
+          contain
+          :src="require('~/assets/images/mydiningRestaurant.png')"
+          width="20px"
+          style="max-width: 20px; margin-right: 5px"
+        ></v-img>
+        <div
+          class="ps-0 text-primary"
+          style="font-size: larger; font-weight: bold"
+        >
+          마이다이닝
+        </div>
+      </v-col>
       <div>
         <v-tabs v-model="tab" class="mb-8">
           <v-tab class="text-capitalize" href="#tab-1"> 예약현황 </v-tab>
@@ -132,7 +139,14 @@
                                   "
                                 >
                                   <nuxt-link
-                                    :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
+                                    :to="{
+                                      path: '/myDining/WriteReviewPage',
+                                      query: {
+                                        reservationId:
+                                          reservation.reservationId,
+                                        name: reservation.name,
+                                      },
+                                    }"
                                     class="text-decoration-none"
                                   >
                                     <v-btn
@@ -279,13 +293,17 @@
                                   리뷰 보기
                                   <!-- <v-icon right small>mdi-plus</v-icon> -->
                                 </v-btn>
-                                <v-btn
-                                  color="primary"
-                                  small
-                                  class="detail-read-view"
-                                >
-                                  자세히 보기
-                                </v-btn>
+                                <nuxt-link :to="`/restaurant/detail/${like.restaurantId}`">
+  <v-btn
+    color="primary"
+    small
+    class="detail-read-view"
+  >
+    자세히 보기
+  </v-btn>
+</nuxt-link>
+
+
                               </div>
                             </div>
                           </div>
@@ -548,7 +566,7 @@ export default {
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
-          console.log(this.reserveRestaurantList);
+          console.log("레저베이션" + this.reserveRestaurantList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
@@ -564,6 +582,7 @@ export default {
         .then((response) => {
           // 응답 데이터를 bookmarksList 배열에 저장합니다
           this.bookmarksList = response.data;
+          console.log("북마크데이터~~",this.bookmarksList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);

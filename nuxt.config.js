@@ -5,6 +5,7 @@ export default {
     port: 3000, // 원하는 포트 번호
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
+  
   router: {
     extendRoutes(routes, resolve) {
       // 기존 라우트 수정도 가능
@@ -21,13 +22,6 @@ export default {
       );
       if (modifyIndex !== -1) {
         routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
-      }
-
-      const writeReview = routes.findIndex(
-        (route) => route.name === "myDining-WriteReviewPage"
-      );
-      if (writeReview !== -1) {
-        routes[writeReview].path = "/myDining/WriteReviewPage/:id";
       }
 
       const mydiningList = routes.findIndex(
