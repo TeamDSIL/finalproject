@@ -2,15 +2,13 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <h1>{{ InformationName }} 게시판</h1>
-        <v-btn icon @click="openModal()">
-          <v-icon>mdi-plus</v-icon>
-        </v-btn>
+        <div style="font-size: larger; font-weight: bold;">{{ InformationName }} 게시판</div>
+        <v-btn  @click="openModal()"  style="color: rgb(210, 63, 87); margin-top: 10px;"> <v-icon>mdi-plus</v-icon> 새 공지 작성 </v-btn>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12">
-        <h2>공지사항 목록</h2>
+        <div style="font-size: larger; font-weight: bold; margin-bottom: 10px;">공지사항 목록</div>
         <v-data-table
           :headers="headers"
           :items="notices"
