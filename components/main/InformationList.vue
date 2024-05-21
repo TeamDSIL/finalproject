@@ -1,22 +1,41 @@
 <template>
   <v-container>
-    <v-row>
-      <v-col cols="12">
+    <v-row >
+      <v-col cols="12" >
+        <div style="display: flex;">
+          <v-img
+                contain
+                :src="require('~/assets/images/board.png')"
+                width="20px"
+                style="max-width: 20px; margin-right: 5px"
+              ></v-img>
         <div style="font-size: larger; font-weight: bold;">{{ InformationName }} 게시판</div>
-        <v-btn  @click="openModal()"  style="color: rgb(210, 63, 87); margin-top: 10px;"> <v-icon>mdi-plus</v-icon> 새 공지 작성 </v-btn>
+        </div>
+        
+        <v-btn  @click="openModal()"  style="color: rgb(210, 63, 87); margin-top: 15px;"> <v-icon>mdi-plus</v-icon> 새 공지 작성 </v-btn>
       </v-col>
     </v-row>
     <v-row>
       <v-col cols="12">
-        <div style="font-size: larger; font-weight: bold; margin-bottom: 10px;">공지사항 목록</div>
+        <div style="display: flex;">
+          <v-img
+                contain
+                :src="require('~/assets/images/list.png')"
+                width="20px"
+                style="max-width: 20px; margin-right: 5px;  margin-bottom: 20px;"
+              ></v-img>
+        <div style="font-size: larger; font-weight: bold; margin-bottom: 20px;">공지사항 목록</div>
+        </div>
+       
         <v-data-table
           :headers="headers"
           :items="notices"
           :items-per-page="10"
           class="elevation-1"
+          style="margin-bottom: 30px;"
         >
           <template v-slot:item="{ item }">
-            <tr @click="showDetails(item)">
+            <tr @click="showDetails(item)" >
               <td>{{ item.category }}</td>
               <td>{{ item.title }}</td>
               <td>{{ item.postDate }}</td>
@@ -37,66 +56,79 @@
 
     <!-- Create and Edit Notice Modal -->
     <v-dialog v-model="showCreateNoticeModal" max-width="600px">
-      <v-card>
-        <v-card-title>{{
-          editingNotice ? "공지사항 수정" : "공지사항 생성"
-        }}</v-card-title>
-        <v-card-text>
-          <v-container>
-            <v-row>
-              <v-col cols="12">
-                <v-select
-                  v-model="currentNotice.category"
-                  :items="noticeCategorys"
-                  label="공지사항 유형"
-                  required
-                ></v-select>
-              </v-col>
-              <v-col cols="12">
-                <v-text-field
-                  v-model="currentNotice.title"
-                  label="공지 제목"
-                  required
-                ></v-text-field>
-              </v-col>
-              <v-col cols="12">
-                <v-textarea
-                  v-model="currentNotice.contents"
-                  label="내용"
-                  required
-                ></v-textarea>
-              </v-col>
-              <v-col cols="12">
-                <v-file-input
-                  v-model="currentNotice.filePath"
-                  label="파일 첨부"
-                  prepend-icon="mdi-paperclip"
-                  accept="image/*, application/pdf"
-                  @change="onFileChanged"
-                ></v-file-input>
-                <!-- 이미지 미리보기 -->
-                <v-img v-if="imageUrl" :src="imageUrl" height="200"></v-img>
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
-        <v-card-actions>
-          <v-spacer></v-spacer>
-          <v-btn color="red" text @click="closeModal">취소</v-btn>
-          <v-btn
-            color="green"
-            text
-            @click="editingNotice ? updateNotice() : createNotice()"
-            >등록</v-btn
-          >
-        </v-card-actions>
-      </v-card>
-    </v-dialog>
+  <v-card class="pa-4" style="border-radius: 12px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);">
+    <v-card-title
+      class="headline"
+      :class="editingNotice ? 'notice-edit' : 'notice-create'"
+      style="font-weight: bold; margin-left: 10px; font-size: larger; color: #333;"
+    >
+      {{ editingNotice ? "공지사항 수정" : "공지사항 작성" }}
+    </v-card-title>
+    <v-card-text>
+      <v-container>
+        <v-row>
+          <v-col cols="12">
+            <v-select
+              v-model="currentNotice.category"
+              :items="noticeCategorys"
+              label="공지사항 유형"
+              required
+              outlined
+              dense
+            ></v-select>
+          </v-col>
+          <v-col cols="12">
+            <v-text-field
+              v-model="currentNotice.title"
+              label="공지 제목"
+              required
+              outlined
+              dense
+            ></v-text-field>
+          </v-col>
+          <v-col cols="12">
+            <v-textarea
+              v-model="currentNotice.contents"
+              label="내용"
+              required
+              outlined
+              rows="6"
+              dense
+            ></v-textarea>
+          </v-col>
+          <v-col cols="12">
+            <v-file-input
+              v-model="currentNotice.filePath"
+              label="파일 첨부"
+              prepend-icon="mdi-paperclip"
+              accept="image/*, application/pdf"
+              @change="onFileChanged"
+              outlined
+              dense
+            ></v-file-input>
+            <!-- 이미지 미리보기 -->
+            <v-img v-if="imageUrl" :src="imageUrl" height="200" class="mt-4" style="border-radius: 8px; object-fit: cover;"></v-img>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn color="red" text @click="closeModal">취소</v-btn>
+      <v-btn
+        class="register-btn"
+        :class="editingNotice ? 'update-btn' : 'create-btn'"
+        @click="editingNotice ? updateNotice() : createNotice()"
+        style="background-color: rgb(210, 63, 87); color: white;"
+      >등록</v-btn>
+    </v-card-actions>
+  </v-card>
+</v-dialog>
 
     <!-- Details Modal -->
     <v-dialog v-model="showDetailsModal" max-width="600px">
-      <v-card>
-        <v-card-title>공지사항 상세 조회</v-card-title>
+      <v-card style="padding-top: 10px;">
+        <v-card-title style="font-weight: bold; margin-left: 10px;">공지사항 상세 조회</v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
@@ -105,6 +137,7 @@
                   v-model="detailsNotice.category"
                   label="공지 유형"
                   readonly
+                  outlined
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
@@ -112,6 +145,7 @@
                   v-model="detailsNotice.title"
                   label="제목"
                   readonly
+                  outlined
                 ></v-text-field>
               </v-col>
               <v-col cols="12">
@@ -119,6 +153,7 @@
                   v-model="detailsNotice.contents"
                   label="내용"
                   readonly
+                  outlined
                 ></v-textarea>
               </v-col>
               <v-col cols="12">
@@ -141,6 +176,7 @@
                   label="첨부 파일"
                   readonly
                   prepend-icon="mdi-paperclip"
+                  outlined
                 ></v-text-field>
               </v-col>
             </v-row>
@@ -166,6 +202,7 @@ export default {
         { text: "공지사항 유형", value: "category" },
         { text: "공지 제목", value: "title" },
         { text: "게시 날짜", value: "postDate" },
+        { text: "수정 삭제", value: "postDate" },
       ],
       notices: [],
       currentNotice: {
