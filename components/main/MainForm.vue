@@ -5,8 +5,8 @@
         <v-col cols="12">
           <v-row>
             <v-tabs v-model="tab" class="mb-8">
-              <v-tab href="#tab-1">홈</v-tab>
-              <v-tab href="#tab-2">내주변</v-tab>
+              <v-tab href="#tab-1" style="font-weight: bold; font-size: large;">홈</v-tab>
+              <v-tab href="#tab-2" style="font-weight: bold; font-size: large;">내주변</v-tab>
             </v-tabs>
           </v-row>
           <v-tabs-items v-model="tab">
