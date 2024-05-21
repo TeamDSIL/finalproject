@@ -1,19 +1,24 @@
 <template>
   <div>
     <v-container style="margin-bottom: 30px">
-      <div
-        class="ps-0 text-primary"
-        style="font-size: larger; font-weight: bold"
-      >
-        마이다이닝
-      </div>
-
+      <v-col cols="12" class="restaurant-title-img">
+        <v-img
+          contain
+          :src="require('~/assets/images/mydiningRestaurant.png')"
+          width="20px"
+          style="max-width: 20px; margin-right: 5px"
+        ></v-img>
+        <div
+          class="ps-0 text-primary"
+          style="font-size: larger; font-weight: bold"
+        >
+          마이다이닝
+        </div>
+      </v-col>
       <div>
         <v-tabs v-model="tab" class="mb-8">
           <v-tab class="text-capitalize" href="#tab-1"> 예약현황 </v-tab>
-
           <v-tab class="text-capitalize" href="#tab-2"> 즐겨찾기 </v-tab>
-
           <v-tab class="text-capitalize" href="#tab-3"> 나의리뷰 </v-tab>
         </v-tabs>
 
@@ -127,18 +132,44 @@
                                   예약금: {{ reservation.deposit }}원
                                 </p>
 
-                                <nuxt-link
-                                  :to="`/myDining/WriteReviewPage/${reservation.reservationId}`"
-                                  class="text-decoration-none white--text"
+                                <template
+                                  v-if="
+                                    reservation.review === false &&
+                                    reservation.reservationState === 'COMPLETED'
+                                  "
                                 >
-                                  <v-btn
-                                    color="primary"
-                                    small
-                                    class="review-write-button"
+                                  <nuxt-link
+                                    :to="{
+                                      path: '/myDining/WriteReviewPage',
+                                      query: {
+                                        reservationId:
+                                          reservation.reservationId,
+                                        name: reservation.name,
+                                      },
+                                    }"
+                                    class="text-decoration-none"
                                   >
-                                    리뷰 쓰기
-                                  </v-btn>
-                                </nuxt-link>
+                                    <v-btn
+                                      color="primary"
+                                      small
+                                      class="review-write-button"
+                                    >
+                                      리뷰 쓰기
+                                    </v-btn>
+                                  </nuxt-link>
+                                </template>
+                                <template v-else>
+                                  <div>
+                                    <v-btn
+                                      color="primary"
+                                      small
+                                      class="review-write-button"
+                                      disabled
+                                    >
+                                      리뷰 쓰기
+                                    </v-btn>
+                                  </div>
+                                </template>
                               </div>
                               <!-- <p class="text-14 grey--text text--darken-1">(4 Pcs mutton in chicken keema gravy)</p> -->
                             </div>
@@ -183,7 +214,6 @@
                     <v-row>
                       <v-col cols="12">
                         <h3 class="fw-bold">나의 즐겨찾기</h3>
-                        
                       </v-col>
                       <v-col
                         cols="12"
@@ -195,8 +225,11 @@
                         >
                           <div class="d-flex flex-wrap">
                             <v-avatar class="me-3" size="150" tile>
-  <img :src="like.restaurantImg" alt="레스토랑 이미지" />
-</v-avatar>
+                              <img
+                                :src="like.restaurantImg"
+                                alt="레스토랑 이미지"
+                              />
+                            </v-avatar>
 
                             <div>
                               <h5 class="f-600 mb-3">{{ like.name }}</h5>
@@ -219,11 +252,7 @@
                                   </span>
                                   <!-- 소수점이 있으면 반 별 추가 -->
                                   <span
-                                    v-if="
-                                      hasHalfStar(
-                                        like.averageReviewScore
-                                      )
-                                    "
+                                    v-if="hasHalfStar(like.averageReviewScore)"
                                   >
                                     <v-img
                                       :src="
@@ -235,9 +264,7 @@
                                     ></v-img>
                                   </span>
                                   <span class="font-weight-bold text-14 ms-2">
-                                    {{
-                                      like.averageReviewScore.toFixed(1)
-                                    }}
+                                    {{ like.averageReviewScore.toFixed(1) }}
                                   </span>
 
                                   <h6
@@ -246,7 +273,6 @@
                                     ({{ like.reviewCount }})
                                   </h6>
                                 </span>
-
                               </div>
                               <div>
                                 <p
@@ -267,13 +293,17 @@
                                   리뷰 보기
                                   <!-- <v-icon right small>mdi-plus</v-icon> -->
                                 </v-btn>
-                                <v-btn
-                                  color="primary"
-                                  small
-                                  class="detail-read-view"
-                                >
-                                  자세히 보기
-                                </v-btn>
+                                <nuxt-link :to="`/restaurant/detail/${like.restaurantId}`">
+  <v-btn
+    color="primary"
+    small
+    class="detail-read-view"
+  >
+    자세히 보기
+  </v-btn>
+</nuxt-link>
+
+
                               </div>
                             </div>
                           </div>
@@ -355,6 +385,9 @@
                       >3 Days Ago</span
                     > -->
                   </div>
+                  <v-avatar class="me-3" size="150" tile>
+                    <img :src="review.reviewImg" alt="레스토랑 이미지" />
+                  </v-avatar>
                   <h5
                     class="grey--text text--darken-2 font-weight-regular mb-3"
                   >
@@ -377,24 +410,21 @@
                   <!-- comment  -->
                   <div class="mb-6">
                     <div v-if="review.replyContent">
-    <div class="text-14 grey--text text--darken-4 f-600">
-      사장님
-    </div>
-    <div class="mb-0 text-14 grey--text text--darken-1">
-      {{ review.replyRegisterDate }}
-    </div>
-    <h5 class="grey--text text--darken-2 font-weight-regular">
-      {{ review.replyContent }}
-    </h5>
-</div>
-<div v-else class="text-14 grey--text text--darken-1">
-    아직 사장님 댓글이 없어요.
-</div>
-
+                      <div class="text-14 grey--text text--darken-4 f-600">
+                        사장님
+                      </div>
+                      <div class="mb-0 text-14 grey--text text--darken-1">
+                        {{ review.replyRegisterDate }}
+                      </div>
+                      <h5 class="grey--text text--darken-2 font-weight-regular">
+                        {{ review.replyContent }}
+                      </h5>
+                    </div>
+                    <div v-else class="text-14 grey--text text--darken-1">
+                      아직 사장님 댓글이 없어요.
+                    </div>
                   </div>
-
                   <v-divider></v-divider>
-                  <!-- end::comment -->
                 </div>
               </v-col>
             </v-row>
@@ -412,7 +442,6 @@
       </div>
     </v-container>
     <div class="mb-4"></div>
-    <!-- <Location /> -->
     <Footer />
   </div>
 </template>
@@ -422,7 +451,6 @@ import axios from "axios";
 
 export default {
   data: () => ({
-    // testImg: "https://gyeongju.go.kr/upload/content/thumb/20200529/4368708A9CC649CDB1EC5DD0C389804C.jpg",
     reserveRestaurantList: [],
     bookmarksList: [],
     reviewsList: [],
@@ -468,12 +496,11 @@ export default {
     async bookmarkCancle(bookmarkId) {
       try {
         const response = await axios.delete(
-          `http://localhost:8000/myDining/bookmark-cancel/${bookmarkId}`,
+          `http://localhost:8000/myDining/bookmark-cancel/${bookmarkId}`
         );
         alert("즐겨찾기가 해제되었습니다.");
         this.fetchBookmarks();
-      }
-      catch (error) {
+      } catch (error) {
         console.error("즐겨찾기 취소 중 오류가 발생했습니다.", error);
         alert("즐겨찾기 해제에 실패했습니다.");
       }
@@ -484,9 +511,9 @@ export default {
         const response = await axios.put(
           `http://localhost:8000/myDining/reviewRemoveRequest/${reviewId}`
         );
-      } catch (error){
+      } catch (error) {
         console.error("리뷰 취소 신청 중 오류가 발생했습니다.", error);
-        alert("예약 취소에 실패했습니다.");
+        alert("리뷰 삭제 요청에 실패했습니다.");
       }
     },
     async reservationDeny(reservationId) {
@@ -520,7 +547,6 @@ export default {
     },
     fetchReviews() {
       const id = this.$route.params.id;
-      console.log(id+"리뷰");
       axios
         .get(`http://localhost:8000/myDining/reviews/${id}`)
         .then((response) => {
@@ -528,7 +554,7 @@ export default {
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
-      })
+        });
     },
     // 예약 리스트 불러오기
     fetchReservations() {
@@ -540,6 +566,7 @@ export default {
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
+          console.log("레저베이션" + this.reserveRestaurantList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
@@ -553,8 +580,9 @@ export default {
       axios
         .get(`http://localhost:8000/myDining/bookmarks/${id}`)
         .then((response) => {
-          // 응답 데이터를 reservations 배열에 저장합니다
+          // 응답 데이터를 bookmarksList 배열에 저장합니다
           this.bookmarksList = response.data;
+          console.log("북마크데이터~~",this.bookmarksList);
         })
         .catch((error) => {
           console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
@@ -575,15 +603,14 @@ export default {
         if (reservationState === "RESERVED") {
           console.log("네, 예약 ID:", reservationId); // 확인을 위해 예약 ID 로깅
           this.reservationDeny(reservationId); // reservationDeny 호출
-        }
-        else {
-          alert("예약중인 건만 취소가 가능합니다.")
+        } else {
+          alert("예약중인 건만 취소가 가능합니다.");
         }
       }
     },
     requestNoLike(bookmarkId) {
       if (confirm("진짜 해제하시겠습니까?")) {
-        this.bookmarkCancle(bookmarkId)
+        this.bookmarkCancle(bookmarkId);
       }
     },
     scrollToTop() {

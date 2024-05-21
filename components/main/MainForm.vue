@@ -5,14 +5,14 @@
         <v-col cols="12">
           <v-row>
             <v-tabs v-model="tab" class="mb-8">
-              <v-tab href="#tab-1">홈</v-tab>
-              <v-tab href="#tab-2">내주변</v-tab>
+              <v-tab href="#tab-1" style="font-weight: bold; font-size: large;">홈</v-tab>
+              <v-tab href="#tab-2" style="font-weight: bold; font-size: large;">내주변</v-tab>
             </v-tabs>
           </v-row>
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <div>
-                <h1>Home Content</h1>
+                <!-- <h1>Home Content</h1> -->
                 <!-- 추가적인 컨텐츠 -->
                 <!-- <div style="width: 100%; height: 350px"> -->
                 <v-carousel hide-delimiters height="350px">
@@ -45,6 +45,7 @@
 
 <script>
 import MainMap from "../api/MainMap.vue";
+
 export default {
   name: "App",
   components: { MainMap },

@@ -1,157 +1,393 @@
 <template>
   <div>
-      <v-app-bar
-          fixed
-          color="white"
-          elevate-on-scroll
-          width="100%"
-      >
-          <v-container class="d-flex align-center">
-              <nuxt-link to="/">
-                <v-avatar class="me-10" tile>
-                    <img src="~/assets/images/dsillogoround.png" alt="" style="width: 100px;"/>
-                </v-avatar>
-              </nuxt-link>
-              <div class="form-location flex-grow-1 d-none d-md-flex border rounded ">
-                <div class=" d-flex align-center ps-5">
-                  <v-icon small left>mdi-map-marker</v-icon>
-                  <span class="grey--text text--darken-1 me-3">New York</span>
-                </div>
-                <v-btn icon tile large text class="text-capitalize rounded-0">
-                  <v-icon small>mdi-crosshairs-gps</v-icon>
-                </v-btn>
-                <input class="white flex-grow-1  ps-5" type="text" placeholder="Search for restaurant " />
-                <v-btn icon large tile class="rounded-l-0 text-capitalize">
-                  <v-icon small>mdi-magnify</v-icon>
-                </v-btn>
-              </div>
-              <v-spacer></v-spacer>
-              <v-dialog
-                v-model="dialog"
-                width="500"
+    <v-app-bar fixed color="white" elevate-on-scroll width="100%">
+      <v-container class="d-flex align-center">
+        <nuxt-link to="/">
+          <v-avatar class="me-10" tile>
+            <img
+              src="~/assets/images/DSILnewLOGO.png"
+              alt=""
+              style="width: 100px"
+            />
+          </v-avatar>
+        </nuxt-link>
+
+        <v-dialog v-model="dsilModal" width="600">
+          <v-card>
+            <v-card-title>
+              <span class="headline">드실 선택</span>
+            </v-card-title>
+            <v-card-text>
+              <div
+                v-for="category in categories"
+                :key="category.name"
+                class="my-3"
               >
-                <template v-slot:activator="{ on, attrs }">
+                <span class="headline">{{ category.displayName }}</span>
+                <div class="button-grid">
                   <v-btn
-                    light
+                    v-for="item in category.items"
+                    :key="item.name"
+                    :color="
+                      category.selected.some(
+                        (selected) => selected.name === item.name
+                      )
+                        ? 'primary'
+                        : ''
+                    "
                     text
-                    v-bind="attrs"
-                    v-on="on"
+                    @click="toggleSelection(category.selected, item)"
                   >
-                    <span class="d-none d-sm-block">로그아웃</span>
+                    {{ item.displayName }}
                   </v-btn>
-                  <v-btn
-                    light
-                    text
-                    v-bind="attrs"
-                    v-on="on"
-                  >
-                    <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-                    <span class="d-none d-sm-block">gnlwp96@naver.com</span>
-                  </v-btn>
-                </template>
-                <SignIn />
-              </v-dialog>
-              <!-- <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
+                </div>
+              </div>
+            </v-card-text>
+            <v-card-actions>
+              <v-spacer></v-spacer>
+              <v-btn color="blue darken-1" text @click="closeModal">취소</v-btn>
+              <v-btn color="primary" text @click="search">검색</v-btn>
+            </v-card-actions>
+          </v-card>
+        </v-dialog>
+
+        <
+        <div
+          class="search-bar-container flex-grow-1 d-none d-md-flex border rounded"
+        >
+          <v-btn
+            icon
+            tile
+            large
+            text
+            class="text-capitalize rounded-0"
+            @click="dsilModal = true"
+          >
+            <!-- <v-icon small>mdi-crosshairs-gps</v-icon> -->
+            <span class="grey--text text--darken-4 font-weight-regular"
+              >드실</span
+            >
+          </v-btn>
+          <input
+            class="white flex-grow-1 ps-5"
+            type="text"
+            placeholder="카테고리 및 음식이름을 입력해주세요"
+            v-model="searchQuery"
+          />
+          <v-btn
+            icon
+            large
+            tile
+            class="rounded-l-0 text-capitalize"
+            @click="search"
+            >Search
+            <!-- <v-icon small>mdi-magnify</v-icon> -->
+          </v-btn>
+        </div>
+        <v-spacer></v-spacer>
+        <v-dialog v-model="dialog" width="500">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn light text v-bind="attrs" v-on="on">
+              <span class="d-none d-sm-block">로그아웃</span>
+            </v-btn>
+            <v-btn light text v-bind="attrs" v-on="on">
+              <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+              <span class="d-none d-sm-block">gnlwp96@naver.com</span>
+            </v-btn>
+          </template>
+          <SignIn />
+        </v-dialog>
+        <!-- <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
                 <v-icon small>mdi-cart-outline</v-icon>(8)
               </v-btn> -->
-              <v-app-bar-nav-icon text light @click="drawer = true"></v-app-bar-nav-icon>
-          </v-container>
-      </v-app-bar>
-      <v-navigation-drawer
-        width="320"
-        v-model="shoppingCartDrawer"
-        fixed
-        temporary
-        right
-      >
-        <ShoppingCart>
-          <template v-slot:userDrawerCloseButton>
-            <v-btn icon color @click.stop="shoppingCartDrawer = !shoppingCartDrawer">
-              <v-icon color="primary">mdi-close</v-icon>
-            </v-btn>
-          </template>
-        </ShoppingCart>
-        <template v-slot:append >
-            <div class="pa-2">
-              <v-btn class="text-capitalize mb-3" block color="primary">
-                Checkout Now ($ 220)
-              </v-btn>
-              <v-btn class="text-cappitalise" outlined block color="primary">
-                View Cart
-              </v-btn>
-            </div>
-          </template>
-      </v-navigation-drawer>
-      <v-navigation-drawer
-        width="320"
-        v-model="drawer"
-        fixed
-        temporary
-      >
-        <NavbarList>
-          <template v-slot:userDrawerCloseButton>
-            <v-btn icon color @click.stop="drawer = !drawer">
-              <v-icon>mdi-close</v-icon>
-            </v-btn>
-          </template>
-        </NavbarList>
-      </v-navigation-drawer>
+        <v-app-bar-nav-icon
+          text
+          light
+          @click="drawer = true"
+        ></v-app-bar-nav-icon>
+      </v-container>
+    </v-app-bar>
+    <!-- <v-navigation-drawer
+      width="320"
+      v-model="shoppingCartDrawer"
+      fixed
+      temporary
+      right
+    >
+      <ShoppingCart>
+        <template v-slot:userDrawerCloseButton>
+          <v-btn
+            icon
+            color
+            @click.stop="shoppingCartDrawer = !shoppingCartDrawer"
+          >
+            <v-icon color="primary">mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </ShoppingCart>
+      <template v-slot:append>
+        <div class="pa-2">
+          <v-btn class="text-capitalize mb-3" block color="primary">
+            Checkout Now ($ 220)
+          </v-btn>
+          <v-btn class="text-cappitalise" outlined block color="primary">
+            View Cart
+          </v-btn>
+        </div>
+      </template> -->
+    <!-- </v-navigation-drawer> -->
+    <v-navigation-drawer width="320" v-model="drawer" fixed temporary>
+      <NavbarList>
+        <template v-slot:userDrawerCloseButton>
+          <v-btn icon color @click.stop="drawer = !drawer">
+            <v-icon>mdi-close</v-icon>
+          </v-btn>
+        </template>
+      </NavbarList>
+    </v-navigation-drawer>
   </div>
 </template>
 <script>
+// export default {
+//   data() {
+//       return {
+//           drawer: false,
+//           group: null,
+//           dialog: false,
+//         // shoppingCartDrawer: false,
+//           dsilModal: false,
+//     searchQuery: "",
+//           items: [
+//               {
+//                 action: 'mdi-view-dashboard-variant-outline',
+//                 active: true,
+//                 items: [
+//                     {
+//                       title: 'Review',
+//                       link: '/dashboard/Review',
+//                     },
+//                     {
+//                       title: 'Photos',
+//                       link: '/dashboard/Photos',
+//                     },
+//                     {
+//                       title: 'Order List',
+//                       link: '/dashboard/OrderList',
+//                     },
+//                     {
+//                       title: 'Order History',
+//                       link: '/dashboard/OrderHistory',
+//                     },
+//                     {
+//                       title: 'Followers',
+//                       link: '/dashboard/Followers',
+//                     },
+//                     {
+//                       title: 'Bookmarks',
+//                       link: '/dashboard/Bookmarks',
+//                     },
+//                 ],
+//                 title: 'Dashboards',
+//               },
+//               {
+//               action: 'mdi-silverware-fork-knife',
+//               active: false,
+//                 items: [
+//                     { title: 'Breakfast & brunch' },
+//                     { title: 'New American' },
+//                     { title: 'Sushi' },
+//                 ],
+//                 title: 'Dining',
+//               },
+//           ]
+//       }
+//   }
+// }
+
 export default {
-  data() {
-      return {
-          drawer: false,
-          group: null,
-          dialog: false,
-          shoppingCartDrawer: false,
-          items: [
-              {
-                action: 'mdi-view-dashboard-variant-outline',
-                active: true,
-                items: [
-                    {
-                      title: 'Review',
-                      link: '/dashboard/Review',
-                    },
-                    {
-                      title: 'Photos',
-                      link: '/dashboard/Photos',
-                    },
-                    {
-                      title: 'Order List',
-                      link: '/dashboard/OrderList',
-                    },
-                    {
-                      title: 'Order History',
-                      link: '/dashboard/OrderHistory',
-                    },
-                    {
-                      title: 'Followers',
-                      link: '/dashboard/Followers',
-                    },
-                    {
-                      title: 'Bookmarks',
-                      link: '/dashboard/Bookmarks',
-                    },
-                ],
-                title: 'Dashboards',
-              },
-              {
-              action: 'mdi-silverware-fork-knife',
-              active: false,
-                items: [
-                    { title: 'Breakfast & brunch' },
-                    { title: 'New American' },
-                    { title: 'Sushi' },
-                ],
-                title: 'Dining',
-              },
-          ]
+  data: () => ({
+    drawer: false,
+    dsilModal: false,
+    searchQuery: "",
+    dialog: false,
+    categories: [
+      {
+        name: "INDUSTRIAL_DISTRICT",
+        displayName: "드실장소",
+        items: [
+          { name: "YEOUIDO_MAPO", displayName: "여의도-마포" },
+          { name: "YONGSAN_VALLEY", displayName: "용산(Y-밸리)" },
+          { name: "YANGJAE", displayName: "양제" },
+          { name: "SUSEO", displayName: "수서" },
+          { name: "HONGNEUNG", displayName: "홍릉" },
+          { name: "MAGOK", displayName: "마곡" },
+          {
+            name: "GASAN_DIGITAL_VALLEY",
+            displayName: "가산디지털단지(G-밸리)",
+          },
+          {
+            name: "GURO_DIGITAL_VALLEY",
+            displayName: "구로디지털단지(G-밸리)",
+          },
+        ],
+        selected: [],
+      },
+      {
+        name: "BY_COUNTRY",
+        displayName: "드실 음식",
+        items: [
+          { name: "KOREAN", displayName: "한식" },
+          { name: "CHINESE", displayName: "중식" },
+          { name: "JAPANESE", displayName: "일식" },
+          { name: "WESTERN", displayName: "양식" },
+          { name: "VIETNAMESE", displayName: "베트남" },
+          { name: "AMERICAN", displayName: "아메리칸" },
+          { name: "INDIAN", displayName: "인도" },
+          { name: "OTHERGLOBALFOOD", displayName: "기타세계" },
+        ],
+        selected: [],
+      },
+      {
+        name: "MEAT",
+        displayName: "드실 고기",
+        items: [
+          { name: "BEEF", displayName: "소고기" },
+          { name: "PORK", displayName: "돼지고기" },
+          { name: "STEAK", displayName: "스테이크" },
+          { name: "TRIPE", displayName: "곱창/막창" },
+        ],
+        selected: [],
+      },
+      {
+        name: "SEAFOOD",
+        displayName: "드실 해물",
+        items: [
+          { name: "SEAFOOD_STEW", displayName: "해물(탕/찜/볶음)" },
+          { name: "SASHIMI", displayName: "회/사시미" },
+          { name: "SUSHI", displayName: "초밥" },
+          { name: "SHELLFISH", displayName: "굴/조개" },
+        ],
+        selected: [],
+      },
+      {
+        name: "ALCOHOL",
+        displayName: "드실 주류",
+        items: [
+          { name: "BEER", displayName: "맥주/호프" },
+          { name: "TRADITIONAL_ALCOHOL", displayName: "전통주" },
+          { name: "IZAKAYA", displayName: "이자카야" },
+          { name: "WINE_COCKTAIL", displayName: "와인/칵테일" },
+        ],
+        selected: [],
+      },
+      {
+        name: "WITH_WHO",
+        displayName: "뭘까",
+        items: [
+          { name: "SOLO", displayName: "혼밥" },
+          { name: "WITH_FRIENDS", displayName: "친구" },
+          { name: "GROUP_GATHERING", displayName: "단체모임" },
+          { name: "DATE", displayName: "데이트" },
+          { name: "FAMILY", displayName: "가족" },
+          { name: "COST_EFFECTIVE", displayName: "가성비" },
+        ],
+        selected: [],
+      },
+      {
+        name: "FACILITIES",
+        displayName: "편의시설",
+        items: [
+          { name: "PARKING_AVAILABLE", displayName: "주차가능" },
+          { name: "VALET_AVAILABLE", displayName: "발렛가능" },
+          { name: "CORKAGE_FREE", displayName: "콜키지 프리" },
+          { name: "CORKAGE_ALLOWED", displayName: "콜키지 가능" },
+          { name: "WELCOME_KIDS_ZONE", displayName: "웰컴키즈존" },
+          { name: "PRIVATE_DINING_AVAILABLE", displayName: "대관 가능" },
+          { name: "NO_KIDS_ZONE", displayName: "노키즈존" },
+          { name: "SOMMELIER_AVAILABLE", displayName: "전문 소믈리에" },
+          { name: "ACCESSIBILITY", displayName: "장애인 편의시설" },
+          { name: "PET_FRIENDLY", displayName: "반려동물 동반" },
+          { name: "FREE_WIFI", displayName: "무료와이파이" },
+          { name: "SMOKING_AREA", displayName: "흡연구역" },
+        ],
+        selected: [],
+      },
+    ],
+  }),
+  methods: {
+    toggleNavClass() {
+      return this.drawer ? "sticky-nav" : "nav";
+    },
+    toggleSelection(selectedArray, item) {
+      const index = selectedArray.findIndex(
+        (selected) => selected.name === item.name
+      );
+      if (index > -1) {
+        selectedArray.splice(index, 1);
+      } else {
+        selectedArray.push(item);
       }
-  }
-}
+    },
+    closeModal() {
+      this.dsilModal = false;
+      this.categories.forEach((category) => {
+        category.selected = [];
+      });
+    },
+    search() {
+      // 쿼리 파라미터를 담을 객체를 생성합니다.
+      let queryParams = {};
+
+      // 입력된 검색어 처리
+      if (this.searchQuery.trim() !== "") {
+        queryParams["search"] = [encodeURIComponent(this.searchQuery.trim())]; // 배열로 저장
+      }
+
+      // 카테고리별로 쿼리 파라미터를 생성합니다.
+      this.categories.forEach((category) => {
+        category.selected.forEach((item) => {
+          // 시설 관련 카테고리는 'facility' 파라미터로, 나머지는 'category' 파라미터로 추가합니다.
+          const paramKey =
+            category.name === "FACILITIES" ? "facility" : "category";
+          // 해당 키에 대한 배열이 없으면 생성합니다.
+          if (!queryParams[paramKey]) {
+            queryParams[paramKey] = [];
+          }
+          // 해당 카테고리 키 배열에 아이템 이름을 추가합니다.
+          queryParams[paramKey].push(item.name);
+        });
+      });
+
+      // 쿼리 파라미터 문자열로 변환합니다.
+      let queryString = Object.keys(queryParams)
+        .map(
+          (key) => queryParams[key].map((value) => `${key}=${value}`).join("&") // 배열을 이용해 join 함수 호출
+        )
+        .join("&");
+
+      // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
+      const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
+
+      // URL로 리디렉션합니다.
+      window.location.href = searchUrl;
+
+      // 모달 창을 닫습니다.
+      this.closeModal();
+    },
+  },
+  mounted() {
+    window.document.onscroll = () => {
+      if (window.scrollY > 400) {
+        this.active = true;
+      } else {
+        this.active = false;
+      }
+    };
+  },
+};
 </script>
 <style scoped>
+.button-grid .v-btn {
+  margin: 4px;
+}
 </style>

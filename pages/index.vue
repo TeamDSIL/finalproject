@@ -1,93 +1,155 @@
 <template>
   <div>
+    <!-- <header></header> -->
     <MainForm></MainForm>
     <!-- 카테고리 -->
     <div>
       <v-container class="py-15">
         <v-row>
-          <v-col cols="12">
-            <h2>어떤 나라 드실 ?</h2>
+          <v-col cols="12" style="display: flex">
+            <v-img
+              contain
+              :src="require('~/assets/images/foodd.png')"
+              width="20px"
+              style="max-width: 30px; margin-right: 5px"
+            ></v-img>
+            <span style="font-size: xx-large; font-weight: bold"
+              >드실 음식</span
+            >
           </v-col>
-          <v-col
-            v-for="(item, index) in food"
-            :key="item.name"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
+          <v-row
+            class="elevation-2"
+            style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
-            <div class="text-center">
-              <nuxt-link
-                :to="`/restaurant/RestaurantListPage/${encodeURIComponent(
-                  item.name
-                )}`"
-                class="text-decoration-none"
-              >
-                <v-avatar size="150" class="mb-4">
-                  <img :src="item.img" alt="" />
-                </v-avatar>
-                <h4 class="grey--text text--darken-2">{{ item.name }}</h4>
-              </nuxt-link>
-            </div>
-          </v-col>
+            <v-col
+              v-for="(item, index) in food"
+              :key="item.name"
+              cols="12"
+              lg="3"
+              md="4"
+              sm="6"
+            >
+              <div class="text-center">
+                <nuxt-link
+                  :to="`/restaurant/list?category=${item.name}`"
+                  class="text-decoration-none"
+                >
+                  <v-avatar size="150" class="mb-4">
+                    <img :src="item.img" alt="" />
+                  </v-avatar>
+                  <h4 class="grey--text text--darken-2">
+                    {{ item.displayName }}
+                  </h4>
+                </nuxt-link>
+              </div>
+            </v-col>
+          </v-row>
         </v-row>
         <!-- 주류 -->
         <v-row>
-          <v-col cols="12">
-            <h2>어떤 주류 드실 ?</h2>
+          <v-col cols="12" style="display: flex; margin-top: 20px">
+            <v-img
+              contain
+              :src="require('~/assets/images/drink.png')"
+              width="20px"
+              style="max-width: 30px; margin-right: 5px"
+            ></v-img>
+            <span style="font-size: xx-large; font-weight: bold"
+              >드실 주류</span
+            >
           </v-col>
-          <v-col
-            v-for="(item, index) in alcohol"
-            :key="index"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
+          <v-row
+            class="elevation-2"
+            style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
-            <div class="text-center">
-              <nuxt-link to="/resturant/FoodMenu" class="text-decoration-none">
-                <v-avatar size="150" class="mb-4">
-                  <img :src="item.img" alt="" />
-                </v-avatar>
-                <h4 class="grey--text text--darken-2">{{ item.name }}</h4>
-              </nuxt-link>
-            </div>
-          </v-col>
+            <v-col
+              v-for="(item, index) in alcohol"
+              :key="item.name"
+              cols="12"
+              lg="3"
+              md="4"
+              sm="6"
+            >
+              <div class="text-center">
+                <nuxt-link
+                  :to="`/restaurant/alcohol?category=${item.name}`"
+                  class="text-decoration-none"
+                >
+                  <v-avatar size="150" class="mb-4">
+                    <img :src="item.img" alt="" />
+                  </v-avatar>
+                  <h4 class="grey--text text--darken-2">
+                    {{ item.displayName }}
+                  </h4>
+                </nuxt-link>
+              </div>
+            </v-col>
+          </v-row>
         </v-row>
         <!-- 고객 맞춤형 -->
         <v-row>
-          <v-col cols="12">
-            <h2>고객 맞춤형 드실</h2>
+          <v-col cols="12" style="display: flex; margin-top: 20px">
+            <v-img
+              contain
+              :src="require('~/assets/images/peoples.png')"
+              width="20px"
+              style="max-width: 30px; margin-right: 5px"
+            ></v-img>
+            <span style="font-size: xx-large; font-weight: bold"
+              >고객 맞춤</span
+            >
           </v-col>
-          <v-col
-            v-for="(item, index) in who"
-            :key="index"
-            cols="12"
-            lg="3"
-            md="4"
-            sm="6"
+          <v-row
+            class="elevation-2"
+            style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
-            <div class="text-center">
-              <nuxt-link to="/resturant/FoodMenu" class="text-decoration-none">
-                <v-avatar size="150" class="mb-4">
-                  <img :src="item.img" alt="" />
-                </v-avatar>
-                <h4 class="grey--text text--darken-2">{{ item.name }}</h4>
-              </nuxt-link>
-            </div>
-          </v-col>
+            <v-col
+              v-for="(item, index) in who"
+              :key="item.name"
+              cols="12"
+              lg="3"
+              md="4"
+              sm="6"
+            >
+              <div class="text-center">
+                <nuxt-link
+                  :to="`/restaurant/custom?category=${item.name}`"
+                  class="text-decoration-none"
+                >
+                  <v-avatar size="150" class="mb-4">
+                    <img :src="item.img" alt="" />
+                  </v-avatar>
+                  <h4 class="grey--text text--darken-2">
+                    {{ item.displayName }}
+                  </h4>
+                </nuxt-link>
+              </div>
+            </v-col>
+          </v-row>
         </v-row>
       </v-container>
     </div>
     <!-- section-2  4,8-->
     <div>
-      <v-container class="py-15">
-        <v-row>
-          <Topten></Topten>
-        </v-row>
-      </v-container>
+      <!-- <v-container class="py-15">
+        <v-row> -->
+      <Topten></Topten>
+      <!-- </v-row>
+      </v-container> -->
     </div>
-    <roulette></roulette>
+    <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
+    <div :style="randomImageStyle" class="random-image" @click="openRoulette">
+      <img src="@/assets/images/dsil_Characters.png" alt="Dynamic Character" />
+      <div class="info-text">메뉴를 추천해 드릴게요.</div>
+    </div>
+    <!-- 모달 창 -->
+    <v-dialog
+      v-model="isRouletteOpen"
+      max-width="600px"
+      @click:outside="isRouletteOpen = false"
+    >
+      <roulette @close="isRouletteOpen = false"></roulette>
+    </v-dialog>
     <Footer />
   </div>
 </template>
@@ -96,165 +158,184 @@ import axios from "axios";
 import { CardSection } from "@/assets/database/data.js";
 import Roulette from "../components/main/Roulette.vue";
 import Topten from "../components/main/Topten.vue";
-
 export default {
   components: { Roulette, Topten },
 
-  layout: "landingHeader",
+  layout: "Header",
+
   head: {
     title: "Home",
   },
   data() {
     return {
       CardList: CardSection,
+      isRouletteOpen: false, // 모달 상태
+      randomImageStyle: {}, // 랜덤 이미지 스타일
       food: [
         {
           img: require("~/assets/images/mainCategory/KOREAN.png"),
-          name: "한식",
+          name: "KOREAN",
+          displayName: "한식",
         },
         {
           img: require("~/assets/images/mainCategory/CHINESE.jpg"),
-          name: "중식",
+          name: "CHINESE",
+          displayName: "중식",
         },
         {
           img: require("~/assets/images/mainCategory/JAPANESE.jpg"),
-          name: "일식",
+          name: "JAPANESE",
+          displayName: "일식",
         },
         {
           img: require("~/assets/images/mainCategory/WESTERN.jpg"),
-          name: "양식",
+          name: "WESTERN",
+          displayName: "양식",
         },
-        { img: require("~/assets/images/food/14.png"), name: "베트남" },
         {
           img: require("~/assets/images/food/14.png"),
-          name: "아메리칸",
+          name: "VIETNAMESE",
+          displayName: "베트남",
         },
-        { img: require("~/assets/images/food/14.png"), name: "인도" },
         {
           img: require("~/assets/images/food/14.png"),
-          name: "기타 세계",
+          name: "AMERICAN",
+          displayName: "아메리칸",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "INDIAN",
+          displayName: "인도",
+        },
+        {
+          img: require("~/assets/images/food/14.png"),
+          name: "OTHERGLOBALFOOD",
+          displayName: "기타 세계",
         },
       ],
       alcohol: [
         {
-          id: 9,
           img: require("~/assets/images/food/9.png"),
-          name: "맥주/호프",
+          name: "BEER",
+          displayName: "맥주/호프",
         },
         {
           img: require("~/assets/images/food/10.png"),
-          name: "전통주",
+          name: "TRADITIONAL_ALCOHOL",
+          displayName: "전통주",
         },
         {
           img: require("~/assets/images/food/11.png"),
-          name: " 이자카야",
+          name: "IZAKAYA",
+          displayName: "이자카야",
         },
         {
           img: require("~/assets/images/food/12.png"),
-          name: " 와인/칵테일",
+          name: "WINE_COCKTAIL",
+          displayName: "와인/칵테일",
         },
       ],
       who: [
         {
           img: require("~/assets/images/food/9.png"),
-          name: "혼밥",
+          name: "SOLO",
+          displayName: "혼밥",
         },
         {
           img: require("~/assets/images/food/10.png"),
-          name: " 친구",
+          name: "WITH_FRIENDS",
+          displayName: "친구",
         },
         {
           img: require("~/assets/images/food/11.png"),
-          name: "모임/회식",
+          name: "GROUP_GATHERING",
+          displayName: "모임/회식",
         },
         {
           img: require("~/assets/images/food/12.png"),
-          name: "데이트",
+          name: "DATE",
+          displayName: "데이트",
         },
       ],
-      reservation: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Best Of New York",
-        },
-      ],
-      read: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
-        },
-      ],
-      favorites: [
-        {
-          img: require("~/assets/images/food/5.png"),
-          name: "Most Searched of 2020",
-        },
-        {
-          img: require("~/assets/images/food/6.png"),
-          name: "Best Openings of 2020",
-        },
-        {
-          img: require("~/assets/images/food/7.png"),
-          name: "Trending This Week",
-        },
-        {
-          img: require("~/assets/images/food/8.png"),
-          name: "Best Of New York",
-        },
-      ],
-      restaurants: [], // API에서 로드한 식당 데이터를 저장할 배열
     };
   },
+  mounted() {
+    this.applyRandomStyle();
+  },
   methods: {
-    fetchRestaurantsByCategory(categoryName) {
-      const serverUrl = "http://localhost:8000"; // 서버 주소 설정
-      const encodeName = encodeURIComponent(categoryName);
-      axios
-        .get(`${serverUrl}/restaurants/category/${encodeName}`)
-        .then((response) => {
-          // 데이터 처리 로직
-          this.restaurants = response.data; // 응답 데이터를 restaurants 배열에 저장
-        })
-        .catch((error) => {
-          console.error("There was an error!", error);
-          this.restaurants = []; // 에러 발생 시 배열 초기화
-        });
+    openRoulette() {
+      this.isRouletteOpen = true;
+    },
+    applyRandomStyle() {
+      const minSize = 50;
+      const maxSize = 150; // 최대 크기
+      const size = Math.random() * (maxSize - minSize) + minSize; // 최소 크기에서 최대 크기 사이의 랜덤 크기
+      this.randomImageStyle = {
+        position: "absolute",
+        top: `${Math.random() * 100}%`, // 화면의 범위 내에서 랜덤 위치
+        left: `${Math.random() * 100}%`,
+        width: `${size}px`,
+        height: `${size}px`,
+        transform: "translate(-50%, -50%)", // 중심을 기준으로 위치 조정
+      };
     },
   },
-  // created() {
-  //   this.fetchRestaurantsByCategory(1); // 예를 들어 한식 카테고리 ID가 1일 때
-  // },
 };
 </script>
 <style lang="scss">
+/* 전역 스타일 */
 .bg-transparent {
   background-color: transparent !important;
 }
 .o-hidden {
   overflow: hidden !important;
+}
+/* 전역 스타일로도 컴포넌트 스타일 정의 가능하지만 스코프드 스타일 권장 */
+.image-container {
+  position: relative;
+  height: 100vh; // 화면 전체 높이
+  width: 100vw; // 화면 전체 너비
+}
+
+.random-image {
+  position: relative;
+  display: inline-block; // 이미지와 텍스트를 컨테이너에 맞게 배치
+  cursor: pointer;
+  width: 100%; // 폭을 명시적으로 지정
+  min-height: 150px; // 최소 높이 지정
+}
+
+.random-image img {
+  display: block; // 이미지 블록 레벨로 설정
+  max-width: 100%; // 이미지 최대 너비 제한
+  height: auto; // 비율 유지
+}
+
+/* 추가적인 컴포넌트 스코프드 스타일 */
+.image-container {
+  cursor: pointer;
+  display: inline-block; // 이미지와 텍스트를 컨테이너에 맞게 배치
+}
+.image-container img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+.info-text {
+  position: absolute;
+  top: 0; // 상단에 위치
+  left: 50%; // 수평 중앙에 위치
+  transform: translate(-50%, -100%); // 중앙에서 위로 이동
+  padding: 8px 12px;
+  background-color: #d23f57; // 말풍선 배경
+  color: white; // 텍스트 색상
+  border-radius: 8px; // 둥근 모서리
+  z-index: 1000; // 높은 z-index
+  visibility: hidden; // 초기에 숨김
+  white-space: nowrap;
+}
+
+.random-image:hover .info-text {
+  visibility: visible; // hover 시에만 텍스트 보이게 설정
 }
 </style>

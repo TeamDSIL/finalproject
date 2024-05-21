@@ -1,7 +1,50 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
+  server: {
+    host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
+    port: 3000, // 원하는 포트 번호
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
+  router: {
+    extendRoutes(routes, resolve) {
+      // 기존 라우트 수정도 가능
+      // 첫 번째 라우트 수정
+      const manageIndex = routes.findIndex(
+        (route) => route.name === "restaurant-RestaurantManageMainPage"
+      );
+      if (manageIndex !== -1) {
+        routes[manageIndex].path = "/restaurant/RestaurantManageMainPage/:id";
+      }
+      // 두 번째 라우트 수정
+      const modifyIndex = routes.findIndex(
+        (route) => route.name === "restaurant-RestaurantModifyPage"
+      );
+      if (modifyIndex !== -1) {
+        routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
+      }
+
+      const mydiningList = routes.findIndex(
+        (route) => route.name === "myDining-MydiningPage"
+      );
+      if (mydiningList !== -1) {
+        routes[mydiningList].path = "/myDining/MydiningPage/:id";
+      }
+      const detailIndex = routes.findIndex(
+        (route) => route.name === "restaurant-RestaurantDetailPage"
+      );
+      if (detailIndex !== -1) {
+        routes[detailIndex].path = "/restaurant/detail/:id";
+      }
+      const listIndex = routes.findIndex(
+        (route) => route.name === "restaurant-RestaurantListPage"
+      );
+      if (listIndex !== -1) {
+        routes[listIndex].path = "/restaurant/list";
+      }
+    },
+  },
+
   head: {
     titleTemplate: "%s - food-truck",
     title: "food-truck",
@@ -80,30 +123,5 @@ export default {
   },
   env: {
     apiURL: process.env.VUE_APP_API_URL,
-  },
-  router: {
-    extendRoutes(routes, resolve) {
-      // 기존 라우트 수정
-      const manageIndex = routes.findIndex(route => route.name === "restaurant-RestaurantManageMainPage");
-      if (manageIndex !== -1) {
-        routes[manageIndex].path = "/restaurant/RestaurantManageMainPage/:id";
-      }
-      const modifyIndex = routes.findIndex(route => route.name === "restaurant-RestaurantModifyPage");
-      if (modifyIndex !== -1) {
-        routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
-      }
-      const writeReview = routes.findIndex(route => route.name === "myDining-WriteReviewPage");
-      if (writeReview !== -1) {
-        routes[writeReview].path = "/myDining/WriteReviewPage/:id";
-      }
-      const mydiningList = routes.findIndex(route => route.name === "myDining-MydiningPage");
-      if (mydiningList !== -1) {
-        routes[mydiningList].path = "/myDining/MydiningPage/:id";
-      }
-      const reserveIndex = routes.findIndex(route => route.name === "restaurant-RestaurantDetailPage");
-      if (reserveIndex !== -1) {
-        routes[reserveIndex].path = "/restaurant/detail";
-      }
-    },
   },
 };
