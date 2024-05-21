@@ -8,8 +8,35 @@
 
         <v-tab class="text-capitalize" href="#tab-2"> 예약전체현황 </v-tab>
 
+<<<<<<< HEAD
+        <v-tab class="text-capitalize" href="#tab-1">
+          식당관리
+
+        </v-tab>
+
+        <v-tab class="text-capitalize" href="#tab-2">
+          예약전체현황
+
+        </v-tab>
+
+        <v-tab class="text-capitalize" href="#tab-3">
+          전체리뷰보기
+
+        </v-tab>
+        <v-tab class="text-capitalize" href="#tab-4">
+          예약통계보기
+
+        </v-tab>
+
+        <v-tab class="text-capitalize" href="#tab-5">
+          챗봇문의하기
+
+        </v-tab>
+
+=======
         <v-tab class="text-capitalize" href="#tab-3"> 전체리뷰보기 </v-tab>
         <v-tab class="text-capitalize" href="#tab-4"> 예약통계보기 </v-tab>
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
 
         <v-tab class="text-capitalize" @click="goToRestaurantManage">
           처음으로
@@ -58,7 +85,11 @@
           <br />
           <br />
           <v-divider></v-divider>
+<<<<<<< HEAD
+          <br>
+=======
           <br />
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
 
           <v-row>
             <v-col cols="12">
@@ -256,6 +287,20 @@
         <v-tab-item value="tab-3">
           <v-row>
             <!-- <v-col cols="12" class="mb-10">
+<<<<<<< HEAD
+        <h3 class="fw-bold">{{ restaurantName }}</h3>
+      </v-col> -->
+            <v-col cols="12" style="display: flex;">
+              <v-img contain :src="require('~/assets/images/review-icon.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px;"></v-img>
+              <h3 class="fw-bold"> 리뷰 전체보기</h3>
+            </v-col>
+            <v-col cols="12">
+              <div class="review-all-title">
+                <h4 class="fw-bold"> {{ restaurant.name }}</h4>
+              </div>
+              <v-divider style="margin-bottom: 20px;"></v-divider>
+=======
               
               <h3 class="fw-bold">{{ restaurantName }}</h3>
             </v-col> -->
@@ -275,9 +320,15 @@
 
               <v-divider style="margin-bottom: 20px"></v-divider>
 
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
               <div slot="boxContent">
                 <div class="px-10">
+                  <!-- 리뷰 항목을 두 줄로 나누기 위해 cols="6"을 사용 -->
                   <v-row>
+<<<<<<< HEAD
+                    <v-col cols="12" lg="6" v-for="review in paginatedReviews" :key="review.id">
+                      <div class="mb-6">
+=======
                     <v-col cols="12" lg="12">
                       <!-- user-post  -->
                       <div
@@ -285,6 +336,7 @@
                         v-for="review in paginatedReviews"
                         :key="review.id"
                       >
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                         <div class="d-flex align-center flex-wrap mb-4">
                           <v-avatar size="48" class="me-4">
                             <v-img :src="review.avatar" alt=""></v-img>
@@ -303,6 +355,10 @@
                               ></v-img>
                             </div>
                           </span>
+<<<<<<< HEAD
+                          <span class="font-weight-bold text-14 ms-2">{{ review.score }}</span>
+                          <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
+=======
 
                           <span class="font-weight-bold text-14 ms-2">{{
                             review.score
@@ -310,6 +366,7 @@
                           <span class="grey--text text--darken-1 text-14 ms-2"
                             >3 Days Ago</span
                           >
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                         </div>
                         <h5
                           class="grey--text text--darken-2 font-weight-regular mb-3"
@@ -318,20 +375,26 @@
                         </h5>
                         <v-row class="mb-2">
                           <!-- 리뷰 사진의 크기를 조금 줄임 cols 3으로 -->
-                          <v-col cols="3" lg="3">
-                            <v-img contain :src="review.img"></v-img>
+                          <v-col cols="8" style="height: 450x;">
+                            <v-img style="height: 300px;" contain :src="review.img"></v-img>
                           </v-col>
                         </v-row>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                         <div>
-                          <!-- <span class="grey--text text--darken-1 text-14">{{ review.reply.length }}개의 답글</span> -->
                           <div class="mt-4">
+<<<<<<< HEAD
+                            <v-btn color="primary" small @click="toggleReplyForm(review.id)">
+=======
                             <!-- 답글달기 버튼 클릭 시 입력 폼을 토글! -->
                             <v-btn
                               color="primary"
                               small
                               @click="toggleReplyForm(review.id)"
                             >
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                               답글달기
                             </v-btn>
                             <div>
@@ -350,6 +413,10 @@
                                 >
                               </v-form>
                             </div>
+<<<<<<< HEAD
+                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small
+                              @click="confirmDelete(review.id)">
+=======
 
                             <!-- <div v-if="showReplyForm">
                               <v-form @submit.prevent="submitReply">
@@ -368,17 +435,21 @@
                               small
                               @click="confirmDelete(review.id)"
                             >
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                               <v-icon left small>mdi-delete</v-icon>
                               삭제요청
                             </v-btn>
                           </div>
                         </div>
-                        <!-- 답글  -->
                         <div class="mb-6">
                           <div class="d-flex align-center mb-3">
                             <v-avatar size="28" class="me-3">
+<<<<<<< HEAD
+                              <img src="~/assets/images/faces/kks.jpg" alt="">
+=======
                               <!-- 사장님 프사 -->
                               <img src="~/assets/images/faces/kks.jpg" alt="" />
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                             </v-avatar>
                             <div
                               class="text-14 grey--text text--darken-4 f-600"
@@ -388,23 +459,32 @@
                           </div>
                           <p>{{ review.replyContent }}</p>
                         </div>
-
                         <v-divider></v-divider>
+<<<<<<< HEAD
+                      </div>
+=======
                         <!-- end::comment -->
                       </div>
                       <!-- end::user-post  -->
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                     </v-col>
-
-                    <!-- 페이지네이션 -->
+                  </v-row>
+                  <!-- 페이지네이션 -->
+                  <v-row>
                     <v-col cols="12" class="mb-15">
                       <v-row align="center">
                         <v-col cols="12" lg="6">
                           <div class="mb-4 me-3">
                             <p class="font-weight-normal mb-0 text-14">
+<<<<<<< HEAD
+                              Showing {{ (pageReview - 1) * pageSize + 1 }} to {{ Math.min(pageReview * pageSize,
+                              reviews.length) }}
+=======
                               Showing{{ (pageReview - 1) * pageSize + 1 }} to
                               {{
                                 Math.min(pageReview * pageSize, reviews.length)
                               }}
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                               of {{ reviews.length }} Reviews
                             </p>
                           </div>
@@ -434,14 +514,24 @@
           <v-container>
             <div class="reservation-stats">
               <v-row>
-                <v-col cols="12">
+                
+                <v-col cols="12" style="display: flex;">
+                  <v-img contain :src="require('~/assets/images/reservationdata.png')" width="20px"
+                    style="max-width: 20px; margin-right: 5px;"></v-img>
                   <h3 class="fw-bold mb-4">예약 통계</h3>
+<<<<<<< HEAD
+                  </v-col>
+                  <v-col>
+                  <v-btn @click="fetchMonthlyStats" color="primary" class="mb-4">월별 통계 보기</v-btn>
+                  <v-btn @click="fetchWeeklyStats" color="primary" class="mb-4">주간 통계 보기</v-btn>
+=======
                   <v-btn @click="fetchMonthlyStats" color="primary" class="mb-4"
                     >월별 통계 보기</v-btn
                   >
                   <v-btn @click="fetchWeeklyStats" color="primary" class="mb-4"
                     >주간 통계 보기</v-btn
                   >
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
                 </v-col>
               </v-row>
               <v-row>
@@ -469,6 +559,29 @@
             </div>
           </v-container>
         </v-tab-item>
+<<<<<<< HEAD
+
+        <!-- 챗봇해보기 -->
+        <v-tab-item value="tab-5">
+          <v-container>
+            <!-- 사용자가 질문을 입력할 수 있는 텍스트 필드입니다. -->
+            <v-text-field v-model="userMessage" label="Ask something" @keyup.enter="sendMessage"></v-text-field>
+
+            <!-- 메시지를 보내는 버튼입니다. -->
+            <v-btn @click="sendMessage" color="primary">Send</v-btn>
+
+            <!-- 챗봇의 응답을 표시하는 카드입니다. -->
+            <v-card v-if="botResponse">
+              <v-card-text>{{ botResponse }}</v-card-text>
+            </v-card>
+          </v-container>
+        </v-tab-item>
+
+
+
+
+=======
+>>>>>>> 9a87da136fe4648fc03322428f640895d1231858
       </v-tabs-items>
     </div>
     <Footer />
@@ -489,6 +602,8 @@ export default {
   },
   data() {
     return {
+      userMessage: '', // 사용자가 입력한 메시지를 저장합니다.
+      botResponse: null, // 챗봇의 응답을 저장합니다.
       // isClicked: false,
       stats: [],
       headers: [
@@ -538,6 +653,27 @@ export default {
   },
 
   methods: {
+    // 메시지를 보내는 메서드입니다.
+    async sendMessage() {
+      if (this.userMessage.trim()) { // 메시지가 비어 있지 않은 경우
+        try {
+          // axios를 사용하여 백엔드 API에 메시지를 보냅니다.
+          const response = await axios.post('http://localhost:8080/chatbot/send', null, {
+            params: { message: this.userMessage }
+          });
+
+          // 챗봇의 응답을 저장합니다.
+          this.botResponse = response.data;
+
+          // 메시지 입력 필드를 초기화합니다.
+          this.userMessage = '';
+        } catch (error) {
+          console.error(error);
+          alert('Failed to communicate with chatbot.');
+        }
+      }
+    },
+
     // 통계 데이터를 가져오는 메서드
     async fetchMonthlyStats() {
       const restaurantId = this.$route.params.id;
@@ -839,6 +975,7 @@ export default {
 .restaurant-name-title {
   margin-bottom: 20px;
 }
+
 .section-title {
   font-size: 1.5em;
   margin-bottom: 20px;
