@@ -7,7 +7,7 @@
         </div>
      
         <div class="text-center mb-3">
-          <h3 class="mb-3" style="color:rgb(210, 63, 87)">리뷰 작성</h3>
+          <h3 class="mb-3" >리뷰 작성</h3>
           <h5 class="text-sm font-600 grey--text text--darken-4" style="font-weight: bold; font-size: small;" >
             {{ selectName }}
           </h5>
@@ -47,7 +47,7 @@
             style="margin-top: 10px"
           ></v-file-input>
         </div>
-        <div style="margin-top: -30px">
+        <div style="margin-top: -15px">
           <div class="mb-4">
             <p class="text-14 mb-1" style="font-weight: bold">내용</p>
             <v-textarea

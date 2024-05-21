@@ -3,13 +3,13 @@
     <v-app-bar fixed color="white" elevate-on-scroll width="100%">
       <v-container class="d-flex align-center">
         <nuxt-link to="/">
-          <v-avatar class="me-10" tile>
+          <div class="me-10" tile>
             <img
               src="~/assets/images/DSILnewLOGO.png"
               alt=""
               style="width: 100px"
             />
-          </v-avatar>
+          </div>
         </nuxt-link>
 
         <v-dialog v-model="dsilModal" width="600">
