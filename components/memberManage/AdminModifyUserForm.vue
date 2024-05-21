@@ -94,7 +94,7 @@ export default {
                     }
                 };
 
-                // API 요청 보내기~
+                // API 요청 보내기
                 const response = await axios.post('http://localhost:8000/memberManage/adminManageUserPage', requestData);
 
                 // 응답 처리

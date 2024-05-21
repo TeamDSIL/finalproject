@@ -1,11 +1,11 @@
 import colors from "vuetify/es5/util/colors";
+
 export default {
   server: {
     host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
     port: 3000, // 원하는 포트 번호
   },
   // Global page headers: https://go.nuxtjs.dev/config-head
-  
   router: {
     extendRoutes(routes, resolve) {
       // 기존 라우트 수정도 가능
@@ -61,14 +61,16 @@ export default {
       { rel: "icon", type: "image/x-icon", href: "" },
       {
         rel: "stylesheet",
-        href: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;900&amp;display=swap",
+        href: "https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;900&display=swap",
       },
     ],
   },
   // Global CSS: https://go.nuxtjs.dev/config-css
   css: ["@/assets/scss/foodtruck.scss"],
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-  plugins: [],
+  plugins: [
+    '~/plugins/axios.js', // 추가된 플러그인 경로
+  ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: {
     dirs: ["~/components", "~/components/session"],
@@ -79,7 +81,13 @@ export default {
     "@nuxtjs/vuetify",
   ],
   // Modules: https://go.nuxtjs.dev/config-modules
-  modules: [],
+  modules: [
+    '@nuxtjs/axios', // Axios 모듈 추가
+  ],
+  // Axios 모듈 설정
+  axios: {
+    baseURL: process.env.apiURL || 'http://localhost:8000', // 환경 변수 또는 기본 URL 설정
+  },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
     customVariables: ["~/assets/variables.scss"],
