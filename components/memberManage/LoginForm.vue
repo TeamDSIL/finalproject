@@ -59,7 +59,7 @@ export default {
   data() {
     return {
       email: '',
-      password: ''
+      password: '',
     };
   },
   methods: {
@@ -99,28 +99,27 @@ export default {
         }
       }
     },
-    
     async checkOAuthToken() {
       try {
-    // 클라이언트 측에서 리디렉션 후에도 응답 헤더에서 액세스 토큰을 추출
-    const response = await axios.get('http://localhost:8000/memberManage/oauth2/success', { withCredentials: true });
-    const authorizationHeader = response.headers['authorization'];
-    
-    if (authorizationHeader) {
-      // 'Bearer ' 접두사를 제거하여 실제 토큰을 추출
-      const token = authorizationHeader.startsWith('Bearer ') ? authorizationHeader.slice(7) : authorizationHeader;
-      
-      localStorage.setItem('token', token); // Access Token 저장
-      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
-      console.log('OAuth 토큰이 저장되었습니다:', token);
-      alert('OAuth 로그인 성공');
-      this.$router.push('/'); // '/' 로 리디렉트
-    } else {
-      console.log('Access Token이 응답 헤더에 포함되어 있지 않습니다.');
-    }
-  } catch (error) {
-    console.error('OAuth 토큰 처리 실패:', error);
-  }
+        // 클라이언트 측에서 리디렉션 후에도 응답 헤더에서 액세스 토큰을 추출
+        const response = await axios.get('http://localhost:8000/memberManage/oauth2/success', { withCredentials: true });
+        const authorizationHeader = response.headers['authorization'];
+
+        if (authorizationHeader) {
+          // 'Bearer ' 접두사를 제거하여 실제 토큰을 추출
+          const token = authorizationHeader.startsWith('Bearer ') ? authorizationHeader.slice(7) : authorizationHeader;
+
+          localStorage.setItem('token', token); // Access Token 저장
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
+          console.log('OAuth 토큰이 저장되었습니다:', token);
+          alert('OAuth 로그인 성공');
+          this.$router.push('/'); // '/' 로 리디렉트
+        } else {
+          console.log('Access Token이 응답 헤더에 포함되어 있지 않습니다.');
+        }
+      } catch (error) {
+        console.error('OAuth 토큰 처리 실패:', error);
+      }
     }
   },
   mounted() {
@@ -155,8 +154,8 @@ export default {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
   /* 간격 설정 */
 }
 
