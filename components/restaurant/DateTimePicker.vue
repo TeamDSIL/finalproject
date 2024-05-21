@@ -696,7 +696,7 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
-      depositAmount:100,
+      depositAmount:1000,
       riceBallPoints: 100,
       totalRiceBallPoints: 4200,
       showConfirmationModal: false,
@@ -861,6 +861,7 @@ export default {
       }
     },
     generateTimeOptions() {
+      this.timeOptions = []; // 배열 초기화
       for (let hour = 12; hour <= 21; hour++) {
     this.timeOptions.push(`${hour.toString().padStart(2, '0')}:00`);
   }
@@ -983,8 +984,6 @@ confirmReservation2() {
       const totalAmount = depositAmount * numberOfPeople - riceBallInput;
       const merchantUid = `${this.restaurantName}${Date.now()}`
 
-      console.log(merchantUid);
-
       // 결제 정보 설정
       this.paymentData = {
         pg: 'html5_inicis',
@@ -1052,6 +1051,7 @@ confirmReservation2() {
           IMP.init('imp56476634');
           IMP.request_pay(this.paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
             if (rsp.success) {
+              const impUid = rsp.imp_uid; 
               this.showSpinner = true;
 
               // 예약 정보를 서버에 전송
@@ -1060,8 +1060,11 @@ confirmReservation2() {
                   console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
                   // 결제 정보를 서버에 전송
                   const reservationId = reservationResponse.data;
-
-                  axios.post('http://localhost:8000/restaurant/payment', this.paymentData, {
+                  const paymentDataWithImpUid = {
+                  ...this.paymentData,
+                  impUid: impUid  // Add imp_uid to the payment data
+                };
+                  axios.post('http://localhost:8000/restaurant/payment', paymentDataWithImpUid, {
                     params: {
                       reservationId: reservationId
                     }
