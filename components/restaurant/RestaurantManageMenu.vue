@@ -44,15 +44,48 @@ export default {
   data() {
     return {
       restaurants: [],
+      user: null, // 사용자 정보를 저장할 변수
     };
   },
+  mounted() {
+        this.fetchUserInfo();
+    },
 
   components: {
     RestaurantManageMain,
   },
   methods: {
+    //memberID를 해당 페이지에 적용하는 메소드
+    async fetchUserInfo() {
+            try {
+                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                if (!token) {
+                    throw new Error('No token found');
+                }
+                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                const response = await axios.get('http://localhost:8000/userInfo/me', {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
+                if (response.status === 200) {
+                    const userInfo = response.data;
+                    console.log('User Info:', userInfo);
+                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                    this.user = userInfo;
+                    console.log(this.user);
+                } else {
+                    console.error('Failed to fetch user info:', response);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        },
+
     fetchRestaurants() {
-      const memberId = 15;
+      const memberId = this.user.id;
+      console.log("유저번호",memberId);
       axios.get(`http://localhost:8000/restaurant/${memberId}/restaurants`)
         .then(response => {
           this.restaurants = response.data;
