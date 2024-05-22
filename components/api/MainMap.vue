@@ -1,5 +1,5 @@
 <template>
-  <div id="MainKakaomap" style="width: 100%; height: 350px"></div>
+  <div id="MainKakaomap" style="width: 100%; height: 500px"></div>
 </template>
 
 <script>
@@ -37,7 +37,7 @@ export default {
         })
         .catch((error) => console.error("Data load failed:", error));
     },
-    //¸Ê ÃÊ±âÈ­¿Í »ç¿ëÀÚ À§Ä¡ ±â¹ÝÀÇ Áöµµ »ý¼º ·ÎÁ÷
+    //ï¿½ï¿½ ï¿½Ê±ï¿½È­ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ä¡ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
     initializeMap() {
       if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -94,7 +94,7 @@ export default {
                     }).setMap(map);
                   }
                 } else {
-                  console.error("ÁÖ¼Ò °Ë»ö ½ÇÆÐ:", restaurant.address);
+                  console.error("ï¿½Ö¼ï¿½ ï¿½Ë»ï¿½ ï¿½ï¿½ï¿½ï¿½:", restaurant.address);
                 }
               });
             });
@@ -107,7 +107,7 @@ export default {
         console.error("This browser doesn't support geolocation");
       }
     },
-    // µÎ ÁÂÇ¥ »çÀÌÀÇ °Å¸® °è»ê ¸Þ¼­µå
+    // ï¿½ï¿½ ï¿½ï¿½Ç¥ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½Å¸ï¿½ ï¿½ï¿½ï¿½ ï¿½Þ¼ï¿½ï¿½ï¿½
     calculateDistance(lat1, lng1, lat2, lng2) {
       function toRad(x) {
         return (x * Math.PI) / 180;
