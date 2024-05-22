@@ -698,7 +698,7 @@ export default {
       timeOptions: [],
       depositAmount:3000,
       riceBallPoints: 100,
-      totalRiceBallPoints: 4200,
+      totalRiceBallPoints: 0,
       showConfirmationModal: false,
       showPaymentModal: false,
       showReservationConfirmationModal: false,
@@ -832,6 +832,7 @@ export default {
           // 사용자 정보를 상태나 컴포넌트 데이터에 저장
           this.user = userInfo;
           console.log(this.user);
+          this.totalRiceBallPoints = userInfo.point.currentPoint || 0;
         } else {
           console.error('Failed to fetch user info:', response);
         }
@@ -1008,6 +1009,12 @@ export default {
           if (this.user) {
         reservationData.memberId = this.user.id;
       }
+      if (this.riceBallInput > 0) {
+      // 사용한 포인트만큼 차감
+      this.totalRiceBallPoints -= this.riceBallInput;
+      // 서버에도 업데이트된 포인트 정보 전송
+      this.updateUserPoints();
+    }
           // axios를 사용하여 백엔드로 예약 정보 전송
           axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
               .then(response => {
