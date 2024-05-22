@@ -81,11 +81,6 @@ export default {
         this.$router.push("/main/InformationPage");
       }
     },
-    handleTabClick(tab) {
-      if (tab.target.href && tab.target.href.includes("#tab-3")) {
-        this.$router.push("/main/InformationPage");
-      }
-    },
   },
   mounted() {},
 };
