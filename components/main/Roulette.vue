@@ -139,14 +139,14 @@ export default {
 <style scoped>
 .menu-selected {
   color: white !important;
-  background-color: #d32f2f !important;
-  border-color: #d32f2f !important;
+  background-color: rgb(210, 63, 87) !important;
+  border-color: rgb(210, 63, 87) !important;
 }
 
 .menu-unselected {
-  color: red !important;
+  color: rgb(210, 63, 87) !important;
   background-color: white !important;
-  border-color: red !important;
+  border-color: rgb(210, 63, 87) !important;
 }
 
 .roulette-container {
@@ -213,7 +213,7 @@ input {
 
 .alert-message {
   margin-top: 1rem;
-  color: #d32f2f;
+  color: rgb(210, 63, 87);
   font-weight: bold;
 }
 </style>

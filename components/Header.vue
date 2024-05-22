@@ -73,6 +73,7 @@
             type="text"
             placeholder="카테고리 및 음식이름을 입력해주세요"
             v-model="searchQuery"
+            @keyup.enter="search"
           />
           <v-btn
             icon
@@ -81,7 +82,6 @@
             class="rounded-l-0 text-capitalize"
             @click="search"
             >Search
-            <!-- <v-icon small>mdi-magnify</v-icon> -->
           </v-btn>
         </div>
         <v-spacer></v-spacer>
