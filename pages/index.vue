@@ -3,7 +3,7 @@
     <!-- <header></header> -->
     <MainForm></MainForm>
     <!-- 카테고리 -->
-    <div>
+    <div style="margin-top: -100px;">
       <v-container class="py-15">
         <v-row>
           <v-col cols="12" style="display: flex">
@@ -13,7 +13,7 @@
               width="20px"
               style="max-width: 30px; margin-right: 5px"
             ></v-img>
-            <span style="font-size: xx-large; font-weight: bold"
+            <span style="font-size: x-large; font-weight: bold"
               >드실 음식</span
             >
           </v-col>
@@ -34,7 +34,7 @@
                   :to="`/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="150" class="mb-4">
+                  <v-avatar size="200" class="mb-4" >
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">
@@ -54,7 +54,7 @@
               width="20px"
               style="max-width: 30px; margin-right: 5px"
             ></v-img>
-            <span style="font-size: xx-large; font-weight: bold"
+            <span style="font-size: x-large; font-weight: bold"
               >드실 주류</span
             >
           </v-col>
@@ -75,7 +75,7 @@
                   :to="`/restaurant/alcohol?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="150" class="mb-4">
+                  <v-avatar size="200" class="mb-4" >
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">
@@ -95,7 +95,7 @@
               width="20px"
               style="max-width: 30px; margin-right: 5px"
             ></v-img>
-            <span style="font-size: xx-large; font-weight: bold"
+            <span style="font-size: x-large; font-weight: bold"
               >고객 맞춤</span
             >
           </v-col>
@@ -116,7 +116,7 @@
                   :to="`/restaurant/custom?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="150" class="mb-4">
+                  <v-avatar size="200" class="mb-4">
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">

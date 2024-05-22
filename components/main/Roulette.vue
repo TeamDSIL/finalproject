@@ -6,8 +6,9 @@
         v-model="newMenu"
         placeholder="새 메뉴 입력"
         @keyup.enter="addMenu"
+        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 200px;"
       />
-      <v-btn @click="addMenu">메뉴 추가</v-btn>
+      <v-btn @click="addMenu" style="background-color: rgb(255,207,2);">메뉴 추가</v-btn>
       <v-btn @click="selectAll">전체 선택/해제</v-btn>
     </div>
 
@@ -26,12 +27,18 @@
         </v-btn>
       </div>
     </div>
-    <v-btn @click="startRoulette" v-if="menus.some((menu) => menu.selected)"
-      >메뉴 고르기 시작!</v-btn
-    >
+    <v-btn @click="startRoulette" v-if="menus.some((menu) => menu.selected)" style="background-color: rgb(255,207,2); margin-top: 10px;">
+      메뉴 고르기 시작!
+    </v-btn>
     <div v-if="alertVisible" class="alert-message">메뉴를 선택해주세요.</div>
-    <div v-if="finalMenu" class="final-menu">최종 메뉴: {{ finalMenu }}</div>
-    <v-btn @click="closeModal">닫기</v-btn>
+    <div v-if="finalMenu" :class="['final-menu', { 'animate-fade-in': showCelebration }]">
+      최종 메뉴: {{ finalMenu }}
+    </div>
+    <!-- 축하 이미지 요소 -->
+    <div>
+      <img v-if="showCelebration" src="~/assets/images/clikCategory/celebration.gif" alt="축하" class="celebration-image" />
+    </div>
+    <v-btn @click="closeModal" style="margin-top: 10px;">닫기</v-btn>
   </div>
 </template>
 
@@ -68,6 +75,7 @@ export default {
       finalMenu: "",
       isSpinning: false,
       alertVisible: false,
+      showCelebration: false, // 축하 이미지 표시 여부
     };
   },
   computed: {
@@ -122,6 +130,7 @@ export default {
     finalizeRoulette(selectedMenus) {
       const randomIndex = Math.floor(Math.random() * selectedMenus.length);
       this.finalMenu = selectedMenus[randomIndex].name;
+      this.showCelebrationImage();
     },
     showAlert() {
       this.alertVisible = true;
@@ -132,11 +141,28 @@ export default {
     closeModal() {
       this.$emit("close");
     },
+    showCelebrationImage() {
+      this.showCelebration = true;
+      setTimeout(() => {
+        this.showCelebration = false;
+      }, 3000); // 3초 후에 축하 이미지 숨기기
+    },
   },
 };
 </script>
 
 <style scoped>
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
 .menu-selected {
   color: white !important;
   background-color: rgb(210, 63, 87) !important;
@@ -209,11 +235,19 @@ input {
   margin-top: 1rem;
   font-weight: bold;
   color: #d32f2f;
+  animation: fade-in 1s ease-in-out;
 }
 
 .alert-message {
   margin-top: 1rem;
   color: rgb(210, 63, 87);
   font-weight: bold;
+}
+
+/* 축하 이미지 스타일 */
+.celebration-image {
+  margin-top: 1rem;
+  width: 100px; /* 원하는 크기로 조정하세요 */
+  height: auto;
 }
 </style>
