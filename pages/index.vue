@@ -267,7 +267,7 @@ export default {
       this.isRouletteOpen = true;
     },
     applyRandomStyle() {
-      const minSize = 50;
+      const minSize = 100;
       const maxSize = 150; // 최대 크기
       const size = Math.random() * (maxSize - minSize) + minSize; // 최소 크기에서 최대 크기 사이의 랜덤 크기
       this.randomImageStyle = {
