@@ -1,5 +1,6 @@
 <template>
   <div>
+
     <v-container class="py-15" style="position: relative">
       <MainForm></MainForm>
       <v-row>
@@ -76,6 +77,7 @@
                 </h4>
               </nuxt-link>
             </div>
+
           </v-col>
         </v-row>
       </v-row>
@@ -102,6 +104,7 @@
             md="4"
             sm="6"
           >
+
             <div class="text-center">
               <nuxt-link
                 :to="`/restaurant/custom?category=${item.name}`"
@@ -116,6 +119,7 @@
               </nuxt-link>
             </div>
           </v-col>
+
         </v-row>
       </v-row>
       <Topten></Topten>
