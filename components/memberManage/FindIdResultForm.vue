@@ -15,7 +15,7 @@
                     </div>
 
                     <div class="flex-1 mr-3">
-                        <p class="mb-0">dv****@naver.com</p>
+                        <p class="mb-0">{{ maskedEmail }}</p>
                     </div>
 
                 </div>
@@ -38,12 +38,32 @@
 
 <script>
 export default {
+    props: {
+        email: {
+            type: String,
+            required: true
+        }
+    },
     data() {
         return {
             step: 1, // 초기 단계 설정
-            email: '',
             dialog: false,
         };
+    },
+    computed: {
+        maskedEmail() {
+            return this.maskEmail(this.email);
+        }
+    },
+    methods: {
+        maskEmail(email) {
+            const [localPart, domain] = email.split('@');
+            if (localPart.length <= 4) {
+                return `${localPart.slice(0, 2)}**@${domain}`;
+            } else {
+                return `${localPart.slice(0, 2)}****${localPart.slice(-2)}@${domain}`;
+            }
+        }
     }
 }
 </script>
