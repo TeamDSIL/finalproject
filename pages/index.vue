@@ -3,7 +3,7 @@
     <!-- <header></header> -->
     <MainForm></MainForm>
     <!-- 카테고리 -->
-    <div>
+    <div style="margin-top: -50px">
       <v-container class="py-15">
         <v-row>
           <v-col cols="12" style="display: flex">
@@ -13,9 +13,7 @@
               width="20px"
               style="max-width: 30px; margin-right: 5px"
             ></v-img>
-            <span style="font-size: xx-large; font-weight: bold"
-              >드실 음식</span
-            >
+            <span style="font-size: x-large; font-weight: bold">드실 음식</span>
           </v-col>
           <v-row
             class="elevation-2"
@@ -34,7 +32,7 @@
                   :to="`/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="150" class="mb-4">
+                  <v-avatar size="200" class="mb-4">
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">
@@ -54,9 +52,7 @@
               width="20px"
               style="max-width: 30px; margin-right: 5px"
             ></v-img>
-            <span style="font-size: xx-large; font-weight: bold"
-              >드실 주류</span
-            >
+            <span style="font-size: x-large; font-weight: bold">드실 주류</span>
           </v-col>
           <v-row
             class="elevation-2"
@@ -75,7 +71,7 @@
                   :to="`/restaurant/alcohol?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="150" class="mb-4">
+                  <v-avatar size="200" class="mb-4">
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">
@@ -95,9 +91,7 @@
               width="20px"
               style="max-width: 30px; margin-right: 5px"
             ></v-img>
-            <span style="font-size: xx-large; font-weight: bold"
-              >고객 맞춤</span
-            >
+            <span style="font-size: x-large; font-weight: bold">고객 맞춤</span>
           </v-col>
           <v-row
             class="elevation-2"
@@ -116,7 +110,7 @@
                   :to="`/restaurant/custom?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="150" class="mb-4">
+                  <v-avatar size="200" class="mb-4">
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">
@@ -160,9 +154,7 @@ import Roulette from "../components/main/Roulette.vue";
 import Topten from "../components/main/Topten.vue";
 export default {
   components: { Roulette, Topten },
-
   layout: "Header",
-
   head: {
     title: "Home",
   },
@@ -267,7 +259,7 @@ export default {
       this.isRouletteOpen = true;
     },
     applyRandomStyle() {
-      const minSize = 50;
+      const minSize = 100;
       const maxSize = 150; // 최대 크기
       const size = Math.random() * (maxSize - minSize) + minSize; // 최소 크기에서 최대 크기 사이의 랜덤 크기
       this.randomImageStyle = {
@@ -292,11 +284,10 @@ export default {
 }
 /* 전역 스타일로도 컴포넌트 스타일 정의 가능하지만 스코프드 스타일 권장 */
 .image-container {
-  position: relative;
+  position: absolute;
   height: 100vh; // 화면 전체 높이
   width: 100vw; // 화면 전체 너비
 }
-
 .random-image {
   position: relative;
   display: inline-block; // 이미지와 텍스트를 컨테이너에 맞게 배치
@@ -304,13 +295,11 @@ export default {
   width: 100%; // 폭을 명시적으로 지정
   min-height: 150px; // 최소 높이 지정
 }
-
 .random-image img {
   display: block; // 이미지 블록 레벨로 설정
   max-width: 100%; // 이미지 최대 너비 제한
   height: auto; // 비율 유지
 }
-
 /* 추가적인 컴포넌트 스코프드 스타일 */
 .image-container {
   cursor: pointer;
@@ -327,14 +316,13 @@ export default {
   left: 50%; // 수평 중앙에 위치
   transform: translate(-50%, -100%); // 중앙에서 위로 이동
   padding: 8px 12px;
-  background-color: #d23f57; // 말풍선 배경
+  background-color: #D23F57; // 말풍선 배경
   color: white; // 텍스트 색상
   border-radius: 8px; // 둥근 모서리
   z-index: 1000; // 높은 z-index
   visibility: hidden; // 초기에 숨김
   white-space: nowrap;
 }
-
 .random-image:hover .info-text {
   visibility: visible; // hover 시에만 텍스트 보이게 설정
 }
