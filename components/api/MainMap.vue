@@ -9,7 +9,7 @@ export default {
   name: "MainMap",
   data() {
     return {
-      imageSrc: require("@/assets/images/dsil_Characters.png"),
+      imageSrc: require("@/assets/images/mainMap.png"),
       restaurantAddresses: [],
     };
   },

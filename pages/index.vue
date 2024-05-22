@@ -1,155 +1,145 @@
 <template>
   <div>
-    <!-- <header></header> -->
-    <MainForm></MainForm>
-    <!-- 카테고리 -->
-    <div style="margin-top: -100px;">
-      <v-container class="py-15">
-        <v-row>
-          <v-col cols="12" style="display: flex">
-            <v-img
-              contain
-              :src="require('~/assets/images/foodd.png')"
-              width="20px"
-              style="max-width: 30px; margin-right: 5px"
-            ></v-img>
-            <span style="font-size: x-large; font-weight: bold"
-              >드실 음식</span
-            >
-          </v-col>
-          <v-row
-            class="elevation-2"
-            style="padding: 16px; border-radius: 8px; margin-top: 0px"
+
+    <v-container class="py-15" style="position: relative">
+      <MainForm></MainForm>
+      <v-row>
+        <v-col cols="12" style="display: flex">
+          <v-img
+            contain
+            :src="require('~/assets/images/foodd.png')"
+            width="20px"
+            style="max-width: 30px; margin-right: 5px"
+          ></v-img>
+          <span style="font-size: xx-large; font-weight: bold">드실 음식</span>
+        </v-col>
+        <v-row
+          class="elevation-2"
+          style="padding: 16px; border-radius: 8px; margin-top: 0px"
+        >
+          <v-col
+            v-for="(item, index) in food"
+            :key="item.name"
+            cols="12"
+            lg="3"
+            md="4"
+            sm="6"
           >
-            <v-col
-              v-for="(item, index) in food"
-              :key="item.name"
-              cols="12"
-              lg="3"
-              md="4"
-              sm="6"
-            >
-              <div class="text-center">
-                <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
-                  class="text-decoration-none"
-                >
-                  <v-avatar size="200" class="mb-4" >
-                    <img :src="item.img" alt="" />
-                  </v-avatar>
-                  <h4 class="grey--text text--darken-2">
-                    {{ item.displayName }}
-                  </h4>
-                </nuxt-link>
-              </div>
-            </v-col>
-          </v-row>
-        </v-row>
-        <!-- 주류 -->
-        <v-row>
-          <v-col cols="12" style="display: flex; margin-top: 20px">
-            <v-img
-              contain
-              :src="require('~/assets/images/drink.png')"
-              width="20px"
-              style="max-width: 30px; margin-right: 5px"
-            ></v-img>
-            <span style="font-size: x-large; font-weight: bold"
-              >드실 주류</span
-            >
+            <div class="text-center">
+              <nuxt-link
+                :to="`/restaurant/list?category=${item.name}`"
+                class="text-decoration-none"
+              >
+                <v-avatar size="150" class="mb-4">
+                  <img :src="item.img" alt="" />
+                </v-avatar>
+                <h4 class="grey--text text--darken-2">
+                  {{ item.displayName }}
+                </h4>
+              </nuxt-link>
+            </div>
           </v-col>
-          <v-row
-            class="elevation-2"
-            style="padding: 16px; border-radius: 8px; margin-top: 0px"
-          >
-            <v-col
-              v-for="(item, index) in alcohol"
-              :key="item.name"
-              cols="12"
-              lg="3"
-              md="4"
-              sm="6"
-            >
-              <div class="text-center">
-                <nuxt-link
-                  :to="`/restaurant/alcohol?category=${item.name}`"
-                  class="text-decoration-none"
-                >
-                  <v-avatar size="200" class="mb-4" >
-                    <img :src="item.img" alt="" />
-                  </v-avatar>
-                  <h4 class="grey--text text--darken-2">
-                    {{ item.displayName }}
-                  </h4>
-                </nuxt-link>
-              </div>
-            </v-col>
-          </v-row>
         </v-row>
-        <!-- 고객 맞춤형 -->
-        <v-row>
-          <v-col cols="12" style="display: flex; margin-top: 20px">
-            <v-img
-              contain
-              :src="require('~/assets/images/peoples.png')"
-              width="20px"
-              style="max-width: 30px; margin-right: 5px"
-            ></v-img>
-            <span style="font-size: x-large; font-weight: bold"
-              >고객 맞춤</span
-            >
+      </v-row>
+      <!-- 주류 -->
+      <v-row>
+        <v-col cols="12" style="display: flex; margin-top: 20px">
+          <v-img
+            contain
+            :src="require('~/assets/images/drink.png')"
+            width="20px"
+            style="max-width: 30px; margin-right: 5px"
+          ></v-img>
+          <span style="font-size: xx-large; font-weight: bold">드실 주류</span>
+        </v-col>
+        <v-row
+          class="elevation-2"
+          style="padding: 16px; border-radius: 8px; margin-top: 0px"
+        >
+          <v-col
+            v-for="(item, index) in alcohol"
+            :key="item.name"
+            cols="12"
+            lg="3"
+            md="4"
+            sm="6"
+          >
+            <div class="text-center">
+              <nuxt-link
+                :to="`/restaurant/alcohol?category=${item.name}`"
+                class="text-decoration-none"
+              >
+                <v-avatar size="150" class="mb-4">
+                  <img :src="item.img" alt="" />
+                </v-avatar>
+                <h4 class="grey--text text--darken-2">
+                  {{ item.displayName }}
+                </h4>
+              </nuxt-link>
+            </div>
+
           </v-col>
-          <v-row
-            class="elevation-2"
-            style="padding: 16px; border-radius: 8px; margin-top: 0px"
-          >
-            <v-col
-              v-for="(item, index) in who"
-              :key="item.name"
-              cols="12"
-              lg="3"
-              md="4"
-              sm="6"
-            >
-              <div class="text-center">
-                <nuxt-link
-                  :to="`/restaurant/custom?category=${item.name}`"
-                  class="text-decoration-none"
-                >
-                  <v-avatar size="200" class="mb-4">
-                    <img :src="item.img" alt="" />
-                  </v-avatar>
-                  <h4 class="grey--text text--darken-2">
-                    {{ item.displayName }}
-                  </h4>
-                </nuxt-link>
-              </div>
-            </v-col>
-          </v-row>
         </v-row>
-      </v-container>
-    </div>
-    <!-- section-2  4,8-->
-    <div>
-      <!-- <v-container class="py-15">
-        <v-row> -->
+      </v-row>
+      <!-- 고객 맞춤형 -->
+      <v-row>
+        <v-col cols="12" style="display: flex; margin-top: 20px">
+          <v-img
+            contain
+            :src="require('~/assets/images/peoples.png')"
+            width="20px"
+            style="max-width: 30px; margin-right: 5px"
+          ></v-img>
+          <span style="font-size: xx-large; font-weight: bold">고객 맞춤</span>
+        </v-col>
+        <v-row
+          class="elevation-2"
+          style="padding: 16px; border-radius: 8px; margin-top: 0px"
+        >
+          <v-col
+            v-for="(item, index) in who"
+            :key="item.name"
+            cols="12"
+            lg="3"
+            md="4"
+            sm="6"
+          >
+
+            <div class="text-center">
+              <nuxt-link
+                :to="`/restaurant/custom?category=${item.name}`"
+                class="text-decoration-none"
+              >
+                <v-avatar size="150" class="mb-4">
+                  <img :src="item.img" alt="" />
+                </v-avatar>
+                <h4 class="grey--text text--darken-2">
+                  {{ item.displayName }}
+                </h4>
+              </nuxt-link>
+            </div>
+          </v-col>
+
+        </v-row>
+      </v-row>
       <Topten></Topten>
-      <!-- </v-row>
-      </v-container> -->
-    </div>
-    <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
-    <div :style="randomImageStyle" class="random-image" @click="openRoulette">
-      <img src="@/assets/images/dsil_Characters.png" alt="Dynamic Character" />
-      <div class="info-text">메뉴를 추천해 드릴게요.</div>
-    </div>
-    <!-- 모달 창 -->
-    <v-dialog
-      v-model="isRouletteOpen"
-      max-width="600px"
-      @click:outside="isRouletteOpen = false"
-    >
-      <roulette @close="isRouletteOpen = false"></roulette>
-    </v-dialog>
+      <!-- 랜덤 위치와 크기의 이미지, 클릭 이벤트 추가 -->
+      <div :style="randomImageStyle" class="random-image" @click="openRoulette">
+        <img
+          src="@/assets/images/dsil_Characters.png"
+          alt="Dynamic Character"
+        />
+        <div class="info-text">메뉴를 추천해 드릴게요.</div>
+      </div>
+      <!-- 모달 창 -->
+      <v-dialog
+        v-model="isRouletteOpen"
+        max-width="600px"
+        @click:outside="isRouletteOpen = false"
+      >
+        <roulette @close="isRouletteOpen = false"></roulette>
+      </v-dialog>
+    </v-container>
     <Footer />
   </div>
 </template>
@@ -269,7 +259,8 @@ export default {
     applyRandomStyle() {
       const minSize = 100;
       const maxSize = 150; // 최대 크기
-      const size = Math.random() * (maxSize - minSize) + minSize; // 최소 크기에서 최대 크기 사이의 랜덤 크기
+      const size = minSize;
+      // const size = Math.random() * (maxSize - minSize) + minSize; // 최소 크기에서 최대 크기 사이의 랜덤 크기
       this.randomImageStyle = {
         position: "absolute",
         top: `${Math.random() * 100}%`, // 화면의 범위 내에서 랜덤 위치
@@ -292,7 +283,7 @@ export default {
 }
 /* 전역 스타일로도 컴포넌트 스타일 정의 가능하지만 스코프드 스타일 권장 */
 .image-container {
-  position: relative;
+  position: absolute;
   height: 100vh; // 화면 전체 높이
   width: 100vw; // 화면 전체 너비
 }
