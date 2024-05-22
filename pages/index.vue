@@ -173,86 +173,86 @@ export default {
       randomImageStyle: {}, // 랜덤 이미지 스타일
       food: [
         {
-          img: require("~/assets/images/mainCategory/KOREAN.png"),
+          img: require("~/assets/images/mainCategory/KOREAN.webp"),
           name: "KOREAN",
           displayName: "한식",
         },
         {
-          img: require("~/assets/images/mainCategory/CHINESE.jpg"),
+          img: require("~/assets/images/mainCategory/CHINESE.webp"),
           name: "CHINESE",
           displayName: "중식",
         },
         {
-          img: require("~/assets/images/mainCategory/JAPANESE.jpg"),
+          img: require("~/assets/images/mainCategory/JAPANESE.webp"),
           name: "JAPANESE",
           displayName: "일식",
         },
         {
-          img: require("~/assets/images/mainCategory/WESTERN.jpg"),
+          img: require("~/assets/images/mainCategory/WESTERN.webp"),
           name: "WESTERN",
           displayName: "양식",
         },
         {
-          img: require("~/assets/images/food/14.png"),
+          img: require("~/assets/images/mainCategory/VIETNAMESE.webp"),
           name: "VIETNAMESE",
           displayName: "베트남",
         },
         {
-          img: require("~/assets/images/food/14.png"),
+          img: require("~/assets/images/mainCategory/AMERICAN.webp"),
           name: "AMERICAN",
           displayName: "아메리칸",
         },
         {
-          img: require("~/assets/images/food/14.png"),
+          img: require("~/assets/images/mainCategory/INDIAN.webp"),
           name: "INDIAN",
           displayName: "인도",
         },
         {
-          img: require("~/assets/images/food/14.png"),
+          img: require("~/assets/images/mainCategory/OTHERGLOBALFOOD.webp"),
           name: "OTHERGLOBALFOOD",
           displayName: "기타 세계",
         },
       ],
       alcohol: [
         {
-          img: require("~/assets/images/food/9.png"),
+          img: require("~/assets/images/mainCategory/BEER.webp"),
           name: "BEER",
           displayName: "맥주/호프",
         },
         {
-          img: require("~/assets/images/food/10.png"),
+          img: require("~/assets/images/mainCategory/TRADITIONAL_ALCOHOL.webp"),
           name: "TRADITIONAL_ALCOHOL",
           displayName: "전통주",
         },
         {
-          img: require("~/assets/images/food/11.png"),
+          img: require("~/assets/images/mainCategory/IZAKAYA.webp"),
           name: "IZAKAYA",
           displayName: "이자카야",
         },
         {
-          img: require("~/assets/images/food/12.png"),
+          img: require("~/assets/images/mainCategory/WINE_COCKTAIL.webp"),
           name: "WINE_COCKTAIL",
           displayName: "와인/칵테일",
         },
       ],
       who: [
         {
-          img: require("~/assets/images/food/9.png"),
+          img: require("~/assets/images/mainCategory/SOLO.webp"),
           name: "SOLO",
           displayName: "혼밥",
         },
         {
-          img: require("~/assets/images/food/10.png"),
+          img: require("~/assets/images/mainCategory/WITH_FRIENDS.webp"),
           name: "WITH_FRIENDS",
           displayName: "친구",
         },
         {
-          img: require("~/assets/images/food/11.png"),
+          img: require("~/assets/images/mainCategory/GROUP_GATHERING.webp"),
           name: "GROUP_GATHERING",
           displayName: "모임/회식",
         },
         {
-          img: require("~/assets/images/food/12.png"),
+          img: require("~/assets/images/mainCategory/DATE.webp"),
           name: "DATE",
           displayName: "데이트",
         },

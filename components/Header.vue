@@ -92,7 +92,6 @@
             @click="search"
             width="100px"
             >Search
-            <!-- <v-icon small>mdi-magnify</v-icon> -->
           </v-btn>
         </div>
         <v-spacer></v-spacer>

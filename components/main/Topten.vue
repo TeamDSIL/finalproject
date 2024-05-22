@@ -16,7 +16,7 @@
           <!-- <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
           <v-card-text>{{ item.description }}</v-card-text> -->
           <v-card-title
-            ><span style="color: #d32f2f; font-weight: bold"
+            ><span style="color: rgb(210, 63, 87); font-weight: bold"
               >{{ item.rank }}위 &nbsp;</span
             >
             {{ item.name }}</v-card-title
@@ -39,7 +39,7 @@
           <v-img :src="item.img" height="200px" />
 
           <v-card-title
-            ><span style="color: #d32f2f; font-weight: bold"
+            ><span style="color: rgb(210, 63, 87); font-weight: bold"
               >{{ item.rank }}위 &nbsp;</span
             >
             {{ item.name }}</v-card-title
@@ -61,7 +61,7 @@
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title
-            ><span style="color: #d32f2f; font-weight: bold"
+            ><span style="color: rgb(210, 63, 87); font-weight: bold"
               >{{ item.rank }}위 &nbsp;</span
             >
             {{ item.name }}</v-card-title
