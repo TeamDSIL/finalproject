@@ -1,26 +1,36 @@
 <template>
   <div class="roulette-container">
+    <div class="input-group">
+      <input
+        type="text"
+        v-model="newMenu"
+        placeholder="새 메뉴 입력"
+        @keyup.enter="addMenu"
+      />
+      <v-btn @click="addMenu">메뉴 추가</v-btn>
+      <v-btn @click="selectAll">전체 선택/해제</v-btn>
+    </div>
+
     <div class="menu-selection">
-      <v-btn
-        v-for="menu in menus"
-        :key="menu.name"
-        :color="menu.selected ? 'primary' : 'white'"
-        @click="toggleMenu(menu)"
-        >{{ menu.name }}</v-btn
-      >
+      <div class="menu-row" v-for="(chunk, index) in chunkedMenus" :key="index">
+        <v-btn
+          v-for="menu in chunk"
+          :key="menu.name"
+          :class="{
+            'menu-selected': menu.selected,
+            'menu-unselected': !menu.selected,
+          }"
+          @click="toggleMenu(menu)"
+        >
+          {{ menu.name }}
+        </v-btn>
+      </div>
     </div>
-    <div class="selected-menus" v-if="selectedMenus.length">
-      <p>선택된 메뉴:</p>
-      <ul>
-        <li v-for="menu in selectedMenus" :key="menu.name">{{ menu.name }}</li>
-      </ul>
-    </div>
-    <v-btn @click="finalizeSelection">선택완료</v-btn>
-    <v-btn @click="startRoulette" v-if="selectedMenus.length"
+    <v-btn @click="startRoulette" v-if="menus.some((menu) => menu.selected)"
       >메뉴 고르기 시작!</v-btn
     >
+    <div v-if="alertVisible" class="alert-message">메뉴를 선택해주세요.</div>
     <div v-if="finalMenu" class="final-menu">최종 메뉴: {{ finalMenu }}</div>
-
     <v-btn @click="closeModal">닫기</v-btn>
   </div>
 </template>
@@ -29,6 +39,7 @@
 export default {
   data() {
     return {
+      newMenu: "",
       menus: [
         { name: "짜장면", selected: false },
         { name: "김치찌개", selected: false },
@@ -39,55 +50,84 @@ export default {
         { name: "국밥", selected: false },
         { name: "칼국수", selected: false },
         { name: "햄버거", selected: false },
-        { name: "기영이네", selected: false },
-
-        // ... 나머지 메뉴 항목 추가
+        { name: "텐동", selected: false },
+        { name: "우동", selected: false },
+        { name: "떡볶이", selected: false },
+        { name: "스테이크", selected: false },
+        { name: "치킨", selected: false },
+        { name: "닭볶음탕", selected: false },
+        { name: "초밥", selected: false },
+        { name: "샐러드", selected: false },
+        { name: "라자냐", selected: false },
+        { name: "삼겹살", selected: false },
+        { name: "전", selected: false },
+        { name: "냉면", selected: false },
+        { name: "쌀국수", selected: false },
+        { name: "라멘", selected: false },
       ],
-      selectedMenus: [],
       finalMenu: "",
       isSpinning: false,
-      showFinalResult: false,
+      alertVisible: false,
     };
+  },
+  computed: {
+    chunkedMenus() {
+      const chunkSize = 5;
+      const result = [];
+      for (let i = 0; i < this.menus.length; i += chunkSize) {
+        result.push(this.menus.slice(i, i + chunkSize));
+      }
+      return result;
+    },
   },
   methods: {
     toggleMenu(menu) {
       menu.selected = !menu.selected;
     },
-    finalizeSelection() {
-      this.selectedMenus = this.menus.filter((menu) => menu.selected);
+    addMenu() {
+      if (this.newMenu.trim() !== "") {
+        this.menus.push({ name: this.newMenu, selected: false });
+        this.newMenu = "";
+      }
+    },
+    selectAll() {
+      const areAllSelected = this.menus.every((menu) => menu.selected);
+      this.menus.forEach((menu) => (menu.selected = !areAllSelected));
     },
     startRoulette() {
-      if (!this.selectedMenus.length) {
-        alert("메뉴를 선택해주세요.");
+      const selectedMenus = this.menus.filter((menu) => menu.selected);
+
+      if (!selectedMenus.length) {
+        this.showAlert();
         return;
       }
 
-      this.isSpinning = true; // 애니메이션 시작 전에 상태를 true로 설정합니다.
-      this.showFinalResult = false; // 초기화
+      this.isSpinning = true;
       let currentSpinCount = 0;
-      const spinCount = 10; // 총 회전 수
-      const spinDuration = 100; // 회전 지속 시간(ms)
+      const spinCount = 10;
+      const spinDuration = 100;
 
       const intervalId = setInterval(() => {
         this.finalMenu =
-          this.selectedMenus[currentSpinCount % this.selectedMenus.length].name;
+          selectedMenus[currentSpinCount % selectedMenus.length].name;
         currentSpinCount++;
 
         if (currentSpinCount >= spinCount) {
           clearInterval(intervalId);
-          this.isSpinning = false; // 애니메이션 종료 후에 상태를 false로 설정합니다.
-          // 최종 메뉴 선정 로직은 애니메이션 완료 후에 수행합니다.
-          this.finalizeRoulette();
+          this.isSpinning = false;
+          this.finalizeRoulette(selectedMenus);
         }
       }, spinDuration);
     },
-    finalizeRoulette() {
-      const randomIndex = Math.floor(Math.random() * this.selectedMenus.length);
-      this.finalMenu = this.selectedMenus[randomIndex].name; // 최종 메뉴 선정
-      // 3초 후에 최종 결과를 보여줍니다.
+    finalizeRoulette(selectedMenus) {
+      const randomIndex = Math.floor(Math.random() * selectedMenus.length);
+      this.finalMenu = selectedMenus[randomIndex].name;
+    },
+    showAlert() {
+      this.alertVisible = true;
       setTimeout(() => {
-        this.showFinalResult = true;
-      }, 8000);
+        this.alertVisible = false;
+      }, 5000);
     },
     closeModal() {
       this.$emit("close");
@@ -97,6 +137,18 @@ export default {
 </script>
 
 <style scoped>
+.menu-selected {
+  color: white !important;
+  background-color: rgb(210, 63, 87) !important;
+  border-color: rgb(210, 63, 87) !important;
+}
+
+.menu-unselected {
+  color: rgb(210, 63, 87) !important;
+  background-color: white !important;
+  border-color: rgb(210, 63, 87) !important;
+}
+
 .roulette-container {
   max-width: 600px;
   margin: 0 auto;
@@ -107,28 +159,50 @@ export default {
   text-align: center;
 }
 
-.menu-selection .v-btn {
-  margin: 0.5rem;
-  border-color: #e0e0e0;
-  color: red;
+.input-group {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1rem;
 }
 
-.menu-selection .v-btn.black--text {
-  color: #000;
+input {
+  flex: 2;
+  height: 40px;
+  padding: 0.5rem;
+  margin-right: 0.5rem;
 }
 
-.selected-menus {
-  margin-top: 1rem;
+.v-btn {
+  height: 40px; /* 입력창과 버튼의 높이를 동일하게 설정 */
 }
 
-.selected-menus ul {
-  list-style: none;
-  padding: 0;
+.input-group .v-btn {
+  margin-right: 0.5rem; /* 버튼 사이에 공간 추가 */
 }
 
-.selected-menus li {
-  display: inline-block;
-  margin: 0.5rem;
+.input-group .v-btn:last-child {
+  margin-right: 0; /* 마지막 버튼의 오른쪽 마진 제거 */
+}
+
+.menu-selection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.menu-row {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  margin-bottom: 0.5rem;
+}
+
+.menu-row .v-btn {
+  flex: 1;
+  margin: 0.2rem;
+  border: 1px solid #e0e0e0;
+  max-width: calc(20% - 0.4rem); /* 5개의 버튼이 한 줄에 들어가도록 설정 */
 }
 
 .final-menu {
@@ -137,57 +211,9 @@ export default {
   color: #d32f2f;
 }
 
-/* 활성화된 메뉴의 스타일 */
-.menu-active {
-  color: #000;
-  background-color: #fff;
-  border: 1px solid black;
-}
-
-/* 선택 완료 버튼 스타일 */
-.selection-done {
+.alert-message {
   margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
-/* 랜덤 선택 버튼 스타일 */
-.start-roulette {
-  margin-bottom: 1rem;
-}
-
-/* 선택한 메뉴 리스트 스타일 */
-.selected-menus {
-  margin-top: 1rem;
-}
-
-/* 최종 메뉴 스타일 */
-.final-menu {
-  margin-top: 1rem;
-  font-size: 1.5rem;
-  color: #d32f2f;
-  animation: fadeIn 2s;
-}
-
-@keyframes spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-.spinning {
-  animation: spin 2s linear infinite;
-}
-
-/* 선택된 메뉴가 나타날 때 애니메이션 */
-@keyframes fadeIn {
-  0% {
-    opacity: 0;
-  }
-  100% {
-    opacity: 1;
-  }
+  color: rgb(210, 63, 87);
+  font-weight: bold;
 }
 </style>
