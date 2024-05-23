@@ -26,7 +26,7 @@
 
                                                 <v-data-table :headers="headers" :items="displayedMembers"
                                                     hide-default-footer>
-                                                    <template v-slot:item="{ item }">
+                                                    <template v-slot:item="{ item }" >
                                                         <tr>
                                                             <td>{{ item.id }}</td>
                                                             <td>{{ item.email }}</td>
@@ -168,6 +168,7 @@ export default {
                     // 사용자 정보를 상태나 컴포넌트 데이터에 저장
                     this.user = userInfo;
                     console.log(this.user);
+                    console.log(this.user.id);
                 } else {
                     console.error('Failed to fetch user info:', response);
                 }

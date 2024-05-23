@@ -77,7 +77,7 @@ export default {
         },
         async findEmail() {
             console.log('Sending tel:', this.tel);  // 추가 로그
-            axios.post('http://localhost:8000/memberManage/findEmail', { tel: this.tel })
+            await axios.post('http://localhost:8000/memberManage/findEmail', { tel: this.tel })
                 .then((response) => {
                     if (response.status === 200) {
                         this.email = response.data;
