@@ -16,10 +16,10 @@
                     <!-- 첫 번째 화면: 이메일 입력 폼 -->
                     <div v-if="step === 1">
                         <label for="email">이메일 입력:</label>
-                        <v-text-field v-model="email" outlined dense hide-details placeholder="dsil@naver.com"
-                            class="mb-4"></v-text-field>
+                        <v-text-field v-model="email" outlined dense hide-details
+                            placeholder="가입 시 입력했던 Email을 입력해주세요. dsil@dsil.com" class="mb-4"></v-text-field>
                         <v-btn light text class="primary" @click="sendTemporaryCode">
-                            임시 비밀번호 받기
+                            임시 코드 발송
                         </v-btn>
                         <p v-if="emailError" class="error-message">{{ emailError }}</p>
                     </div>
@@ -38,10 +38,10 @@
                     <!-- 세 번째 화면: 비밀번호 재설정 폼 -->
                     <div v-if="step === 3">
                         <label for="newPassword">새로운 비밀번호:</label>
-                        <v-text-field type="password" id="newPassword" v-model="newPassword" outlined dense
-                            hide-details placeholder="새로운 비밀번호" class="mb-4"></v-text-field>
-                        <v-text-field type="password" id="newPassword2" v-model="newPassword2" outlined dense hide-details
-                            placeholder="새로운 비밀번호 확인" class="mb-4"></v-text-field>
+                        <v-text-field type="password" id="newPassword" v-model="newPassword" outlined dense hide-details
+                            placeholder="새로운 비밀번호" class="mb-4"></v-text-field>
+                        <v-text-field type="password" id="newPassword2" v-model="newPassword2" outlined dense
+                            hide-details placeholder="새로운 비밀번호 확인" class="mb-4"></v-text-field>
 
                         <v-divider></v-divider>
 
@@ -94,7 +94,7 @@ export default {
             }
             this.emailError = '';
             try {
-                // 인증 코드 발급 요청
+                console.log(this.email);
                 const response = await axios.post('http://localhost:8000/memberManage/sendCode', { email: this.email });
                 console.log('인증 코드가 전송된 이메일:', this.email);
                 alert('입력하신 이메일로 인증 코드가 전송됐습니다.');
@@ -106,7 +106,6 @@ export default {
         },
         async verifyTempCode() {
             try {
-                // 인증 코드 검증 요청
                 const response = await axios.post('http://localhost:8000/memberManage/verifyCode', { email: this.email, code: this.tempCode });
                 console.log('인증 코드 확인:', this.tempCode);
                 alert('인증 되었습니다.');
@@ -116,12 +115,23 @@ export default {
                 this.codeError = '인증 코드가 틀렸습니다. 다시 시도해주세요.';
             }
         },
-        submitPassword() {
-            // 비밀번호 재설정 로직 처리
-            console.log('비밀번호 재설정:', this.newPassword, this.newPassword2);
-            alert('비밀번호가 재설정되었습니다!');
-            // 다시 초기 단계로 돌아가거나 다른 작업 수행
-            this.$router.push('/memberManage/LoginPage');
+        async submitPassword() {
+            if (this.newPassword !== this.newPassword2) {
+                alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                return;
+            }
+            try {
+                const response = await axios.post('http://localhost:8000/memberManage/resetPassword', {
+                    email: this.email,
+                    newPassword: this.newPassword
+                });
+                console.log('비밀번호 재설정:', this.newPassword, this.newPassword2);
+                
+                this.$router.push('/memberManage/LoginPage');
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                alert('비밀번호 재설정 중 오류가 발생했습니다.');
+            }
         },
         handleMouseMove() {
             this.moved = true;
@@ -130,7 +140,6 @@ export default {
             if (this.moved) {
                 this.captchaCompleted = true;
                 alert('CAPTCHA 확인됨! 양식을 제출할 수 있습니다.');
-                // 여기에 폼 제출 또는 다음 단계로 진행하는 로직 추가
             } else {
                 alert('CAPTCHA를 완료해주세요. 마우스를 움직여야 합니다.');
             }
