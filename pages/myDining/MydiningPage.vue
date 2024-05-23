@@ -519,11 +519,9 @@ export default {
     async reservationDeny(reservationId) {
       console.log(reservationId + " 여기");
       try {
-        const response = await axios.put(
+        const response = await axios.post(
           `http://localhost:8000/myDining/reservation-cancel/${reservationId}`,
-          {
-            reservationState: "CANCELED",
-          }
+          
         );
         alert("예약이 성공적으로 취소되었습니다.");
         this.fetchReservations();
