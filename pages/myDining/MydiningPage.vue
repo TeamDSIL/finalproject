@@ -519,9 +519,11 @@ export default {
     async reservationDeny(reservationId) {
       console.log(reservationId + " 여기");
       try {
-        const response = await axios.post(
+        const response = await axios.put(
           `http://localhost:8000/myDining/reservation-cancel/${reservationId}`,
-          
+          {
+            reservationState: "CANCELED",
+          }
         );
         alert("예약이 성공적으로 취소되었습니다.");
         this.fetchReservations();
@@ -546,7 +548,7 @@ export default {
     fetchReviews() {
       const id = this.$route.params.id;
       axios
-        .get(`http://223.130.136.101:8000/myDining/reviews/${id}`)
+        .get(`http://localhost:8000/myDining/reviews/${id}`)
         .then((response) => {
           this.reviewsList = response.data;
         })
@@ -560,7 +562,7 @@ export default {
       const id = this.$route.params.id;
 
       axios
-        .get(`http://223.130.136.101:8000/myDining/reservations/${id}`)
+        .get(`http://localhost:8000/myDining/reservations/${id}`)
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
@@ -576,7 +578,7 @@ export default {
       const id = this.$route.params.id;
 
       axios
-        .get(`http://223.130.136.101:8000/myDining/bookmarks/${id}`)
+        .get(`http://localhost:8000/myDining/bookmarks/${id}`)
         .then((response) => {
           // 응답 데이터를 bookmarksList 배열에 저장합니다
           this.bookmarksList = response.data;
