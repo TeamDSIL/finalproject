@@ -15,6 +15,7 @@
     <div class="menu-selection">
       <div class="menu-row" v-for="(chunk, index) in chunkedMenus" :key="index">
         <v-btn
+          style="box-shadow: 0,0,0,0;"
           v-for="menu in chunk"
           :key="menu.name"
           :class="{
@@ -170,9 +171,9 @@ export default {
 }
 
 .menu-unselected {
-  color: rgb(210, 63, 87) !important;
+  color: gray !important;
   background-color: white !important;
-  border-color: rgb(210, 63, 87) !important;
+  border-color: gray !important;
 }
 
 .roulette-container {
@@ -181,7 +182,7 @@ export default {
   padding: 2rem;
   background-color: #f5f5f5;
   border-radius: 10px;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  /* box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); */
   text-align: center;
 }
 
