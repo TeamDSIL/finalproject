@@ -86,7 +86,7 @@ export default {
   ],
   // Axios 모듈 설정
   axios: {
-    baseURL: process.env.apiURL || 'http://223.130.136.101:8000', // 환경 변수 또는 기본 URL 설정
+    baseURL: process.env.apiURL || 'http://localhost:8000', // 환경 변수 또는 기본 URL 설정
   },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {
