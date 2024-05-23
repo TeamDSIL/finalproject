@@ -47,10 +47,6 @@ export default {
       user: null, // 사용자 정보를 저장할 변수
     };
   },
-  mounted() {
-        this.fetchUserInfo();
-    },
-
   components: {
     RestaurantManageMain,
   },
@@ -63,6 +59,7 @@ export default {
                     throw new Error('No token found');
                 }
                 // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                console.log('access token', token);
                 const response = await axios.get('http://localhost:8000/userInfo/me', {
                     headers: {
                         'Authorization': `${token}`
@@ -74,7 +71,7 @@ export default {
                     console.log('User Info:', userInfo);
                     // 사용자 정보를 상태나 컴포넌트 데이터에 저장
                     this.user = userInfo;
-                    console.log(this.user);
+                    console.log("이것이 디스유저다",this.user);
                 } else {
                     console.error('Failed to fetch user info:', response);
                 }
@@ -82,11 +79,15 @@ export default {
                 console.error('Error fetching user info:', error);
             }
         },
+        async showmethethisuser() {
+console.log("이것이 쇼미더디스유저다!",this.user);
+        },
 
-    fetchRestaurants() {
+    async fetchRestaurants() {
+      console.log("이것이유저다!",this.user);
       const memberId = this.user.id;
       console.log("유저번호",memberId);
-      axios.get(`http://localhost:8000/restaurant/${memberId}/restaurants`)
+      await axios.get(`http://localhost:8000/restaurant/${memberId}/restaurants`)
         .then(response => {
           this.restaurants = response.data;
           console.log(this.restaurants);
@@ -113,7 +114,9 @@ export default {
     },
 
   },
-  created() {
+  async created() {
+    await this.fetchUserInfo();
+    this.showmethethisuser();
     this.fetchRestaurants();
   },
 }

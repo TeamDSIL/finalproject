@@ -29,6 +29,11 @@
 
         </v-tab>
 
+        <v-tab class="text-capitalize" href="#tab-6">
+          리뷰감정평가
+
+        </v-tab>
+
 
 
         <v-tab class="text-capitalize" @click="goToRestaurantManage">
@@ -297,9 +302,9 @@
                     <v-col cols="12" lg="6" v-for="review in paginatedReviews" :key="review.id">
                       <div class="mb-6">
                         <div class="d-flex align-center flex-wrap mb-4">
-                          <v-avatar size="48" class="me-4">
+                          <!-- <v-avatar size="48" class="me-4">
                             <v-img :src="review.avatar" alt=""></v-img>
-                          </v-avatar>
+                          </v-avatar> -->
                           <div>
                             <h5 class="mb-0">{{ review.reservationName }}</h5>
                           </div>
@@ -315,7 +320,6 @@
                             </div>
                           </span>
                           <span class="font-weight-bold text-14 ms-2">{{ review.score }}</span>
-                          <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
                         </div>
                         <h5
                           class="grey--text text--darken-2 font-weight-regular mb-3"
@@ -466,6 +470,30 @@
         </v-tab-item>
 
 
+        <!-- 감정분석 해보기 -->
+        <v-tab-item value="tab-6">
+          <v-container>
+    <v-card>
+      <v-img :src="restaurant.img" height="200px">
+        <v-card-title class="headline">{{ restaurant.name }}</v-card-title>
+      </v-img>
+      <v-card-subtitle>Address: {{ restaurant.address }}</v-card-subtitle>
+      <v-card-subtitle>Tel: {{ restaurant.tel }}</v-card-subtitle>
+      <v-card-subtitle>Crowd: {{ restaurant.crowd }}</v-card-subtitle>
+      <v-divider></v-divider>
+      <v-card-actions>
+        <v-btn @click="getRestaurantSentiment(restaurant.id)" color="primary">Perform Sentiment Analysis</v-btn>
+      </v-card-actions>
+      <v-divider></v-divider>
+      <v-card-text>
+        <p>Reviews: {{ reviewsCount }}</p>
+        <p>Sentiment: {{ sentiment }}</p>
+      </v-card-text>
+    </v-card>
+  </v-container>
+        </v-tab-item>
+
+
 
 
       </v-tabs-items>
@@ -486,8 +514,10 @@ export default {
     this.fetchAvailableTimes(restaurantId);
     this.year = new Date().getFullYear();
   },
+  
   data() {
     return {
+      sentiment: '',
       message: '',
       responseMessage: '',
       // isClicked: false,
@@ -537,8 +567,21 @@ export default {
       selected: null, // 현재 선택된 버튼을 저장
     };
   },
-
+  
   methods: {
+//감정분석 가져오는 메소드 입니다.
+// async fetch() {
+//     const id = this.$route.params.id;
+    
+//     this.sentiment = await RestaurantService.getRestaurantSentiment(id);
+//     console.log("이것이 감정분석이다:",this.sentiment);
+//   },
+  async getRestaurantSentiment(id) {
+    const response = await axios.get(`http://localhost:8000/restaurant/${id}/sentiment`);
+    this.sentiment = response.data;
+    return this.sentiment;
+  },
+
     // 메시지를 보내는 메서드입니다.
     async sendMessage() {
       try {
