@@ -548,7 +548,7 @@ export default {
     fetchReviews() {
       const id = this.$route.params.id;
       axios
-        .get(`http://localhost:8000/myDining/reviews/${id}`)
+        .get(`http://223.130.136.101:8000/myDining/reviews/${id}`)
         .then((response) => {
           this.reviewsList = response.data;
         })
@@ -562,7 +562,7 @@ export default {
       const id = this.$route.params.id;
 
       axios
-        .get(`http://localhost:8000/myDining/reservations/${id}`)
+        .get(`http://223.130.136.101:8000/myDining/reservations/${id}`)
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
@@ -578,7 +578,7 @@ export default {
       const id = this.$route.params.id;
 
       axios
-        .get(`http://localhost:8000/myDining/bookmarks/${id}`)
+        .get(`http://223.130.136.101:8000/myDining/bookmarks/${id}`)
         .then((response) => {
           // 응답 데이터를 bookmarksList 배열에 저장합니다
           this.bookmarksList = response.data;
