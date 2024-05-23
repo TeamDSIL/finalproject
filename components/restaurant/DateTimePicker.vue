@@ -696,9 +696,9 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
-      depositAmount:1000,
+      depositAmount:3000,
       riceBallPoints: 100,
-      totalRiceBallPoints: 4200,
+      totalRiceBallPoints: 0,
       showConfirmationModal: false,
       showPaymentModal: false,
       showReservationConfirmationModal: false,
@@ -718,11 +718,13 @@ export default {
       customerRequest: '',
       selectedButtonIndex: null,
     currentTime: new Date(),
-    selectedDate: new Date(), 
+    selectedDate: new Date(),
+    user: null,
     };
   },
   mounted(){
     this.generateTimeOptions();
+    this.fetchUserInfo();
   },
   watch: {
     selectedDate(newVal) {
@@ -784,6 +786,60 @@ export default {
     clearInterval(this.timerInterval);
   },
   methods: {
+    async login(username, password) {
+      try {
+        const response = await axios.post('http://localhost:8000/memberManage/loginPage', {
+          username,
+          password
+        });
+        if (response.status === 200 && response.headers['authorization']) {
+          const token = response.headers['authorization'].split(' ')[1]; // 'Bearer ' 부분 제거
+          localStorage.setItem('token', token); // 토큰을 localStorage에 저장
+          console.log('Login successful, token stored');
+
+          // JWT 토큰에서 회원 아이디 추출
+          const payload = JSON.parse(atob(token.split('.')[1]));
+          const memberId = payload.sub; // JWT 페이로드에서 회원 아이디 추출 (sub 필드 사용 가정)
+
+          // 회원 아이디를 서버에 POST로 전달
+          await this.sendMemberId(memberId);
+          
+          this.fetchUserInfo(); // 로그인 후 사용자 정보 요청
+        } else {
+          console.error('Login failed:', response);
+        }
+      } catch (error) {
+        console.error('Error during login:', error);
+      }
+    },
+
+    async fetchUserInfo() {
+      try {
+        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+        if (!token) {
+          throw new Error('No token found');
+        }
+        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+        const response = await axios.get('http://localhost:8000/userInfo/me', {
+          headers: {
+            'Authorization': `Bearer ${token}` // "Bearer "를 추가
+          },
+          withCredentials: true
+        });
+        if (response.status === 200) {
+          const userInfo = response.data;
+          console.log('User Info:', userInfo);
+          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+          this.user = userInfo;
+          console.log(this.user);
+          this.totalRiceBallPoints = userInfo.point.currentPoint || 0;
+        } else {
+          console.error('Failed to fetch user info:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
     validateRiceBallInput() {
       if (this.riceBallInput > this.maxRiceBallInput) {
         this.riceBallInput = this.maxRiceBallInput;
@@ -791,80 +847,17 @@ export default {
     },
     cancelPayment() {
       this.showPaymentModal = false;
+      this.resetReservationData();
     },
-    payment() {
-  // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
-  if (this.reservationPolicyAgreed && this.agreeTerms) {
-    // 백엔드에서 payment.html을 가져옵니다.
-    axios.get('/restaurant/payment')
-      .then(response => {
-        // HTML 파일을 가져왔을 때 실행될 부분입니다.
-        const htmlContent = response.data;
-
-        // HTML 파일을 파싱하여 DOM으로 변환합니다.
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(htmlContent, 'text/html');
-
-        // HTML을 현재 페이지에 적용합니다.
-        document.body.innerHTML = htmlContent;
-
-        // 스크립트를 먼저 로드합니다.
-        const impScript = document.createElement('script');
-        impScript.src = 'https://cdn.iamport.kr/js/iamport.payment-1.2.0.js';
-        document.head.appendChild(impScript);
-
-        // 스크립트 로드 후에 실행합니다.
-        impScript.onload = function() {
-          // IMP 스크립트가 로드된 후에 payment 함수를 호출합니다.
-          paymentFunction();
-        };
-
-        const depositAmount = this.depositAmount; // depositAmount 변수 정의
-        const numberOfPeople = this.numberOfPeople;
-        const riceBallInput = this.riceBallInput;
-        const restaurantName = this.restaurantName;
-        // payment 함수 정의
-        function paymentFunction() {
-          // 아임포트 초기화와 결제 요청을 진행합니다.
-          IMP.init('imp56476634');// 아임포트 관리자 콘솔에서 확인한 '가맹점 식별코드' 입력
-          IMP.request_pay({// param
-            pg: "kakaopay.TC0ONETIME", // pg사명 or pg사명.CID (잘못 입력할 경우, 기본 PG사가 띄워짐)
-            pay_method: "card", // 지불 방법
-            merchant_uid: "test8_id", // 가맹점 주문번호 (아임포트를 사용하는 가맹점에서 중복되지 않은 임의의 문자열을 입력)
-            name: restaurantName, 
-            amount: depositAmount * numberOfPeople - riceBallInput, 
-            buyer_email : "testiamport@naver.com",
-            buyer_name : "홍길동",
-            buyer_tel : "01012341234"
-          }, function (rsp) { // callback
-            if (rsp.success) {
-              alert("완료 -> imp_uid : "+rsp.imp_uid+" / merchant_uid(orderKey) : " +rsp.merchant_uid);
-              this.showReservationConfirmationModal= true;
-            } else {
-              alert("실패 : 코드("+rsp.error_code+") / 메세지(" + rsp.error_msg + ")");
-              window.location.href = 'http://localhost:3000/restaurant/RestaurantDetailPage';
-            }
-          });
-        }
-      })
-      .catch(error => {
-        // HTML 파일을 가져오는 데 실패했을 때 실행될 부분입니다.
-        console.error('Error fetching HTML:', error);
-      });
-  } else {
-    // 두 체크박스 중 하나라도 체크되지 않은 경우 결제하기 버튼 비활성화
-    console.log("두 개의 필수 동의사항에 모두 동의해야 합니다.");
-  }
-},
-
-
+  
     formatPhoneNumber() {
-      let phoneNumber = this.visitorContact.toString().replace(/\D/g, ''); // 문자열로 변환하고 숫자 이외의 문자 제거
-      phoneNumber = phoneNumber.slice(0, 11); // 최대 11자리까지만 허용
-      if (phoneNumber.length === 11) {
-        this.visitorContact = phoneNumber.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3'); // 휴대폰 번호 포맷팅
+      let cleaned = ('' + this.visitorContact).replace(/\D/g, '');
+      let match = cleaned.match(/^(\d{3})(\d{3,4})(\d{4})$/);
+
+      if (match) {
+        this.visitorContact = `${match[1]}-${match[2]}-${match[3]}`;
       } else {
-        this.visitorContact = phoneNumber; // 11자리가 아니면 그대로 반환
+        this.visitorContact = cleaned;
       }
     },
     showPrivacyModal() {
@@ -1013,6 +1006,15 @@ export default {
                depositAmount: this.depositAmount,
                restaurantId: this.$route.params.id
           };
+          if (this.user) {
+        reservationData.memberId = this.user.id;
+      }
+      if (this.riceBallInput > 0) {
+      // 사용한 포인트만큼 차감
+      this.totalRiceBallPoints -= this.riceBallInput;
+      // 서버에도 업데이트된 포인트 정보 전송
+      this.updateUserPoints();
+    }
           // axios를 사용하여 백엔드로 예약 정보 전송
           axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
               .then(response => {
@@ -1072,6 +1074,11 @@ confirmReservation2() {
         requestContent: this.customerRequest,
         restaurantId: this.$route.params.id
       };
+
+      if (this.user) {
+            this.reservationData.memberId = this.user.id; // memberId 추가
+        }
+
 
       // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
       if (totalAmount === 0) {

@@ -466,7 +466,7 @@
 </template>
 <script>
 import axios from 'axios';
-import KakaoMap1 from '@/components/api/kakaoMap.vue'
+import KakaoMap1 from '@/components/api/KakaoMap.vue'
 import DateTimePicker from '@/components/restaurant/DateTimePicker.vue';
 export default {
     name: 'App',
@@ -854,3 +854,4 @@ hr {
     text-align: left; /* 왼쪽 정렬 */
 }
 </style>
+
