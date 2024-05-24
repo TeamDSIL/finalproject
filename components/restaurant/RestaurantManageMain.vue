@@ -4,7 +4,7 @@
       <h1>식당관리</h1>
 
       <v-tabs v-model="tab" class="mb-8">
-     
+
         <v-tab class="text-capitalize" href="#tab-1">
           식당관리
 
@@ -25,7 +25,7 @@
         </v-tab>
 
         <v-tab class="text-capitalize" href="#tab-5">
-          챗봇문의하기
+          리뷰분석
 
         </v-tab>
 
@@ -42,12 +42,8 @@
         <v-tab-item value="tab-1">
           <v-row>
             <v-col cols="12" class="restaurant-title-img">
-              <v-img
-                contain
-                :src="require('~/assets/images/restaurant_img.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img>
+              <v-img contain :src="require('~/assets/images/restaurant_img.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px"></v-img>
               <h3 class="fw-bold">{{ restaurant.name }}</h3>
             </v-col>
           </v-row>
@@ -55,22 +51,13 @@
             <v-col cols="12">
               <!-- 실시간 이용현황 버튼. 클릭시 컬러 변경되게 설정 -->
               <h4 class="silsigan-use-title">실시간 이용 현황</h4>
-              <v-btn
-                :color="restaurant.crowd === 'AVAILABLE' ? '#1DDB16' : ''"
-                @click="toggleSelection('AVAILABLE')"
-              >
+              <v-btn :color="restaurant.crowd === 'AVAILABLE' ? '#1DDB16' : ''" @click="toggleSelection('AVAILABLE')">
                 여유
               </v-btn>
-              <v-btn
-                :color="restaurant.crowd === 'NORMAL' ? '#FFE400' : ''"
-                @click="toggleSelection('NORMAL')"
-              >
+              <v-btn :color="restaurant.crowd === 'NORMAL' ? '#FFE400' : ''" @click="toggleSelection('NORMAL')">
                 보통
               </v-btn>
-              <v-btn
-                :color="restaurant.crowd === 'BUSY' ? '#FF0000' : ''"
-                @click="toggleSelection('BUSY')"
-              >
+              <v-btn :color="restaurant.crowd === 'BUSY' ? '#FF0000' : ''" @click="toggleSelection('BUSY')">
                 혼잡
               </v-btn>
             </v-col>
@@ -86,16 +73,10 @@
             <v-col cols="12">
               <h4>예약 가능 시간 설정</h4>
               <br />
-              <v-btn
-                v-for="time in times"
-                :key="time.id"
-                class="ma-2"
-                :style="{
-                  color: time.clicked ? 'white' : '',
-                  backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '',
-                }"
-                @click="toggleTime(time)"
-              >
+              <v-btn v-for="time in times" :key="time.id" class="ma-2" :style="{
+                color: time.clicked ? 'white' : '',
+                backgroundColor: time.clicked ? 'rgb(210, 63, 87)' : '',
+              }" @click="toggleTime(time)">
                 {{ time.label }}
               </v-btn>
             </v-col>
@@ -108,11 +89,8 @@
             <v-col cols="12">
               <h4>식당 정보 수정</h4>
               <br />
-              <v-btn
-                style="background-color: rgb(210, 63, 87); color: white"
-                v-on:click="goToRestaurantModify(restaurant)"
-                >식당수정</v-btn
-              >
+              <v-btn style="background-color: rgb(210, 63, 87); color: white"
+                v-on:click="goToRestaurantModify(restaurant)">식당수정</v-btn>
             </v-col>
           </v-row>
           <br />
@@ -133,10 +111,7 @@
                   </thead>
                   <tbody>
                     <!-- 5개의 예약만 보여줌 -->
-                    <tr
-                      v-for="reservation in reservations.slice(0, 5)"
-                      :key="reservation.id"
-                    >
+                    <tr v-for="reservation in reservations.slice(0, 5)" :key="reservation.id">
                       <td>{{ reservation.reservationDate }}</td>
                       <td>
                         {{ formatReservationTime(reservation.reservationTime) }}
@@ -184,12 +159,8 @@
         <v-tab-item value="tab-2">
           <v-row>
             <v-col cols="12" style="display: flex">
-              <v-img
-                contain
-                :src="require('~/assets/images/reserve-icon.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img>
+              <v-img contain :src="require('~/assets/images/reserve-icon.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px"></v-img>
               <h3 class="fw-bold">예약 전체보기</h3>
             </v-col>
           </v-row>
@@ -216,10 +187,7 @@
                             </tr>
                           </thead>
                           <tbody>
-                            <tr
-                              v-for="item in paginatedReservations"
-                              :key="item.id"
-                            >
+                            <tr v-for="item in paginatedReservations" :key="item.id">
                               <td>{{ item.reservationDate }}</td>
                               <td>
                                 {{
@@ -255,13 +223,8 @@
                           </v-col>
                           <v-col cols="12" lg="6">
                             <div class="mb-4">
-                              <v-pagination
-                                class="food-truck-pagination"
-                                v-model="pageReservation"
-                                :length="pageCountReservation"
-                                circle
-                                @input="srcollToTop"
-                              ></v-pagination>
+                              <v-pagination class="food-truck-pagination" v-model="pageReservation"
+                                :length="pageCountReservation" circle @input="srcollToTop"></v-pagination>
                             </div>
                           </v-col>
                         </v-row>
@@ -297,36 +260,28 @@
                     <v-col cols="12" lg="6" v-for="review in paginatedReviews" :key="review.id">
                       <div class="mb-6">
                         <div class="d-flex align-center flex-wrap mb-4">
-                          <v-avatar size="48" class="me-4">
-                            <v-img :src="review.avatar" alt=""></v-img>
-                          </v-avatar>
                           <div>
                             <h5 class="mb-0">{{ review.reservationName }}</h5>
                           </div>
                         </div>
                         <div class="d-flex align-center mb-2">
-                          <span v-for="(star, index) in 5" :key="index">
+                          <span v-for="(star, index) in review.score" :key="index">
                             <div style="margin-left: 2px">
-                              <v-img
-                                :src="review.bobscore"
-                                width="20px"
-                                class="fixed-size"
-                              ></v-img>
+                              <v-img :src="require('~/assets/images/babscore.png')" width="20px"
+                                class="fixed-size"></v-img>
                             </div>
                           </span>
                           <span class="font-weight-bold text-14 ms-2">{{ review.score }}</span>
-                          <span class="grey--text text--darken-1 text-14 ms-2">3 Days Ago</span>
                         </div>
-                        <h5
-                          class="grey--text text--darken-2 font-weight-regular mb-3"
-                        >
+                        <h5 class="grey--text text--darken-2 font-weight-regular mb-3">
                           {{ review.content }}
                         </h5>
                         <v-row class="mb-2">
                           <!-- 리뷰 사진의 크기를 조금 줄임 cols 3으로 -->
-                          <v-col cols="8" style="height: 450x;">
-                            <v-img style="height: 300px;" contain :src="review.img"></v-img>
-                          </v-col>
+                          <v-avatar class="me-3" size="200" tile>
+                            <img :src="review.img || require('~/assets/images/default-image.png')" alt="레스토랑 이미지" />
+                          </v-avatar>
+                          
                         </v-row>
                         <div>
                           <div class="mt-4">
@@ -334,19 +289,9 @@
                               답글달기
                             </v-btn>
                             <div>
-                              <v-form
-                                v-show="review.showReplyForm"
-                                @submit.prevent="submitReply(review.id)"
-                              >
-                                <v-text-field
-                                  v-model="reply"
-                                  label="답글 작성"
-                                  outlined
-                                  dense
-                                ></v-text-field>
-                                <v-btn color="primary" small type="submit"
-                                  >등록</v-btn
-                                >
+                              <v-form v-show="review.showReplyForm" @submit.prevent="submitReply(review.id)">
+                                <v-text-field v-model="reply" label="답글 작성" outlined dense></v-text-field>
+                                <v-btn color="primary" small type="submit">등록</v-btn>
                               </v-form>
                             </div>
                             <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small
@@ -359,11 +304,9 @@
                         <div class="mb-6">
                           <div class="d-flex align-center mb-3">
                             <v-avatar size="28" class="me-3">
-                              <img src="~/assets/images/faces/kks.jpg" alt="">
+                              <img :src="restaurant.img" alt="">
                             </v-avatar>
-                            <div
-                              class="text-14 grey--text text--darken-4 f-600"
-                            >
+                            <div class="text-14 grey--text text--darken-4 f-600">
                               사장님의 답글
                             </div>
                           </div>
@@ -381,20 +324,15 @@
                           <div class="mb-4 me-3">
                             <p class="font-weight-normal mb-0 text-14">
                               Showing {{ (pageReview - 1) * pageSize + 1 }} to {{ Math.min(pageReview * pageSize,
-                              reviews.length) }}
+                                reviews.length) }}
                               of {{ reviews.length }} Reviews
                             </p>
                           </div>
                         </v-col>
                         <v-col cols="12" lg="6">
                           <div class="mb-4">
-                            <v-pagination
-                              class="food-truck-pagination"
-                              v-model="pageReview"
-                              :length="pageCountReview"
-                              circle
-                              @input="scrollToTop"
-                            ></v-pagination>
+                            <v-pagination class="food-truck-pagination" v-model="pageReview" :length="pageCountReview"
+                              circle @input="scrollToTop"></v-pagination>
                           </div>
                         </v-col>
                       </v-row>
@@ -411,13 +349,13 @@
           <v-container>
             <div class="reservation-stats">
               <v-row>
-                
+
                 <v-col cols="12" style="display: flex;">
                   <v-img contain :src="require('~/assets/images/reservationdata.png')" width="20px"
                     style="max-width: 20px; margin-right: 5px;"></v-img>
                   <h3 class="fw-bold mb-4">예약 통계</h3>
-                  </v-col>
-                  <v-col>
+                </v-col>
+                <v-col>
                   <v-btn @click="fetchMonthlyStats" color="primary" class="mb-4">월별 통계 보기</v-btn>
                   <v-btn @click="fetchWeeklyStats" color="primary" class="mb-4">주간 통계 보기</v-btn>
                 </v-col>
@@ -425,19 +363,10 @@
               <v-row>
                 <v-col cols="12">
                   <div class="stats-container">
-                    <div
-                      v-for="stat in stats"
-                      :key="stat.period"
-                      class="stat-card"
-                    >
+                    <div v-for="stat in stats" :key="stat.period" class="stat-card">
                       <div class="stat-period">{{ stat.period }}</div>
-                      <v-progress-circular
-                        :value="stat.count"
-                        :size="100"
-                        :width="15"
-                        color="primary"
-                        class="stat-progress"
-                      >
+                      <v-progress-circular :value="stat.count" :size="100" :width="15" color="primary"
+                        class="stat-progress">
                         <span class="stat-count">{{ stat.count }}건</span>
                       </v-progress-circular>
                     </div>
@@ -448,24 +377,34 @@
           </v-container>
         </v-tab-item>
 
-        <!-- 챗봇해보기 -->
+        
+
+
+        <!-- 감정분석 해보기 -->
         <v-tab-item value="tab-5">
           <v-container>
-            <!-- 사용자가 질문을 입력할 수 있는 텍스트 필드입니다. -->
-            <v-text-field v-model="userMessage" label="Ask something" @keyup.enter="sendMessage"></v-text-field>
+            <v-card>
+              <v-img :src="restaurant.img" height="200px">
+                <v-card-title class="headline">{{ restaurant.name }}</v-card-title>
+              </v-img>
 
-            <!-- 메시지를 보내는 버튼입니다. -->
-            <v-btn @click="sendMessage" color="primary">Send</v-btn>
+              <v-divider></v-divider>
+              <v-card-actions>
+                <v-btn @click="getRestaurantSentiment(restaurant.id)" color="primary">내 식당의 리뷰 분석</v-btn>
+              </v-card-actions>
 
-            <!-- 챗봇의 응답을 표시하는 카드입니다. -->
-            <v-card v-if="botResponse">
-              <v-card-text>{{ botResponse }}</v-card-text>
+              <v-card-text>
+                <p>총 {{ paginatedReviews.length }}개의 리뷰가 있습니다.</p>
+                <v-divider></v-divider>
+                <div class="d-flex align-center">
+                  <v-icon color="blue" large>mdi-emoticon-happy</v-icon>
+                  <h3 class="ml-3 font-weight-bold" style="font-size: 24px;">리뷰들의 전반적인 감정 평가: {{ sentiment }}</h3>
+                </div>
+                <v-progress-linear :value="sentimentScore" color="green" height="20"></v-progress-linear>
+              </v-card-text>
             </v-card>
           </v-container>
         </v-tab-item>
-
-
-
 
       </v-tabs-items>
     </div>
@@ -484,11 +423,14 @@ export default {
     this.fetchReviews(restaurantId);
     this.fetchAvailableTimes(restaurantId);
     this.year = new Date().getFullYear();
+    this.fetchRestaurantDetails(this.$route.params.id);
   },
+
   data() {
     return {
-      userMessage: '', // 사용자가 입력한 메시지를 저장합니다.
-      botResponse: null, // 챗봇의 응답을 저장합니다.
+      sentiment: '',
+      sentimentScore: 0, // 추가된 감정 평가 점수
+      
       // isClicked: false,
       stats: [],
       headers: [
@@ -538,24 +480,24 @@ export default {
   },
 
   methods: {
-    // 메시지를 보내는 메서드입니다.
-    async sendMessage() {
-      if (this.userMessage.trim()) { // 메시지가 비어 있지 않은 경우
-        try {
-          // axios를 사용하여 백엔드 API에 메시지를 보냅니다.
-          const response = await axios.post('http://localhost:8080/chatbot/send', null, {
-            params: { message: this.userMessage }
-          });
+    //감정분석 가져오는 메소드
 
-          // 챗봇의 응답을 저장합니다.
-          this.botResponse = response.data;
-
-          // 메시지 입력 필드를 초기화합니다.
-          this.userMessage = '';
-        } catch (error) {
-          console.error(error);
-          alert('Failed to communicate with chatbot.');
-        }
+    async getRestaurantSentiment(id) {
+      try {
+        const response = await axios.get(`http://localhost:8000/restaurant/${id}/sentiment`);
+        this.sentiment = response.data;
+        this.calculateSentimentScore(); // 감정 평가 점수 계산
+      } catch (error) {
+        console.error(error);
+      }
+    },
+    calculateSentimentScore() {
+      if (this.sentiment === 'Positive') {
+        this.sentimentScore = 80; // Positive 평가일 경우 점수 80
+      } else if (this.sentiment === 'Neutral') {
+        this.sentimentScore = 50; // Neutral 평가일 경우 점수 50
+      } else {
+        this.sentimentScore = 20; // Negative 평가일 경우 점수 20
       }
     },
 
@@ -662,7 +604,7 @@ export default {
         );
         const availableTimes = response.data;
 
-        // 'times' 배열의 각 요소에 대해 'clicked' 속성을 설정합니다.
+        // 'times' 배열의 각 요소에 대해 'clicked' 속성 설정
         this.times.forEach((time) => {
           time.clicked = availableTimes.some(
             (at) => at.availableTime === time.slot
