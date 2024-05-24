@@ -22,7 +22,7 @@
           <v-text-field v-model="userInfo.password" type="password" label="비밀번호" placeholder="*********"
             class="mb-4"></v-text-field>
 
-          <v-text-field v-model="confirmPassword" type="password" label="비밀번호 재입력F" placeholder="*********"
+          <v-text-field v-model="confirmPassword" type="password" label="비밀번호 재입력" placeholder="*********"
             class="mb-4"></v-text-field>
 
 
@@ -32,19 +32,6 @@
           <v-text-field v-model="userInfo.detailAddress" label="상세주소" type="text" placeholder="상세주소 입력"
             ref="detailAddress"></v-text-field>
           <v-text-field v-model="userInfo.extraAddress" label="참고항목" type="text" placeholder="참고항목"></v-text-field>
-
-
-          <!-- <div class="mb-4">
-            <p class="text-14 mb-1">주소 입력</p>
-            <v-text-field v-model="userInfo.address" placeholder="서울시 동작구" outlined dense hide-details
-              class="mb-4"></v-text-field>
-          </div>
-
-          <div class="mb-4">
-            <p class="text-14 mb-1">우편번호 입력</p>
-            <v-text-field v-model="userInfo.postcode" placeholder="123-412" outlined dense hide-details
-              class="mb-4"></v-text-field>
-          </div> -->
 
           <div class="mb-4" hide-details>
             <v-checkbox v-model="checkbox">

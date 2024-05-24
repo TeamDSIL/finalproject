@@ -4,11 +4,9 @@
       <div class="px-3 px-md-10 py-8 ">
         <h3 class="mb-2 text-center">드실에 오신 걸 환영합니다.</h3>
         <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">이메일과 비밀번호를 입력해주세요.</h5>
-        <p class="text-14 mb-1">이메일</p>
-        <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4" v-model="email"
+        <v-text-field label="이메일" class="mb-4" v-model="email"
           @keyup.enter="loginButton"></v-text-field>
-        <p class="text-14 mb-1">비밀번호</p>
-        <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4" v-model="password"
+        <v-text-field label="비밀번호" type="password" class="mb-4" v-model="password"
           @keyup.enter="loginButton"></v-text-field>
         <v-btn block color="rgb(255,84,82)" class="primary" @click="loginButton">로그인</v-btn>
         <v-col cols="10" lg="8" class="mx-auto">
