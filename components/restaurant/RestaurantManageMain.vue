@@ -281,9 +281,7 @@
                           <v-avatar class="me-3" size="200" tile>
                             <img :src="review.img || require('~/assets/images/default-image.png')" alt="레스토랑 이미지" />
                           </v-avatar>
-                          <!-- <v-col cols="8" style="height: 450x;">
-                            <v-img style="height: 300px;" contain :src="review.img"></v-img>
-                          </v-col> -->
+                          
                         </v-row>
                         <div>
                           <div class="mt-4">
@@ -482,7 +480,7 @@ export default {
   },
 
   methods: {
-    //감정분석 가져오는 메소드 입니다.
+    //감정분석 가져오는 메소드
 
     async getRestaurantSentiment(id) {
       try {
@@ -606,7 +604,7 @@ export default {
         );
         const availableTimes = response.data;
 
-        // 'times' 배열의 각 요소에 대해 'clicked' 속성을 설정합니다.
+        // 'times' 배열의 각 요소에 대해 'clicked' 속성 설정
         this.times.forEach((time) => {
           time.clicked = availableTimes.some(
             (at) => at.availableTime === time.slot

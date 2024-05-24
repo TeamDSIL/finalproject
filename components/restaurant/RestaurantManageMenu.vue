@@ -71,7 +71,7 @@ export default {
                     console.log('User Info:', userInfo);
                     // 사용자 정보를 상태나 컴포넌트 데이터에 저장
                     this.user = userInfo;
-                    console.log("이것이 디스유저다",this.user);
+                    console.log("UserInfo를 담은 user: ",this.user);
                 } else {
                     console.error('Failed to fetch user info:', response);
                 }
@@ -79,12 +79,9 @@ export default {
                 console.error('Error fetching user info:', error);
             }
         },
-        async showmethethisuser() {
-console.log("이것이 쇼미더디스유저다!",this.user);
-        },
 
     async fetchRestaurants() {
-      console.log("이것이유저다!",this.user);
+      console.log("restaurant목록을 불러올 멤버: ",this.user);
       const memberId = this.user.id;
       console.log("유저번호",memberId);
       await axios.get(`http://localhost:8000/restaurant/${memberId}/restaurants`)
@@ -116,7 +113,6 @@ console.log("이것이 쇼미더디스유저다!",this.user);
   },
   async created() {
     await this.fetchUserInfo();
-    this.showmethethisuser();
     this.fetchRestaurants();
   },
 }
@@ -144,4 +140,4 @@ console.log("이것이 쇼미더디스유저다!",this.user);
 </style>
 
 
-<!-- 여기도 지금 스타일을 약간 변경했다. 그.. 식당사진의 크기를 균일하게 바꾸는 작업을 했다. -->
+<!-- 여기도 지금 스타일을 약간 변경했다. 식당사진의 크기를 균일하게 바꾸는 작업을 했다. -->
