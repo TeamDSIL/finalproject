@@ -20,7 +20,8 @@
 
                 <v-dialog v-model="dialog" width="500">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary" @click="findEmail">
+                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary"
+                            :disabled="!isTelValid" @click="handleFindEmail">
                             <span class="d-none d-sm-block">아이디(이메일) 찾기</span>
                         </v-btn>
                     </template>
@@ -28,6 +29,7 @@
                     <FindIdResultForm :email="email" />
                 </v-dialog>
 
+                <div v-if="showError" class="error-message">유효하지 않은 전화번호입니다. 11자리를 입력해주세요.</div>
             </div>
         </div>
     </div>
@@ -35,35 +37,36 @@
 
 <script>
 import axios from 'axios';
-
 import FindIdResultForm from '@/components/memberManage/FindIdResultForm.vue';
 
 export default {
     data() {
         return {
-            dialog: false,  // dialog 속성 추가
-            tel: '',  // 연락처를 저장할 변수 추가
+            dialog: false,
+            tel: '',
             email: '',
-            telErrors: []  // 전화번호 유효성 검사 오류 메시지
+            telErrors: [],
+            showError: false
         };
+    },
+    computed: {
+        isTelValid() {
+            return this.tel.replace(/\D/g, '').length === 11;
+        }
     },
     components: {
         FindIdResultForm,
     },
     methods: {
         formatTel() {
-            // 숫자 이외의 문자를 제거
             let cleaned = ('' + this.tel).replace(/\D/g, '');
 
-            // 유효하지 않은 문자가 있음을 나타내기 위해 초기 telErrors 설정
             this.telErrors = cleaned.length !== this.tel.length ? ['숫자만 입력해주세요'] : [];
 
-            // 최대 길이 제한
             if (cleaned.length > 11) {
                 cleaned = cleaned.slice(0, 11);
             }
 
-            // 포맷팅
             let match = cleaned.match(/^(\d{3})(\d{4})(\d{4})$/);
             if (match) {
                 this.tel = `${match[1]}-${match[2]}-${match[3]}`;
@@ -75,21 +78,26 @@ export default {
                 this.telErrors = ['숫자만 입력해주세요'];
             }
         },
-        async findEmail() {
-            console.log('Sending tel:', this.tel);  // 추가 로그
-            await axios.post('http://localhost:8000/memberManage/findEmail', { tel: this.tel })
-                .then((response) => {
-                    if (response.status === 200) {
-                        this.email = response.data;
-                        console.log('Email Info:', this.email);
-                        this.dialog = true;
-                    } else {
-                        console.error('Failed to find Email:', response);
-                    }
-                })
-                .catch((error) => {
-                    console.error('Error finding Email:', error);
-                });
+        async handleFindEmail() {
+            if (!this.isTelValid) {
+                this.showError = true;
+                return;
+            }
+            this.showError = false;
+
+            try {
+                const response = await axios.post('http://localhost:8000/memberManage/findEmail', { tel: this.tel });
+                if (response.status === 200) {
+                    this.email = response.data;
+                } else {
+                    this.email = '';
+                    console.error('아이디 찾기에 실패했습니다:', response);
+                }
+            } catch (error) {
+                this.email = '';
+                console.error('아이디 찾기 오류:', error);
+            }
+            this.dialog = true;
         }
     }
 }
@@ -104,23 +112,21 @@ export default {
     border-radius: 8px;
     margin: 2rem auto;
     box-shadow: rgb(3 0 71 / 9%) 0px 8px 45px;
-
-    @media(max-width: 500px) {
-        width: 100%;
-    }
 }
 
 .find-id-form-container {
     padding: 3rem 3.75rem 0px;
-
-    @media(max-width: 500px) {
-        padding: 3rem 1rem 0px;
-    }
 }
 
 #logo-image {
     display: flex;
     justify-content: center;
     margin-left: 10px;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 1rem;
 }
 </style>

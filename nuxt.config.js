@@ -1,13 +1,18 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
-  server: {
-    host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
-    port: 3000, // 원하는 포트 번호
-  },
+  // server: {
+  //   host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
+  //   port: 3000, // 원하는 포트 번호
+  // },
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'OAuthSuccess',
+        path: '/OAuthSuccess',
+        component: resolve(__dirname, 'pages/memberManage/OAuthSuccess.vue')
+      });
       // 기존 라우트 수정도 가능
       // 첫 번째 라우트 수정
       const manageIndex = routes.findIndex(
