@@ -9,15 +9,12 @@
 
             <v-card elevation="0" class="border br-10 mb-4">
                 <div class="pa-4 d-flex align-center flex-wrap">
-
                     <div class="flex-1 mr-3">
                         <h4 class="font-600 mb-0 ">이메일</h4>
                     </div>
-
                     <div class="flex-1 mr-3">
-                        <p class="mb-0">{{ maskedEmail }}</p>
+                        <p class="mb-0">{{ emailMessage }}</p>
                     </div>
-
                 </div>
             </v-card>
 
@@ -30,8 +27,6 @@
                     </nuxt-link>
                 </template>
             </v-dialog>
-
-
         </div>
     </v-card>
 </template>
@@ -46,13 +41,13 @@ export default {
     },
     data() {
         return {
-            step: 1, // 초기 단계 설정
+            step: 1,
             dialog: false,
         };
     },
     computed: {
-        maskedEmail() {
-            return this.maskEmail(this.email);
+        emailMessage() {
+            return this.email ? this.maskEmail(this.email) : '해당 연락처로 가입한 이메일이 없습니다.';
         }
     },
     methods: {

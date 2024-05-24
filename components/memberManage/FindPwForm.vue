@@ -15,9 +15,8 @@
                 <div>
                     <!-- 첫 번째 화면: 이메일 입력 폼 -->
                     <div v-if="step === 1">
-                        <label for="email">이메일 입력:</label>
-                        <v-text-field v-model="email" outlined dense hide-details
-                            placeholder="가입 시 입력했던 Email을 입력해주세요. dsil@dsil.com" class="mb-4"></v-text-field>
+                        <v-text-field v-model="email" label="email 입력" outlined dense hide-details
+                            placeholder="dsil@dsil.com" class="mb-4"></v-text-field>
                         <v-btn light text class="primary" @click="sendTemporaryCode">
                             임시 코드 발송
                         </v-btn>

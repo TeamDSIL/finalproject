@@ -1,5 +1,5 @@
 <template>
-  
+
   <v-container>
     <div class="bg-body d-flex flex-column justify-center align-center min-vh-100">
       <div class="sign-up-form">
@@ -10,37 +10,31 @@
             <h5 class="text-sm font-600 grey--text text--darken-4">계속하려면 양식에 맞춰 입력해주세요.</h5>
           </div>
 
-          <div class="mb-4">
-            <p class="text-14 mb-1">이름</p>
-            <v-text-field v-model="userInfo.name" placeholder="윤호상" outlined dense hide-details
-              class="mb-4"></v-text-field>
-          </div>
 
-          <div class="mb-4">
-            <p class="text-14 mb-1">이메일(ID)</p>
-            <v-text-field v-model="userInfo.email" placeholder="dvbf@naver.com" outlined dense hide-details
-              class="mb-4"></v-text-field>
-          </div>
+          <v-text-field v-model="userInfo.name" label="이름" type="text" placeholder="윤호상" class="mb-4"></v-text-field>
 
-          <div class="mb-4">
-            <p class="text-14 mb-1">연락처</p>
-            <v-text-field v-model="userInfo.tel" placeholder="010-9677-7048" outlined dense hide-details
-              class="mb-4"></v-text-field>
-          </div>
+          <v-text-field v-model="userInfo.email" label="이메일" type="email" placeholder="dvbf@naver.com"
+            class="mb-4"></v-text-field>
 
-          <div class="mb-4">
-            <p class="text-14 mb-1">비밀번호</p>
-            <v-text-field v-model="userInfo.password" type="password" placeholder="*********" outlined dense
-              hide-details class="mb-4"></v-text-field>
-          </div>
+          <v-text-field v-model="userInfo.tel" label="연락처" type="tel" placeholder="010-9677-7048"
+            class="mb-4"></v-text-field>
 
-          <div class="mb-4">
-            <p class="text-14 mb-1">비밀번호 확인</p>
-            <v-text-field v-model="confirmPassword" type="password" placeholder="*********" outlined dense hide-details
-              class="mb-4"></v-text-field>
-          </div>
+          <v-text-field v-model="userInfo.password" type="password" label="비밀번호" placeholder="*********"
+            class="mb-4"></v-text-field>
 
-          <div class="mb-4">
+          <v-text-field v-model="confirmPassword" type="password" label="비밀번호 재입력F" placeholder="*********"
+            class="mb-4"></v-text-field>
+
+
+          <v-btn @click="sample6_execDaumPostcode" style="margin-bottom: 20px" small color="primary">주소 찾기</v-btn>
+          <v-text-field v-model="userInfo.postcode" label="우편번호" type="text" placeholder="우편번호"></v-text-field>
+          <v-text-field v-model="userInfo.dynamicAddress" label="주소" type="text" placeholder="주소"></v-text-field>
+          <v-text-field v-model="userInfo.detailAddress" label="상세주소" type="text" placeholder="상세주소 입력"
+            ref="detailAddress"></v-text-field>
+          <v-text-field v-model="userInfo.extraAddress" label="참고항목" type="text" placeholder="참고항목"></v-text-field>
+
+
+          <!-- <div class="mb-4">
             <p class="text-14 mb-1">주소 입력</p>
             <v-text-field v-model="userInfo.address" placeholder="서울시 동작구" outlined dense hide-details
               class="mb-4"></v-text-field>
@@ -50,7 +44,7 @@
             <p class="text-14 mb-1">우편번호 입력</p>
             <v-text-field v-model="userInfo.postcode" placeholder="123-412" outlined dense hide-details
               class="mb-4"></v-text-field>
-          </div>
+          </div> -->
 
           <div class="mb-4" hide-details>
             <v-checkbox v-model="checkbox">
@@ -106,11 +100,19 @@ export default {
         email: '',
         tel: '',
         password: '',
-        address: '',
-        postcode:'',
+        dynamicAddress: '',
+        detailAddress: '',
+        extraAddress: '',
+        postcode: '',
       },
       confirmPassword: ''
     }
+  },
+  mounted() {
+    const script = document.createElement("script");
+    script.src =
+      "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+    document.head.appendChild(script);
   },
   methods: {
     gotoLoginPage() {
@@ -133,7 +135,7 @@ export default {
           password: this.userInfo.password,
           name: this.userInfo.name,
           tel: this.userInfo.tel,
-          address: this.userInfo.address,
+          address: `${this.userInfo.dynamicAddress} ${this.userInfo.detailAddress}`,
           postcode: this.userInfo.postcode,
         };
 
@@ -143,7 +145,7 @@ export default {
         // 응답 처리
         console.log('회원 정보 응답:', response.data);
         alert('회원가입이 완료되었습니다.');
-        
+
         this.$router.push('/main/mainPage');
         // 부모 컴포넌트로 수정된 정보를 전달
         this.$emit('modify-user', requestData);
@@ -158,6 +160,26 @@ export default {
         console.error('회원가입 요청 실패:', error);
         alert('정보를 다시 입력해주세요.');
       }
+    },
+    sample6_execDaumPostcode() {
+      new daum.Postcode({
+        oncomplete: (data) => {
+          // 데이터를 Vue 인스턴스의 데이터에 직접 할당
+          this.userInfo.postcode = data.zonecode;
+          this.userInfo.dynamicAddress =
+            data.userSelectedType === "R"
+              ? data.roadAddress
+              : data.jibunAddress;
+          this.userInfo.detailAddress = ""; // 상세 주소는 사용자 입력을 위해 초기화
+          this.userInfo.extraAddress =
+            data.bname && /[동|로|가]$/g.test(data.bname) ? data.bname : "";
+
+          // 포커스를 상세 주소 필드로 이동
+          this.$nextTick(() => {
+            this.$refs.detailAddress.focus();
+          });
+        },
+      }).open();
     }
   }
 }

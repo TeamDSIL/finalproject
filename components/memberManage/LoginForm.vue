@@ -5,10 +5,11 @@
         <h3 class="mb-2 text-center">드실에 오신 걸 환영합니다.</h3>
         <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">이메일과 비밀번호를 입력해주세요.</h5>
         <p class="text-14 mb-1">이메일</p>
-        <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4" v-model="email"></v-text-field>
+        <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4" v-model="email"
+          @keyup.enter="loginButton"></v-text-field>
         <p class="text-14 mb-1">비밀번호</p>
-        <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4"
-          v-model="password"></v-text-field>
+        <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4" v-model="password"
+          @keyup.enter="loginButton"></v-text-field>
         <v-btn block color="rgb(255,84,82)" class="primary" @click="loginButton">로그인</v-btn>
         <v-col cols="10" lg="8" class="mx-auto">
           <div class="d-flex align-center my-1">
@@ -142,7 +143,6 @@ export default {
 
         if (authorizationHeader) {
           const token = authorizationHeader.startsWith('Bearer ') ? authorizationHeader.slice(7) : authorizationHeader;
-
           localStorage.setItem('token', token); // Access Token 저장
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
           console.log('OAuth 토큰이 저장되었습니다:', token);
