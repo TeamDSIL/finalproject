@@ -385,7 +385,7 @@
                       >3 Days Ago</span
                     > -->
                   </div>
-                  <v-avatar class="me-3" size="150" tile>
+                  <v-avatar class="me-3" size="200" tile>
                     <img :src="review.reviewImg" alt="레스토랑 이미지" />
                   </v-avatar>
                   <h5
@@ -464,6 +464,7 @@ export default {
     tab: null,
     radioGroup: 1,
     value: [20, 40],
+    user: null,
   }),
   computed: {
     paginatedData() {
@@ -493,6 +494,31 @@ export default {
   },
 
   methods: {
+    async fetchUserInfo() {
+            try {
+                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                if (!token) {
+                    throw new Error('No token found');
+                }
+                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                const response = await axios.get('http://localhost:8000/userInfo/me', {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
+                if (response.status === 200) {
+                    const userInfo = response.data;
+                    console.log('User Info:', userInfo);
+                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                    this.user = userInfo;
+                } else {
+                    console.error('Failed to fetch user info:', response);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        },
     async bookmarkCancle(bookmarkId) {
       try {
         const response = await axios.delete(
@@ -546,7 +572,7 @@ export default {
       return score % 1 !== 0;
     },
     fetchReviews() {
-      const id = this.$route.params.id;
+      const id = this.user.id;
       axios
         .get(`http://localhost:8000/myDining/reviews/${id}`)
         .then((response) => {
@@ -559,7 +585,7 @@ export default {
     // 예약 리스트 불러오기
     fetchReservations() {
       // URL의 id 파라미터를 가져옵니다
-      const id = this.$route.params.id;
+      const id = this.user.id;
 
       axios
         .get(`http://localhost:8000/myDining/reservations/${id}`)
@@ -575,7 +601,7 @@ export default {
     // 즐겨찾기 리스트 불러오기
     fetchBookmarks() {
       // URL의 id 파라미터를 가져옵니다
-      const id = this.$route.params.id;
+      const id = this.user.id;
 
       axios
         .get(`http://localhost:8000/myDining/bookmarks/${id}`)
@@ -596,6 +622,7 @@ export default {
     requestDelete(reviewId) {
       if (confirm("진짜 삭제하시겠습니까?")) {
         this.requestRemeveReview(reviewId);
+        alert("삭제 요청되었습니다.")
       }
     },
     requestDeny(reservationId, reservationState) {
@@ -617,11 +644,13 @@ export default {
       window.scrollTo(0, 0); // X 좌표, Y 좌표
     },
   },
-  created() {
+  async created() {
+    await this.fetchUserInfo();
     this.fetchReservations();
     this.fetchBookmarks();
     this.fetchReviews();
   },
+
 };
 </script>
 

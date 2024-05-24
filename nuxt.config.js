@@ -1,10 +1,10 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
-  server: {
-    host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
-    port: 3000, // 원하는 포트 번호
-  },
+  // server: {
+  //   host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
+  //   port: 3000, // 원하는 포트 번호
+  // },
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes, resolve) {
@@ -27,13 +27,6 @@ export default {
       );
       if (modifyIndex !== -1) {
         routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
-      }
-
-      const mydiningList = routes.findIndex(
-        (route) => route.name === "myDining-MydiningPage"
-      );
-      if (mydiningList !== -1) {
-        routes[mydiningList].path = "/myDining/MydiningPage/:id";
       }
       const detailIndex = routes.findIndex(
         (route) => route.name === "restaurant-RestaurantDetailPage"
