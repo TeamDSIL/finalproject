@@ -306,54 +306,54 @@ export default {
     closeModal() {
       this.dsilModal = false;
       this.categories.forEach((category) => {
-      category.selected = [];
-    });
-  },
-  search() {
-    // 쿼리 파라미터를 담을 객체를 생성합니다.
-    let queryParams = {};
-
-    // 입력된 검색어 처리
-    if (this.searchQuery.trim() !== "") {
-      queryParams["search"] = [encodeURIComponent(this.searchQuery.trim())]; // 배열로 저장
-    }
-
-    // 카테고리별로 쿼리 파라미터를 생성합니다.
-    this.categories.forEach((category) => {
-      category.selected.forEach((item) => {
-        // 시설 관련 카테고리는 'facility' 파라미터로, 나머지는 'category' 파라미터로 추가합니다.
-        const paramKey =
-          category.name === "FACILITIES" ? "facility" : "category";
-        // 해당 키에 대한 배열이 없으면 생성합니다.
-        if (!queryParams[paramKey]) {
-          queryParams[paramKey] = [];
-        }
-        // 해당 카테고리 키 배열에 아이템 이름을 추가합니다.
-        queryParams[paramKey].push(item.name);
+        category.selected = [];
       });
-    });
-
-    // 쿼리 파라미터 문자열로 변환합니다.
-    let queryString = Object.keys(queryParams)
+    },
+    search() {
+      // 쿼리 파라미터를 담을 객체를 생성합니다.
+      let queryParams = {};
+      
+      // 입력된 검색어 처리
+      if (this.searchQuery.trim() !== "") {
+        queryParams["search"] = [encodeURIComponent(this.searchQuery.trim())]; // 배열로 저장
+      }
+      
+      // 카테고리별로 쿼리 파라미터를 생성합니다.
+      this.categories.forEach((category) => {
+        category.selected.forEach((item) => {
+          // 시설 관련 카테고리는 'facility' 파라미터로, 나머지는 'category' 파라미터로 추가합니다.
+          const paramKey =
+          category.name === "FACILITIES" ? "facility" : "category";
+          // 해당 키에 대한 배열이 없으면 생성합니다.
+          if (!queryParams[paramKey]) {
+            queryParams[paramKey] = [];
+          }
+          // 해당 카테고리 키 배열에 아이템 이름을 추가합니다.
+          queryParams[paramKey].push(item.name);
+        });
+      });
+      
+      // 쿼리 파라미터 문자열로 변환합니다.
+      let queryString = Object.keys(queryParams)
       .map(
         (key) => queryParams[key].map((value) => `${key}=${value}`).join("&") // 배열을 이용해 join 함수 호출
       )
       .join("&");
-
-    // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
-    const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
-
-    // URL로 리디렉션합니다.
-    window.location.href = searchUrl;
-
-    // 모달 창을 닫습니다.
-    this.closeModal();
+      
+      // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
+      const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
+      
+      // URL로 리디렉션합니다.
+      window.location.href = searchUrl;
+      
+      // 모달 창을 닫습니다.
+      this.closeModal();
+    },
   },
-},
-  async mounted() {
-    await this.fetchUserInfo();
-    window.document.onscroll = () => {
-      if (window.scrollY > 400) {
+    async mounted() {
+      await this.fetchUserInfo();
+      window.document.onscroll = () => {
+        if (window.scrollY > 400) {
         this.active = true;
       } else {
         this.active = false;

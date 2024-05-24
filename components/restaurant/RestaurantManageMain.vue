@@ -419,7 +419,7 @@ export default {
     this.fetchReviews(restaurantId);
     this.fetchAvailableTimes(restaurantId);
     this.year = new Date().getFullYear();
-    this.fetchRestaurantDetails(this.$route.params.id);
+    // this.fetchRestaurantDetails(this.$route.params.id);
   },
   computed: {
     progressColor() {
