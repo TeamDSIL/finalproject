@@ -23,13 +23,6 @@ export default {
       if (modifyIndex !== -1) {
         routes[modifyIndex].path = "/restaurant/RestaurantModifyPage/:id";
       }
-
-      const mydiningList = routes.findIndex(
-        (route) => route.name === "myDining-MydiningPage"
-      );
-      if (mydiningList !== -1) {
-        routes[mydiningList].path = "/myDining/MydiningPage/:id";
-      }
       const detailIndex = routes.findIndex(
         (route) => route.name === "restaurant-RestaurantDetailPage"
       );
