@@ -289,24 +289,23 @@ export default {
       } catch (error) {
         console.error('Error logging out:', error);
       }
-    }
-  },
-  toggleNavClass() {
-    return this.drawer ? "sticky-nav" : "nav";
-  },
-  toggleSelection(selectedArray, item) {
-    const index = selectedArray.findIndex(
-      (selected) => selected.name === item.name
-    );
-    if (index > -1) {
-      selectedArray.splice(index, 1);
-    } else {
-      selectedArray.push(item);
-    }
-  },
-  closeModal() {
-    this.dsilModal = false;
-    this.categories.forEach((category) => {
+    },
+    toggleNavClass() {
+      return this.drawer ? "sticky-nav" : "nav";
+    },
+    toggleSelection(selectedArray, item) {
+      const index = selectedArray.findIndex(
+        (selected) => selected.name === item.name
+      );
+      if (index > -1) {
+        selectedArray.splice(index, 1);
+      } else {
+        selectedArray.push(item);
+      }
+    },
+    closeModal() {
+      this.dsilModal = false;
+      this.categories.forEach((category) => {
       category.selected = [];
     });
   },
@@ -350,6 +349,7 @@ export default {
     // 모달 창을 닫습니다.
     this.closeModal();
   },
+},
   async mounted() {
     await this.fetchUserInfo();
     window.document.onscroll = () => {
