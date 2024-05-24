@@ -7,11 +7,9 @@
 
             <v-dialog v-model="dialog" width="500">
                 <template v-slot:activator="{ on, attrs }">
-                    <nuxt-link to="/memberManage/userMyPage">
-                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary" @click="handleDelete">
-                            <span class="d-none d-sm-block">회원탈퇴</span>
-                        </v-btn>
-                    </nuxt-link>
+                    <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary" @click="handleDelete">
+                        <span class="d-none d-sm-block">회원탈퇴</span>
+                    </v-btn>
                 </template>
             </v-dialog>
         </div>
@@ -33,10 +31,10 @@ export default {
         async handleDelete() {
             try {
                 const response = await axios.delete(`http://localhost:8000/memberManage/userMyPage?email=${this.userInfo.email}`);
-                console.log('딜리트 성공!');
-
+                this.$router.push('/');
             } catch (error) {
-                // 생략
+                alert('삭제 요청에 실패하였습니다.');
+                this.$router.push('/memberManage/usermypage');
                 console.error('삭제 요청 실패:', error);
             }
         },

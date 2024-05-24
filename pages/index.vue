@@ -1,9 +1,11 @@
 <template>
   <div>
     <!-- <header></header> -->
-    <MainForm></MainForm>
+    <div style="margin-top: -50px;">
+      <MainForm></MainForm>
+    </div>
     <!-- 카테고리 -->
-    <div style="margin-top: -50px">
+    <div style="margin-top: -100px">
       <v-container class="py-15">
         <v-row>
           <v-col cols="12" style="display: flex">
@@ -29,16 +31,16 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
-                  class="text-decoration-none"
-                >
-                  <v-avatar size="200" class="mb-4">
-                    <img :src="item.img" alt="" />
-                  </v-avatar>
-                  <h4 class="grey--text text--darken-2">
-                    {{ item.displayName }}
-                  </h4>
-                </nuxt-link>
+    :to="`/restaurant/list?category=${item.name}`"
+    class="text-decoration-none"
+  >
+    <v-avatar size="200" class="mb-4 hover-effect">
+      <img :src="item.img" alt="" />
+    </v-avatar>
+    <h4 class="grey--text text--darken-2">
+      {{ item.displayName }}
+    </h4>
+  </nuxt-link>
               </div>
             </v-col>
           </v-row>
@@ -71,7 +73,7 @@
                   :to="`/restaurant/alcohol?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="200" class="mb-4">
+                  <v-avatar size="200" class="mb-4 hover-effect">
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">
@@ -110,7 +112,7 @@
                   :to="`/restaurant/custom?category=${item.name}`"
                   class="text-decoration-none"
                 >
-                  <v-avatar size="200" class="mb-4">
+                  <v-avatar size="200" class="mb-4 hover-effect">
                     <img :src="item.img" alt="" />
                   </v-avatar>
                   <h4 class="grey--text text--darken-2">
@@ -147,6 +149,7 @@
     <Footer />
   </div>
 </template>
+
 <script>
 import axios from "axios";
 import { CardSection } from "@/assets/database/data.js";
@@ -162,7 +165,14 @@ export default {
     return {
       CardList: CardSection,
       isRouletteOpen: false, // 모달 상태
-      randomImageStyle: {}, // 랜덤 이미지 스타일
+      randomImageStyle: {
+        position: "fixed", // Change to fixed positioning
+        bottom: "100px", // Position 20px from the bottom
+        right: "50px", // Position 20px from the right
+        width: "100px", // Set a fixed width
+        height: "150px", // Set a fixed height
+        cursor: "pointer", // Change cursor to pointer on hover
+      },
       food: [
         {
           img: require("~/assets/images/mainCategory/KOREAN.webp"),
@@ -251,29 +261,14 @@ export default {
       ],
     };
   },
-  mounted() {
-    this.applyRandomStyle();
-  },
   methods: {
     openRoulette() {
       this.isRouletteOpen = true;
     },
-    applyRandomStyle() {
-      const minSize = 100;
-      const maxSize = 150; // 최대 크기
-      const size = Math.random() * (maxSize - minSize) + minSize; // 최소 크기에서 최대 크기 사이의 랜덤 크기
-      this.randomImageStyle = {
-        position: "absolute",
-        top: `${Math.random() * 100}%`, // 화면의 범위 내에서 랜덤 위치
-        left: `${Math.random() * 100}%`,
-        width: `${size}px`,
-        height: `${size}px`,
-        transform: "translate(-50%, -50%)", // 중심을 기준으로 위치 조정
-      };
-    },
   },
 };
 </script>
+
 <style lang="scss">
 /* 전역 스타일 */
 .bg-transparent {
@@ -300,16 +295,6 @@ export default {
   max-width: 100%; // 이미지 최대 너비 제한
   height: auto; // 비율 유지
 }
-/* 추가적인 컴포넌트 스코프드 스타일 */
-.image-container {
-  cursor: pointer;
-  display: inline-block; // 이미지와 텍스트를 컨테이너에 맞게 배치
-}
-.image-container img {
-  display: block;
-  max-width: 100%;
-  height: auto;
-}
 .info-text {
   position: absolute;
   top: 0; // 상단에 위치
@@ -325,5 +310,14 @@ export default {
 }
 .random-image:hover .info-text {
   visibility: visible; // hover 시에만 텍스트 보이게 설정
+}
+.hover-effect {
+  // transition: border 0.3s ease;
+}
+
+.hover-effect:hover {
+  border: 6px solid rgb(210, 63, 87);
+  border-radius: 50%; /* 동그란 테두리를 원하면 사용 */
+  box-shadow: 0 10px 12px rgba(0, 0.2, 0.2, 0.4);
 }
 </style>

@@ -5,10 +5,11 @@
         <h3 class="mb-2 text-center">드실에 오신 걸 환영합니다.</h3>
         <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">이메일과 비밀번호를 입력해주세요.</h5>
         <p class="text-14 mb-1">이메일</p>
-        <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4" v-model="email"></v-text-field>
+        <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4" v-model="email"
+          @keyup.enter="loginButton"></v-text-field>
         <p class="text-14 mb-1">비밀번호</p>
-        <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4"
-          v-model="password"></v-text-field>
+        <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4" v-model="password"
+          @keyup.enter="loginButton"></v-text-field>
         <v-btn block color="rgb(255,84,82)" class="primary" @click="loginButton">로그인</v-btn>
         <v-col cols="10" lg="8" class="mx-auto">
           <div class="d-flex align-center my-1">
@@ -54,6 +55,7 @@
 
 <script>
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default {
   data() {
@@ -70,7 +72,6 @@ export default {
         const response = await axios.post('http://localhost:8000/memberManage/loginPage', loginDTO, { withCredentials: true });
         console.log('post 요청');
 
-        // && response.config.url.includes('login') && response.config.method === 'post'
         if (response.status === 200) {
           const token = response.headers['authorization'];
           localStorage.setItem('token', token); // 액세스 토큰 저장
@@ -79,10 +80,46 @@ export default {
           console.log('Response Headers:', response.headers);
           console.log('Extracted Token:', token);
           alert('로그인 성공');
-          this.$router.push('/'); // '/' 로 리디렉트
+
+          try {
+
+            if (!token) {
+              throw new Error('No token found');
+            }
+
+            // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+            const response = await axios.get('http://localhost:8000/userInfo/me', {
+              headers: {
+                'Authorization': `${token}`
+              },
+              withCredentials: true
+            });
+
+            if (response.status === 200) {
+              const userInfo = response.data;
+              console.log('User Info:', userInfo);
+              // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+              this.user = userInfo;
+              console.log(this.user);
+              console.log(this.user.id);
+              console.log(this.user.permission.permission);
+
+              if (this.user.permission.id === 1) {
+                this.$router.push('/'); // '/' 로 리디렉트
+              } else if (this.user.permission.id === 2) {
+                this.$router.push('/restaurant/RestaurantManagePage'); // '/' 로 리디렉트
+              } else {
+                this.$router.push('/memberManage/adminManageUserPage'); // '/' 로 리디렉트
+              }
+            } else {
+              console.error('Failed to fetch user info:', response);
+            }
+          } catch (error) {
+            console.error('Error fetching user info:', error);
+          }
+
+
         } else {
-          // if (response.status !== 200) 
-          // 에러 응답이 왔을 때 해당 에러 페이지로 리디렉션
           const errorUrl = response.headers['location'];
           this.$router.push(errorUrl);
         }
@@ -101,14 +138,11 @@ export default {
     },
     async checkOAuthToken() {
       try {
-        // 클라이언트 측에서 리디렉션 후에도 응답 헤더에서 액세스 토큰을 추출
         const response = await axios.get('http://localhost:8000/memberManage/oauth2/success', { withCredentials: true });
         const authorizationHeader = response.headers['authorization'];
 
         if (authorizationHeader) {
-          // 'Bearer ' 접두사를 제거하여 실제 토큰을 추출
           const token = authorizationHeader.startsWith('Bearer ') ? authorizationHeader.slice(7) : authorizationHeader;
-
           localStorage.setItem('token', token); // Access Token 저장
           axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
           console.log('OAuth 토큰이 저장되었습니다:', token);
@@ -119,6 +153,29 @@ export default {
         }
       } catch (error) {
         console.error('OAuth 토큰 처리 실패:', error);
+      }
+    },
+    async useRefreshToken() {
+      try {
+        const refreshToken = Cookies.get('refreshToken');
+        console.log(refreshToken);
+        if (!refreshToken) {
+          console.log('Refresh Token이 없습니다.');
+          return;
+        }
+
+        const response = await axios.post('http://localhost:8000/userInfo/refresh', { refreshToken });
+
+        if (response.status === 200) {
+          const token = response.headers['authorization'];
+          localStorage.setItem('token', token); // Access Token 저장
+          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
+          alert('Access 토큰이 갱신되었습니다.');
+        } else {
+          console.log('Access Token을 가져오지 못했습니다.');
+        }
+      } catch (error) {
+        console.error('Refresh 토큰 처리 실패:', error);
       }
     }
   },

@@ -12,36 +12,31 @@
                 <br>
                 <h3 class="mb-2 text-center">비밀번호 찾기</h3>
 
-
-                <!-- <p class="text-14 mb-1">Email</p> -->
-
                 <div>
                     <!-- 첫 번째 화면: 이메일 입력 폼 -->
                     <div v-if="step === 1">
-                        <label for="email">이메일 입력:</label>
-                        <v-text-field type="email" id="email" v-model="email" outlined dense hide-details
-                            placeholder="dsil@naver.com" class="mb-4"></v-text-field>
-                        <v-btn light text v-bind="attrs" v-on="on"
-                            class="primary" @click="sendTemporaryPassword">
-                            임시 비밀번호 받기
+                        <v-text-field v-model="email" label="email 입력" outlined dense hide-details
+                            placeholder="dsil@dsil.com" class="mb-4"></v-text-field>
+                        <v-btn light text class="primary" @click="sendTemporaryCode">
+                            임시 코드 발송
                         </v-btn>
+                        <p v-if="emailError" class="error-message">{{ emailError }}</p>
                     </div>
 
                     <!-- 두 번째 화면: 임시 비밀번호 인증 폼 -->
                     <div v-if="step === 2">
-                        <label for="tempPassword">임시 비밀번호 입력:</label>
-                        <v-text-field type="password" id="tempPassword" v-model="tempPassword" outlined dense
-                            hide-details placeholder="임시 비밀번호를 입력하세요" class="mb-4"></v-text-field>
-                        <v-btn light text v-bind="attrs" v-on="on"
-                            class="primary"
-                            @click="verifyTemporaryPassword">
+                        <label for="tempCode">인증 코드 입력:</label>
+                        <v-text-field v-model="tempCode" outlined dense hide-details placeholder="이메일로 전송된 인증코드를 입력하세요"
+                            class="mb-4"></v-text-field>
+                        <v-btn light text class="primary" @click="verifyTempCode">
                             새 비밀번호 설정
                         </v-btn>
+                        <p v-if="codeError" class="error-message">{{ codeError }}</p>
                     </div>
 
                     <!-- 세 번째 화면: 비밀번호 재설정 폼 -->
                     <div v-if="step === 3">
-                        <label for="newPassword">드실 이메일(ID) : </label>
+                        <label for="newPassword">새로운 비밀번호:</label>
                         <v-text-field type="password" id="newPassword" v-model="newPassword" outlined dense hide-details
                             placeholder="새로운 비밀번호" class="mb-4"></v-text-field>
                         <v-text-field type="password" id="newPassword2" v-model="newPassword2" outlined dense
@@ -57,10 +52,7 @@
                             <button @click="validateCaptcha" :disabled="captchaCompleted">제출</button>
                         </div>
 
-
-                        <v-btn light text v-bind="attrs" v-on="on"
-                            class="primary" @click="submitPassword"
-                            id="submu-ps">
+                        <v-btn light text class="primary" @click="submitPassword" id="submit-ps">
                             확인
                         </v-btn>
                     </div>
@@ -72,41 +64,73 @@
 </template>
 
 <script>
-
+import axios from 'axios';
 
 export default {
     data() {
         return {
             step: 1, // 초기 단계 설정
             email: '',
-            tempPassword: '',
+            tempCode: '',
             newPassword: '',
             newPassword2: '',
             dialog: false,
             captchaCompleted: false,
-            moved: false
+            moved: false,
+            emailError: '',  // 이메일 형식 오류 메시지
+            codeError: ''    // 인증 코드 오류 메시지
         };
     },
     methods: {
-        sendTemporaryPassword() {
-            // 임시 비밀번호 전송 로직 처리
-            console.log('임시 비밀번호 전송:', this.email);
-            alert('입력하신 이메일로 임시 비밀번호가 전송됐습니다.');
-            this.step = 2; // 다음 단계로 이동
+        validateEmail(email) {
+            const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
+            return re.test(String(email).toLowerCase());
         },
-        verifyTemporaryPassword() {
-            // 임시 비밀번호 인증 로직 처리
-            console.log('임시 비밀번호 인증:', this.tempPassword);
-            alert('인증 되었습니다.');
-            alert('인증되지 않았습니다. 다시 시도해주세요.');
-            this.step = 3; // 다음 단계로 이동
+        async sendTemporaryCode() {
+            if (!this.validateEmail(this.email)) {
+                this.emailError = '이메일 형식으로 입력해주세요';
+                return;
+            }
+            this.emailError = '';
+            try {
+                console.log(this.email);
+                const response = await axios.post('http://localhost:8000/memberManage/sendCode', { email: this.email });
+                console.log('인증 코드가 전송된 이메일:', this.email);
+                alert('입력하신 이메일로 인증 코드가 전송됐습니다.');
+                this.step = 2; // 다음 단계로 이동
+            } catch (error) {
+                console.error('Error sending temporary code:', error);
+                this.emailError = '인증 코드를 전송하는 중 오류가 발생했습니다.';
+            }
         },
-        submitPassword() {
-            // 비밀번호 재설정 로직 처리
-            console.log('비밀번호 재설정:', this.newPassword, this.newPassword2);
-            alert('비밀번호가 재설정되었습니다!');
-            // 다시 초기 단계로 돌아가거나 다른 작업 수행
-            this.$router.push('/memberManage/LoginPage');
+        async verifyTempCode() {
+            try {
+                const response = await axios.post('http://localhost:8000/memberManage/verifyCode', { email: this.email, code: this.tempCode });
+                console.log('인증 코드 확인:', this.tempCode);
+                alert('인증 되었습니다.');
+                this.step = 3; // 다음 단계로 이동
+            } catch (error) {
+                console.error('Error verifying code:', error);
+                this.codeError = '인증 코드가 틀렸습니다. 다시 시도해주세요.';
+            }
+        },
+        async submitPassword() {
+            if (this.newPassword !== this.newPassword2) {
+                alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                return;
+            }
+            try {
+                const response = await axios.post('http://localhost:8000/memberManage/resetPassword', {
+                    email: this.email,
+                    newPassword: this.newPassword
+                });
+                console.log('비밀번호 재설정:', this.newPassword, this.newPassword2);
+                
+                this.$router.push('/memberManage/LoginPage');
+            } catch (error) {
+                console.error('Error resetting password:', error);
+                alert('비밀번호 재설정 중 오류가 발생했습니다.');
+            }
         },
         handleMouseMove() {
             this.moved = true;
@@ -115,7 +139,6 @@ export default {
             if (this.moved) {
                 this.captchaCompleted = true;
                 alert('CAPTCHA 확인됨! 양식을 제출할 수 있습니다.');
-                // 여기에 폼 제출 또는 다음 단계로 진행하는 로직 추가
             } else {
                 alert('CAPTCHA를 완료해주세요. 마우스를 움직여야 합니다.');
             }

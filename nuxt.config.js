@@ -8,6 +8,11 @@ export default {
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes, resolve) {
+      routes.push({
+        name: 'OAuthSuccess',
+        path: '/OAuthSuccess',
+        component: resolve(__dirname, 'pages/memberManage/OAuthSuccess.vue')
+      });
       // 기존 라우트 수정도 가능
       // 첫 번째 라우트 수정
       const manageIndex = routes.findIndex(
