@@ -61,16 +61,24 @@
           <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
           <span class="d-none d-sm-block">{{ user ? user.email : '' }}</span>
         </v-btn> -->
+
         <template v-if="user">
           <v-btn light text @click="logout">
             <span class="d-none d-sm-block">로그아웃</span>
           </v-btn>
-          <v-btn light text href="http://localhost:3000/memberManage/userMyPage">
+          <v-btn v-if="user.permission.permission === 'USER'" light text href="http://localhost:3000/memberManage/userMyPage">
             <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">{{ user ? user.email : '' }}</span>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
+          </v-btn>
+          <v-btn v-else-if="user.permission.permission === 'OWNER'" light text href="http://localhost:3000/memberManage/ownerMyPage">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
+          </v-btn>
+          <v-btn v-else light text href="http://localhost:3000/memberManage/AdminManageUserPage">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
           </v-btn>
         </template>
-
         <template v-else>
           <v-btn light text href="http://localhost:3000/memberManage/loginPage">
             <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
@@ -312,18 +320,18 @@ export default {
     search() {
       // 쿼리 파라미터를 담을 객체를 생성합니다.
       let queryParams = {};
-      
+
       // 입력된 검색어 처리
       if (this.searchQuery.trim() !== "") {
         queryParams["search"] = [encodeURIComponent(this.searchQuery.trim())]; // 배열로 저장
       }
-      
+
       // 카테고리별로 쿼리 파라미터를 생성합니다.
       this.categories.forEach((category) => {
         category.selected.forEach((item) => {
           // 시설 관련 카테고리는 'facility' 파라미터로, 나머지는 'category' 파라미터로 추가합니다.
           const paramKey =
-          category.name === "FACILITIES" ? "facility" : "category";
+            category.name === "FACILITIES" ? "facility" : "category";
           // 해당 키에 대한 배열이 없으면 생성합니다.
           if (!queryParams[paramKey]) {
             queryParams[paramKey] = [];
@@ -332,28 +340,28 @@ export default {
           queryParams[paramKey].push(item.name);
         });
       });
-      
+
       // 쿼리 파라미터 문자열로 변환합니다.
       let queryString = Object.keys(queryParams)
-      .map(
-        (key) => queryParams[key].map((value) => `${key}=${value}`).join("&") // 배열을 이용해 join 함수 호출
-      )
-      .join("&");
-      
+        .map(
+          (key) => queryParams[key].map((value) => `${key}=${value}`).join("&") // 배열을 이용해 join 함수 호출
+        )
+        .join("&");
+
       // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
       const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
-      
+
       // URL로 리디렉션합니다.
       window.location.href = searchUrl;
-      
+
       // 모달 창을 닫습니다.
       this.closeModal();
     },
   },
-    async mounted() {
-      await this.fetchUserInfo();
-      window.document.onscroll = () => {
-        if (window.scrollY > 400) {
+  async mounted() {
+    await this.fetchUserInfo();
+    window.document.onscroll = () => {
+      if (window.scrollY > 400) {
         this.active = true;
       } else {
         this.active = false;

@@ -16,7 +16,7 @@
                                             <h1>회원정보</h1>
 
                                             <v-dialog v-model="dialogModify" width="500">
-                                                <template v-slot:activator="{ on }">
+                                                <template v-slot:activator="{ on }" >
                                                     <v-btn light text v-on="on"
                                                         class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
                                                         id="modify-userInfo-btn">
@@ -26,7 +26,6 @@
 
                                                 <UserInfoModifyForm :userInfo="userInfo" :dialogModify="dialogModify" />
                                             </v-dialog>
-
 
                                             <v-dialog v-model="dialogDelete" width="500">
                                                 <template v-slot:activator="{ on, attrs }">
@@ -39,25 +38,19 @@
 
                                                 <UserInfoDeleteForm :userInfo="userInfo" />
                                             </v-dialog>
-
                                         </div>
                                     </v-col>
 
                                     <v-col cols="7">
                                         <v-card elevation="0" class="border br-10">
-
-
                                             <div
-                                                class=" d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10  pa-4">
+                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
                                                 <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
-
                                                     <div class="text-center text-sm-left">
-                                                        <div class="text-14 f-600 mb-2 mb-sm-0">
-                                                            이메일
-                                                        </div>
+                                                        <div class="text-14 f-600 mb-2 mb-sm-0">이메일</div>
                                                     </div>
                                                 </div>
-                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0 ">
+                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
                                                     {{ userInfo.email }}
                                                 </p>
                                             </div>
@@ -65,79 +58,58 @@
                                             <v-divider></v-divider>
 
                                             <div
-                                                class=" d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10  pa-4">
+                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
                                                 <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
-
                                                     <div class="text-center text-sm-left">
-                                                        <div class="text-14 f-600 mb-2 mb-sm-0">
-                                                            이름
-                                                        </div>
+                                                        <div class="text-14 f-600 mb-2 mb-sm-0">이름</div>
                                                     </div>
-
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
                                                     {{ userInfo.name }}
                                                 </p>
-
                                             </div>
+
                                             <v-divider></v-divider>
 
                                             <div
-                                                class=" d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10  pa-4">
+                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
                                                 <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
-
                                                     <div class="text-center text-sm-left">
-                                                        <div class="text-14 f-600 mb-2 mb-sm-0">
-                                                            연락처
-                                                        </div>
+                                                        <div class="text-14 f-600 mb-2 mb-sm-0">연락처</div>
                                                     </div>
-
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
                                                     {{ userInfo.tel }}
                                                 </p>
-
-
                                             </div>
+
                                             <v-divider></v-divider>
 
-
                                             <div
-                                                class=" d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10  pa-4">
+                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
                                                 <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
-
                                                     <div class="text-center text-sm-left">
-                                                        <div class="text-14 f-600 mb-2 mb-sm-0">
-                                                            주소
-                                                        </div>
+                                                        <div class="text-14 f-600 mb-2 mb-sm-0">주소</div>
                                                     </div>
-
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
                                                     {{ userInfo.address }}
                                                 </p>
-
-
                                             </div>
+
                                             <v-divider></v-divider>
 
                                             <div
-                                                class=" d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10  pa-4">
+                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
                                                 <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
-
                                                     <div class="text-center text-sm-left">
-                                                        <div class="text-14 f-600 mb-2 mb-sm-0">
-                                                            우편번호
-                                                        </div>
+                                                        <div class="text-14 f-600 mb-2 mb-sm-0">우편번호</div>
                                                     </div>
                                                 </div>
-
-                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0 ">
+                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
                                                     {{ userInfo.postcode }}
                                                 </p>
                                             </div>
-                                            <v-divider></v-divider>
-
                                         </v-card>
                                     </v-col>
 
@@ -148,26 +120,24 @@
                                             </div>
                                             <v-divider></v-divider>
                                             <div class="info-item">
-
                                                 <v-img class="br-10 d-flex cover-img align-end" cover
                                                     :src="require('~/assets/images/bobal.jpg')" max-width="70px"
-                                                    max-height="100px">
-                                                </v-img>
+                                                    max-height="100px"></v-img>
 
-                                                <span v-if="userInfo.point">현재 보유 밥알 : {{ userInfo.point.currentPoint }}
-                                                    밥알</span>
-
+                                                <span v-if="userInfo.point">
+                                                    현재 보유 밥알 : {{ formatNumber(userInfo.point.currentPoint) }}
+                                                    밥알
+                                                </span>
                                             </div>
                                             <div class="info-item">
-
                                                 <v-img class="br-10 d-flex cover-img align-end" cover
                                                     :src="require('~/assets/images/bobjeom.png')" max-width="50px"
-                                                    max-height="50px">
-                                                </v-img>
+                                                    max-height="50px"></v-img>
 
-                                                <span v-if="userInfo.point">&nbsp; 지금까지 {{
-                                                    (userInfo.point.accumulatePoint / 100).toFixed(2)
-                                                    }}공기 드셨어요.</span>
+                                                <span v-if="userInfo.point">
+                                                    &nbsp; 지금까지 {{ formatNumber((userInfo.point.accumulatePoint / 100).toFixed(2))
+                                                    }}공기 드셨어요.
+                                                </span>
                                             </div>
                                         </v-card>
                                     </v-col>
@@ -179,9 +149,9 @@
             </v-row>
         </v-container>
         <Footer />
-
     </div>
 </template>
+
 <script>
 import UserInfoModifyForm from '@/components/memberManage/UserInfoModifyForm.vue';
 import UserInfoDeleteForm from '@/components/memberManage/UserInfoDeleteForm.vue';
@@ -195,58 +165,92 @@ export default {
     head: {
         title: 'Order History'
     },
-    created() {
-        // 페이지가 로드될 때 API를 호출하여 회원 정보를 받아옵니다.
+    async created() {
+        await this.getUserInfo();
         this.fetchUserInfo();
     },
     data() {
         return {
             page: 1,
-            dialogModify: false, // 수정 다이얼로그 열기 여부를 관리하는 데이터 속성
-            dialogDelete: false, // 삭제 다이얼로그 열기 여부를 관리하는 데이터 속성
+            dialogModify: false,
+            dialogDelete: false,
+            user: null,
             userInfo: {
-                modifiedPassword: '',           // 비밀번호
-                confirmPassword: '',    // 비밀번호 확인
-                name: '',               // 이름
-                tel: '',              // 연락처
-                address: '',            // 주소
-                postcode: '',            // 우편번호
+                modifiedPassword: '',
+                confirmPassword: '',
+                name: '',
+                tel: '',
+                address: '',
+                postcode: '',
                 point: {
                     id: '',
                     currentPoint: '',
-                    accumulatePoint:'',
+                    accumulatePoint: '',
                 },
-            }
+            },
         };
     },
     methods: {
-        // API를 호출하여 식당 정보를 받아오는 메서드입니다.
+        async getUserInfo() {
+      try {
+        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+        const response = await axios.get('http://localhost:8000/userInfo/me', {
+          headers: {
+            'Authorization': `${token}`
+          },
+          withCredentials: true
+        });
+
+        if (response.status === 200) {
+          const userInfo = response.data;
+          console.log('User Info:', userInfo);
+          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+          this.user = userInfo;
+          console.log(this.user);
+          console.log(this.user.id);
+        } else {
+          console.error('Failed to fetch user info:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
         async fetchUserInfo() {
-            // API 통신을 통해 식당 정보를 받아옵니다.
-            const email = 'dvbf@naver.com';
-            const response = await axios.get(`http://localhost:8000/memberManage/userMyPage?email=${email}`)
-            // ${this.userInfo.email}
+            const email = this.user.email;
+            const response = await axios
+                .get(`http://localhost:8000/memberManage/userMyPage?email=${email}`)
                 .then((response) => {
-                    // 받아온 식당 정보를 restaurants에 저장합니다.
                     this.userInfo = response.data;
                 })
                 .catch((error) => {
                     console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-                })
+                });
         },
         openModifyDialog() {
-            this.dialogModify = true; // 수정 다이얼로그 열기
+            this.dialogModify = true;
         },
         openDeleteDialog() {
-            this.dialogDelete = true; // 삭제 다이얼로그 열기
+            this.dialogDelete = true;
         },
         closeDialogs() {
             this.dialogModify = false;
             this.dialogDelete = false;
         },
+        formatNumber(value) {
+            if (typeof value === 'number') {
+                return value.toLocaleString();
+            } else if (!isNaN(value)) {
+                return Number(value).toLocaleString();
+            }
+            return value;
+        },
     },
-
-}
+};
 </script>
 
 <style lang="scss">
@@ -267,7 +271,7 @@ export default {
         margin-bottom: 15px;
 
         v-img {
-            margin-right: 10px; // 이미지와 텍스트 사이 간격 조정
+            margin-right: 10px;
         }
 
         span {
