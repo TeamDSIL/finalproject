@@ -61,16 +61,16 @@
           <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
           <span class="d-none d-sm-block">{{ user ? user.email : '' }}</span>
         </v-btn> -->
+        
         <template v-if="user">
           <v-btn light text @click="logout">
             <span class="d-none d-sm-block">로그아웃</span>
           </v-btn>
           <v-btn light text href="http://localhost:3000/memberManage/userMyPage">
             <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">{{ user ? user.email : '' }}</span>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
           </v-btn>
         </template>
-
         <template v-else>
           <v-btn light text href="http://localhost:3000/memberManage/loginPage">
             <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
