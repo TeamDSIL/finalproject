@@ -696,7 +696,7 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
-      depositAmount:3000,
+      depositAmount:0,
       riceBallPoints: 100,
       totalRiceBallPoints: 0,
       showConfirmationModal: false,
@@ -725,6 +725,7 @@ export default {
   mounted(){
     this.generateTimeOptions();
     this.fetchUserInfo();
+    this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
   },
   watch: {
     selectedDate(newVal) {
@@ -785,7 +786,31 @@ export default {
   destroyed() {
     clearInterval(this.timerInterval);
   },
+  
   methods: {
+    async fetchRestaurantInfo() {
+      try {
+        const restaurantId = this.$route.params.id
+        const response = await axios.get(`http://localhost:8000/restaurant/detail/${restaurantId}`);
+        
+        if (response.status === 200) {
+          const restaurantInfo = response.data[0]; // 배열의 첫 번째 항목을 가져옴
+          
+          if (restaurantInfo && restaurantInfo.restaurant_deposit !== undefined) {
+            this.depositAmount = restaurantInfo.restaurant_deposit;
+            console.log('Deposit Amount:', this.depositAmount);
+          } else {
+            console.error('Restaurant deposit not found for id:', restaurantId);
+            throw new Error('Restaurant deposit not found');
+          }
+        } else {
+          console.error('Failed to fetch restaurant info:', response);
+          throw new Error('Failed to fetch restaurant info');
+        }
+      } catch (error) {
+        console.error('Error fetching restaurant info:', error);
+      }
+    },
     async login(username, password) {
       try {
         const response = await axios.post('http://localhost:8000/memberManage/loginPage', {
@@ -1036,6 +1061,7 @@ confirmReservation2() {
           this.showConfirmationModal = false;
           this.showPaymentModal = true;
         } else {
+          this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
           this.showConfirmationModal = false;
           this.showReservationConfirmationModal = true;
         }
