@@ -37,8 +37,10 @@
 
                     <!-- 세 번째 화면: 비밀번호 재설정 폼 -->
                     <div v-if="step === 3">
-                        <v-text-field type="password" id="newPassword" v-model="newPassword" placeholder="새로운 비밀번호" class="mb-4"></v-text-field>
-                        <v-text-field type="password" id="newPassword2" v-model="newPassword2" placeholder="새로운 비밀번호 확인" class="mb-4"></v-text-field>
+                        <v-text-field type="password" id="newPassword" v-model="newPassword" placeholder="새로운 비밀번호" class="mb-4"
+                                      :error-messages="passwordErrors" @input="validatePassword"></v-text-field>
+                        <v-text-field type="password" id="newPassword2" v-model="newPassword2" placeholder="새로운 비밀번호 확인" class="mb-4"
+                                      :error-messages="confirmPasswordErrors" @input="validateConfirmPassword"></v-text-field>
                         <div class="button-container">
                             <v-btn :class="['primary', { 'disabled-btn': !isPasswordValid }]" :disabled="!isPasswordValid" @click="submitPassword" id="submit-ps">
                                 확인
@@ -64,7 +66,9 @@ export default {
             newPassword: '',
             newPassword2: '',
             emailError: '',  // 이메일 형식 오류 메시지
-            codeError: ''    // 인증 코드 오류 메시지
+            codeError: '',    // 인증 코드 오류 메시지
+            passwordErrors: [],
+            confirmPasswordErrors: [],
         };
     },
     computed: {
@@ -73,7 +77,7 @@ export default {
             return re.test(String(this.email).toLowerCase());
         },
         isPasswordValid() {
-            return this.newPassword !== '' && this.newPassword === this.newPassword2;
+            return this.newPassword !== '' && this.newPassword === this.newPassword2 && this.passwordErrors.length === 0 && this.confirmPasswordErrors.length === 0;
         }
     },
     methods: {
@@ -105,11 +109,27 @@ export default {
                 this.codeError = '인증 코드가 틀렸습니다. 다시 시도해주세요.';
             }
         },
-        async submitPassword() {
+        validatePassword() {
+            this.passwordErrors = [];
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&~])[A-Za-z\d@$!%*#?&~]{10,15}$/;
+            if (!passwordPattern.test(this.newPassword)) {
+                this.passwordErrors.push('문자와 숫자, 특수문자(!, @, #, $, %, *, ?, &, ~) 합하여 10~15자를 입력해주세요');
+            }
+        },
+        validateConfirmPassword() {
+            this.confirmPasswordErrors = [];
             if (this.newPassword !== this.newPassword2) {
-                alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                this.confirmPasswordErrors.push('비밀번호가 일치하지 않습니다');
+            }
+        },
+        async submitPassword() {
+            this.validatePassword();
+            this.validateConfirmPassword();
+
+            if (!this.isPasswordValid) {
                 return;
             }
+
             try {
                 const response = await axios.post('http://localhost:8000/memberManage/resetPassword', {
                     email: this.email,
@@ -128,7 +148,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .find-id-form {
     width: 500px;
     height: 600px;
@@ -177,5 +197,9 @@ export default {
     color: red;
     text-align: center;
     margin-top: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
 }
 </style>

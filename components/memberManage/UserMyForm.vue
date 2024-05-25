@@ -165,7 +165,8 @@ export default {
     head: {
         title: 'Order History'
     },
-    created() {
+    async created() {
+        await this.getUserInfo();
         this.fetchUserInfo();
     },
     data() {
@@ -173,6 +174,7 @@ export default {
             page: 1,
             dialogModify: false,
             dialogDelete: false,
+            user: null,
             userInfo: {
                 modifiedPassword: '',
                 confirmPassword: '',
@@ -189,8 +191,37 @@ export default {
         };
     },
     methods: {
+        async getUserInfo() {
+      try {
+        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+        const response = await axios.get('http://localhost:8000/userInfo/me', {
+          headers: {
+            'Authorization': `${token}`
+          },
+          withCredentials: true
+        });
+
+        if (response.status === 200) {
+          const userInfo = response.data;
+          console.log('User Info:', userInfo);
+          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+          this.user = userInfo;
+          console.log(this.user);
+          console.log(this.user.id);
+        } else {
+          console.error('Failed to fetch user info:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
         async fetchUserInfo() {
-            const email = 'dvbf@naver.com';
+            const email = this.user.email;
             const response = await axios
                 .get(`http://localhost:8000/memberManage/userMyPage?email=${email}`)
                 .then((response) => {

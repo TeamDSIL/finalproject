@@ -141,7 +141,7 @@
                 <br>
                 <div id="bottom-text">
                   <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">계약 해지를 원하시면 전화 문의 부탁드립니다. 고객 센터
-                    010-6634-9023</p>
+                    010-2687-0737</p>
                 </div>
               </div>
             </div>
@@ -165,7 +165,8 @@ export default {
     OwnerDashboardSidebar,
     OwnerInfoModifyForm,
   },
-  created() {
+  async created() {
+    await this.fetchUserInfo();
     this.fetchOwnerInfos();
   },
   data() {
@@ -174,6 +175,7 @@ export default {
       selectedItem: null,
       selectedOwnerInfo: null,
       hoverItem: null,
+      user: null,
       ownerInfos: [
         {
           id: '',
@@ -191,9 +193,38 @@ export default {
     };
   },
   methods: {
+    async fetchUserInfo() {
+      try {
+        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+        const response = await axios.get('http://localhost:8000/userInfo/me', {
+          headers: {
+            'Authorization': `${token}`
+          },
+          withCredentials: true
+        });
+
+        if (response.status === 200) {
+          const userInfo = response.data;
+          console.log('User Info:', userInfo);
+          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+          this.user = userInfo;
+          console.log(this.user);
+          console.log(this.user.id);
+        } else {
+          console.error('Failed to fetch user info:', response);
+        }
+      } catch (error) {
+        console.error('Error fetching user info:', error);
+      }
+    },
     async fetchOwnerInfos() {
       // API 통신을 통해 식당 정보를 받아옵니다.
-      const email = "a@a1";
+      const email = this.user.email;
       const response = await axios.get(`http://localhost:8000/memberManage/ownerMyPage?email=${email}`)
         // this.selectedOwnerInfo.email
         .then((response) => {
@@ -254,7 +285,7 @@ li:hover {
 }
 
 li.selected {
-  background-color: #e86253;
+  background-color: #da1600da;
   /* 클릭 후 파란색 배경 */
   color: white;
 }
