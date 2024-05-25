@@ -545,7 +545,7 @@ export default {
     async reservationDeny(reservationId) {
       console.log(reservationId + " 여기");
       try {
-        const response = await axios.put(
+        const response = await axios.post(
           `http://localhost:8000/myDining/reservation-cancel/${reservationId}`,
           {
             reservationState: "CANCELED",
@@ -645,10 +645,13 @@ export default {
     },
   },
   async created() {
+    if (process.client) {
+
     await this.fetchUserInfo();
     this.fetchReservations();
     this.fetchBookmarks();
     this.fetchReviews();
+    }
   },
 
 };
