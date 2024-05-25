@@ -93,7 +93,7 @@
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">예약이 확정되었습니다!</p>
-          <p>밥알 {{ riceBallPoints }}개 적립완료 (현재 누적 밥알 {{ totalRiceBallPoints }}개)</p>
+          <p>밥알 {{ riceBallPoints }}개 적립완료 (현재 누적 밥알 {{ totalRiceBallPoints + 100 }}개)</p>
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
           <v-btn style="background-color: rgb(210,63,87); color: white"
@@ -720,6 +720,7 @@ export default {
     currentTime: new Date(),
     selectedDate: new Date(),
     user: null,
+    restaurant_table_count: 0, // 테이블 수 추가
     };
   },
   mounted(){
@@ -798,10 +799,15 @@ export default {
           
           if (restaurantInfo && restaurantInfo.restaurant_deposit !== undefined) {
             this.depositAmount = restaurantInfo.restaurant_deposit;
+            this.restaurant_table_count = restaurantInfo.restaurant_table_count;
             console.log('Deposit Amount:', this.depositAmount);
-          } else {
-            console.error('Restaurant deposit not found for id:', restaurantId);
-            throw new Error('Restaurant deposit not found');
+            console.log('테이블 갯수 ', this.restaurant_table_count);
+            if (this.numberOfTables > this.restaurant_table_count) {
+            console.log("예약 가능한 테이블 수가 모자릅니다.");
+            alert("예약 가능한 테이블 수가 모자릅니다.");
+          }
+          } else if(restaurantInfo.restaurant_deposit==null){
+            this.showConfirmationModal = true;
           }
         } else {
           console.error('Failed to fetch restaurant info:', response);
@@ -999,11 +1005,20 @@ export default {
         this.selectedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
 
         this.selectedDateTime = `${this.selectedDate} ${this.selectedTime}`;
-        this.showConfirmationModal = true; // 확정 모달 창 표시
-      }
 
-      this.modal = false; // 기존 모달 창은 닫기
-    },
+        const people = this.numberOfPeople;
+        const tablesNeeded = Math.ceil(people / 4);
+        if (tablesNeeded <= this.restaurant_table_count) {
+      // 예약 가능한 테이블이 충분한 경우
+      this.showConfirmationModal = true; // 확정 모달 창 표시
+    } else {
+      // 예약 가능한 테이블이 부족한 경우
+      alert("예약 가능한 테이블 수를 초과했습니다. 다른 시간대를 선택하거나 인원 수를 줄여주세요.");
+    }
+  }
+
+  this.modal = false; // 기존 모달 창은 닫기
+},
     handleTouchMove(event) {
       if (Math.abs(event.touches[0].clientY - event.touches[0].pageY) > 10) {
         event.preventDefault();
