@@ -1,6 +1,8 @@
 <template>
   <div>
     <InformationList></InformationList>
+    <div class="mb-4"></div>
+    <Footer />
   </div>
 </template>
 
