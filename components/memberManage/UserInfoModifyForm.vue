@@ -89,7 +89,7 @@ export default ({
                 };
 
                 // API 요청 보내기~
-                const response = await axios.post('http://localhost:8000/memberManage/userMyPage', requestData);
+                const response = await axios.post(`${process.env.API_URL}/memberManage/userMyPage`, requestData);
 
                 // 응답 처리
                 console.log('수정 응답:', response.data);

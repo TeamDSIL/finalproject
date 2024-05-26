@@ -598,7 +598,7 @@ export default {
         },
         fetchMenus() {
             const id = this.$route.params.id;
-            axios.get(`http://localhost:8000/restaurant/detail/${id}`)
+            axios.get(`${process.env.API_URL}/restaurant/detail/${id}`)
                 .then(response => {
                     this.menus = response.data;
                     console.log('식당 상세정보 불러왔음')
@@ -613,7 +613,7 @@ export default {
         },
         fetchReviews() {
             const id = this.$route.params.id;
-            axios.get(`http://localhost:8000/restaurant/detail/review/${id}`)
+            axios.get(`${process.env.API_URL}/restaurant/detail/review/${id}`)
                 .then(response => {
                     this.reviews = response.data;
                     console.log('리뷰 데이터 불러왔음')

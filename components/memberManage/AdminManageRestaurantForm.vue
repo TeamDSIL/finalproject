@@ -148,7 +148,7 @@ export default {
         // API를 호출하여 식당 정보를 받아오는 메서드입니다.
         async fetchRestaurants() {
             // API 통신을 통해 식당 정보를 받아옵니다.
-            const response = await axios.get('http://localhost:8000/memberManage/adminManageRestaurantPage')
+            const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`)
                 .then((response) => {
                     // 받아온 식당 정보를 restaurants에 저장합니다.
                     this.restaurants = response.data;

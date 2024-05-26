@@ -484,7 +484,7 @@ export default {
 
     async getRestaurantSentiment(id) {
       try {
-        const response = await axios.get(`http://localhost:8000/restaurant/${id}/sentiment`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${id}/sentiment`);
         this.sentiment = response.data;
         this.calculateSentimentScore(); // 감정 평가 점수 계산
       } catch (error) {
@@ -506,7 +506,7 @@ export default {
       const restaurantId = this.$route.params.id;
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/monthly/${restaurantId}/${this.year}`
+          `${process.env.API_URL}/restaurant/monthly/${restaurantId}/${this.year}`
         );
         this.stats = Object.keys(response.data).map((month) => ({
           period: `${month}월`,
@@ -520,7 +520,7 @@ export default {
       const restaurantId = this.$route.params.id;
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/weekly/${restaurantId}/${this.year}`
+          `${process.env.API_URL}/restaurant/weekly/${restaurantId}/${this.year}`
         );
         this.stats = Object.keys(response.data).map((week) => {
           const month =
@@ -541,7 +541,7 @@ export default {
       if (time.clicked) {
         try {
           await axios.delete(
-            `http://localhost:8000/restaurant/${restaurantId}/available-times`,
+            `${process.env.API_URL}/restaurant/${restaurantId}/available-times`,
             {
               params: {
                 slot: time.slot,
@@ -555,7 +555,7 @@ export default {
       } else {
         try {
           const response = await axios.post(
-            `http://localhost:8000/restaurant/${restaurantId}/available-times`,
+            `${process.env.API_URL}/restaurant/${restaurantId}/available-times`,
             null,
             {
               params: {
@@ -572,7 +572,7 @@ export default {
     async fetchRestaurantDetails(restaurantId) {
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}`
+          `${process.env.API_URL}/restaurant/${restaurantId}`
         );
         this.restaurant = response.data;
         console.log("Restaurant details fetched successfully");
@@ -584,7 +584,7 @@ export default {
       console.log("예약목록을 불러올 식당의 아이디:", restaurantId);
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}/reservations`
+          `${process.env.API_URL}/restaurant/${restaurantId}/reservations`
         );
         this.reservations = response.data;
         console.log("불러온 예약목록들: ", this.reservations);
@@ -600,7 +600,7 @@ export default {
     async fetchAvailableTimes(restaurantId) {
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}/available-times`
+          `${process.env.API_URL}/restaurant/${restaurantId}/available-times`
         );
         const availableTimes = response.data;
 
@@ -622,7 +622,7 @@ export default {
       console.log("리뷰목록을 불러올 식당의 아이디:", restaurantId);
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}/reviews`
+          `${process.env.API_URL}/restaurant/${restaurantId}/reviews`
         );
         this.reviews = response.data.map((review) => {
           return {
@@ -689,7 +689,7 @@ export default {
     async toggleSelection(crowd) {
       try {
         const response = await axios.patch(
-          `http://localhost:8000/restaurant/${this.restaurant.id}/crowd`,
+          `${process.env.API_URL}/restaurant/${this.restaurant.id}/crowd`,
           null,
           {
             params: {
@@ -713,7 +713,7 @@ export default {
     async deleteReview(reviewId) {
       try {
         const response = await axios.patch(
-          `http://localhost:8000/restaurant/reviews/${reviewId}/delete-status`,
+          `${process.env.API_URL}/restaurant/reviews/${reviewId}/delete-status`,
           null,
           {
             params: {
@@ -740,7 +740,7 @@ export default {
     async submitReply(reviewId) {
       try {
         const response = await axios.post(
-          `http://localhost:8000/restaurant/reviews/${reviewId}`,
+          `${process.env.API_URL}/restaurant/reviews/${reviewId}`,
           { content: this.reply }
         );
         const reply = response.data;
