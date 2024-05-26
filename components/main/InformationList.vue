@@ -3,7 +3,7 @@
     <v-row>
       <v-col cols="12">
         <div style="display: flex">
-          <v-img
+          <!-- <v-img
             contain
             :src="require('~/assets/images/board.png')"
             width="20px"
@@ -11,7 +11,7 @@
           ></v-img>
           <div style="font-size: larger; font-weight: bold">
             {{ InformationName }} 게시판
-          </div>
+          </div> -->
         </div>
       </v-col>
     </v-row>

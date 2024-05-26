@@ -113,15 +113,6 @@
           <v-btn light text @click="logout">
             <span class="d-none d-sm-block">로그아웃</span>
           </v-btn>
-
-          <v-btn
-            light
-            text
-            href="http://localhost:3000/memberManage/userMyPage"
-          >
-            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">{{ user ? user.email : "" }}</span>
-          </v-btn>
           <v-btn
             v-if="user.permission.permission === 'USER'"
             light
@@ -156,6 +147,7 @@
             <span class="d-none d-sm-block">로그인</span>
           </v-btn>
         </template>
+
         <!-- <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
                 <v-icon small>mdi-cart-outline</v-icon>(8)
               </v-btn> -->
