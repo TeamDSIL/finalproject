@@ -155,7 +155,7 @@ export default {
                 }
 
                 // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-                const response = await axios.get('http://localhost:8000/userInfo/me', {
+                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
                     headers: {
                         'Authorization': `${token}`
                     },
@@ -180,7 +180,7 @@ export default {
         async fetchMembers() {
 
             // API 통신을 통해 회원 정보를 받아옵니다.
-            const response = await axios.get('http://localhost:8000/memberManage/adminManageUserPage')
+            const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageUserPage`)
                 .then((response) => {
                     // 받아온 회원 정보를 members에 저장합니다.
                     this.members = response.data;

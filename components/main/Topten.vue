@@ -187,7 +187,7 @@ export default {
   methods: {
     fetchTopViews() {
       axios
-        .get("http://localhost:8000/main/topten/views")
+        .get(`${process.env.API_URL}/main/topten/views`)
         .then((response) => {
           this.topViews = this.addRanks(response.data);
           this.currentTopViews = this.getCircularItems(
@@ -200,7 +200,7 @@ export default {
     },
     fetchTopBookmarks() {
       axios
-        .get("http://localhost:8000/main/topten/bookmarks")
+        .get(`${process.env.API_URL}/main/topten/bookmarks`)
         .then((response) => {
           this.topBookmarks = this.addRanks(response.data);
           this.currentTopBookmarks = this.getCircularItems(
@@ -215,7 +215,7 @@ export default {
     },
     fetchTopReservations() {
       axios
-        .get("http://localhost:8000/main/topten/reservations")
+        .get(`${process.env.API_URL}/main/topten/reservations`)
         .then((response) => {
           this.topReservations = this.addRanks(response.data);
           this.currentTopReservations = this.getCircularItems(

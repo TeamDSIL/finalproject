@@ -494,7 +494,7 @@ export default {
                     throw new Error('No token found');
                 }
                 // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-                const response = await axios.get('http://localhost:8000/userInfo/me', {
+                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
                     headers: {
                         'Authorization': `${token}`
                     },
@@ -515,7 +515,7 @@ export default {
     async bookmarkCancle(bookmarkId) {
       try {
         const response = await axios.delete(
-          `http://localhost:8000/myDining/bookmark-cancel/${bookmarkId}`
+          `${process.env.API_URL}/myDining/bookmark-cancel/${bookmarkId}`
         );
         alert("즐겨찾기가 해제되었습니다.");
         this.fetchBookmarks();
@@ -528,7 +528,7 @@ export default {
       console.log(reviewId + "삭제할 리뷰아이디");
       try {
         const response = await axios.put(
-          `http://localhost:8000/myDining/reviewRemoveRequest/${reviewId}`
+          `${process.env.API_URL}/myDining/reviewRemoveRequest/${reviewId}`
         );
       } catch (error) {
         console.error("리뷰 취소 신청 중 오류가 발생했습니다.", error);
@@ -539,7 +539,7 @@ export default {
       console.log(reservationId + " 여기");
       try {
         const response = await axios.post(
-          `http://localhost:8000/myDining/reservation-cancel/${reservationId}`,
+          `${process.env.API_URL}/myDining/reservation-cancel/${reservationId}`,
           {
             reservationState: "CANCELED",
           }
@@ -567,7 +567,7 @@ export default {
     fetchReviews() {
       const id = this.user.id;
       axios
-        .get(`http://localhost:8000/myDining/reviews/${id}`)
+        .get(`${process.env.API_URL}/myDining/reviews/${id}`)
         .then((response) => {
           this.reviewsList = response.data;
         })
@@ -581,7 +581,7 @@ export default {
       const id = this.user.id;
 
       axios
-        .get(`http://localhost:8000/myDining/reservations/${id}`)
+        .get(`${process.env.API_URL}/myDining/reservations/${id}`)
         .then((response) => {
           // 응답 데이터를 reservations 배열에 저장합니다
           this.reserveRestaurantList = response.data;
@@ -597,7 +597,7 @@ export default {
       const id = this.user.id;
 
       axios
-        .get(`http://localhost:8000/myDining/bookmarks/${id}`)
+        .get(`${process.env.API_URL}/myDining/bookmarks/${id}`)
         .then((response) => {
           // 응답 데이터를 bookmarksList 배열에 저장합니다
           this.bookmarksList = response.data;
@@ -646,6 +646,7 @@ export default {
     this.fetchReviews();
     }
   },
+
 
 };
 </script>

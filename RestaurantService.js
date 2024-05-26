@@ -6,7 +6,7 @@ export default {
 //     return response.data;
 //   },
   async getRestaurantSentiment(id) {
-    const response = await axios.get(`http://localhost:8000/restaurant/${id}/sentiment`);
+    const response = await axios.get(`${process.env.API_URL}/restaurant/${id}/sentiment`);
     return response.data;
   }
 }

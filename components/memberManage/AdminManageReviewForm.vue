@@ -174,7 +174,7 @@ export default {
   methods: {
     fetchReviews() {
       axios
-        .get(`http://localhost:8000/memberManage/reviewManage`)
+        .get(`${process.env.API_URL}/memberManage/reviewManage`)
         .then((response) => {
           this.reviewInfos = response.data;
           console.log(this.reviewInfos);

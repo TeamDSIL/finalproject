@@ -232,7 +232,7 @@ export default {
   methods: {
     fetchNotices() {
       axios
-        .get("http://localhost:8000/informs/")
+        .get(`${process.env.API_URL}/informs/`)
         .then((response) => {
           this.notices = response.data;
         })
@@ -288,7 +288,7 @@ export default {
       }
 
       axios
-        .post("http://localhost:8000/informs/", formData, {
+        .post(`${process.env.API_URL}/informs/`, formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
@@ -324,7 +324,7 @@ export default {
 
       axios
         .put(
-          `http://localhost:8000/informs/${this.editingNotice.id}`,
+          `${process.env.API_URL}/informs/${this.editingNotice.id}`,
           formData,
           {
             headers: {
@@ -353,7 +353,7 @@ export default {
       if (confirm("진짜 삭제하시겠습니까?")) {
         // 사용자에게 삭제 확인 요청
         axios
-          .delete(`http://localhost:8000/informs/${id}`)
+          .delete(`${process.env.API_URL}/informs/${id}`)
           .then(() => {
             this.notices = this.notices.filter((notice) => notice.id !== id); // 성공적으로 삭제된 경우 클라이언트에서도 제거
             alert("공지사항이 성공적으로 삭제되었습니다."); // 성공 알림

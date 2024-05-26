@@ -224,7 +224,7 @@ export default {
         };
 
         // API 요청 보내기~
-        const response = await axios.post('http://localhost:8000/memberManage/signupPage', requestData);
+        const response = await axios.post(`${process.env.API_URL}/memberManage/signupPage`, requestData);
 
         // 응답 처리
         console.log('회원 정보 응답:', response.data);
