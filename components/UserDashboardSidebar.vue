@@ -37,18 +37,18 @@ export default {
                     id: 2,
                     icon: 'mdi-silverware',
                     title: '마이 다이닝',
-                    link: '/myDining/MydiningPage'
+                    link: '/myDining/myDiningPage'
 
                 },
+                // {
+                //     id: 3,
+                //     icon: 'mdi-clipboard-check-outline',
+                //     title: '식당 찾기',
+                //     link: '/restaurant/RestaurantListPage'
+
+                // },
                 {
                     id: 3,
-                    icon: 'mdi-clipboard-check-outline',
-                    title: '식당 찾기',
-                    link: '/restaurant/RestaurantListPage'
-
-                },
-                {
-                    id: 4,
                     icon: 'mdi-lock-check-outline',
                     title: '비밀번호 변경',
                     link: '/restaurant/RestaurantListPage'

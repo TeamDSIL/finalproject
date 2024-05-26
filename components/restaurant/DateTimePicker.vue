@@ -93,7 +93,7 @@
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">예약이 확정되었습니다!</p>
-          <p>밥알 {{ riceBallPoints }}개 적립완료 (현재 누적 밥알 {{ totalRiceBallPoints }}개)</p>
+          <p>밥알 {{ riceBallPoints }}개 적립완료 (현재 누적 밥알 {{ totalRiceBallPoints + 100 }}개)</p>
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
           <v-btn style="background-color: rgb(210,63,87); color: white"
@@ -696,7 +696,7 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
-      depositAmount:3000,
+      depositAmount:0,
       riceBallPoints: 100,
       totalRiceBallPoints: 0,
       showConfirmationModal: false,
@@ -720,11 +720,13 @@ export default {
     currentTime: new Date(),
     selectedDate: new Date(),
     user: null,
+    restaurant_table_count: 0, // 테이블 수 추가
     };
   },
   mounted(){
     this.generateTimeOptions();
     this.fetchUserInfo();
+    this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
   },
   watch: {
     selectedDate(newVal) {
@@ -785,7 +787,36 @@ export default {
   destroyed() {
     clearInterval(this.timerInterval);
   },
+  
   methods: {
+    async fetchRestaurantInfo() {
+      try {
+        const restaurantId = this.$route.params.id
+        const response = await axios.get(`http://localhost:8000/restaurant/detail/${restaurantId}`);
+        
+        if (response.status === 200) {
+          const restaurantInfo = response.data[0]; // 배열의 첫 번째 항목을 가져옴
+          
+          if (restaurantInfo && restaurantInfo.restaurant_deposit !== undefined) {
+            this.depositAmount = restaurantInfo.restaurant_deposit;
+            this.restaurant_table_count = restaurantInfo.restaurant_table_count;
+            console.log('Deposit Amount:', this.depositAmount);
+            console.log('테이블 갯수 ', this.restaurant_table_count);
+            if (this.numberOfTables > this.restaurant_table_count) {
+            console.log("예약 가능한 테이블 수가 모자릅니다.");
+            alert("예약 가능한 테이블 수가 모자릅니다.");
+          }
+          } else if(restaurantInfo.restaurant_deposit==null){
+            this.showConfirmationModal = true;
+          }
+        } else {
+          console.error('Failed to fetch restaurant info:', response);
+          throw new Error('Failed to fetch restaurant info');
+        }
+      } catch (error) {
+        console.error('Error fetching restaurant info:', error);
+      }
+    },
     async login(username, password) {
       try {
         const response = await axios.post('http://localhost:8000/memberManage/loginPage', {
@@ -974,11 +1005,20 @@ export default {
         this.selectedTime = `${dateTime.getHours().toString().padStart(2, '0')}:${dateTime.getMinutes().toString().padStart(2, '0')}`;
 
         this.selectedDateTime = `${this.selectedDate} ${this.selectedTime}`;
-        this.showConfirmationModal = true; // 확정 모달 창 표시
-      }
 
-      this.modal = false; // 기존 모달 창은 닫기
-    },
+        const people = this.numberOfPeople;
+        const tablesNeeded = Math.ceil(people / 4);
+        if (tablesNeeded <= this.restaurant_table_count) {
+      // 예약 가능한 테이블이 충분한 경우
+      this.showConfirmationModal = true; // 확정 모달 창 표시
+    } else {
+      // 예약 가능한 테이블이 부족한 경우
+      alert("예약 가능한 테이블 수를 초과했습니다. 다른 시간대를 선택하거나 인원 수를 줄여주세요.");
+    }
+  }
+
+  this.modal = false; // 기존 모달 창은 닫기
+},
     handleTouchMove(event) {
       if (Math.abs(event.touches[0].clientY - event.touches[0].pageY) > 10) {
         event.preventDefault();
@@ -1036,6 +1076,7 @@ confirmReservation2() {
           this.showConfirmationModal = false;
           this.showPaymentModal = true;
         } else {
+          this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
           this.showConfirmationModal = false;
           this.showReservationConfirmationModal = true;
         }
