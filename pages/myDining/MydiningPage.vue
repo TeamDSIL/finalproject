@@ -285,14 +285,7 @@
                                 >
                                   전화번호: {{ like.tel }}
                                 </p>
-                                <v-btn
-                                  color="primary"
-                                  small
-                                  class="review-read-button"
-                                >
-                                  리뷰 보기
-                                  <!-- <v-icon right small>mdi-plus</v-icon> -->
-                                </v-btn>
+                             
                                 <nuxt-link :to="`/restaurant/detail/${like.restaurantId}`">
   <v-btn
     color="primary"
