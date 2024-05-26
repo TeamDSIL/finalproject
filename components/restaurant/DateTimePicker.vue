@@ -8,14 +8,16 @@
       <v-card>
         <!-- 예약 날짜 선택 -->
         <v-date-picker v-model="date" :min="minDate" scrollable locale="ko" full-width></v-date-picker>
-        <p style="margin-left: 10px;">예약 시간을 선택해주세요.</p>
+        <p style="margin-left: 10px;">예약 시간을 선택해주세요.<span class="time-description">(테이블 개수)</span></p>
         <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
             :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
-      :disabled="isDisabled(time)">
-      {{ time }}
+      :disabled="isDisabled(time)" 
+      :style="{ width: '80px' }"
+      >
+      {{ time }} ({{ restaurant_table_count }})
             </v-btn>
           </v-row>
         </div>
@@ -1060,6 +1062,7 @@ export default {
               .then(response => {
                   // 예약 정보가 성공적으로 전송되었을 때의 처리
                   console.log('예약 정보가 성공적으로 전송되었습니다:', reservationData);
+                  this.$router.go(0); // 혹은 window.location.reload();
                   if (response.data.success) {
                     // 예약 성공적으로 처리된 경우
                     console.log('예약이 성공적으로 처리되었습니다.');
@@ -1144,6 +1147,7 @@ confirmReservation2() {
                     this.showPaymentModal = false;
                     console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
                     this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
+                    this.$router.go(0); // 혹은 window.location.reload();
                     alert("예약 및 결제가 완료되었습니다.");
                     this.resetReservationData();
                 })
@@ -1341,6 +1345,11 @@ input[type="number"] {
   align-items: center;
   z-index: 9999;
 }
+.time-description {
+  font-size: 12px;
+  color: rgba(0, 0, 0, 0.5); /* 텍스트 색상 흐리게 설정 */
+}
+
 
 .spinner {
   border: 4px solid rgba(255, 255, 255, 0.3);
