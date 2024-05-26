@@ -27,7 +27,7 @@
           <div
             style="font-size: larger; font-weight: bold; margin-bottom: 20px"
           >
-            공지사항 목록
+            공지사항 게시판
           </div>
         </div>
 

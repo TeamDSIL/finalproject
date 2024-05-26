@@ -41,20 +41,12 @@
                               </td>
                               <td>{{ item.postDate }}</td>
                               <td>
-                                <v-dialog
-                                  max-width="500"
-                                  :class="{ 'overlay-hidden': !showDialog }"
+                                <v-btn
+                                  color="primary"
+                                  @click="editNotice(item)"
                                 >
-                                  <template v-slot:activator="{ on }">
-                                    <v-btn
-                                      color="primary"
-                                      v-on="on"
-                                      @click="editNotice(item)"
-                                    >
-                                      상세정보
-                                    </v-btn>
-                                  </template>
-                                </v-dialog>
+                                  상세정보
+                                </v-btn>
                               </td>
                               <td>
                                 <v-btn
@@ -76,20 +68,15 @@
                     <div
                       class="d-flex justify-center align-center justify-sm-space-between flex-wrap"
                     >
-                      <div class="mb-4 me-3">
-                        <p class="font-weight-normal mb-0 text-14">
-                          Showing {{ startItemIndex }}-{{ endItemIndex }} of
-                          {{ filteredNotices.length }} Notices
-                        </p>
-                      </div>
-                      <div class="d-flex mb-4 align-center">
+                      <div class="mb-4 me-3" style="margin-left: 10px">
                         <v-btn
                           @click="openModal"
                           style="color: rgb(210, 63, 87); border-radius: 10px"
                         >
                           <v-icon>mdi-plus</v-icon>글 등록
                         </v-btn>
-
+                      </div>
+                      <div class="d-flex mb-4 align-center">
                         <!-- 페이지네이션 -->
                         <v-pagination
                           v-model="currentPage"
@@ -277,7 +264,7 @@ export default {
         { text: "공지 제목", value: "title" },
         { text: "게시 날짜", value: "postDate" },
         { text: "수정하기", value: "actions" },
-        { text: "삭제", value: "actions" },
+        { text: "삭제", value: "delete" },
       ],
       notices: [],
       currentNotice: {
