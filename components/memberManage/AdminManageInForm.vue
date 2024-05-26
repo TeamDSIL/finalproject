@@ -85,8 +85,7 @@
                       <div class="d-flex mb-4 align-center">
                         <v-btn
                           @click="openModal"
-                          style="color: rgb(210, 63, 87)"
-                          rounded="x-large"
+                          style="color: rgb(210, 63, 87); border-radius: 10px"
                         >
                           <v-icon>mdi-plus</v-icon>글 등록
                         </v-btn>
