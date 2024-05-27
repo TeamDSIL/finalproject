@@ -5,15 +5,29 @@
         <v-col cols="12">
           <v-row>
             <v-tabs v-model="tab" class="mb-8">
-              <v-tab href="#tab-1" style="font-weight: bold; font-size: large">홈</v-tab>
-              <v-tab href="#tab-2" style="font-weight: bold; font-size: large">내주변찾기</v-tab>
+              <v-tab href="#tab-1" style="font-weight: bold; font-size: large"
+                >홈</v-tab
+              >
+              <v-tab href="#tab-2" style="font-weight: bold; font-size: large"
+                >내주변찾기</v-tab
+              >
               <v-spacer></v-spacer>
               <nuxt-link
-                style="margin-top: 10px;"
+                style="margin-top: 10px"
                 :to="{ path: '/main/InformationPage' }"
                 class="text-decoration-none"
               >
-                <v-button style="font-size: large; color: gray; background-color: white; font-weight: bold; margin-top: 10px; margin-right: 25px;" medium>
+                <v-button
+                  style="
+                    font-size: large;
+                    color: gray;
+                    background-color: white;
+                    font-weight: bold;
+                    margin-top: 10px;
+                    margin-right: 25px;
+                  "
+                  medium
+                >
                   공지사항
                 </v-button>
               </nuxt-link>
@@ -23,7 +37,12 @@
           <v-tabs-items v-model="tab">
             <v-tab-item value="tab-1">
               <div class="carousel-container">
-                <v-carousel hide-delimiters height="500px" cycle interval="2000" >
+                <v-carousel
+                  hide-delimiters
+                  height="500px"
+                  cycle
+                  interval="2000"
+                >
                   <v-carousel-item v-for="(item, i) in items" :key="i">
                     <div class="image-wrapper">
                       <div
@@ -109,12 +128,20 @@ export default {
 
 .carousel-container::before {
   left: 0;
-  background: linear-gradient(to right, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  background: linear-gradient(
+    to right,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
 }
 
 .carousel-container::after {
   right: 0;
-  background: linear-gradient(to left, rgba(255, 255, 255, 1), rgba(255, 255, 255, 0));
+  background: linear-gradient(
+    to left,
+    rgba(255, 255, 255, 1),
+    rgba(255, 255, 255, 0)
+  );
 }
 
 .image-wrapper {
