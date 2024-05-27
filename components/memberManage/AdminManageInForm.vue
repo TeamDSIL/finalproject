@@ -166,9 +166,8 @@
                   style="border-radius: 8px; object-fit: cover"
                 ></v-img>
               </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
+            </v-row> </v-container
+        ></v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" text @click="closeModal">취소</v-btn>
@@ -180,8 +179,6 @@
           >
             등록
           </v-btn>
-          <!--  -->
-          <!--  -->
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -220,21 +217,21 @@
                 ></v-textarea>
               </v-col>
               <v-col cols="12">
+                <!-- 이미지 파일이 있을 경우 이미지 미리보기를 표시 -->
                 <v-img
                   v-if="
-                    detailsNotice.filePath &&
-                    detailsNotice.filePath.startsWith('http')
+                    detailsNotice.img && detailsNotice.img.startsWith('http')
                   "
-                  :src="detailsNotice.filePath"
+                  :src="detailsNotice.img"
                   alt="첨부 이미지"
                   height="200"
                 ></v-img>
+                <!-- 파일 이름을 표시 -->
                 <v-text-field
                   v-if="
-                    detailsNotice.filePath &&
-                    !detailsNotice.filePath.startsWith('http')
+                    detailsNotice.img && !detailsNotice.img.startsWith('http')
                   "
-                  v-model="detailsNotice.filePath"
+                  v-model="detailsNotice.img"
                   label="첨부 파일"
                   readonly
                   prepend-icon="mdi-paperclip"
@@ -278,6 +275,7 @@ export default {
         category: "",
         title: "",
         contents: "",
+        img: "",
         filePath: "",
       },
       editingNotice: null,
@@ -324,7 +322,7 @@ export default {
   methods: {
     fetchNotices() {
       axios
-        .get("http://localhost:8000/informs/")
+        .get(`${process.env.API_URL}/informs/`)
         .then((response) => {
           this.notices = response.data;
         })
@@ -372,13 +370,28 @@ export default {
         "inform",
         new Blob([JSON.stringify(noticeData)], { type: "application/json" })
       );
-      if (this.currentNotice.filePath) {
-        const resizedFile = await this.resizeImage(this.currentNotice.filePath);
-        formData.append("file", resizedFile, this.currentNotice.filePath.name);
+      // 파일 첨부가 있고, 이미지 파일인 경우에만 리사이징을 시도
+      if (
+        this.currentNotice.filePath &&
+        this.currentNotice.filePath.type.startsWith("image/")
+      ) {
+        try {
+          const resizedImage = await this.resizeImage(
+            this.currentNotice.filePath
+          );
+          formData.append("file", resizedImage, "resized_image.jpg");
+        } catch (error) {
+          console.error("Error resizing image:", error);
+          alert("이미지 리사이징에 실패했습니다.");
+          return;
+        }
+      } else if (this.currentNotice.filePath) {
+        // 이미지 파일이 아니라면 원본 파일을 그대로 사용
+        formData.append("file", this.currentNotice.filePath);
       }
 
       axios
-        .post("http://localhost:8000/informs/", formData, {
+        .post(`${process.env.API_URL}/informs/`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((response) => {
@@ -402,19 +415,28 @@ export default {
         "inform",
         new Blob([JSON.stringify(noticeData)], { type: "application/json" })
       );
+
       if (this.currentNotice.filePath) {
-        const resizedFile = await this.resizeImage(this.currentNotice.filePath);
-        formData.append("file", resizedFile, this.currentNotice.filePath.name);
+        try {
+          const resizedImage = await this.resizeImage(
+            this.currentNotice.filePath
+          );
+          formData.append(
+            "file",
+            resizedImage,
+            this.currentNotice.filePath.name
+          );
+        } catch (error) {
+          console.error("Error resizing image:", error);
+          alert("이미지 리사이징에 실패했습니다.");
+          return;
+        }
       }
 
       axios
-        .put(
-          `http://localhost:8000/informs/${this.editingNotice.id}`,
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        )
+        .put(`${process.env.API_URL}/${this.editingNotice.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
         .then((response) => {
           const index = this.notices.findIndex(
             (n) => n.id === this.editingNotice.id
@@ -430,33 +452,37 @@ export default {
           alert("공지사항 업데이트 실패: " + error.message);
         });
     },
-    // 공지사항 삭제하기
     deleteNotice(id) {
       if (confirm("진짜 삭제하시겠습니까?")) {
-        // 사용자에게 삭제 확인 요청
         axios
           .delete(`http://localhost:8000/informs/${id}`)
           .then(() => {
-            this.notices = this.notices.filter((notice) => notice.id !== id); // 성공적으로 삭제된 경우 클라이언트에서도 제거
-            alert("공지사항이 성공적으로 삭제되었습니다."); // 성공 알림
+            this.notices = this.notices.filter((notice) => notice.id !== id);
+            alert("공지사항이 성공적으로 삭제되었습니다.");
           })
           .catch((error) => {
             console.error("Error deleting the notice:", error);
-            alert("공지사항 삭제 실패: " + error.message); // 실패 알림
+            alert("공지사항 삭제 실패: " + error.message);
           });
       } else {
-        console.log("삭제 취소됩니다."); // 사용자가 삭제를 취소한 경우
+        console.log("삭제 취소됩니다.");
       }
     },
 
-    onFileChanged() {
+    async onFileChanged() {
       const filePath = this.currentNotice.filePath;
       if (filePath && filePath.type.startsWith("image/")) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.imageUrl = e.target.result;
-        };
-        reader.readAsDataURL(filePath);
+        try {
+          const resizedImage = await this.resizeImage(filePath);
+          const reader = new FileReader();
+          reader.onload = (e) => {
+            this.imageUrl = e.target.result;
+          };
+          reader.readAsDataURL(resizedImage);
+        } catch (error) {
+          console.error("Error resizing image:", error);
+          alert("이미지 리사이징에 실패했습니다.");
+        }
       } else {
         this.imageUrl = null;
       }
@@ -470,6 +496,53 @@ export default {
     },
     navigateToPage(newPage) {
       this.currentPage = newPage;
+    },
+    // 이미지 리사이징 함수
+    resizeImage(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          const img = new Image();
+          img.src = event.target.result;
+          img.onload = () => {
+            const canvas = document.createElement("canvas");
+            const maxWidth = 800; // 최대 너비 설정
+            const maxHeight = 800; // 최대 높이 설정
+            let width = img.width;
+            let height = img.height;
+
+            // 이미지 비율을 유지하면서 리사이징
+            if (width > height) {
+              if (width > maxWidth) {
+                height = Math.round((height * maxWidth) / width);
+                width = maxWidth;
+              }
+            } else {
+              if (height > maxHeight) {
+                width = Math.round((width * maxHeight) / height);
+                height = maxHeight;
+              }
+            }
+
+            // 캔버스 크기를 조정하고 이미지를 그립니다.
+            canvas.width = width;
+            canvas.height = height;
+            const ctx = canvas.getContext("2d");
+            ctx.drawImage(img, 0, 0, width, height);
+
+            // 리사이징된 이미지를 Blob 형태로 변환
+            canvas.toBlob(
+              (blob) => {
+                resolve(blob);
+              },
+              "image/jpeg",
+              0.8 // 품질을 0.8로 설정하여 용량 줄이기
+            );
+          };
+        };
+        reader.onerror = (error) => reject(error);
+        reader.readAsDataURL(file);
+      });
     },
   },
   mounted() {

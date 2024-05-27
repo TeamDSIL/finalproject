@@ -437,7 +437,7 @@ export default {
   },
   computed: {
     frontUrl() {
-      return this.$config.frontUrl;
+      return process.env.FRONT_URL;
     }
   },
 };
