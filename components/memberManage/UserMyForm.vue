@@ -16,7 +16,7 @@
                                             <h1>회원정보</h1>
 
                                             <v-dialog v-model="dialogModify" width="500">
-                                                <template v-slot:activator="{ on }" >
+                                                <template v-slot:activator="{ on }">
                                                     <v-btn light text v-on="on"
                                                         class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
                                                         id="modify-userInfo-btn">
@@ -135,7 +135,8 @@
                                                     max-height="50px"></v-img>
 
                                                 <span v-if="userInfo.point">
-                                                    &nbsp; 지금까지 {{ formatNumber((userInfo.point.accumulatePoint / 100).toFixed(2))
+                                                    &nbsp; 지금까지 {{ formatNumber((userInfo.point.accumulatePoint /
+                                                        100).toFixed(2))
                                                     }}공기 드셨어요.
                                                 </span>
                                             </div>
@@ -192,34 +193,34 @@ export default {
     },
     methods: {
         async getUserInfo() {
-      try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
+            try {
+                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                if (!token) {
+                    throw new Error('No token found');
+                }
 
-        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-          headers: {
-            'Authorization': `${token}`
-          },
-          withCredentials: true
-        });
+                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
 
-        if (response.status === 200) {
-          const userInfo = response.data;
-          console.log('User Info:', userInfo);
-          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-          this.user = userInfo;
-          console.log(this.user);
-          console.log(this.user.id);
-        } else {
-          console.error('Failed to fetch user info:', response);
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    },
+                if (response.status === 200) {
+                    const userInfo = response.data;
+                    console.log('User Info:', userInfo);
+                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                    this.user = userInfo;
+                    console.log(this.user);
+                    console.log(this.user.id);
+                } else {
+                    console.error('Failed to fetch user info:', response);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        },
         async fetchUserInfo() {
             const email = this.user.email;
             const response = await axios

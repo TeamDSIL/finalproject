@@ -66,7 +66,7 @@ export default {
       return this.email !== '' && this.password !== '' && this.emailErrors.length === 0;
     },
     apiUrl() {
-      return this.$config.apiUrl;
+      return process.env.API_URL;
     },
   },
   methods: {
