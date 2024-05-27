@@ -60,7 +60,7 @@ export default {
                 }
                 // 토큰을 Authorization 헤더에 포함하여 요청 보내기
                 console.log('access token', token);
-                const response = await axios.get('http://localhost:8000/userInfo/me', {
+                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
                     headers: {
                         'Authorization': `${token}`
                     },
@@ -84,7 +84,7 @@ export default {
       console.log("restaurant목록을 불러올 멤버: ",this.user);
       const memberId = this.user.id;
       console.log("유저번호",memberId);
-      await axios.get(`http://localhost:8000/restaurant/${memberId}/restaurants`)
+      await axios.get(`${process.env.API_URL}/restaurant/${memberId}/restaurants`)
         .then(response => {
           this.restaurants = response.data;
           console.log(this.restaurants);

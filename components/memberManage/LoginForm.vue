@@ -20,15 +20,15 @@
         </v-col>
 
         <div class="icon-align">
-          <a href="http://localhost:8000/oauth2/authorization/naver">
-            <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
-          </a>
-          <a href="http://localhost:8000/oauth2/authorization/kakao">
-            <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
-          </a>
-          <a href="http://localhost:8000/oauth2/authorization/google">
-            <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
-          </a>
+          <a :href="`${apiUrl}/oauth2/authorization/naver`">
+      <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
+    </a>
+    <a :href="`${apiUrl}/oauth2/authorization/kakao`">
+      <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
+    </a>
+    <a :href="`${apiUrl}/oauth2/authorization/google`">
+      <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
+    </a>
         </div>
 
         <div class="text-14 text-center my-3">아직 드실 회원이 아니신가요?
@@ -64,6 +64,9 @@ export default {
     isFormValid() {
       return this.email !== '' && this.password !== '' && this.emailErrors.length === 0;
     },
+    apiUrl() {
+      return this.$config.apiUrl;
+    },
   },
   methods: {
     handleEmailInput() {
@@ -93,7 +96,7 @@ export default {
       try {
         const loginDTO = { email: this.email, password: this.password };
         console.log(loginDTO);
-        const response = await axios.post('http://localhost:8000/memberManage/loginPage', loginDTO, { withCredentials: true });
+        const response = await axios.post(`${process.env.API_URL}/memberManage/loginPage`, loginDTO, { withCredentials: true });
         console.log('post 요청');
 
         if (response.status === 200) {
@@ -111,7 +114,7 @@ export default {
             }
 
             // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-            const response = await axios.get('http://localhost:8000/userInfo/me', {
+            const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
               headers: {
                 'Authorization': `${token}`
               },
@@ -166,7 +169,7 @@ export default {
           return;
         }
 
-        const response = await axios.post('http://localhost:8000/userInfo/refresh', { refreshToken });
+        const response = await axios.post(`${process.env.API_URL}/userInfo/refresh`, { refreshToken });
 
         if (response.status === 200) {
           const token = response.headers['authorization'];

@@ -792,7 +792,7 @@ export default {
     async fetchRestaurantInfo() {
       try {
         const restaurantId = this.$route.params.id
-        const response = await axios.get(`http://localhost:8000/restaurant/detail/${restaurantId}`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/detail/${restaurantId}`);
         
         if (response.status === 200) {
           const restaurantInfo = response.data[0]; // 배열의 첫 번째 항목을 가져옴
@@ -819,7 +819,7 @@ export default {
     },
     async login(username, password) {
       try {
-        const response = await axios.post('http://localhost:8000/memberManage/loginPage', {
+        const response = await axios.post(`${process.env.API_URL}/memberManage/loginPage`, {
           username,
           password
         });
@@ -851,7 +851,7 @@ export default {
           throw new Error('No token found');
         }
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get('http://localhost:8000/userInfo/me', {
+        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
           headers: {
             'Authorization': `Bearer ${token}` // "Bearer "를 추가
           },
@@ -1056,7 +1056,7 @@ export default {
       this.updateUserPoints();
     }
           // axios를 사용하여 백엔드로 예약 정보 전송
-          axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
+          axios.post(`${process.env.API_URL}/restaurant/detail`, reservationData)
               .then(response => {
                   // 예약 정보가 성공적으로 전송되었을 때의 처리
                   console.log('예약 정보가 성공적으로 전송되었습니다:', reservationData);
@@ -1129,12 +1129,12 @@ confirmReservation2() {
           pay_method: "point",
           pointUsage: riceBallInput
         }
-        axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
+        axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
         .then(reservationResponse => {
             console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
             // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
             const reservationId = reservationResponse.data;
-            axios.post('http://localhost:8000/restaurant/payment', pointData,{
+            axios.post(`${process.env.API_URL}/restaurant/payment`, pointData,{
               params:{
                 reservationId: reservationId
               }
@@ -1166,7 +1166,7 @@ confirmReservation2() {
               this.showSpinner = true;
 
               // 예약 정보를 서버에 전송
-              axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
+              axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
                 .then(reservationResponse => {
                   console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
                   // 결제 정보를 서버에 전송
@@ -1175,7 +1175,7 @@ confirmReservation2() {
                   ...this.paymentData,
                   impUid: impUid  // Add imp_uid to the payment data
                 };
-                  axios.post('http://localhost:8000/restaurant/payment', paymentDataWithImpUid, {
+                  axios.post(`${process.env.API_URL}/restaurant/payment`, paymentDataWithImpUid, {
                     params: {
                       reservationId: reservationId
                     }

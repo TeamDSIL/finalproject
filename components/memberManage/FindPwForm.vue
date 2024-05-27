@@ -89,7 +89,7 @@ export default {
             this.emailError = '';
             try {
                 console.log(this.email);
-                const response = await axios.post('http://localhost:8000/memberManage/sendCode', { email: this.email });
+                const response = await axios.post(`${process.env.API_URL}/memberManage/sendCode`, { email: this.email });
                 console.log('인증 코드가 전송된 이메일:', this.email);
                 alert('입력하신 이메일로 인증 코드가 전송됐습니다.');
                 this.step = 2; // 다음 단계로 이동
@@ -100,7 +100,7 @@ export default {
         },
         async verifyTempCode() {
             try {
-                const response = await axios.post('http://localhost:8000/memberManage/verifyCode', { email: this.email, code: this.tempCode });
+                const response = await axios.post(`${process.env.API_URL}/memberManage/verifyCode`, { email: this.email, code: this.tempCode });
                 console.log('인증 코드 확인:', this.tempCode);
                 alert('인증 되었습니다.');
                 this.step = 3; // 다음 단계로 이동
@@ -131,7 +131,7 @@ export default {
             }
 
             try {
-                const response = await axios.post('http://localhost:8000/memberManage/resetPassword', {
+                const response = await axios.post(`${process.env.API_URL}/memberManage/resetPassword`, {
                     email: this.email,
                     newPassword: this.newPassword
                 });

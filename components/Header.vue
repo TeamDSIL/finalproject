@@ -110,44 +110,43 @@
         </v-btn> -->
 
         <template v-if="user">
-          <v-btn light text @click="logout">
-            <span class="d-none d-sm-block">로그아웃</span>
-          </v-btn>
-          <v-btn
-            v-if="user.permission.permission === 'USER'"
-            light
-            text
-            href="http://localhost:3000/memberManage/userMyPage"
-          >
-            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">{{ user.email }}</span>
-          </v-btn>
-          <v-btn
-            v-else-if="user.permission.permission === 'OWNER'"
-            light
-            text
-            href="http://localhost:3000/memberManage/ownerMyPage"
-          >
-            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">{{ user.email }}</span>
-          </v-btn>
-          <v-btn
-            v-else
-            light
-            text
-            href="http://localhost:3000/memberManage/AdminManageUserPage"
-          >
-            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">{{ user.email }}</span>
-          </v-btn>
-        </template>
-        <template v-else>
-          <v-btn light text href="http://localhost:3000/memberManage/loginPage">
-            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">로그인</span>
-          </v-btn>
-        </template>
-
+      <v-btn light text @click="logout">
+        <span class="d-none d-sm-block">로그아웃</span>
+      </v-btn>
+      <v-btn
+        v-if="user.permission.permission === 'USER'"
+        light
+        text
+        :href="`${frontUrl}/memberManage/userMyPage`"
+      >
+        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+        <span class="d-none d-sm-block">{{ user.email }}</span>
+      </v-btn>
+      <v-btn
+        v-else-if="user.permission.permission === 'OWNER'"
+        light
+        text
+        :href="`${frontUrl}/memberManage/ownerMyPage`"
+      >
+        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+        <span class="d-none d-sm-block">{{ user.email }}</span>
+      </v-btn>
+      <v-btn
+        v-else
+        light
+        text
+        :href="`${frontUrl}/memberManage/AdminManageUserPage`"
+      >
+        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+        <span class="d-none d-sm-block">{{ user.email }}</span>
+      </v-btn>
+    </template>
+    <template v-else>
+      <v-btn light text :href="`${frontUrl}/memberManage/loginPage`">
+        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+        <span class="d-none d-sm-block">로그인</span>
+      </v-btn>
+    </template>
         <!-- <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
                 <v-icon small>mdi-cart-outline</v-icon>(8)
               </v-btn> -->
@@ -328,7 +327,7 @@ export default {
         }
 
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get("http://localhost:8000/userInfo/me", {
+        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
           headers: {
             Authorization: `${token}`,
           },
@@ -351,12 +350,8 @@ export default {
     },
     async logout() {
       try {
-        console.log("Sending logout request...");
-        const response = await axios.post(
-          "http://localhost:8000/memberManage/logout",
-          {},
-          { withCredentials: true }
-        );
+        console.log('Sending logout request...');
+        const response = await axios.post(`${process.env.API_URL}/memberManage/logout`, {}, { withCredentials: true });
         if (response.status === 200) {
           console.log("Logout successful");
           localStorage.removeItem("token");
@@ -420,7 +415,7 @@ export default {
         .join("&");
 
       // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
-      const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
+      const searchUrl = `${process.env.FRONT_URL}/restaurant/list?${queryString}`;
 
       // URL로 리디렉션합니다.
       window.location.href = searchUrl;
@@ -439,6 +434,11 @@ export default {
         this.active = false;
       }
     };
+  },
+  computed: {
+    frontUrl() {
+      return this.$config.frontUrl;
+    }
   },
 };
 </script>

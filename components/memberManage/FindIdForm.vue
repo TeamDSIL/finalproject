@@ -86,7 +86,7 @@ export default {
             this.showError = false;
 
             try {
-                const response = await axios.post('http://localhost:8000/memberManage/findEmail', { tel: this.tel });
+                const response = await axios.post(`${process.env.API_URL}/memberManage/findEmail`, { tel: this.tel });
                 if (response.status === 200) {
                     this.email = response.data;
                 } else {

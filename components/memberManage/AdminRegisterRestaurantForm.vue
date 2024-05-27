@@ -397,7 +397,7 @@ export default {
 
     // Send the form data
     const response = await axios.post(
-      "http://localhost:8000/memberManage/registerRestaurant",
+      `${process.env.API_URL}/memberManage/registerRestaurant`,
       formData,
       {
         headers: {

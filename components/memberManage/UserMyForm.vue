@@ -199,7 +199,7 @@ export default {
         }
 
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get('http://localhost:8000/userInfo/me', {
+        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
           headers: {
             'Authorization': `${token}`
           },
@@ -223,7 +223,7 @@ export default {
         async fetchUserInfo() {
             const email = this.user.email;
             const response = await axios
-                .get(`http://localhost:8000/memberManage/userMyPage?email=${email}`)
+                .get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`)
                 .then((response) => {
                     this.userInfo = response.data;
                 })

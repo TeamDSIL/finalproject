@@ -81,10 +81,14 @@ export default {
   // Modules: https://go.nuxtjs.dev/config-modules
   modules: [
     '@nuxtjs/axios', // Axios 모듈 추가
+    '@nuxtjs/dotenv',
   ],
   // Axios 모듈 설정
   axios: {
-    baseURL: process.env.apiURL || 'http://localhost:8000', // 환경 변수 또는 기본 URL 설정
+    baseURL: process.env.apiURL || `${process.env.API_URL}`, // 환경 변수 또는 기본 URL 설정
+  },
+  publicRuntimeConfig: {
+    apiUrl: process.env.API_URL
   },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

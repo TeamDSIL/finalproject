@@ -99,7 +99,7 @@ export default {
                 console.log(requestData);
                 console.log('왔어?');
                 // API 요청 보내기~
-                const response = await axios.post('http://localhost:8000/memberManage/adminManageRestaurantPage', requestData);
+                const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`, requestData);
 
                 // 응답 처리
                 console.log('수정 응답:', response.data);
@@ -120,7 +120,7 @@ export default {
         },
         async handleDelete() {
             try {
-                const response = await axios.delete(`http://localhost:8000/memberManage/adminManageRestaurantPage?restaurantName=${this.restaurantInfo.name}`);
+                const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageRestaurantPage?restaurantName=${this.restaurantInfo.name}`);
 
                 // 생략
                 this.$emit('close');
