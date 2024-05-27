@@ -21,14 +21,14 @@
 
         <div class="icon-align">
           <a :href="`${apiUrl}/oauth2/authorization/naver`">
-      <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
-    </a>
-    <a :href="`${apiUrl}/oauth2/authorization/kakao`">
-      <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
-    </a>
-    <a :href="`${apiUrl}/oauth2/authorization/google`">
-      <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
-    </a>
+            <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
+          </a>
+          <a :href="`${apiUrl}/oauth2/authorization/kakao`">
+            <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
+          </a>
+          <a :href="`${apiUrl}/oauth2/authorization/google`">
+            <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
+          </a>
         </div>
 
         <div class="text-14 text-center my-3">아직 드실 회원이 아니신가요?
@@ -51,6 +51,7 @@
 <script>
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { EventBus } from '~/plugins/event-bus.js';
 
 export default {
   data() {
@@ -96,7 +97,7 @@ export default {
       try {
         const loginDTO = { email: this.email, password: this.password };
         console.log(loginDTO);
-        const response = await axios.post(`${process.env.API_URL}/memberManage/loginPage`, loginDTO, { withCredentials: true });
+        const response = await axios.post('http://localhost:8000/memberManage/loginPage', loginDTO, { withCredentials: true });
         console.log('post 요청');
 
         if (response.status === 200) {
@@ -106,15 +107,13 @@ export default {
           console.log('토큰이 찍혔는지');
           console.log('Response Headers:', response.headers);
           console.log('Extracted Token:', token);
-          alert('로그인 성공');
-
           try {
             if (!token) {
               throw new Error('No token found');
             }
 
             // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-            const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+            const response = await axios.get('http://localhost:8000/userInfo/me', {
               headers: {
                 'Authorization': `${token}`
               },
@@ -129,6 +128,9 @@ export default {
               console.log(this.user);
               console.log(this.user.id);
               console.log(this.user.permission.permission);
+
+              // 로그인 성공 시 이벤트 버스에서 이벤트를 트리거합니다.
+              EventBus.$emit('user-logged-in');
 
               if (this.user.permission.id === 1) {
                 this.$router.push('/'); // '/' 로 리디렉트

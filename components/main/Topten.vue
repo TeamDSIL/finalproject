@@ -16,7 +16,7 @@
         cols="12"
         sm="6"
         md="3"
-        v-for="(item, index) in currentTopViews"
+        v-for="item in currentTopViews"
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
@@ -76,7 +76,7 @@
         cols="12"
         sm="6"
         md="3"
-        v-for="(item, index) in currentTopBookmarks"
+        v-for="item in currentTopBookmarks"
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
@@ -134,7 +134,7 @@
         cols="12"
         sm="6"
         md="3"
-        v-for="(item, index) in currentTopReservations"
+        v-for="item in currentTopReservations"
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
