@@ -167,8 +167,10 @@ export default {
         title: 'Order History'
     },
     async created() {
-        await this.getUserInfo();
-        this.fetchUserInfo();
+        if (process.client) {
+            await this.getUserInfo();
+            this.fetchUserInfo();
+        }
     },
     data() {
         return {
@@ -193,44 +195,50 @@ export default {
     },
     methods: {
         async getUserInfo() {
-            try {
-                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-                if (!token) {
-                    throw new Error('No token found');
-                }
+            if (typeof window !== 'undefined') {
+                try {
+                    const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                    if (!token) {
+                        throw new Error('No token found');
+                    }
 
-                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-                    headers: {
-                        'Authorization': `${token}`
-                    },
-                    withCredentials: true
-                });
+                    // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                    const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+                        headers: {
+                            'Authorization': `${token}`
+                        },
+                        withCredentials: true
+                    });
 
-                if (response.status === 200) {
-                    const userInfo = response.data;
-                    console.log('User Info:', userInfo);
-                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-                    this.user = userInfo;
-                    console.log(this.user);
-                    console.log(this.user.id);
-                } else {
-                    console.error('Failed to fetch user info:', response);
+                    if (response.status === 200) {
+                        const userInfo = response.data;
+                        console.log('User Info:', userInfo);
+                        // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                        this.user = userInfo;
+                    } else {
+                        console.error('Failed to fetch user info:', response);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
                 }
-            } catch (error) {
-                console.error('Error fetching user info:', error);
+            } else {
+                console.error('localStorage is not defined');
             }
         },
         async fetchUserInfo() {
-            const email = this.user.email;
-            const response = await axios
-                .get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`)
-                .then((response) => {
-                    this.userInfo = response.data;
-                })
-                .catch((error) => {
-                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-                });
+            if (this.user && this.user.email) {
+                const email = this.user.email;
+                const response = await axios
+                    .get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`)
+                    .then((response) => {
+                        this.userInfo = response.data;
+                    })
+                    .catch((error) => {
+                        console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+                    });
+            } else {
+                console.error('User information is not available');
+            }
         },
         openModifyDialog() {
             this.dialogModify = true;
