@@ -133,7 +133,7 @@ export default {
       {
         text: '메인화면',
         disabled: true,
-        href: 'http://localhost:3000/',
+        href: `${process.env.FRONT_URL}/`,
       },
       {
         text: '식당 검색 리스트',
@@ -213,7 +213,7 @@ export default {
       if (search) {
         params.append('search', search);
       }
-      axios.get(`http://localhost:8000/restaurant/list?${params.toString()}`)
+      axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`)
         .then(response => {
           this.CardList = response.data;
           console.log('식당 정보 불러옴');
@@ -225,10 +225,10 @@ export default {
     submitData() {
       const params = new URLSearchParams();
       this.selectedCategories.forEach(category => params.append('categoryNames', category));
-      window.location.href = `http://localhost:3000/restaurant/list?${params.toString()}`;
+      window.location.href = `${process.env.FRONT_URL}/restaurant/list?${params.toString()}`;
     },
     sendRestaurantLink(restaurant_id) {
-      window.location.href = `http://localhost:3000/restaurant/detail/${restaurant_id}`;
+      window.location.href = `${process.env.FRONT_URL}/restaurant/detail/${restaurant_id}`;
     },
     navigateToPage() {
       this.fetchList();

@@ -4,13 +4,13 @@
       <div class="px-3 px-md-10 py-8 ">
         <h3 class="mb-2 text-center">드실에 오신 걸 환영합니다.</h3>
         <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">이메일과 비밀번호를 입력해주세요.</h5>
-        <p class="text-14 mb-1">이메일</p>
-        <v-text-field outlined dense hide-details placeholder="이메일을 입력" class="mb-4" v-model="email"
+        <v-text-field label="이메일" class="mb-4" v-model="email" :error-messages="emailErrors" @input="handleEmailInput"
           @keyup.enter="loginButton"></v-text-field>
-        <p class="text-14 mb-1">비밀번호</p>
-        <v-text-field outlined dense type="password" hide-details placeholder="비밀번호 입력" class="mb-4" v-model="password"
+        <v-text-field label="비밀번호" type="password" class="mb-4" v-model="password" @input="handlePasswordInput"
           @keyup.enter="loginButton"></v-text-field>
-        <v-btn block color="rgb(255,84,82)" class="primary" @click="loginButton">로그인</v-btn>
+        <v-btn block color="rgb(255,84,82)" class="primary" @click="loginButton" :disabled="!isFormValid">
+          로그인
+        </v-btn>
         <v-col cols="10" lg="8" class="mx-auto">
           <div class="d-flex align-center my-1">
             <v-divider></v-divider>
@@ -20,35 +20,30 @@
         </v-col>
 
         <div class="icon-align">
-          <a href="http://localhost:8000/oauth2/authorization/naver">
-            <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
-          </a>
-
-          <a href="http://localhost:8000/oauth2/authorization/kakao">
-            <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
-          </a>
-
-          <a href="http://localhost:8000/oauth2/authorization/google">
-            <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
-          </a>
+          <a :href="`${apiUrl}/oauth2/authorization/naver`">
+      <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
+    </a>
+    <a :href="`${apiUrl}/oauth2/authorization/kakao`">
+      <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
+    </a>
+    <a :href="`${apiUrl}/oauth2/authorization/google`">
+      <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
+    </a>
         </div>
 
-        <div class="text-14 text-center my-3">아직 드실 회원이 아니신가요? <nuxt-link to="/memberManage/SignupPage"
-            class=" grey--text text--darken-4 font-600">회원가입</nuxt-link>
+        <div class="text-14 text-center my-3">아직 드실 회원이 아니신가요?
+          <nuxt-link to="/memberManage/SignupPage" class="grey--text text--darken-4 font-600">회원가입</nuxt-link>
         </div>
 
         <div class="py-4 bg-grey-light" id="find-idpw">
           <div class="text-center">
             <nuxt-link to="/memberManage/FindIdPage" class="ms-2 grey--text text--darken-4 font-600">아이디 찾기</nuxt-link>
           </div>
-
           <div class="text-center">
             <nuxt-link to="/memberManage/FindPwPage" class="ms-2 grey--text text--darken-4 font-600">비밀번호 찾기</nuxt-link>
           </div>
         </div>
       </div>
-
-
     </div>
   </div>
 </template>
@@ -62,14 +57,46 @@ export default {
     return {
       email: '',
       password: '',
+      emailErrors: []
     };
   },
+  computed: {
+    isFormValid() {
+      return this.email !== '' && this.password !== '' && this.emailErrors.length === 0;
+    },
+    apiUrl() {
+      return this.$config.apiUrl;
+    },
+  },
   methods: {
+    handleEmailInput() {
+      if (this.email === '') {
+        this.emailErrors = [];
+      } else {
+        this.validateEmail();
+      }
+    },
+    handlePasswordInput() {
+      // 비밀번호 입력 중 에러 메시지를 처리하는 로직을 추가할 수 있습니다.
+    },
+    validateEmail() {
+      this.emailErrors = [];
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.email)) {
+        this.emailErrors.push('이메일 형식이 아닙니다');
+      }
+    },
     async loginButton() {
+      this.validateEmail();
+
+      if (!this.isFormValid) {
+        return;
+      }
+
       try {
         const loginDTO = { email: this.email, password: this.password };
         console.log(loginDTO);
-        const response = await axios.post('http://localhost:8000/memberManage/loginPage', loginDTO, { withCredentials: true });
+        const response = await axios.post(`${process.env.API_URL}/memberManage/loginPage`, loginDTO, { withCredentials: true });
         console.log('post 요청');
 
         if (response.status === 200) {
@@ -82,13 +109,12 @@ export default {
           alert('로그인 성공');
 
           try {
-
             if (!token) {
               throw new Error('No token found');
             }
 
             // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-            const response = await axios.get('http://localhost:8000/userInfo/me', {
+            const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
               headers: {
                 'Authorization': `${token}`
               },
@@ -117,8 +143,6 @@ export default {
           } catch (error) {
             console.error('Error fetching user info:', error);
           }
-
-
         } else {
           const errorUrl = response.headers['location'];
           this.$router.push(errorUrl);
@@ -136,25 +160,6 @@ export default {
         }
       }
     },
-    async checkOAuthToken() {
-      try {
-        const response = await axios.get('http://localhost:8000/memberManage/oauth2/success', { withCredentials: true });
-        const authorizationHeader = response.headers['authorization'];
-
-        if (authorizationHeader) {
-          const token = authorizationHeader.startsWith('Bearer ') ? authorizationHeader.slice(7) : authorizationHeader;
-          localStorage.setItem('token', token); // Access Token 저장
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
-          console.log('OAuth 토큰이 저장되었습니다:', token);
-          alert('OAuth 로그인 성공');
-          this.$router.push('/'); // '/' 로 리디렉트
-        } else {
-          console.log('Access Token이 응답 헤더에 포함되어 있지 않습니다.');
-        }
-      } catch (error) {
-        console.error('OAuth 토큰 처리 실패:', error);
-      }
-    },
     async useRefreshToken() {
       try {
         const refreshToken = Cookies.get('refreshToken');
@@ -164,7 +169,7 @@ export default {
           return;
         }
 
-        const response = await axios.post('http://localhost:8000/userInfo/refresh', { refreshToken });
+        const response = await axios.post(`${process.env.API_URL}/userInfo/refresh`, { refreshToken });
 
         if (response.status === 200) {
           const token = response.headers['authorization'];
@@ -178,9 +183,6 @@ export default {
         console.error('Refresh 토큰 처리 실패:', error);
       }
     }
-  },
-  mounted() {
-    this.checkOAuthToken();
   },
 }
 </script>
@@ -227,21 +229,30 @@ export default {
   /* 내부 여백 제거 */
   cursor: pointer;
   /* 마우스 커서를 포인터로 변경 */
+  transition: transform 0.2s, box-shadow 0.2s, border-radius 0.2s;
+  border-radius: 50%;
 }
 
 .icon-btn:hover {
-  background: none;
-  /* 호버 상태에서도 배경 제거 */
+  transform: scale(1.1);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.icon-btn:active {
+  transform: scale(1);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .custom-btn {
   width: 50px;
   height: 50px;
+  border-radius: 50%;
 }
 
 .icon-img {
   width: 45px;
   height: 45px;
+  border-radius: 50%;
 }
 
 #find-idpw {

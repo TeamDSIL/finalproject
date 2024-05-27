@@ -86,7 +86,7 @@ export default {
             };
 
             // axios를 사용하여 POST 요청을 보냅니다.
-            axios.post('http://localhost:8000/memberManage/ownerMyPage', modifiedData)
+            axios.post(`${process.env.API_URL}/memberManage/ownerMyPage`, modifiedData)
                 .then(response => {
                     // 요청이 성공하면 사용자에게 메시지를 보여줍니다.
                     alert("회원 정보가 성공적으로 수정되었습니다.");

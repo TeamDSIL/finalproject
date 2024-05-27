@@ -30,7 +30,7 @@ export default {
   methods: {
     loadRestaurantData(){
       const id = this.$route.params.id;
-      axios.get(`http://localhost:8000/restaurant/detail/${id}`)
+      axios.get(`${process.env.API_URL}/restaurant/detail/${id}`)
       .then(response => {
         this.restaurantAddresses = response.data.map(item => item.restaurant_address);
         console.log(this.restaurantAddresses);

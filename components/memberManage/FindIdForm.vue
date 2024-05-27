@@ -5,7 +5,7 @@
 
                 <div id="logo-image">
                     <v-avatar class="me-4" tile width="200" height="100">
-                        <img src="~/assets/images/dsilLogoCut.jpg" alt="">
+                        <img src="~/assets/images/DSILnewLOGO.png" alt="">
                     </v-avatar>
                 </div>
 
@@ -13,17 +13,17 @@
                 <h3 class="mb-2 text-center">아이디 찾기</h3>
                 <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">가입 시 입력했던 연락처를 입력해주세요.</h5>
 
-                <v-divider></v-divider>
-
-                <v-text-field outlined dense hide-details placeholder="010-1234-5678" v-model="tel" class="mb-4"
+                <v-text-field placeholder="- 없이 입력해주세요." v-model="tel" class="mb-4" label="연락처"
                     :error-messages="telErrors" @input="formatTel" maxlength="13"></v-text-field>
 
                 <v-dialog v-model="dialog" width="500">
                     <template v-slot:activator="{ on, attrs }">
-                        <v-btn block color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary"
-                            :disabled="!isTelValid" @click="handleFindEmail">
-                            <span class="d-none d-sm-block">아이디(이메일) 찾기</span>
-                        </v-btn>
+                        <div class="button-container">
+                            <v-btn color="rgb(255,84,82)" v-bind="attrs" v-on="on" class="primary"
+                                :disabled="!isTelValid" @click="handleFindEmail">
+                                <span class="d-none d-sm-block">아이디(이메일) 찾기</span>
+                            </v-btn>
+                        </div>
                     </template>
 
                     <FindIdResultForm :email="email" />
@@ -86,7 +86,7 @@ export default {
             this.showError = false;
 
             try {
-                const response = await axios.post('http://localhost:8000/memberManage/findEmail', { tel: this.tel });
+                const response = await axios.post(`${process.env.API_URL}/memberManage/findEmail`, { tel: this.tel });
                 if (response.status === 200) {
                     this.email = response.data;
                 } else {
@@ -127,6 +127,12 @@ export default {
 .error-message {
     color: red;
     text-align: center;
+    margin-top: 1rem;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
     margin-top: 1rem;
 }
 </style>
