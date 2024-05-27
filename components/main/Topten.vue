@@ -16,11 +16,7 @@
         cols="12"
         sm="6"
         md="3"
-<<<<<<< HEAD
         v-for="item in currentTopViews"
-=======
-        v-for="(item) in currentTopViews"
->>>>>>> 8027bdbb7a33e6580d3cdee9ed6e6ef2888c5ad3
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
@@ -80,11 +76,7 @@
         cols="12"
         sm="6"
         md="3"
-<<<<<<< HEAD
         v-for="item in currentTopBookmarks"
-=======
-        v-for="(item) in currentTopBookmarks"
->>>>>>> 8027bdbb7a33e6580d3cdee9ed6e6ef2888c5ad3
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
@@ -142,11 +134,7 @@
         cols="12"
         sm="6"
         md="3"
-<<<<<<< HEAD
         v-for="item in currentTopReservations"
-=======
-        v-for="(item) in currentTopReservations"
->>>>>>> 8027bdbb7a33e6580d3cdee9ed6e6ef2888c5ad3
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
