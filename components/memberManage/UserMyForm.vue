@@ -24,7 +24,8 @@
                                                     </v-btn>
                                                 </template>
 
-                                                <UserInfoModifyForm :userInfo="userInfo" :dialogModify="dialogModify" />
+                                                <UserInfoModifyForm :userInfo="userInfo" @modify-user="updateUserInfo"
+                                                    @close="dialogModify = false" />
                                             </v-dialog>
 
                                             <v-dialog v-model="dialogDelete" width="500">
@@ -43,19 +44,6 @@
 
                                     <v-col cols="7">
                                         <v-card elevation="0" class="border br-10">
-                                            <div
-                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
-                                                <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
-                                                    <div class="text-center text-sm-left">
-                                                        <div class="text-14 f-600 mb-2 mb-sm-0">이메일</div>
-                                                    </div>
-                                                </div>
-                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
-                                                    {{ userInfo.email }}
-                                                </p>
-                                            </div>
-
-                                            <v-divider></v-divider>
 
                                             <div
                                                 class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
@@ -66,6 +54,20 @@
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
                                                     {{ userInfo.name }}
+                                                </p>
+                                            </div>
+
+                                            <v-divider></v-divider>
+
+                                            <div
+                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
+                                                <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
+                                                    <div class="text-center text-sm-left">
+                                                        <div class="text-14 f-600 mb-2 mb-sm-0">이메일</div>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
+                                                    {{ userInfo.email }}
                                                 </p>
                                             </div>
 
@@ -135,9 +137,9 @@
                                                     max-height="50px"></v-img>
 
                                                 <span v-if="userInfo.point">
-                                                    &nbsp; 지금까지 {{ formatNumber((userInfo.point.accumulatePoint /
-                                                        100).toFixed(2))
-                                                    }}공기 드셨어요.
+                                                    &nbsp; 지금까지 {{ userInfo.point.accumulatePoint ?
+                                                        formatNumber((userInfo.point.accumulatePoint /
+                                                    100).toFixed(2)) : 0 }} 공기 드셨어요.
                                                 </span>
                                             </div>
                                         </v-card>
@@ -239,6 +241,11 @@ export default {
             } else {
                 console.error('User information is not available');
             }
+        },
+        updateUserInfo(updatedUserInfo) {
+            this.userInfo = { ...this.userInfo, ...updatedUserInfo };
+            this.dialogModify = false;
+            this.$router.push('/memberManage/userMyPage');
         },
         openModifyDialog() {
             this.dialogModify = true;

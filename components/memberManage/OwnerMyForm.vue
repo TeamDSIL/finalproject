@@ -35,7 +35,8 @@
                             <span class="d-none d-sm-block">수정</span>
                           </v-btn>
                         </template>
-                        <OwnerInfoModifyForm :selectedOwnerInfo="selectedOwnerInfo" :dialogModify="dialogModify" />
+                        <OwnerInfoModifyForm :selectedOwnerInfo="selectedOwnerInfo" :dialogModify="dialogModify"
+                          @modify-user="updateOwnerInfo" @close="dialogModify = false" />
                       </v-dialog>
                     </div>
                   </v-col>
@@ -178,20 +179,7 @@ export default {
       selectedOwnerInfo: null,
       hoverItem: null,
       user: null,
-      ownerInfos: [
-        {
-          id: '',
-          email: '',
-          modifiedPassword: '',           // 비밀번호
-          confirmPassword: '',    // 비밀번호 확인
-          name: '',               // 매장명
-          ownerName: '',        // 사업자명
-          tel: '',              // 연락처
-          address: '',            // 주소
-          registerNumber: '',     // 사업자등록번호
-        },
-      ],
-
+      ownerInfos: [],
     };
   },
   methods: {
@@ -252,6 +240,13 @@ export default {
       this.selectedItem = index;
       this.selectedOwnerInfo = this.ownerInfos[index];
     },
+    updateOwnerInfo(updatedInfo) {
+      const index = this.ownerInfos.findIndex(info => info.email === updatedInfo.email);
+      if (index !== -1) {
+        this.$set(this.ownerInfos, index, updatedInfo);
+        this.selectedOwnerInfo = updatedInfo;
+      }
+    }
   },
 }
 </script>

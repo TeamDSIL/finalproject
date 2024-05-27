@@ -6,43 +6,34 @@
             <br>
 
             <!-- 이메일 표시 -->
-            <p class="text-14 mb-1">email</p>
-            <v-text-field outlined dense hide-details v-model="restaurantInfo.email" placeholder="email" class="mb-4"
-                readonly></v-text-field>
+            <v-text-field v-model="restaurantInfo.email" class="mb-4" label="이메일[ID]" readonly></v-text-field>
 
             <!-- 매장명 표시 -->
-            <p class="text-14 mb-1">매장명</p>
-            <v-text-field outlined dense hide-details v-model="restaurantInfo.name" placeholder="매장명" class="mb-4"
-                readonly></v-text-field>
+            <v-text-field v-model="restaurantInfo.name" class="mb-4" label="매장명" readonly></v-text-field>
 
             <!-- 사업자명 -->
-            <p class="text-14 mb-1">사업자명</p>
-            <v-text-field v-model="restaurantInfo.ownerName" outlined dense hide-details placeholder="사업자명" readonly
-                class="mb-4"></v-text-field>
+            <v-text-field v-model="restaurantInfo.ownerName" readonly label="사업자명" class="mb-4"></v-text-field>
 
             <!-- 사업자등록번호 표시 -->
-            <p class="text-14 mb-1">사업자등록번호</p>
-            <v-text-field outlined dense hide-details v-model="restaurantInfo.registerNumber" placeholder="사업자등록번호"
-                class="mb-4" readonly></v-text-field>
+            <v-text-field v-model="restaurantInfo.registerNumber" label="사업자등록번호" class="mb-4" readonly></v-text-field>
 
             <!-- 연락처 -->
-            <p class="text-14 mb-1">연락처</p>
-            <v-text-field v-model="restaurantInfo.tel" outlined dense hide-details placeholder="연락처" class="mb-4"></v-text-field>
+            <v-text-field v-model="restaurantInfo.tel" class="mb-4" label="연락처" :error-messages="telErrors"
+                @input="handleTelInput"></v-text-field>
 
-            <!-- 주소 -->
-            <p class="text-14 mb-1">주소</p>
-            <v-text-field v-model="restaurantInfo.address" outlined dense hide-details placeholder="주소" class="mb-4"></v-text-field>
+            <!-- 주소 찾기 버튼 -->
+            <v-btn @click="sample6_execDaumPostcode" style="margin-bottom: 20px" small color="primary">주소 찾기</v-btn>
 
-            <!-- 비밀번호 -->
-            <p class="text-14 mb-1">비밀번호</p>
-            <v-text-field v-model="modifiedPassword" outlined dense type="password" hide-details placeholder="********"
-                class="mb-4"></v-text-field>
-
-            <!-- 비밀번호 재입력 -->
-            <p class="text-14 mb-1">비밀번호 재입력</p>
-            <v-text-field v-model="confirmPassword" outlined dense type="password" hide-details placeholder="********"
-                class="mb-4"></v-text-field>
-
+            <div v-if="addressSelected">
+                <v-text-field v-model="restaurantInfo.postcode" label="우편번호" type="text" placeholder="우편번호"
+                    class="mb-4"></v-text-field>
+                <v-text-field v-model="restaurantInfo.dynamicAddress" label="주소" type="text" placeholder="주소"
+                    class="mb-4"></v-text-field>
+                <v-text-field v-model="restaurantInfo.detailAddress" label="상세주소" type="text" placeholder="상세주소 입력"
+                    ref="detailAddress" class="mb-4"></v-text-field>
+                <v-text-field v-model="restaurantInfo.extraAddress" label="참고항목" type="text" placeholder="참고항목"
+                    class="mb-4"></v-text-field>
+            </div>
             <!-- 수정 확인 버튼 -->
             <div>
                 <v-btn id="modify-btn" @click="handleModify" color="rgb(255,84,82)" class="primary">수정</v-btn>
@@ -50,7 +41,6 @@
             </div>
         </div>
     </v-card>
-
 </template>
 
 <script>
@@ -62,42 +52,67 @@ export default {
         return {
             id: '',
             email: '',
-            modifiedPassword: '',
-            confirmPassword: '',
             name: '',
             registerNumber: '',
             ownerName: '',
             tel: '',
             address: '',
+            telErrors: [],
+            addressSelected: false, // 주소가 선택되었는지 여부
         };
     },
+    computed: {
+        isFormValid() {
+            return (
+                this.telErrors.length === 0
+            );
+        },
+    },
+    mounted() {
+        const script = document.createElement("script");
+        script.src =
+            "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+        document.head.appendChild(script);
+    },
     methods: {
-        // 수정 확인 버튼 클릭 시 실행될 메서드
+        handleTelInput() {
+            if (this.restaurantInfo.tel === '') {
+                this.telErrors = [];
+            } else {
+                this.validateTel();
+            }
+        },
+        validateTel() {
+            this.telErrors = [];
+            const telPattern = /^[0-9]{2}-?[0-9]{3}-?[0-9]{4}$/;
+            if (!telPattern.test(this.restaurantInfo.tel) || this.restaurantInfo.tel.replace(/[^0-9]/g, '').length !== 9) {
+                this.telErrors.push('매장 번호 9자리를 입력해주세요.');
+            } else {
+                const tel = this.restaurantInfo.tel.replace(/[^0-9]/g, '');
+                this.restaurantInfo.tel = tel.replace(/(\d{2})(\d{3})(\d{4})/, '$1-$2-$3');
+            }
+        },
         async handleModify() {
+            this.validateTel();
+
+            if (!this.isFormValid) {
+                return;
+            }
+
             try {
-                // API 요청을 보내기 전에 비밀번호가 일치하는지 확인
-                if (this.modifiedPassword !== this.confirmPassword) {
-                    // 비밀번호가 일치하지 않으면 에러 메시지를 표시하고 함수 종료
-                    alert('비밀번호가 일치하지 않습니다.');
-                    return;
-                }
-
-                // API 요청을 보내기 전에 데이터 유효성 검사를 수행할 수 있습니다.
-
                 // API 요청을 보낼 데이터 생성
                 const requestData = {
                     id: this.restaurantInfo.id,
                     email: this.restaurantInfo.email,
-                    password: this.modifiedPassword,
                     ownerName: this.restaurantInfo.ownerName,
                     name: this.restaurantInfo.name,
                     registerNumber: this.restaurantInfo.registerNumber,
                     tel: this.restaurantInfo.tel,
-                    address: this.restaurantInfo.address,
+                    address: `${this.restaurantInfo.dynamicAddress} ${this.restaurantInfo.detailAddress}`,
                 };
 
                 console.log(requestData);
-                console.log('왔어?');
+
                 // API 요청 보내기~
                 const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`, requestData);
 
@@ -122,16 +137,59 @@ export default {
             try {
                 const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageRestaurantPage?restaurantName=${this.restaurantInfo.name}`);
 
-                // 생략
+                // 삭제 완료 후 모달 창 닫음
                 this.$emit('close');
+
+                // 페이지 리다이렉션
                 this.$router.push('/memberManage/adminManageRestaurantPage');
 
             } catch (error) {
-                // 생략
                 console.error('삭제 요청 실패:', error);
             }
+        },
+        sample6_execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: (data) => {
+                    // 데이터를 Vue 인스턴스의 데이터에 직접 할당
+                    this.restaurantInfo.postcode = data.zonecode;
+                    this.restaurantInfo.dynamicAddress =
+                        data.userSelectedType === "R"
+                            ? data.roadAddress
+                            : data.jibunAddress;
+                    this.restaurantInfo.detailAddress = ""; // 상세 주소는 사용자 입력을 위해 초기화
+                    this.restaurantInfo.extraAddress =
+                        data.bname && /[동|로|가]$/g.test(data.bname) ? data.bname : "";
+
+                    this.addressSelected = true; // 주소가 선택되었음을 표시
+
+                    // 포커스를 상세 주소 필드로 이동
+                    this.$nextTick(() => {
+                        this.$refs.detailAddress.focus();
+                    });
+                },
+            }).open();
         }
     }
 }
-
 </script>
+
+<style scoped>
+.px-3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.px-md-10 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
+
+.py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+</style>
