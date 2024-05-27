@@ -610,6 +610,7 @@ export default {
           `http://localhost:8000/restaurant/${restaurantId}/available-times`
         );
         const availableTimes = response.data;
+        console.log("가져온 예약 가능 시간들: ", availableTimes);
 
         // 'times' 배열의 각 요소에 대해 'clicked' 속성 설정
         this.times.forEach((time) => {
