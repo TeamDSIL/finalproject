@@ -2,17 +2,7 @@
   <v-container>
     <v-row>
       <v-col cols="12">
-        <div style="display: flex">
-          <!-- <v-img
-            contain
-            :src="require('~/assets/images/board.png')"
-            width="20px"
-            style="max-width: 20px; margin-right: 5px"
-          ></v-img>
-          <div style="font-size: larger; font-weight: bold">
-            {{ InformationName }} 게시판
-          </div> -->
-        </div>
+        <div style="display: flex"></div>
       </v-col>
     </v-row>
     <v-row>
@@ -82,6 +72,28 @@
                   outlined
                 ></v-textarea>
               </v-col>
+              <v-col cols="12">
+                <!-- 이미지 파일이 있을 경우 이미지 미리보기를 표시 -->
+                <v-img
+                  v-if="
+                    detailsNotice.img && detailsNotice.img.startsWith('http')
+                  "
+                  :src="detailsNotice.img"
+                  alt="첨부 이미지"
+                  height="200"
+                ></v-img>
+                <!-- 파일 이름을 표시 -->
+                <v-text-field
+                  v-if="
+                    detailsNotice.img && !detailsNotice.img.startsWith('http')
+                  "
+                  v-model="detailsNotice.img"
+                  label="첨부 파일"
+                  readonly
+                  prepend-icon="mdi-paperclip"
+                  outlined
+                ></v-text-field>
+              </v-col>
             </v-row>
           </v-container>
         </v-card-text>
@@ -111,6 +123,7 @@ export default {
         category: "",
         title: "",
         contents: "",
+        img: "",
         postDate: "",
       },
       showDetailsModal: false,
