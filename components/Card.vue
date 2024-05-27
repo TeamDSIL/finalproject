@@ -14,7 +14,7 @@
       <div v-else></div>
     </div>
 
-    <div class="pa-4 d-flex justify-space-between align-center">
+    <div class="cardTitle">
       <span
         class="d-inline-block text-truncate me-3 f-600 text-18 card-title"
         >{{ cardSection.restaurant_name }}</span
@@ -27,12 +27,18 @@
         </div>
       </div>
     </div>
-    <p class="px-4 grey--text text--darken-1">
-      <span class="primary--text f-600 me-1">{{ cardSection.restaurant_crowd }}</span><br> •
-      {{ formatCategories(cardSection.categories) }} <br>• 인당 예약 금액 : {{ cardSection.restaurant_deposit }}
-    </p>
+   
+      <div class="crowdClass">
+                              <span v-if="cardSection.restaurant_crowd === 'BUSY'" class="busy1">　혼잡　</span>
+                              <span v-else-if="cardSection.restaurant_crowd === 'NORMAL' "class="normal1">　보통　</span>
+                              <span v-else-if="cardSection.restaurant_crowd === 'AVAILABLE'" class="available1">　여유　</span>
+                          </div>
+                         
+                           　<v-icon left small color="grey" style="margin-left:15px; margin-right: 5px;">mdi-map-marker</v-icon>{{ cardSection.restaurant_address }}<br>
+                          　식당 예약금(1인) : {{ cardSection.restaurant_deposit }}원<br>
+       <span class="primary--text f-400 me-1">　{{ formatCategories(cardSection.categoryNames) }}</span>
+    
   </v-card>
-</nuxt-link>
 </template>
 
 <script>
@@ -74,13 +80,17 @@ const categoryMappings = {
 };
 export default {
 props: ["cardSection"],
+data: () => ({
+ 
+}),
 methods: {
 formatCategories(categories) {
     if (!categories) {
       return ''; // categories가 null 또는 undefined이면 빈 문자열 반환
     }
-    return categories.map(category => categoryMappings[category] || category).join(", ");
-  }
+    return categories.map(category => `#${categoryMappings[category] || category}`).join(" ");
+  },
+
 }
 }
 </script>
@@ -99,5 +109,42 @@ border: none !important;
 btr-10 {
 border-top-left-radius: 10px !important;
 border-top-right-radius: 10px !important;
+}
+
+.available1 {
+  width: 50px;
+  border-radius: 50px;
+  background-color: #1DDB16;
+  text-align: center;
+  color: #eee;
+  margin-left: 180px;
+}
+
+.normal1 {
+  width: 80px;
+  margin-right: 20px;
+  border-radius: 50px;
+  background-color: #ffee01;
+  text-align: center;
+  color: #000000;
+  margin-left: 180px;
+}
+
+.busy1 {
+  width: 200px;
+  margin: 100px;
+  border-radius: 50px;
+  background-color: #db1616;
+  text-align: center;
+  color: #eee;
+  margin-left: 180px;
+}
+.cardTitle{
+display: flex;
+padding: 16px;
+padding-bottom: 5px;
+}
+.crowdClass{
+padding-bottom: 10px;
 }
 </style>
