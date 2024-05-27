@@ -280,7 +280,7 @@ export default {
       return items;
     },
     goToRestaurantDetail(restaurantId) {
-      this.$.push(`/restaurant/detail/${restaurantId}`);
+      this.$router.push(`/restaurant/detail/${restaurantId}`);
     },
   },
 };

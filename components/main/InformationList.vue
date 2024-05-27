@@ -135,7 +135,7 @@ export default {
   methods: {
     fetchNotices() {
       axios
-        .get("http://localhost:8000/informs/")
+        .get(`${process.env.API_URL}/informs/`)
         .then((response) => {
           this.notices = response.data;
         })

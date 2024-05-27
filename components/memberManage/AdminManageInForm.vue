@@ -322,7 +322,7 @@ export default {
   methods: {
     fetchNotices() {
       axios
-        .get("http://localhost:8000/informs/")
+        .get(`${process.env.API_URL}/informs/`)
         .then((response) => {
           this.notices = response.data;
         })
@@ -391,7 +391,7 @@ export default {
       }
 
       axios
-        .post("http://localhost:8000/informs/", formData, {
+        .post(`${process.env.API_URL}/informs/`, formData, {
           headers: { "Content-Type": "multipart/form-data" },
         })
         .then((response) => {
@@ -434,13 +434,9 @@ export default {
       }
 
       axios
-        .put(
-          `http://localhost:8000/informs/${this.editingNotice.id}`,
-          formData,
-          {
-            headers: { "Content-Type": "multipart/form-data" },
-          }
-        )
+        .put(`${process.env.API_URL}/${this.editingNotice.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
+        })
         .then((response) => {
           const index = this.notices.findIndex(
             (n) => n.id === this.editingNotice.id
