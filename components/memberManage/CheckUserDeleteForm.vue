@@ -26,6 +26,11 @@ export default {
             default: () => ({}),
         },
     },
+    data() {
+        return {
+            dialog: false,
+        };
+    },
     methods: {
         // 수정 확인 버튼 클릭 시 실행될 메서드
         async handleDelete() {

@@ -68,6 +68,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios.js', // 추가된 플러그인 경로
+    '~/plugins/event-bus.js'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: {
