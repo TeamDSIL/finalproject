@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <header></header> -->
-    <div style="margin-top: -50px">
+    <div style="margin-top: -50px;">
       <MainForm></MainForm>
     </div>
     <!-- 카테고리 -->
@@ -9,31 +9,14 @@
       <v-container class="py-15">
         <v-row>
           <v-col cols="12" style="display: flex">
-            <v-img
-              contain
-              :src="require('~/assets/images/foodd.png')"
-              width="20px"
-              style="max-width: 30px; margin-right: 5px"
-            ></v-img>
+            <v-img contain :src="require('~/assets/images/foodd.png')" width="20px"
+              style="max-width: 30px; margin-right: 5px"></v-img>
             <span style="font-size: x-large; font-weight: bold">드실 음식</span>
           </v-col>
-          <v-row
-            class="elevation-2"
-            style="padding: 16px; border-radius: 8px; margin-top: 0px"
-          >
-            <v-col
-              v-for="(item, index) in food"
-              :key="item.name"
-              cols="12"
-              lg="3"
-              md="4"
-              sm="6"
-            >
+          <v-row class="elevation-2" style="padding: 16px; border-radius: 8px; margin-top: 0px">
+            <v-col v-for="item in food" :key="item.name" cols="12" lg="3" md="4" sm="6">
               <div class="text-center">
-                <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
-                  class="text-decoration-none"
-                >
+                <nuxt-link :to="foodLink(item.name)" class="text-decoration-none">
                   <v-avatar size="200" class="mb-4 hover-effect">
                     <img :src="item.img" alt="" />
                   </v-avatar>
@@ -48,31 +31,14 @@
         <!-- 주류 -->
         <v-row>
           <v-col cols="12" style="display: flex; margin-top: 20px">
-            <v-img
-              contain
-              :src="require('~/assets/images/drink.png')"
-              width="20px"
-              style="max-width: 30px; margin-right: 5px"
-            ></v-img>
+            <v-img contain :src="require('~/assets/images/drink.png')" width="20px"
+              style="max-width: 30px; margin-right: 5px"></v-img>
             <span style="font-size: x-large; font-weight: bold">드실 주류</span>
           </v-col>
-          <v-row
-            class="elevation-2"
-            style="padding: 16px; border-radius: 8px; margin-top: 0px"
-          >
-            <v-col
-              v-for="(item, index) in alcohol"
-              :key="item.name"
-              cols="12"
-              lg="3"
-              md="4"
-              sm="6"
-            >
+          <v-row class="elevation-2" style="padding: 16px; border-radius: 8px; margin-top: 0px">
+            <v-col v-for="item in alcohol" :key="item.name" cols="12" lg="3" md="4" sm="6">
               <div class="text-center">
-                <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
-                  class="text-decoration-none"
-                >
+                <nuxt-link :to="alcoholLink(item.name)" class="text-decoration-none">
                   <v-avatar size="200" class="mb-4 hover-effect">
                     <img :src="item.img" alt="" />
                   </v-avatar>
@@ -87,31 +53,14 @@
         <!-- 고객 맞춤형 -->
         <v-row>
           <v-col cols="12" style="display: flex; margin-top: 20px">
-            <v-img
-              contain
-              :src="require('~/assets/images/peoples.png')"
-              width="20px"
-              style="max-width: 30px; margin-right: 5px"
-            ></v-img>
+            <v-img contain :src="require('~/assets/images/peoples.png')" width="20px"
+              style="max-width: 30px; margin-right: 5px"></v-img>
             <span style="font-size: x-large; font-weight: bold">고객 맞춤</span>
           </v-col>
-          <v-row
-            class="elevation-2"
-            style="padding: 16px; border-radius: 8px; margin-top: 0px"
-          >
-            <v-col
-              v-for="(item, index) in who"
-              :key="item.name"
-              cols="12"
-              lg="3"
-              md="4"
-              sm="6"
-            >
+          <v-row class="elevation-2" style="padding: 16px; border-radius: 8px; margin-top: 0px">
+            <v-col v-for="item in who" :key="item.name" cols="12" lg="3" md="4" sm="6">
               <div class="text-center">
-                <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
-                  class="text-decoration-none"
-                >
+                <nuxt-link :to="customLink(item.name)" class="text-decoration-none">
                   <v-avatar size="200" class="mb-4 hover-effect">
                     <img :src="item.img" alt="" />
                   </v-avatar>
@@ -139,11 +88,7 @@
       <div class="info-text">메뉴를 추천해 드릴게요.</div>
     </div>
     <!-- 모달 창 -->
-    <v-dialog
-      v-model="isRouletteOpen"
-      max-width="600px"
-      @click:outside="isRouletteOpen = false"
-    >
+    <v-dialog v-model="isRouletteOpen" max-width="600px" @click:outside="isRouletteOpen = false">
       <roulette @close="isRouletteOpen = false"></roulette>
     </v-dialog>
     <Footer />
@@ -262,13 +207,21 @@ export default {
     };
   },
   methods: {
+    foodLink(category) {
+      return `/restaurant/list?category=${category}`;
+    },
+    alcoholLink(category) {
+      return `/restaurant/alcohol?category=${category}`;
+    },
+    customLink(category) {
+      return `/restaurant/custom?category=${category}`;
+    },
     openRoulette() {
       this.isRouletteOpen = true;
     },
   },
 };
 </script>
-
 <style lang="scss">
 /* 전역 스타일 */
 .bg-transparent {
@@ -301,7 +254,7 @@ export default {
   left: 50%; // 수평 중앙에 위치
   transform: translate(-50%, -100%); // 중앙에서 위로 이동
   padding: 8px 12px;
-  background-color: #d23f57; // 말풍선 배경
+  background-color: #D23F57; // 말풍선 배경
   color: white; // 텍스트 색상
   border-radius: 8px; // 둥근 모서리
   z-index: 1000; // 높은 z-index
@@ -311,13 +264,13 @@ export default {
 .random-image:hover .info-text {
   visibility: visible; // hover 시에만 텍스트 보이게 설정
 }
-//.hover-effect {
-// transition: border 0.3s ease;
-//}
-
+.hover-effect {
+  // transition: border 0.3s ease;
+}
 .hover-effect:hover {
   border: 6px solid rgb(210, 63, 87);
-  border-radius: 50%; /* 동그란 테두리를 원하면 사용 */
+  border-radius: 50%;
+  /* 동그란 테두리를 원하면 사용 */
   box-shadow: 0 10px 12px rgba(0, 0.2, 0.2, 0.4);
 }
 </style>
