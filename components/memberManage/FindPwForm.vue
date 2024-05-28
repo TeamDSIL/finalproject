@@ -15,7 +15,7 @@
                 <div>
                     <!-- 첫 번째 화면: 이메일 입력 폼 -->
                     <div v-if="step === 1">
-                        <v-text-field v-model="email" label="이메일을 입력해주세요" class="mb-4"></v-text-field>
+                        <v-text-field v-model="email" label="이메일을 입력해주세요" @keyup.enter="sendTemporaryCode" class="mb-4"></v-text-field>
                         <div class="button-container">
                             <v-btn :class="['primary', { 'disabled-btn': !isEmailValid }]" :disabled="!isEmailValid" @click="sendTemporaryCode">
                                 인증 코드 발송
@@ -26,7 +26,7 @@
 
                     <!-- 두 번째 화면: 인증 코드 인증 폼 -->
                     <div v-if="step === 2">
-                        <v-text-field v-model="tempCode" placeholder="이메일로 전송된 인증코드를 입력하세요" class="mb-4"></v-text-field>
+                        <v-text-field v-model="tempCode" placeholder="이메일로 전송된 인증코드를 입력하세요" @keyup.enter="verifyTempCode" class="mb-4"></v-text-field>
                         <div class="button-container">
                             <v-btn :class="['primary', { 'disabled-btn': tempCode.length === 0 }]" :disabled="tempCode.length === 0" @click="verifyTempCode">
                                 새 비밀번호 설정
@@ -38,9 +38,9 @@
                     <!-- 세 번째 화면: 비밀번호 재설정 폼 -->
                     <div v-if="step === 3">
                         <v-text-field type="password" id="newPassword" v-model="newPassword" placeholder="새로운 비밀번호" class="mb-4"
-                                      :error-messages="passwordErrors" @input="validatePassword"></v-text-field>
+                                      :error-messages="passwordErrors" @input="validatePassword" @keyup.enter="submitPassword"></v-text-field>
                         <v-text-field type="password" id="newPassword2" v-model="newPassword2" placeholder="새로운 비밀번호 확인" class="mb-4"
-                                      :error-messages="confirmPasswordErrors" @input="validateConfirmPassword"></v-text-field>
+                                      :error-messages="confirmPasswordErrors" @input="validateConfirmPassword" @keyup.enter="submitPassword"></v-text-field>
                         <div class="button-container">
                             <v-btn :class="['primary', { 'disabled-btn': !isPasswordValid }]" :disabled="!isPasswordValid" @click="submitPassword" id="submit-ps">
                                 확인

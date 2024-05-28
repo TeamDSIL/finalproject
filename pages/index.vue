@@ -1,7 +1,7 @@
 <template>
   <div>
     <!-- <header></header> -->
-    <div style="margin-top: -50px;">
+    <div style="margin-top: -50px">
       <MainForm></MainForm>
     </div>
     <!-- 카테고리 -->
@@ -31,16 +31,16 @@
             >
               <div class="text-center">
                 <nuxt-link
-    :to="`/restaurant/list?category=${item.name}`"
-    class="text-decoration-none"
-  >
-    <v-avatar size="200" class="mb-4 hover-effect">
-      <img :src="item.img" alt="" />
-    </v-avatar>
-    <h4 class="grey--text text--darken-2">
-      {{ item.displayName }}
-    </h4>
-  </nuxt-link>
+                  :to="`/restaurant/list?category=${item.name}`"
+                  class="text-decoration-none"
+                >
+                  <v-avatar size="200" class="mb-4 hover-effect">
+                    <img :src="item.img" alt="" />
+                  </v-avatar>
+                  <h4 class="grey--text text--darken-2">
+                    {{ item.displayName }}
+                  </h4>
+                </nuxt-link>
               </div>
             </v-col>
           </v-row>
@@ -70,7 +70,7 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/alcohol?category=${item.name}`"
+                  :to="`/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -109,7 +109,7 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/custom?category=${item.name}`"
+                  :to="`/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -301,7 +301,7 @@ export default {
   left: 50%; // 수평 중앙에 위치
   transform: translate(-50%, -100%); // 중앙에서 위로 이동
   padding: 8px 12px;
-  background-color: #D23F57; // 말풍선 배경
+  background-color: #d23f57; // 말풍선 배경
   color: white; // 텍스트 색상
   border-radius: 8px; // 둥근 모서리
   z-index: 1000; // 높은 z-index
@@ -311,9 +311,9 @@ export default {
 .random-image:hover .info-text {
   visibility: visible; // hover 시에만 텍스트 보이게 설정
 }
-.hover-effect {
-  // transition: border 0.3s ease;
-}
+//.hover-effect {
+// transition: border 0.3s ease;
+//}
 
 .hover-effect:hover {
   border: 6px solid rgb(210, 63, 87);
