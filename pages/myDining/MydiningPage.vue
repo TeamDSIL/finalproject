@@ -286,7 +286,7 @@
                                   전화번호: {{ like.tel }}
                                 </p>
                              
-                                <nuxt-link :to="`/restaurant/detail/${like.restaurantId}`">
+                                <nuxt-link :to="`${process.env.FRONT_URL}/restaurant/detail/${like.restaurantId}`">
   <v-btn
     color="primary"
     small
