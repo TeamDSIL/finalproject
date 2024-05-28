@@ -125,6 +125,6 @@ export default {
     },
   },
   env: {
-    apiURL: process.env.VUE_APP_API_URL,
+    apiURL: process.env.API_URL,
   },
 };
