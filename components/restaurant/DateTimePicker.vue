@@ -1213,7 +1213,7 @@ export default {
                 this.showSpinner = true;
 
                 // 예약 정보를 서버에 전송
-                axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
+                axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
                   .then(reservationResponse => {
                     console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
                     // 결제 정보를 서버에 전송
@@ -1222,7 +1222,7 @@ export default {
                       ...this.paymentData,
                       impUid: impUid  // Add imp_uid to the payment data
                     };
-                    axios.post('http://localhost:8000/restaurant/payment', paymentDataWithImpUid, {
+                    axios.post(`${process.env.API_URL}/restaurant/payment`, paymentDataWithImpUid, {
                       params: {
                         reservationId: reservationId
                       }
