@@ -21,7 +21,7 @@
             style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
             <v-col
-              v-for="(item, index) in food"
+              v-for="(item) in food"
               :key="item.name"
               cols="12"
               lg="3"
@@ -60,7 +60,7 @@
             style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
             <v-col
-              v-for="(item, index) in alcohol"
+              v-for="(item) in alcohol"
               :key="item.name"
               cols="12"
               lg="3"
@@ -99,7 +99,7 @@
             style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
             <v-col
-              v-for="(item, index) in who"
+              v-for="(item) in who"
               :key="item.name"
               cols="12"
               lg="3"
