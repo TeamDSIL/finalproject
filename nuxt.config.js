@@ -82,5 +82,6 @@ export default {
   },
   env: {
     apiURL: process.env.API_URL,
+    FRONT_URL: process.env.FRONT_URL
   },
 };
