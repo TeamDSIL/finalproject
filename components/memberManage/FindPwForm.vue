@@ -5,7 +5,7 @@
 
                 <div id="logo-image">
                     <v-avatar class="me-4" tile width="200" height="100">
-                        <img src="~/assets/images/dsilLogoCut.jpg" alt="">
+                        <img src="~/assets/images/DSILnewLOGO.png" alt="">
                     </v-avatar>
                 </div>
 
@@ -15,46 +15,37 @@
                 <div>
                     <!-- 첫 번째 화면: 이메일 입력 폼 -->
                     <div v-if="step === 1">
-                        <v-text-field v-model="email" label="email 입력" outlined dense hide-details
-                            placeholder="dsil@dsil.com" class="mb-4"></v-text-field>
-                        <v-btn light text class="primary" @click="sendTemporaryCode">
-                            임시 코드 발송
-                        </v-btn>
+                        <v-text-field v-model="email" label="이메일을 입력해주세요" @keyup.enter="sendTemporaryCode" class="mb-4"></v-text-field>
+                        <div class="button-container">
+                            <v-btn :class="['primary', { 'disabled-btn': !isEmailValid }]" :disabled="!isEmailValid" @click="sendTemporaryCode">
+                                인증 코드 발송
+                            </v-btn>
+                        </div>
                         <p v-if="emailError" class="error-message">{{ emailError }}</p>
                     </div>
 
-                    <!-- 두 번째 화면: 임시 비밀번호 인증 폼 -->
+                    <!-- 두 번째 화면: 인증 코드 인증 폼 -->
                     <div v-if="step === 2">
-                        <label for="tempCode">인증 코드 입력:</label>
-                        <v-text-field v-model="tempCode" outlined dense hide-details placeholder="이메일로 전송된 인증코드를 입력하세요"
-                            class="mb-4"></v-text-field>
-                        <v-btn light text class="primary" @click="verifyTempCode">
-                            새 비밀번호 설정
-                        </v-btn>
+                        <v-text-field v-model="tempCode" placeholder="이메일로 전송된 인증코드를 입력하세요" @keyup.enter="verifyTempCode" class="mb-4"></v-text-field>
+                        <div class="button-container">
+                            <v-btn :class="['primary', { 'disabled-btn': tempCode.length === 0 }]" :disabled="tempCode.length === 0" @click="verifyTempCode">
+                                새 비밀번호 설정
+                            </v-btn>
+                        </div>
                         <p v-if="codeError" class="error-message">{{ codeError }}</p>
                     </div>
 
                     <!-- 세 번째 화면: 비밀번호 재설정 폼 -->
                     <div v-if="step === 3">
-                        <label for="newPassword">새로운 비밀번호:</label>
-                        <v-text-field type="password" id="newPassword" v-model="newPassword" outlined dense hide-details
-                            placeholder="새로운 비밀번호" class="mb-4"></v-text-field>
-                        <v-text-field type="password" id="newPassword2" v-model="newPassword2" outlined dense
-                            hide-details placeholder="새로운 비밀번호 확인" class="mb-4"></v-text-field>
-
-                        <v-divider></v-divider>
-
-                        <div id="app">
-                            <div id="captcha-box" @mousemove="handleMouseMove">
-                                <p v-if="!captchaCompleted">마우스를 여기에 움직여주세요.</p>
-                                <p v-else>CAPTCHA 확인됨! 양식을 제출할 수 있습니다.</p>
-                            </div>
-                            <button @click="validateCaptcha" :disabled="captchaCompleted">제출</button>
+                        <v-text-field type="password" id="newPassword" v-model="newPassword" placeholder="새로운 비밀번호" class="mb-4"
+                                      :error-messages="passwordErrors" @input="validatePassword" @keyup.enter="submitPassword"></v-text-field>
+                        <v-text-field type="password" id="newPassword2" v-model="newPassword2" placeholder="새로운 비밀번호 확인" class="mb-4"
+                                      :error-messages="confirmPasswordErrors" @input="validateConfirmPassword" @keyup.enter="submitPassword"></v-text-field>
+                        <div class="button-container">
+                            <v-btn :class="['primary', { 'disabled-btn': !isPasswordValid }]" :disabled="!isPasswordValid" @click="submitPassword" id="submit-ps">
+                                확인
+                            </v-btn>
                         </div>
-
-                        <v-btn light text class="primary" @click="submitPassword" id="submit-ps">
-                            확인
-                        </v-btn>
                     </div>
                 </div>
 
@@ -74,27 +65,31 @@ export default {
             tempCode: '',
             newPassword: '',
             newPassword2: '',
-            dialog: false,
-            captchaCompleted: false,
-            moved: false,
             emailError: '',  // 이메일 형식 오류 메시지
-            codeError: ''    // 인증 코드 오류 메시지
+            codeError: '',    // 인증 코드 오류 메시지
+            passwordErrors: [],
+            confirmPasswordErrors: [],
         };
     },
-    methods: {
-        validateEmail(email) {
+    computed: {
+        isEmailValid() {
             const re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@(([^<>()[\]\.,;:\s@"]+\.)+[^<>()[\]\.,;:\s@"]{2,})$/i;
-            return re.test(String(email).toLowerCase());
+            return re.test(String(this.email).toLowerCase());
         },
+        isPasswordValid() {
+            return this.newPassword !== '' && this.newPassword === this.newPassword2 && this.passwordErrors.length === 0 && this.confirmPasswordErrors.length === 0;
+        }
+    },
+    methods: {
         async sendTemporaryCode() {
-            if (!this.validateEmail(this.email)) {
+            if (!this.isEmailValid) {
                 this.emailError = '이메일 형식으로 입력해주세요';
                 return;
             }
             this.emailError = '';
             try {
                 console.log(this.email);
-                const response = await axios.post('http://localhost:8000/memberManage/sendCode', { email: this.email });
+                const response = await axios.post(`${process.env.API_URL}/memberManage/sendCode`, { email: this.email });
                 console.log('인증 코드가 전송된 이메일:', this.email);
                 alert('입력하신 이메일로 인증 코드가 전송됐습니다.');
                 this.step = 2; // 다음 단계로 이동
@@ -105,7 +100,7 @@ export default {
         },
         async verifyTempCode() {
             try {
-                const response = await axios.post('http://localhost:8000/memberManage/verifyCode', { email: this.email, code: this.tempCode });
+                const response = await axios.post(`${process.env.API_URL}/memberManage/verifyCode`, { email: this.email, code: this.tempCode });
                 console.log('인증 코드 확인:', this.tempCode);
                 alert('인증 되었습니다.');
                 this.step = 3; // 다음 단계로 이동
@@ -114,40 +109,46 @@ export default {
                 this.codeError = '인증 코드가 틀렸습니다. 다시 시도해주세요.';
             }
         },
-        async submitPassword() {
+        validatePassword() {
+            this.passwordErrors = [];
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&~])[A-Za-z\d@$!%*#?&~]{10,15}$/;
+            if (!passwordPattern.test(this.newPassword)) {
+                this.passwordErrors.push('문자와 숫자, 특수문자(!, @, #, $, %, *, ?, &, ~) 합하여 10~15자를 입력해주세요');
+            }
+        },
+        validateConfirmPassword() {
+            this.confirmPasswordErrors = [];
             if (this.newPassword !== this.newPassword2) {
-                alert('새 비밀번호와 비밀번호 확인이 일치하지 않습니다.');
+                this.confirmPasswordErrors.push('비밀번호가 일치하지 않습니다');
+            }
+        },
+        async submitPassword() {
+            this.validatePassword();
+            this.validateConfirmPassword();
+
+            if (!this.isPasswordValid) {
                 return;
             }
+
             try {
-                const response = await axios.post('http://localhost:8000/memberManage/resetPassword', {
+                const response = await axios.post(`${process.env.API_URL}/memberManage/resetPassword`, {
                     email: this.email,
                     newPassword: this.newPassword
                 });
                 console.log('비밀번호 재설정:', this.newPassword, this.newPassword2);
-                
+                alert('비밀번호가 재설정 됐습니다.');
+
                 this.$router.push('/memberManage/LoginPage');
             } catch (error) {
                 console.error('Error resetting password:', error);
                 alert('비밀번호 재설정 중 오류가 발생했습니다.');
             }
-        },
-        handleMouseMove() {
-            this.moved = true;
-        },
-        validateCaptcha() {
-            if (this.moved) {
-                this.captchaCompleted = true;
-                alert('CAPTCHA 확인됨! 양식을 제출할 수 있습니다.');
-            } else {
-                alert('CAPTCHA를 완료해주세요. 마우스를 움직여야 합니다.');
-            }
-        },
+        }
     }
 }
 </script>
 
-<style>
+<style scoped>
 .find-id-form {
     width: 500px;
     height: 600px;
@@ -176,14 +177,29 @@ export default {
     margin-left: 10px;
 }
 
-#captcha-box {
-    width: 300px;
-    height: 100px;
-    border: 2px solid #ccc;
-    margin-bottom: 20px;
+.button-container {
     display: flex;
     justify-content: center;
-    align-items: center;
-    cursor: pointer;
+    margin-top: 1rem;
+}
+
+.primary {
+    background-color: rgb(255,84,82);
+    color: white;
+}
+
+.disabled-btn {
+    background-color: grey;
+    color: white;
+}
+
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 1rem;
+}
+
+.mb-4 {
+    margin-bottom: 1.5rem;
 }
 </style>

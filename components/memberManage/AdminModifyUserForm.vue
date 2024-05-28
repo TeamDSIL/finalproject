@@ -6,39 +6,40 @@
             <br>
 
             <!-- 이메일 표시 -->
-            <p class="text-14 mb-1">이메일[ID]</p>
-            <v-text-field outlined dense hide-details v-model="userInfo.email" class="mb-4" readonly></v-text-field>
+            <v-text-field v-model="userInfo.email" label="이메일[ID]" class="mb-4" readonly></v-text-field>
 
             <!-- 이름 -->
-            <p class="text-14 mb-1">이름</p>
-            <v-text-field v-model="userInfo.name" outlined dense  hide-details placeholder="이름" class="mb-4"></v-text-field>
-
+            <v-text-field v-model="userInfo.name" label="이름" class="mb-4" :error-messages="nameErrors"
+                @input="handleNameInput"></v-text-field>
 
             <!-- 포인트 -->
-            <p class="text-14 mb-1">포인트</p>
-            <v-text-field v-model="userInfo.point.currentPoint" outlined dense hide-details placeholder="포인트" class="mb-4"></v-text-field>
+            <v-text-field v-model="userInfo.point.currentPoint" label="포인트" class="mb-4"></v-text-field>
 
             <!-- 연락처 -->
-            <p class="text-14 mb-1">연락처</p>
-            <v-text-field v-model="userInfo.tel" outlined dense hide-details placeholder="연락처" class="mb-4"></v-text-field>
-
-            <!-- 주소 -->
-            <p class="text-14 mb-1">주소</p>
-            <v-text-field v-model="userInfo.address" outlined dense hide-details placeholder="주소" class="mb-4"></v-text-field>
-
-            <!-- 우편번호 -->
-            <p class="text-14 mb-1">우편번호</p>
-            <v-text-field v-model="userInfo.postcode" outlined dense hide-details placeholder="우편번호" class="mb-4"></v-text-field>
+            <v-text-field v-model="userInfo.tel" label="연락처" class="mb-4" :error-messages="telErrors"
+                @input="handleTelInput"></v-text-field>
 
             <!-- 비밀번호 -->
-            <p class="text-14 mb-1">비밀번호</p>
-            <v-text-field v-model="modifiedPassword" outlined dense type="password" hide-details placeholder="********"
-                class="mb-4"></v-text-field>
+            <v-text-field v-model="modifiedPassword" label="비밀번호" type="password" class="mb-4"
+                :error-messages="passwordErrors" @input="handlePasswordInput"></v-text-field>
 
             <!-- 비밀번호 재입력 -->
-            <p class="text-14 mb-1">비밀번호 재입력</p>
-            <v-text-field v-model="confirmPassword" outlined dense type="password" hide-details placeholder="********"
-                class="mb-4"></v-text-field>
+            <v-text-field v-model="confirmPassword" label="비밀번호 확인" type="password" class="mb-4"
+                :error-messages="confirmPasswordErrors" @input="handleConfirmPasswordInput"></v-text-field>
+
+            <!-- 주소 찾기 버튼 -->
+            <v-btn @click="sample6_execDaumPostcode" style="margin-bottom: 20px" small color="primary">주소 찾기</v-btn>
+
+            <div v-if="addressSelected">
+                <v-text-field v-model="userInfo.postcode" label="우편번호" type="text" placeholder="우편번호"
+                    class="mb-4"></v-text-field>
+                <v-text-field v-model="userInfo.dynamicAddress" label="주소" type="text" placeholder="주소"
+                    class="mb-4"></v-text-field>
+                <v-text-field v-model="userInfo.detailAddress" label="상세주소" type="text" placeholder="상세주소 입력"
+                    ref="detailAddress" class="mb-4"></v-text-field>
+                <v-text-field v-model="userInfo.extraAddress" label="참고항목" type="text" placeholder="참고항목"
+                    class="mb-4"></v-text-field>
+            </div>
 
             <!-- 수정 확인 버튼 -->
             <div id="modify-delete-btn">
@@ -47,7 +48,6 @@
             </div>
         </div>
     </v-card>
-
 </template>
 
 <script>
@@ -59,24 +59,104 @@ export default {
         return {
             modifiedPassword: '',           // 비밀번호
             confirmPassword: '',    // 비밀번호 확인
-            name: '',               // 이름
-            tel: '',              // 연락처
-            address: '',            // 주소
-            postcode: '',            // 우편번호
-            point: '',
+            nameErrors: [],
+            emailErrors: [],
+            telErrors: [],
+            passwordErrors: [],
+            confirmPasswordErrors: [],
+            addressSelected: false, // 주소가 선택되었는지 여부
         };
     },
+    computed: {
+        isFormValid() {
+            return (
+                this.nameErrors.length === 0 &&
+                this.telErrors.length === 0 &&
+                this.passwordErrors.length === 0 &&
+                this.confirmPasswordErrors.length === 0 &&
+                this.modifiedPassword &&
+                this.confirmPassword
+            );
+        },
+    },
+    mounted() {
+        const script = document.createElement("script");
+        script.src =
+            "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
+        document.head.appendChild(script);
+    },
     methods: {
-        // 수정 확인 버튼 클릭 시 실행될 메서드
+        handleNameInput() {
+            if (this.userInfo.name === '') {
+                this.nameErrors = [];
+            } else {
+                this.validateName();
+            }
+        },
+        handleTelInput() {
+            if (this.userInfo.tel === '') {
+                this.telErrors = [];
+            } else {
+                this.validateTel();
+            }
+        },
+        handlePasswordInput() {
+            if (this.modifiedPassword === '') {
+                this.passwordErrors = [];
+            } else {
+                this.validatePassword();
+            }
+        },
+        handleConfirmPasswordInput() {
+            if (this.confirmPassword === '') {
+                this.confirmPasswordErrors = [];
+            } else {
+                this.validateConfirmPassword();
+            }
+        },
+        validateName() {
+            this.nameErrors = [];
+            const namePattern = /^[가-힣a-zA-Z\s]+$/;
+            if (!namePattern.test(this.userInfo.name)) {
+                this.nameErrors.push('이름은 문자만 입력 가능합니다');
+            } else if (this.userInfo.name === '') {
+                this.nameErrors.push('이름은 필수로 입력해야합니다');
+            }
+        },
+        validateTel() {
+            this.telErrors = [];
+            const telPattern = /^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/;
+            if (!telPattern.test(this.userInfo.tel) || this.userInfo.tel.replace(/[^0-9]/g, '').length !== 11) {
+                this.telErrors.push('유효한 전화번호를 입력해주세요');
+            } else {
+                const tel = this.userInfo.tel.replace(/[^0-9]/g, '');
+                this.userInfo.tel = tel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+            }
+        },
+        validatePassword() {
+            this.passwordErrors = [];
+            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&~])[A-Za-z\d@$!%*#?&~]{10,15}$/;
+            if (!passwordPattern.test(this.modifiedPassword)) {
+                this.passwordErrors.push('문자와 숫자, 특수문자(!, @, #, $, %, *, ?, &, ~) 합하여 10~15자를 입력해주세요');
+            }
+        },
+        validateConfirmPassword() {
+            this.confirmPasswordErrors = [];
+            if (this.modifiedPassword !== this.confirmPassword) {
+                this.confirmPasswordErrors.push('비밀번호가 일치하지 않습니다');
+            }
+        },
         async handleModify() {
-            try {
-                // API 요청을 보내기 전에 비밀번호가 일치하는지 확인
-                if (this.modifiedPassword !== this.confirmPassword) {
-                    // 비밀번호가 일치하지 않으면 에러 메시지를 표시하고 함수 종료
-                    alert('비밀번호가 일치하지 않습니다.');
-                    return;
-                }
+            this.validateName();
+            this.validateTel();
+            this.validatePassword();
+            this.validateConfirmPassword();
 
+            if (!this.isFormValid) {
+                return;
+            }
+
+            try {
                 // API 요청을 보내기 전에 데이터 유효성 검사를 수행할 수 있습니다.
 
                 // API 요청을 보낼 데이터 생성
@@ -85,7 +165,7 @@ export default {
                     password: this.modifiedPassword,
                     name: this.userInfo.name,
                     tel: this.userInfo.tel,
-                    address: this.userInfo.address,
+                    address: `${this.userInfo.dynamicAddress} ${this.userInfo.detailAddress}`,
                     postcode: this.userInfo.postcode,
                     point: {
                         id: this.userInfo.point.id,
@@ -95,7 +175,7 @@ export default {
                 };
 
                 // API 요청 보내기
-                const response = await axios.post('http://localhost:8000/memberManage/adminManageUserPage', requestData);
+                const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageUserPage`, requestData);
 
                 // 응답 처리
                 console.log('수정 응답:', response.data);
@@ -116,19 +196,61 @@ export default {
         },
         async handleDelete() {
             try {
-                const response = await axios.delete(`http://localhost:8000/memberManage/adminManageUserPage?email=${this.userInfo.email}`);
+                const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageUserPage?email=${this.userInfo.email}`);
 
-                // 생략
+                // 삭제 완료 후 모달 창 닫음
                 this.$emit('close');
-                // this.$router.push('/memberManage/AdminManageUserPage');
+
+                // 페이지 리다이렉션
+                this.$router.push('/memberManage/AdminManageUserPage');
 
             } catch (error) {
-                // 생략
                 console.error('삭제 요청 실패:', error);
             }
+        },
+        sample6_execDaumPostcode() {
+            new daum.Postcode({
+                oncomplete: (data) => {
+                    // 데이터를 Vue 인스턴스의 데이터에 직접 할당
+                    this.userInfo.postcode = data.zonecode;
+                    this.userInfo.dynamicAddress =
+                        data.userSelectedType === "R"
+                            ? data.roadAddress
+                            : data.jibunAddress;
+                    this.userInfo.detailAddress = ""; // 상세 주소는 사용자 입력을 위해 초기화
+                    this.userInfo.extraAddress =
+                        data.bname && /[동|로|가]$/g.test(data.bname) ? data.bname : "";
+
+                    this.addressSelected = true; // 주소가 선택되었음을 표시
+
+                    // 포커스를 상세 주소 필드로 이동
+                    this.$nextTick(() => {
+                        this.$refs.detailAddress.focus();
+                    });
+                },
+            }).open();
         }
     }
 }
 </script>
 
-<style scoped></style>
+<style scoped>
+.px-3 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+}
+
+.px-md-10 {
+    padding-left: 2.5rem;
+    padding-right: 2.5rem;
+}
+
+.py-8 {
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+}
+
+.mb-2 {
+    margin-bottom: 0.5rem;
+}
+</style>

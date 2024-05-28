@@ -11,11 +11,13 @@
           <Box>
             <div slot="boxSidebar">
               <div>
-                <br>
                 <v-expansion-panels accordion>
                   <v-expansion-panel>
                     <v-expansion-panel-header class="panel-header">
-                      지역별
+                      <span>
+                        <img src="../../assets/images/facility/list-designation.png" width=24 height=24>
+                        　지역별</span>
+                      
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-checkbox v-for="clusterarea in clusterareas" :key="clusterarea.id" class="changecheckbox"
@@ -23,22 +25,28 @@
                         v-model="selectedCategories"></v-checkbox>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
+
                   <v-expansion-panel>
                     <v-expansion-panel-header class="panel-header">
-                      음식 종류별
+                      <span>
+                      <img src="../../assets/images/facility/list-high-fiber.png" width=24 height=24>
+                      　음식종류별</span>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-checkbox v-for="foodType in foodTypes" :key="foodType.id" class="mt-2 changecheckbox" :label="foodType.name"
                         color="secondary" :value="foodType.value" v-model="selectedCategories"></v-checkbox>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
+
                   <v-expansion-panel>
                     <v-expansion-panel-header class="panel-header">
-                      편의 시설
+                      <span>
+                      <img src="../../assets/images/facility/list-welfare.png" width=24 height=24>
+                      　편의시설별</span>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-checkbox v-for="sortType in sortTypes" :key="sortType.id" class="mt-2 changecheckbox" :label="sortType.name"
-                        color="secondary" :value="sortType.value" v-model="selectedCategories"></v-checkbox>
+                        color="secondary" :value="sortType.value" v-model="selectedFacilities"></v-checkbox>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
@@ -57,9 +65,16 @@
                     @click="sendRestaurantLink(item.restaurant_id)" class="cursor-pointer">
                     <Card :cardSection="item" />
                   </v-col>
+
+            
+
       </v-row>
+   
 </div>
 </div>
+
+ 
+
   </Box>
   <div class="pagelocation">
     <div class="mb-4 me-3">
@@ -69,17 +84,21 @@
     </div>
     <div class="mb-4">
       <!-- 페이지네이션 -->
-      <v-pagination v-model="currentPage" :length="numberOfPages" circle @input="navigateToPage"></v-pagination>
+      <v-pagination v-model="currentPage" :length="numberOfPages" :total-visible="11" circle @input="navigateToPage"></v-pagination>
     </div>
   </div>
   </v-col>
   </v-row>
+
   </v-container>
   <Footer />
+
   </div>
 </template>
+
 <script>
 import axios from 'axios';
+
 export default {
   components: {
     Card: () => import('@/components/Card.vue')
@@ -125,6 +144,7 @@ export default {
     CardList: [],
     cardSection: [],
     selectedCategories: [],
+    selectedFacilities: [],
     page: 1,
     step: 1,
     currentPage: 1,
@@ -133,7 +153,7 @@ export default {
       {
         text: '메인화면',
         disabled: true,
-        href: 'http://localhost:3000/',
+        href: `${process.env.FRONT_URL}/`,
       },
       {
         text: '식당 검색 리스트',
@@ -196,6 +216,7 @@ export default {
       const facilities = this.$route.query.facility;
       const search = this.$route.query.search;
       const params = new URLSearchParams();
+
       if (categories) {
         if (Array.isArray(categories)) {
           categories.forEach(category => params.append('categoryNames', category));
@@ -203,6 +224,7 @@ export default {
           params.append('categoryNames', categories);
         }
       }
+
       if (facilities) {
         if (Array.isArray(facilities)) {
           facilities.forEach(facility => params.append('facilityNames', facility));
@@ -210,10 +232,12 @@ export default {
           params.append('facilityNames', facilities);
         }
       }
+
       if (search) {
         params.append('search', search);
       }
-      axios.get(`http://localhost:8000/restaurant/list?${params.toString()}`)
+
+      axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`)
         .then(response => {
           this.CardList = response.data;
           console.log('식당 정보 불러옴');
@@ -224,21 +248,30 @@ export default {
     },
     submitData() {
       const params = new URLSearchParams();
-      this.selectedCategories.forEach(category => params.append('categoryNames', category));
-      window.location.href = `http://localhost:3000/restaurant/list?${params.toString()}`;
+      this.selectedCategories.forEach(category => params.append('category', category));
+      this.selectedFacilities.forEach(facility => params.append('facility', facility));
+      window.location.href = `${process.env.FRONT_URL}/restaurant/list?${params.toString()}`;
+      
     },
     sendRestaurantLink(restaurant_id) {
-      window.location.href = `http://localhost:3000/restaurant/detail/${restaurant_id}`;
+      window.location.href = `${process.env.FRONT_URL}/restaurant/detail/${restaurant_id}`;
+      
     },
     navigateToPage() {
-      this.fetchList();
-    }
+      this.$router.push({ query: { ...this.$route.query, page: this.currentPage } });
+    },
   },
   watch: {
-    '$route.query': 'fetchList'
-  }
+    '$route.query.page': {
+      handler(newPage) {
+        this.currentPage = parseInt(newPage, 10) || 1;
+      },
+      immediate: true,
+    },
+  },
 }
 </script>
+
 <style lang="scss">
 .pagelocation {
   display: flex;
@@ -246,6 +279,7 @@ export default {
   justify-content: flex-end;
   align-items: center;
 }
+
 .cursor-pointer {
   cursor: pointer;
 }
@@ -256,6 +290,7 @@ export default {
 .btn-css{
   margin: 15px;
   width: 100px;
+
 }
 .panel-header{
   font-size : 16px;
@@ -265,5 +300,6 @@ export default {
 .changecheckbox{
   margin-top: 10px;
   font-size: 20px;
+
 }
 </style>

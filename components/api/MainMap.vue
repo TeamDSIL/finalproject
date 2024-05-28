@@ -29,7 +29,7 @@ export default {
   methods: {
     loadRestaurantData() {
       axios
-        .get("http://localhost:8000/api/restaurants")
+        .get(`${process.env.API_URL}/api/restaurants`)
         .then((response) => {
           this.restaurantAddresses = response.data.map((item) => {
             return { name: item.name, address: item.address };

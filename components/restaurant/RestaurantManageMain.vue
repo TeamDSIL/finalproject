@@ -20,14 +20,11 @@
 
         </v-tab>
         <v-tab class="text-capitalize" href="#tab-4">
-          예약통계보기
+          데이터센터
 
         </v-tab>
 
-        <v-tab class="text-capitalize" href="#tab-5">
-          리뷰분석
-
-        </v-tab>
+      
 
 
 
@@ -333,21 +330,46 @@
                           <div class="mb-4">
                             <v-pagination class="food-truck-pagination" v-model="pageReview" :length="pageCountReview"
                               circle @input="scrollToTop"></v-pagination>
-                          </div>
-                        </v-col>
-                      </v-row>
-                    </v-col>
-                  </v-row>
+                            </div>
+                          </v-col>
+                        </v-row>
+                      </v-col>
+                    </v-row>
+                  </div>
                 </div>
-              </div>
-            </v-col>
-          </v-row>
-        </v-tab-item>
-
-        <!-- 탭4에 해당하는화면 -->
-        <v-tab-item value="tab-4">
-          <v-container>
-            <div class="reservation-stats">
+              </v-col>
+            </v-row>
+          </v-tab-item>
+          
+          <!-- 탭4에 해당하는화면 -->
+          <v-tab-item value="tab-4">
+            <v-container>
+              <v-card>
+                <v-img :src="require('~/assets/images/restaurantManage.png')" height="300px">
+                  <v-card-title class="headline">{{ restaurant.name }}</v-card-title>
+                </v-img>
+    
+                <v-divider></v-divider>
+                <v-card-actions>
+                  <v-btn @click="getRestaurantSentiment(restaurant.id)" color="primary">내 식당의 리뷰 분석</v-btn>
+                </v-card-actions>
+    
+                <v-card-text>
+                  <p>총 {{ paginatedReviews.length }}개의 리뷰가 있습니다.</p>
+                  <v-divider></v-divider>
+                  <div class="d-flex align-center">
+                    <v-icon color="yellow" large>mdi-emoticon-happy</v-icon>
+                    <h3 class="ml-3 font-weight-bold" style="font-size: 24px;">리뷰들은 지금 {{ sentiment }}!</h3>
+                  </div>
+                  <v-progress-linear
+    :value="sentimentScore"
+    :color="progressColor"
+    height="30"
+  ></v-progress-linear>
+                </v-card-text>
+              <br>
+              <br>
+              <div class="reservation-stats">
               <v-row>
 
                 <v-col cols="12" style="display: flex;">
@@ -374,37 +396,11 @@
                 </v-col>
               </v-row>
             </div>
+            </v-card>
           </v-container>
         </v-tab-item>
 
         
-
-
-        <!-- 감정분석 해보기 -->
-        <v-tab-item value="tab-5">
-          <v-container>
-            <v-card>
-              <v-img :src="restaurant.img" height="200px">
-                <v-card-title class="headline">{{ restaurant.name }}</v-card-title>
-              </v-img>
-
-              <v-divider></v-divider>
-              <v-card-actions>
-                <v-btn @click="getRestaurantSentiment(restaurant.id)" color="primary">내 식당의 리뷰 분석</v-btn>
-              </v-card-actions>
-
-              <v-card-text>
-                <p>총 {{ paginatedReviews.length }}개의 리뷰가 있습니다.</p>
-                <v-divider></v-divider>
-                <div class="d-flex align-center">
-                  <v-icon color="blue" large>mdi-emoticon-happy</v-icon>
-                  <h3 class="ml-3 font-weight-bold" style="font-size: 24px;">리뷰들의 전반적인 감정 평가: {{ sentiment }}</h3>
-                </div>
-                <v-progress-linear :value="sentimentScore" color="green" height="20"></v-progress-linear>
-              </v-card-text>
-            </v-card>
-          </v-container>
-        </v-tab-item>
 
       </v-tabs-items>
     </div>
@@ -423,7 +419,18 @@ export default {
     this.fetchReviews(restaurantId);
     this.fetchAvailableTimes(restaurantId);
     this.year = new Date().getFullYear();
-    this.fetchRestaurantDetails(this.$route.params.id);
+    // this.fetchRestaurantDetails(this.$route.params.id);
+  },
+  computed: {
+    progressColor() {
+      if (this.sentimentScore >= 80) {
+        return 'green';
+      } else if (this.sentimentScore >= 50) {
+        return 'yellow';
+      } else {
+        return 'red';
+      }
+    }
   },
 
   data() {
@@ -484,7 +491,7 @@ export default {
 
     async getRestaurantSentiment(id) {
       try {
-        const response = await axios.get(`http://localhost:8000/restaurant/${id}/sentiment`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${id}/sentiment`);
         this.sentiment = response.data;
         this.calculateSentimentScore(); // 감정 평가 점수 계산
       } catch (error) {
@@ -492,7 +499,7 @@ export default {
       }
     },
     calculateSentimentScore() {
-      if (this.sentiment === 'Positive') {
+      if (this.sentiment === '긍정적이에요') {
         this.sentimentScore = 80; // Positive 평가일 경우 점수 80
       } else if (this.sentiment === 'Neutral') {
         this.sentimentScore = 50; // Neutral 평가일 경우 점수 50
@@ -506,7 +513,7 @@ export default {
       const restaurantId = this.$route.params.id;
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/monthly/${restaurantId}/${this.year}`
+          `${process.env.API_URL}/restaurant/monthly/${restaurantId}/${this.year}`
         );
         this.stats = Object.keys(response.data).map((month) => ({
           period: `${month}월`,
@@ -520,7 +527,7 @@ export default {
       const restaurantId = this.$route.params.id;
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/weekly/${restaurantId}/${this.year}`
+          `${process.env.API_URL}/restaurant/weekly/${restaurantId}/${this.year}`
         );
         this.stats = Object.keys(response.data).map((week) => {
           const month =
@@ -541,7 +548,7 @@ export default {
       if (time.clicked) {
         try {
           await axios.delete(
-            `http://localhost:8000/restaurant/${restaurantId}/available-times`,
+            `${process.env.API_URL}/restaurant/${restaurantId}/available-times`,
             {
               params: {
                 slot: time.slot,
@@ -555,7 +562,7 @@ export default {
       } else {
         try {
           const response = await axios.post(
-            `http://localhost:8000/restaurant/${restaurantId}/available-times`,
+            `${process.env.API_URL}/restaurant/${restaurantId}/available-times`,
             null,
             {
               params: {
@@ -572,7 +579,7 @@ export default {
     async fetchRestaurantDetails(restaurantId) {
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}`
+          `${process.env.API_URL}/restaurant/${restaurantId}`
         );
         this.restaurant = response.data;
         console.log("Restaurant details fetched successfully");
@@ -584,7 +591,7 @@ export default {
       console.log("예약목록을 불러올 식당의 아이디:", restaurantId);
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}/reservations`
+          `${process.env.API_URL}/restaurant/${restaurantId}/reservations`
         );
         this.reservations = response.data;
         console.log("불러온 예약목록들: ", this.reservations);
@@ -600,9 +607,10 @@ export default {
     async fetchAvailableTimes(restaurantId) {
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}/available-times`
+          `${process.env.API_URL}/restaurant/${restaurantId}/available-times`
         );
         const availableTimes = response.data;
+        console.log("가져온 예약 가능 시간들: ", availableTimes);
 
         // 'times' 배열의 각 요소에 대해 'clicked' 속성 설정
         this.times.forEach((time) => {
@@ -622,7 +630,7 @@ export default {
       console.log("리뷰목록을 불러올 식당의 아이디:", restaurantId);
       try {
         const response = await axios.get(
-          `http://localhost:8000/restaurant/${restaurantId}/reviews`
+          `${process.env.API_URL}/restaurant/${restaurantId}/reviews`
         );
         this.reviews = response.data.map((review) => {
           return {
@@ -689,7 +697,7 @@ export default {
     async toggleSelection(crowd) {
       try {
         const response = await axios.patch(
-          `http://localhost:8000/restaurant/${this.restaurant.id}/crowd`,
+          `${process.env.API_URL}/restaurant/${this.restaurant.id}/crowd`,
           null,
           {
             params: {
@@ -713,7 +721,7 @@ export default {
     async deleteReview(reviewId) {
       try {
         const response = await axios.patch(
-          `http://localhost:8000/restaurant/reviews/${reviewId}/delete-status`,
+          `${process.env.API_URL}/restaurant/reviews/${reviewId}/delete-status`,
           null,
           {
             params: {
@@ -740,7 +748,7 @@ export default {
     async submitReply(reviewId) {
       try {
         const response = await axios.post(
-          `http://localhost:8000/restaurant/reviews/${reviewId}`,
+          `${process.env.API_URL}/restaurant/reviews/${reviewId}`,
           { content: this.reply }
         );
         const reply = response.data;
@@ -871,6 +879,10 @@ export default {
   font-weight: bold;
   display: flex;
   justify-content: right;
+}
+.headline {
+  font-weight: bold;
+
 }
 </style>
 

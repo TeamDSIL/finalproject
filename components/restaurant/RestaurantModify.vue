@@ -197,7 +197,7 @@ export default {
   methods: {
     async fetchCategories(restaurantId) {
       try {
-        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/categories`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/categories`);
         const selectedCategories = response.data.map((category) => category.name);
         this.restaurant.categories = selectedCategories;
         this.allCategories = [
@@ -242,7 +242,7 @@ export default {
     },
     async fetchFacilities(restaurantId) {
       try {
-        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/facilities`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/facilities`);
         const selectedFacilities = response.data.map((facility) => facility.name);
         this.restaurant.facilities = selectedFacilities;
         this.allFacilities = [
@@ -265,7 +265,7 @@ export default {
     },
     async fetchMenus(restaurantId) {
       try {
-        const response = await axios.get(`http://localhost:8000/restaurant/${restaurantId}/menus`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/menus`);
         this.menuItems = response.data.map((menu) => ({
           id: menu.id,
           name: menu.name,
@@ -324,7 +324,7 @@ export default {
         }
       });
       try {
-        const response = await axios.put(`http://localhost:8000/restaurant/${this.restaurant.id}`, formData);
+        const response = await axios.put(`${process.env.API_URL}/restaurant/${this.restaurant.id}`, formData);
         console.log('식당 정보가 성공적으로 업데이트되었습니다:', response.data);
         alert('식당 정보가 성공적으로 업데이트되었습니다.');
       } catch (error) {

@@ -38,8 +38,12 @@
                             <tr>
                               <td>{{ item.reviewId }}</td>
                               <td>{{ item.userEamil }}</td>
-                              <td>{{ truncateString(item.replyContent, 13) }}</td>
-                              <td>{{ truncateString(item.reviewContent, 13) }}</td>
+                              <td>
+                                {{ truncateString(item.replyContent, 13) }}
+                              </td>
+                              <td>
+                                {{ truncateString(item.reviewContent, 13) }}
+                              </td>
                               <td>
                                 <v-dialog
                                   max-width="500"
@@ -72,10 +76,6 @@
                       class="d-flex justify-center align-center justify-sm-space-between flex-wrap"
                     >
                       <div class="mb-4 me-3">
-                        <p class="font-weight-normal mb-0 text-14">
-                          Showing {{ startItemIndex }}-{{ endItemIndex }} of
-                          {{ filteredMembers.length }} Reviews
-                        </p>
                       </div>
                       <div class="mb-4">
                         <!-- 페이지네이션 -->
@@ -139,9 +139,15 @@ export default {
     filteredMembers() {
       return this.reviewInfos.filter(
         (review) =>
-          review.userEamil.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          review.replyContent.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
-          review.reviewContent.toLowerCase().includes(this.searchQuery.toLowerCase())
+          review.userEamil
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          review.replyContent
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase()) ||
+          review.reviewContent
+            .toLowerCase()
+            .includes(this.searchQuery.toLowerCase())
       );
     },
     displayedMembers() {
@@ -174,7 +180,7 @@ export default {
   methods: {
     fetchReviews() {
       axios
-        .get(`http://localhost:8000/memberManage/reviewManage`)
+        .get(`${process.env.API_URL}/memberManage/reviewManage`)
         .then((response) => {
           this.reviewInfos = response.data;
           console.log(this.reviewInfos);
@@ -184,30 +190,29 @@ export default {
         });
     },
     truncateString(str, num) {
-  if (!str) {
-    // 입력 문자열이 비어있는 경우
-    return "댓글이 없습니다.";
-  } else if (str.length > num) {
-    // 입력 문자열이 지정된 길이보다 길 경우
-    return str.slice(0, num) + "...";
-  } else {
-    // 입력 문자열이 지정된 길이 이내인 경우
-    return str;
-  }
-}
-,
+      if (!str) {
+        // 입력 문자열이 비어있는 경우
+        return "댓글이 없습니다.";
+      } else if (str.length > num) {
+        // 입력 문자열이 지정된 길이보다 길 경우
+        return str.slice(0, num) + "...";
+      } else {
+        // 입력 문자열이 지정된 길이 이내인 경우
+        return str;
+      }
+    },
     openReviewInfoForm(reviewInfo) {
       // 선택된 사용자의 모든 정보 저장
-        this.reviewInfo = {
-            userEamil: reviewInfo.userEamil,
-            userId: reviewInfo.userId,
-            reviewContent: reviewInfo.reviewContent,
-            reviewId: reviewInfo.reviewId,
-            reviewStatus: reviewInfo.reviewStatus,
-            registerDate: reviewInfo.registerDate,
-            replyContent: reviewInfo.replyContent,
-            replyId: reviewInfo.replyId,
-            replyStatus:reviewInfo.replyStatus,
+      this.reviewInfo = {
+        userEamil: reviewInfo.userEamil,
+        userId: reviewInfo.userId,
+        reviewContent: reviewInfo.reviewContent,
+        reviewId: reviewInfo.reviewId,
+        reviewStatus: reviewInfo.reviewStatus,
+        registerDate: reviewInfo.registerDate,
+        replyContent: reviewInfo.replyContent,
+        replyId: reviewInfo.replyId,
+        replyStatus: reviewInfo.replyStatus,
       };
       // 다이얼로그 표시
       this.showDialog = true;

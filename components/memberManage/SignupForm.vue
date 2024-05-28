@@ -1,50 +1,37 @@
 <template>
-
   <v-container>
     <div class="bg-body d-flex flex-column justify-center align-center min-vh-100">
       <div class="sign-up-form">
         <div class="sign-up-form-container">
-
           <div class="text-center mb-10">
             <h3 class="mb-3">회원가입</h3>
             <h5 class="text-sm font-600 grey--text text--darken-4">계속하려면 양식에 맞춰 입력해주세요.</h5>
           </div>
 
+          <v-text-field v-model="userInfo.name" label="이름" type="text" class="mb-4" :error-messages="nameErrors"
+            @input="handleNameInput"></v-text-field>
 
-          <v-text-field v-model="userInfo.name" label="이름" type="text" placeholder="윤호상" class="mb-4"></v-text-field>
+          <v-text-field v-model="userInfo.email" label="이메일" type="email" class="mb-4" :error-messages="emailErrors"
+            @input="handleEmailInput"></v-text-field>
 
-          <v-text-field v-model="userInfo.email" label="이메일" type="email" placeholder="dvbf@naver.com"
-            class="mb-4"></v-text-field>
+          <v-text-field v-model="userInfo.tel" label="연락처" type="tel" class="mb-4" :error-messages="telErrors"
+            @input="handleTelInput"></v-text-field>
 
-          <v-text-field v-model="userInfo.tel" label="연락처" type="tel" placeholder="010-9677-7048"
-            class="mb-4"></v-text-field>
+          <v-text-field v-model="userInfo.password" type="password" label="비밀번호" class="mb-4"
+            :error-messages="passwordErrors" @input="handlePasswordInput"></v-text-field>
 
-          <v-text-field v-model="userInfo.password" type="password" label="비밀번호" placeholder="*********"
-            class="mb-4"></v-text-field>
-
-          <v-text-field v-model="confirmPassword" type="password" label="비밀번호 재입력F" placeholder="*********"
-            class="mb-4"></v-text-field>
-
+          <v-text-field v-model="confirmPassword" type="password" label="비밀번호 재입력" class="mb-4"
+            :error-messages="confirmPasswordErrors" @input="handleConfirmPasswordInput"></v-text-field>
 
           <v-btn @click="sample6_execDaumPostcode" style="margin-bottom: 20px" small color="primary">주소 찾기</v-btn>
-          <v-text-field v-model="userInfo.postcode" label="우편번호" type="text" placeholder="우편번호"></v-text-field>
-          <v-text-field v-model="userInfo.dynamicAddress" label="주소" type="text" placeholder="주소"></v-text-field>
-          <v-text-field v-model="userInfo.detailAddress" label="상세주소" type="text" placeholder="상세주소 입력"
-            ref="detailAddress"></v-text-field>
-          <v-text-field v-model="userInfo.extraAddress" label="참고항목" type="text" placeholder="참고항목"></v-text-field>
 
-
-          <!-- <div class="mb-4">
-            <p class="text-14 mb-1">주소 입력</p>
-            <v-text-field v-model="userInfo.address" placeholder="서울시 동작구" outlined dense hide-details
-              class="mb-4"></v-text-field>
+          <div v-if="addressSelected">
+            <v-text-field v-model="userInfo.postcode" label="우편번호" type="text" placeholder="우편번호"></v-text-field>
+            <v-text-field v-model="userInfo.dynamicAddress" label="주소" type="text" placeholder="주소"></v-text-field>
+            <v-text-field v-model="userInfo.detailAddress" label="상세주소" type="text" placeholder="상세주소 입력"
+              ref="detailAddress"></v-text-field>
+            <v-text-field v-model="userInfo.extraAddress" label="참고항목" type="text" placeholder="참고항목"></v-text-field>
           </div>
-
-          <div class="mb-4">
-            <p class="text-14 mb-1">우편번호 입력</p>
-            <v-text-field v-model="userInfo.postcode" placeholder="123-412" outlined dense hide-details
-              class="mb-4"></v-text-field>
-          </div> -->
 
           <div class="mb-4" hide-details>
             <v-checkbox v-model="checkbox">
@@ -65,20 +52,16 @@
             </v-checkbox>
           </div>
 
-          <!-- 버튼의 disabled 속성에 checkbox 값을 바인딩하여 활성화 여부를 결정 -->
-          <div class="mb-4" hide-details>
-            <v-btn block color="rgb(255,84,82)" class="primary" :disabled="!checkbox" @click="signUp">
-              계정 생성
-            </v-btn>
+          <div class="text-center mb-4">
+            <span class="grey--text text--darken-1">이미 계정이 있으신가요?
+              <a @click="gotoLoginPage()" class="ms-2 grey--text text--darken-4 font-600 underline-link">로그인</a>
+            </span>
           </div>
 
-
-          <div class="py-4 bg-grey-light" hide-details>
-            <div class="text-center">
-              <span class="grey--text text--darken-1">이미 계정이 있으신가요?
-                <a @click="gotoLoginPage()" class="ms-2 grey--text text--darken-4 font-600">로그인</a>
-              </span>
-            </div>
+          <div class="mb-4 text-center" hide-details>
+            <v-btn block color="rgb(255,84,82)" class="primary" :disabled="!isFormValid" @click="signUp">
+              계정 생성
+            </v-btn>
           </div>
 
         </div>
@@ -105,8 +88,31 @@ export default {
         extraAddress: '',
         postcode: '',
       },
-      confirmPassword: ''
-    }
+      confirmPassword: '',
+      nameErrors: [],
+      emailErrors: [],
+      telErrors: [],
+      passwordErrors: [],
+      confirmPasswordErrors: [],
+      addressSelected: false, // 주소가 선택되었는지 여부
+    };
+  },
+  computed: {
+    isFormValid() {
+      return (
+        this.checkbox &&
+        this.nameErrors.length === 0 &&
+        this.emailErrors.length === 0 &&
+        this.telErrors.length === 0 &&
+        this.passwordErrors.length === 0 &&
+        this.confirmPasswordErrors.length === 0 &&
+        this.userInfo.name &&
+        this.userInfo.email &&
+        this.userInfo.tel &&
+        this.userInfo.password &&
+        this.confirmPassword
+      );
+    },
   },
   mounted() {
     const script = document.createElement("script");
@@ -118,15 +124,93 @@ export default {
     gotoLoginPage() {
       this.$router.push('/memberManage/LoginPage');
     },
+    handleNameInput() {
+      if (this.userInfo.name === '') {
+        this.nameErrors = [];
+      } else {
+        this.validateName();
+      }
+    },
+    handleEmailInput() {
+      if (this.userInfo.email === '') {
+        this.emailErrors = [];
+      } else {
+        this.validateEmail();
+      }
+    },
+    handleTelInput() {
+      if (this.userInfo.tel === '') {
+        this.telErrors = [];
+      } else {
+        this.validateTel();
+      }
+    },
+    handlePasswordInput() {
+      if (this.userInfo.password === '') {
+        this.passwordErrors = [];
+      } else {
+        this.validatePassword();
+      }
+    },
+    handleConfirmPasswordInput() {
+      if (this.confirmPassword === '') {
+        this.confirmPasswordErrors = [];
+      } else {
+        this.validateConfirmPassword();
+      }
+    },
+    validateName() {
+      this.nameErrors = [];
+      const namePattern = /^[가-힣a-zA-Z\s]+$/;
+      if (!namePattern.test(this.userInfo.name)) {
+        this.nameErrors.push('이름은 문자만 입력 가능합니다');
+      } else if (this.userInfo.name === '') {
+        this.nameErrors.push('이름은 필수로 입력해야합니다');
+      }
+    },
+    validateEmail() {
+      this.emailErrors = [];
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.userInfo.email)) {
+        this.emailErrors.push('이메일 형식이 아닙니다');
+      }
+    },
+    validateTel() {
+      this.telErrors = [];
+      const telPattern = /^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/;
+      if (!telPattern.test(this.userInfo.tel)) {
+        this.telErrors.push('숫자만 입력해야 합니다');
+      } else {
+        // 전화번호 형식을 010-1234-5678 형식으로 변환
+        const tel = this.userInfo.tel.replace(/[^0-9]/g, '');
+        this.userInfo.tel = tel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+      }
+    },
+    validatePassword() {
+      this.passwordErrors = [];
+      const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&~])[A-Za-z\d@$!%*#?&~]{10,15}$/;
+      if (!passwordPattern.test(this.userInfo.password)) {
+        this.passwordErrors.push('문자와 숫자, 특수문자(!, @, #, $, %, *, ?, &, ~) 합하여 10~15자를 입력해주세요');
+      }
+    },
+    validateConfirmPassword() {
+      this.confirmPasswordErrors = [];
+      if (this.userInfo.password !== this.confirmPassword) {
+        this.confirmPasswordErrors.push('비밀번호가 일치하지 않습니다');
+      }
+    },
     async signUp() {
-      try {
-        // API 요청을 보내기 전에 비밀번호가 일치하는지 확인
-        if (this.userInfo.password !== this.confirmPassword) {
-          // 비밀번호가 일치하지 않으면 에러 메시지를 표시하고 함수 종료
-          alert('비밀번호가 일치하지 않습니다.');
-          return;
-        }
+      this.validateName();
+      this.validateEmail();
+      this.validateTel();
+      this.validatePassword();
+      this.validateConfirmPassword();
 
+      if (!this.isFormValid) {
+        return;
+      }
+
+      try {
         // API 요청을 보내기 전에 데이터 유효성 검사를 수행할 수 있습니다.
 
         // API 요청을 보낼 데이터 생성
@@ -140,7 +224,7 @@ export default {
         };
 
         // API 요청 보내기~
-        const response = await axios.post('http://localhost:8000/memberManage/signupPage', requestData);
+        const response = await axios.post(`${process.env.API_URL}/memberManage/signupPage`, requestData);
 
         // 응답 처리
         console.log('회원 정보 응답:', response.data);
@@ -174,6 +258,8 @@ export default {
           this.userInfo.extraAddress =
             data.bname && /[동|로|가]$/g.test(data.bname) ? data.bname : "";
 
+          this.addressSelected = true; // 주소가 선택되었음을 표시
+
           // 포커스를 상세 주소 필드로 이동
           this.$nextTick(() => {
             this.$refs.detailAddress.focus();
@@ -204,6 +290,22 @@ export default {
     @media(max-width: 500px) {
       padding: 3rem 1rem 0px;
     }
+  }
+
+  .underline-link {
+    text-decoration: underline;
+  }
+
+  .text-center {
+    text-align: center;
+  }
+
+  .mb-4 {
+    margin-bottom: 1.5rem;
+  }
+
+  .mb-10 {
+    margin-bottom: 3rem;
   }
 }
 </style>

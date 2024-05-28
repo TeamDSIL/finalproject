@@ -795,8 +795,8 @@ export default {
     async fetchRestaurantInfo() {
       try {
         const restaurantId = this.$route.params.id
-        const response = await axios.get(`http://localhost:8000/restaurant/detail/${restaurantId}`);
-
+        const response = await axios.get(`${process.env.API_URL}/restaurant/detail/${restaurantId}`);
+        
         if (response.status === 200) {
           const restaurantInfo = response.data[0]; // 배열의 첫 번째 항목을 가져옴
 
@@ -822,7 +822,7 @@ export default {
     },
     async login(username, password) {
       try {
-        const response = await axios.post('http://localhost:8000/memberManage/loginPage', {
+        const response = await axios.post(`${process.env.API_URL}/memberManage/loginPage`, {
           username,
           password
         });
@@ -854,7 +854,7 @@ export default {
           throw new Error('No token found');
         }
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get('http://localhost:8000/userInfo/me', {
+        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
           headers: {
             'Authorization': `Bearer ${token}` // "Bearer "를 추가
           },
@@ -1079,6 +1079,7 @@ export default {
         const timeEnum = this.timeToEnum(`${this.selectedHour}:${this.selectedMinute}`);
 
         const reservationData = {
+
           reservationDate: this.selectedDate,
           peopleCount: this.numberOfPeople,
           reservationTime: timeEnum,
@@ -1087,6 +1088,7 @@ export default {
         };
         if (this.user) {
           reservationData.memberId = this.user.id;
+
         }
         if (this.riceBallInput > 0) {
           // 사용한 포인트만큼 차감
@@ -1161,7 +1163,6 @@ export default {
           this.reservationData.memberId = this.user.id; // memberId 추가
         }
 
-
         // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
         if (totalAmount === 0) {
           this.showSpinner = true;
@@ -1180,6 +1181,7 @@ export default {
                   reservationId: reservationId
                 }
               })
+
                 .then(paymentResponse => {
                   this.showSpinner = false;
                   this.showPaymentModal = false;
@@ -1191,7 +1193,9 @@ export default {
                   this.resetReservationData();
                 })
                 .catch(paymentError => {
+
                   console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
+
                   this.showSpinner = false;
                 });
             })

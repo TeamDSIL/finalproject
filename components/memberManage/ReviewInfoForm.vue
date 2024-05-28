@@ -75,7 +75,7 @@ export default {
           try {
         console.log(reviewId+"삭제할 리뷰아이디");
         const response = await axios.delete(
-          `http://localhost:8000/memberManage/removeReview`,
+          `${process.env.API_URL}/memberManage/removeReview`,
           {
             data: {
               reviewId: reviewId, // bookmarkId를 reviewId로 전달
@@ -97,7 +97,7 @@ export default {
           try {
         console.log(reviewId+"삭제할 댓글아이디");
         const response = await axios.delete(
-          `http://localhost:8000/memberManage/removeReply`,
+          `${process.env.API_URL}/memberManage/removeReply`,
           {
             data: {
                 reviewId: reviewId, // bookmarkId를 reviewId로 전달

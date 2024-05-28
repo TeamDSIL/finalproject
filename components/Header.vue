@@ -11,14 +11,15 @@
         <v-dialog v-model="dsilModal" width="600">
           <v-card>
             <v-card-title>
-              <span style="font-size: large; font-weight: bold; margin-top: 10px;">빠른 검색</span>
+              <span style="font-size: large; font-weight: bold; margin-top: 10px">빠른 검색</span>
             </v-card-title>
             <v-card-text>
               <div v-for="category in categories" :key="category.name" class="my-3">
-                <div style="margin-bottom: 10px; display: flex;"><v-img contain
-                    :src="require(`~/assets/images/clikCategory/${category.img}.png`)" width="20px"
-                    style="max-width: 20px; margin-right: 5px"></v-img><span
-                    style="font-weight: bold; font-size: large; color: black;">{{ category.displayName }}</span></div>
+                <div style="margin-bottom: 10px; display: flex">
+                  <v-img contain :src="require(`~/assets/images/clikCategory/${category.img}.png`)
+                    " width="20px" style="max-width: 20px; margin-right: 5px"></v-img><span
+                    style="font-weight: bold; font-size: large; color: black">{{ category.displayName }}</span>
+                </div>
 
                 <div class="button-grid">
                   <v-btn v-for="item in category.items" :key="item.name" :class="{
@@ -42,12 +43,11 @@
           </v-card>
         </v-dialog>
 
-
         <div class="search-bar-container flex-grow-1 d-none d-md-flex border rounded">
           <v-btn icon tile large text class="text-capitalize rounded-0" width="120px"
-            style="background-color: rgb(210, 63, 87);" @click="dsilModal = true">
+            style="background-color: rgb(210, 63, 87)" @click="dsilModal = true">
             <!-- <v-icon small>mdi-crosshairs-gps</v-icon> -->
-            <span style="color: white; font-weight: bold;">빠른검색하기</span>
+            <span style="color: white; font-weight: bold">빠른검색하기</span>
           </v-btn>
           <input class="white flex-grow-1 ps-5" type="text" placeholder="카테고리 및 음식이름을 입력해주세요" v-model="searchQuery"
             @keyup.enter="search" />
@@ -56,23 +56,31 @@
         </div>
         <v-spacer></v-spacer>
 
-
         <!-- <v-btn light text href="http://localhost:3000/memberManage/loginPage">
           <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
           <span class="d-none d-sm-block">{{ user ? user.email : '' }}</span>
         </v-btn> -->
+
         <template v-if="user">
           <v-btn light text @click="logout">
             <span class="d-none d-sm-block">로그아웃</span>
           </v-btn>
-          <v-btn light text href="http://localhost:3000/memberManage/userMyPage">
+          <v-btn v-if="user.permission.permission === 'USER'" light text :href="`${frontUrl}/memberManage/userMyPage`">
             <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-            <span class="d-none d-sm-block">{{ user ? user.email : '' }}</span>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
+          </v-btn>
+          <v-btn v-else-if="user.permission.permission === 'OWNER'" light text
+            :href="`${frontUrl}/memberManage/ownerMyPage`">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
+          </v-btn>
+          <v-btn v-else light text :href="`${frontUrl}/memberManage/AdminManageUserPage`">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
           </v-btn>
         </template>
-
         <template v-else>
-          <v-btn light text href="http://localhost:3000/memberManage/loginPage">
+          <v-btn light text :href="`${frontUrl}/memberManage/loginPage`">
             <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
             <span class="d-none d-sm-block">로그인</span>
           </v-btn>
@@ -124,7 +132,8 @@
   </div>
 </template>
 <script>
-import axios from 'axios';
+import axios from "axios";
+import { EventBus } from '~/plugins/event-bus.js';
 
 export default {
   data: () => ({
@@ -245,13 +254,16 @@ export default {
     ],
   }),
   methods: {
-    async fetchUserInfo() {
+    async checkLoginAndFetchUserInfo() {
+      const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+      if (token) {
+        await this.fetchUserInfo(token);
+      } else {
+        console.log('아직 로그인하지 않아 토큰이 없음');
+      }
+    },
+    async fetchUserInfo(token) {
       try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
-
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
         const response = await axios.get('http://localhost:8000/userInfo/me', {
           headers: {
@@ -267,6 +279,7 @@ export default {
           this.user = userInfo;
           console.log(this.user);
           console.log(this.user.id);
+          await this.loadUserDetails();
         } else {
           console.error('Failed to fetch user info:', response);
         }
@@ -274,20 +287,29 @@ export default {
         console.error('Error fetching user info:', error);
       }
     },
+    async loadUserDetails() {
+      try {
+        const email = this.user.email;
+        const response = await axios.get(`http://localhost:8000/memberManage/userMyPage?email=${email}`);
+        this.userInfo = response.data;
+      } catch (error) {
+        console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+      }
+    },
     async logout() {
       try {
         console.log('Sending logout request...');
-        const response = await axios.post('http://localhost:8000/memberManage/logout', {}, { withCredentials: true });
+        const response = await axios.post(`${process.env.API_URL}/memberManage/logout`, {}, { withCredentials: true });
         if (response.status === 200) {
-          console.log('Logout successful');
-          localStorage.removeItem('token');
+          console.log("Logout successful");
+          localStorage.removeItem("token");
           this.user = null;
-          this.$router.push('/memberManage/loginPage');
+          this.$router.push("/memberManage/loginPage");
         } else {
-          console.error('Failed to logout:', response);
+          console.error("Failed to logout:", response);
         }
       } catch (error) {
-        console.error('Error logging out:', error);
+        console.error("Error logging out:", error);
       }
     },
     toggleNavClass() {
@@ -312,18 +334,18 @@ export default {
     search() {
       // 쿼리 파라미터를 담을 객체를 생성합니다.
       let queryParams = {};
-      
+
       // 입력된 검색어 처리
       if (this.searchQuery.trim() !== "") {
         queryParams["search"] = [encodeURIComponent(this.searchQuery.trim())]; // 배열로 저장
       }
-      
+
       // 카테고리별로 쿼리 파라미터를 생성합니다.
       this.categories.forEach((category) => {
         category.selected.forEach((item) => {
           // 시설 관련 카테고리는 'facility' 파라미터로, 나머지는 'category' 파라미터로 추가합니다.
           const paramKey =
-          category.name === "FACILITIES" ? "facility" : "category";
+            category.name === "FACILITIES" ? "facility" : "category";
           // 해당 키에 대한 배열이 없으면 생성합니다.
           if (!queryParams[paramKey]) {
             queryParams[paramKey] = [];
@@ -332,33 +354,43 @@ export default {
           queryParams[paramKey].push(item.name);
         });
       });
-      
+
       // 쿼리 파라미터 문자열로 변환합니다.
       let queryString = Object.keys(queryParams)
-      .map(
-        (key) => queryParams[key].map((value) => `${key}=${value}`).join("&") // 배열을 이용해 join 함수 호출
-      )
-      .join("&");
-      
+        .map(
+          (key) => queryParams[key].map((value) => `${key}=${value}`).join("&") // 배열을 이용해 join 함수 호출
+        )
+        .join("&");
+
       // 생성된 쿼리 파라미터를 포함하는 URL을 생성합니다.
-      const searchUrl = `http://localhost:3000/restaurant/list?${queryString}`;
-      
+      const searchUrl = `${process.env.FRONT_URL}/restaurant/list?${queryString}`;
+
       // URL로 리디렉션합니다.
       window.location.href = searchUrl;
-      
+
       // 모달 창을 닫습니다.
       this.closeModal();
     },
   },
-    async mounted() {
-      await this.fetchUserInfo();
-      window.document.onscroll = () => {
-        if (window.scrollY > 400) {
+
+  async mounted() {
+    await this.checkLoginAndFetchUserInfo();
+    window.document.onscroll = () => {
+      if (window.scrollY > 400) {
         this.active = true;
       } else {
         this.active = false;
       }
     };
+
+    EventBus.$on('user-logged-in', async () => {
+      await this.checkLoginAndFetchUserInfo();
+    });
+  },
+  computed: {
+    frontUrl() {
+      return process.env.FRONT_URL;
+    }
   },
 };
 </script>

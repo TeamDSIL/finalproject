@@ -26,16 +26,38 @@ export default {
             default: () => ({}),
         },
     },
+    data() {
+        return {
+            dialog: false,
+        };
+    },
     methods: {
         // 수정 확인 버튼 클릭 시 실행될 메서드
         async handleDelete() {
+            this.logout();
             try {
-                const response = await axios.delete(`http://localhost:8000/memberManage/userMyPage?email=${this.userInfo.email}`);
+                const response = await axios.delete(`${process.env.API_URL}/memberManage/userMyPage?email=${this.userInfo.email}`);
                 this.$router.push('/');
             } catch (error) {
                 alert('삭제 요청에 실패하였습니다.');
                 this.$router.push('/memberManage/usermypage');
                 console.error('삭제 요청 실패:', error);
+            }
+        },
+        async logout() {
+            try {
+                console.log('Sending logout request...');
+                const response = await axios.post(`${process.env.API_URL}/memberManage/logout`, {}, { withCredentials: true });
+                if (response.status === 200) {
+                    console.log('Logout successful');
+                    localStorage.removeItem('token');
+                    this.user = null;
+                    this.$router.push('/memberManage/loginPage');
+                } else {
+                    console.error('Failed to logout:', response);
+                }
+            } catch (error) {
+                console.error('Error logging out:', error);
             }
         },
     },
