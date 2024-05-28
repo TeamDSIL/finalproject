@@ -279,21 +279,11 @@ export default {
           this.user = userInfo;
           console.log(this.user);
           console.log(this.user.id);
-          await this.loadUserDetails();
         } else {
           console.error('Failed to fetch user info:', response);
         }
       } catch (error) {
         console.error('Error fetching user info:', error);
-      }
-    },
-    async loadUserDetails() {
-      try {
-        const email = this.user.email;
-        const response = await axios.get(`http://localhost:8000/memberManage/userMyPage?email=${email}`);
-        this.userInfo = response.data;
-      } catch (error) {
-        console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
       }
     },
     async logout() {
@@ -304,6 +294,7 @@ export default {
           console.log("Logout successful");
           localStorage.removeItem("token");
           this.user = null;
+          EventBus.$emit('user-logged-out'); // 로그아웃 이벤트 발행
           this.$router.push("/memberManage/loginPage");
         } else {
           console.error("Failed to logout:", response);
@@ -385,6 +376,10 @@ export default {
 
     EventBus.$on('user-logged-in', async () => {
       await this.checkLoginAndFetchUserInfo();
+    });
+
+    EventBus.$on('user-logged-out', () => {
+      this.user = null;
     });
   },
   computed: {

@@ -24,6 +24,11 @@
             <!-- 주소 찾기 버튼 -->
             <v-btn @click="sample6_execDaumPostcode" style="margin-bottom: 20px" small color="primary">주소 찾기</v-btn>
 
+            <!-- 기존 주소 표시 -->
+            <v-text-field v-if="!addressSelected" v-model="restaurantInfo.address" label="주소" type="text" readonly
+                class="mb-4"></v-text-field>
+
+            <!-- 새로운 주소 입력 -->
             <div v-if="addressSelected">
                 <v-text-field v-model="restaurantInfo.postcode" label="우편번호" type="text" placeholder="우편번호"
                     class="mb-4"></v-text-field>
@@ -34,6 +39,7 @@
                 <v-text-field v-model="restaurantInfo.extraAddress" label="참고항목" type="text" placeholder="참고항목"
                     class="mb-4"></v-text-field>
             </div>
+
             <!-- 수정 확인 버튼 -->
             <div>
                 <v-btn id="modify-btn" @click="handleModify" color="rgb(255,84,82)" class="primary">수정</v-btn>
@@ -73,6 +79,13 @@ export default {
         script.src =
             "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
         document.head.appendChild(script);
+
+        // 기존 주소를 나눠서 초기화
+        if (this.restaurantInfo.address) {
+            const addressParts = this.restaurantInfo.address.split(' ');
+            this.restaurantInfo.dynamicAddress = addressParts.slice(0, -1).join(' ');
+            this.restaurantInfo.detailAddress = addressParts.slice(-1).join(' ');
+        }
     },
     methods: {
         handleTelInput() {
@@ -100,7 +113,11 @@ export default {
             }
 
             try {
-                // API 요청을 보낼 데이터 생성
+                // 주소와 관련된 필드가 비어있으면 기존 값을 사용
+                const address = this.addressSelected
+                    ? `${this.restaurantInfo.dynamicAddress} ${this.restaurantInfo.detailAddress}`
+                    : this.restaurantInfo.address;
+
                 const requestData = {
                     id: this.restaurantInfo.id,
                     email: this.restaurantInfo.email,
@@ -108,7 +125,8 @@ export default {
                     name: this.restaurantInfo.name,
                     registerNumber: this.restaurantInfo.registerNumber,
                     tel: this.restaurantInfo.tel,
-                    address: `${this.restaurantInfo.dynamicAddress} ${this.restaurantInfo.detailAddress}`,
+                    address: address,
+                    postcode: this.restaurantInfo.postcode || this.restaurantInfo.oldPostcode,
                 };
 
                 console.log(requestData);
@@ -120,13 +138,13 @@ export default {
                 console.log('수정 응답:', response.data);
 
                 // 부모 컴포넌트로 수정된 정보를 전달
-                this.$emit('modify-user', requestData);
+                this.$emit('modify-restaurant', requestData);
 
                 // 모달 창을 닫음
                 this.$emit('close');
 
-                // 수정이 완료되면 이전 페이지로 이동하거나 필요한 작업을 수행할 수 있습니다.
-                this.$router.push('/memberManage/adminManageRestaurantPage');
+                // 현재 페이지로 리다이렉션 (새로고침)
+                this.$router.go(0);
 
             } catch (error) {
                 // API 요청 실패 시 에러 처리
@@ -140,8 +158,8 @@ export default {
                 // 삭제 완료 후 모달 창 닫음
                 this.$emit('close');
 
-                // 페이지 리다이렉션
-                this.$router.push('/memberManage/adminManageRestaurantPage');
+                // 현재 페이지로 리다이렉션 (새로고침)
+                this.$router.go(0);
 
             } catch (error) {
                 console.error('삭제 요청 실패:', error);

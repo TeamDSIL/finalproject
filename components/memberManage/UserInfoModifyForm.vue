@@ -135,11 +135,11 @@ export default ({
         validateTel() {
             this.telErrors = [];
             const telPattern = /^[0-9]{3}-?[0-9]{4}-?[0-9]{4}$/;
-            if (!telPattern.test(this.localUserInfo.tel) || this.localUserInfo.tel.replace(/[^0-9]/g, '').length !== 11) {
+            if (!telPattern.test(this.userInfo.tel) || this.userInfo.tel.replace(/[^0-9]/g, '').length !== 11) {
                 this.telErrors.push('휴대전화 번호 11자리를 입력해주세요.');
             } else {
-                const tel = this.localUserInfo.tel.replace(/[^0-9]/g, '');
-                this.localUserInfo.tel = tel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+                const tel = this.userInfo.tel.replace(/[^0-9]/g, '');
+                this.userInfo.tel = tel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
             }
         },
         validatePassword() {
@@ -167,13 +167,18 @@ export default ({
             }
 
             try {
+                // 주소 필드가 비어 있으면 기존 주소 값 사용
+                const address = this.userInfo.dynamicAddress && this.userInfo.detailAddress
+                    ? `${this.userInfo.dynamicAddress} ${this.userInfo.detailAddress}`
+                    : this.userInfo.address;
+
                 // API 요청을 보낼 데이터 생성
                 const requestData = {
                     email: this.userInfo.email,
                     password: this.modifiedPassword,
                     name: this.userInfo.name,
                     tel: this.userInfo.tel,
-                    address: `${this.userInfo.dynamicAddress} ${this.userInfo.detailAddress}`,
+                    address: address,
                     postcode: this.userInfo.postcode,
                     point: {
                         id: this.userInfo.point.id,
@@ -182,7 +187,7 @@ export default ({
                     }
                 };
 
-                // API 요청 보내기~
+                // API 요청 보내기
                 const response = await axios.post(`${process.env.API_URL}/memberManage/userMyPage`, requestData);
 
                 // 응답 처리
