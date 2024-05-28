@@ -97,7 +97,7 @@ export default {
       try {
         const loginDTO = { email: this.email, password: this.password };
         console.log(loginDTO);
-        const response = await axios.post('http://localhost:8000/memberManage/loginPage', loginDTO, { withCredentials: true });
+        const response = await axios.post(`${process.env.API_URL}/memberManage/loginPage`, loginDTO, { withCredentials: true });
         console.log('post 요청');
 
         if (response.status === 200) {
@@ -113,7 +113,7 @@ export default {
             }
 
             // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-            const response = await axios.get('http://localhost:8000/userInfo/me', {
+            const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
               headers: {
                 'Authorization': `${token}`
               },
