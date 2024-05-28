@@ -265,7 +265,7 @@ export default {
     async fetchUserInfo(token) {
       try {
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get('http://localhost:8000/userInfo/me', {
+        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
           headers: {
             'Authorization': `${token}`
           },
@@ -290,7 +290,7 @@ export default {
     async loadUserDetails() {
       try {
         const email = this.user.email;
-        const response = await axios.get(`http://localhost:8000/memberManage/userMyPage?email=${email}`);
+        const response = await axios.get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`);
         this.userInfo = response.data;
       } catch (error) {
         console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);

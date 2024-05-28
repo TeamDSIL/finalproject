@@ -880,7 +880,7 @@ export default {
       }
     },
     cancelPayment() {
-      axios.post('http://localhost:8000/restaurant/cancelreservation', {
+      axios.post(`${process.env.API_URL}/restaurant/cancelreservation`, {
         restaurantId: this.$route.params.id,
         numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
       })
@@ -1026,7 +1026,7 @@ export default {
 
         this.tablesNeeded = tablesNeeded;
 
-        axios.post('http://localhost:8000/restaurant/reservetable', {
+        axios.post(`${process.env.API_URL}/restaurant/reservetable`, {
           numberOfTables: tablesNeeded,
           restaurantId: this.$route.params.id // 이 부분을 추가하여 restaurantId를 전달합니다.
 
@@ -1052,7 +1052,7 @@ export default {
       }
     },
     cancelReservation() {
-      axios.post('http://localhost:8000/restaurant/cancelreservation', {
+      axios.post(`${process.env.API_URL}/restaurant/cancelreservation`, {
         restaurantId: this.$route.params.id,
         numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
       })
@@ -1097,7 +1097,7 @@ export default {
           this.updateUserPoints();
         }
         // axios를 사용하여 백엔드로 예약 정보 전송
-        axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
+        axios.post(`${process.env.API_URL}/restaurant/detail`, reservationData)
           .then(response => {
             // 예약 정보가 성공적으로 전송되었을 때의 처리
             console.log('예약 정보가 성공적으로 전송되었습니다:', reservationData);
@@ -1171,12 +1171,12 @@ export default {
             pay_method: "point",
             pointUsage: riceBallInput
           }
-          axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
+          axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
             .then(reservationResponse => {
               console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
               // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
               const reservationId = reservationResponse.data;
-              axios.post('http://localhost:8000/restaurant/payment', pointData, {
+              axios.post(`${process.env.API_URL}/restaurant/payment`, pointData, {
                 params: {
                   reservationId: reservationId
                 }
