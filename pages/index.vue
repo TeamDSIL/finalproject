@@ -31,7 +31,7 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
+                  :to="`${process.env.FRONT_URL}/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -70,7 +70,7 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
+                  :to="`${process.env.FRONT_URL}/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -109,7 +109,7 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/list?category=${item.name}`"
+                  :to="`${process.env.FRONT_URL}/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
                   <v-avatar size="200" class="mb-4 hover-effect">
