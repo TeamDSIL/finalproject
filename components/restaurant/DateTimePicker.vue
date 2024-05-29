@@ -8,14 +8,14 @@
       <v-card>
         <!-- 예약 날짜 선택 -->
         <v-date-picker v-model="date" :min="minDate" scrollable locale="ko" full-width></v-date-picker>
-        <p style="margin-left: 10px;">예약 시간을 선택해주세요.<span class="time-description"></span></p>
+        <p style="margin-left: 10px;">예약 시간을 선택해주세요.</p>
         <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
-              :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
-              :disabled="isDisabled(time)" :style="{ width: '80px' }">
-              {{ time }}
+            :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
+      :disabled="isDisabled(time)">
+      {{ time }}
             </v-btn>
           </v-row>
         </div>
@@ -25,7 +25,7 @@
         <v-card-actions>
           <v-btn color="primary" text @click="set" :disabled="numberOfPeople <= 0">예약하기</v-btn>
           <v-spacer></v-spacer>
-          <v-btn color="primary" text @click=cancelReservation()>닫기</v-btn>
+          <v-btn color="primary" text @click= cancelReservation()>닫기</v-btn>
         </v-card-actions>
       </v-card>
     </v-dialog>
@@ -93,7 +93,6 @@
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">예약이 확정되었습니다!</p>
-          <p>4초 후에 자동으로 창이 닫힙니다.</p>
           <p>밥알 {{ riceBallPoints }}개 적립완료 (현재 누적 밥알 {{ totalRiceBallPoints + 100 }}개)</p>
         </v-card-text>
         <v-card-actions class="d-flex justify-center">
@@ -109,8 +108,8 @@
         <v-card-title class="title">
           <p style="margin-top: 2px;">예약금 결제</p>
           <v-icon @click="cancelPayment" style="position: absolute; right: 9px; top: 20px;">mdi-close</v-icon>
-        </v-card-title>
-        <v-card-title class="restaurant-name" style="margin-bottom: 13px;">
+    </v-card-title>
+            <v-card-title class="restaurant-name" style="margin-bottom: 13px;">
           <div style="margin-top: -20px;">{{ restaurantName }}</div>
         </v-card-title>
 
@@ -152,7 +151,7 @@
             <p style="font-weight: bold;">
               현재 보유 밥알: {{ totalRiceBallPoints }} 밥알<br>
               몇 밥알? : <input type="number" v-model="riceBallInput" @input="handleInputChange"
-                placeholder="사용할 밥알을 입력해주세요." pattern="[0-9]*">
+                placeholder="사용할 밥알을 입력해주세요." pattern="[0-9]*">   
             </p>
             <br>
             <span style="font-weight: bold; color: black;">레스토랑 유의사항</span><br>
@@ -167,8 +166,7 @@
           <span style="font-weight: bold; color: black; margin-top: 20px;">고객 요청 사항</span>
           <div
             style="background-color:rgba(251, 251, 251, 0.89);; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
-            <textarea v-model="customerRequest" rows="4" cols="50"
-              style="resize: none; border: none; background-color: transparent;"
+            <textarea v-model="customerRequest" rows="4" cols="50" style="resize: none; border: none; background-color: transparent;"
               placeholder="레스토랑에 요쳥하실 내용을 입력해주세요."></textarea>
           </div>
         </div>
@@ -638,10 +636,9 @@
                 <span>{{ riceBallInput }}밥알</span>
               </div>
             </div>
-          </v-card-text>
-          <div style="text-align: center; margin-top: 20px;">
-            <v-btn color="primary" large width="460px" @click="payment" :disabled="!isPaymentButtonEnabled">결제하기</v-btn>
-          </div>
+          </v-card-text>    <div style="text-align: center; margin-top: 20px;">
+            <v-btn color="primary" large width="460px" @click="payment" :disabled="!isPaymentButtonEnabled">결제하기</v-btn>    
+    </div>
         </div>
       </v-card>
     </v-dialog>
@@ -679,7 +676,7 @@
   </v-col>
 </template>
 
-<script>
+  <script>
 import axios from 'axios';
 
 export default {
@@ -699,7 +696,7 @@ export default {
       riceBallInput: '',
       numberOfPeople: 1,
       timeOptions: [],
-      depositAmount: 0,
+      depositAmount:0,
       riceBallPoints: 100,
       totalRiceBallPoints: 0,
       showConfirmationModal: false,
@@ -716,26 +713,26 @@ export default {
       privacyModal: false,
       reservationPolicyAgreed: false,
       agreeTerms: false,
-      htmlContent: '',
+      htmlContent: '', 
       showSpinner: false,
       customerRequest: '',
       selectedButtonIndex: null,
-      currentTime: new Date(),
-      selectedDate: new Date(),
-      user: null,
-      restaurant_table_count: 0, // 테이블 수 추가
+    currentTime: new Date(),
+    selectedDate: new Date(),
+    user: null,
+    restaurant_table_count: 0, // 테이블 수 추가
     };
   },
-  mounted() {
+  mounted(){
     this.generateTimeOptions();
     this.fetchUserInfo();
     this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
   },
   watch: {
     selectedDate(newVal) {
-      // 선택된 날짜가 변경될 때마다 현재 시간을 갱신
-      this.currentTime = new Date();
-    },
+    // 선택된 날짜가 변경될 때마다 현재 시간을 갱신
+    this.currentTime = new Date();
+  },
     showConfirmationModal(newVal) {
       if (newVal) {
         this.startTimer();
@@ -790,7 +787,7 @@ export default {
   destroyed() {
     clearInterval(this.timerInterval);
   },
-
+  
   methods: {
     async fetchRestaurantInfo() {
       try {
@@ -799,17 +796,17 @@ export default {
         
         if (response.status === 200) {
           const restaurantInfo = response.data[0]; // 배열의 첫 번째 항목을 가져옴
-
+          
           if (restaurantInfo && restaurantInfo.restaurant_deposit !== undefined) {
             this.depositAmount = restaurantInfo.restaurant_deposit;
             this.restaurant_table_count = restaurantInfo.restaurant_table_count;
             console.log('Deposit Amount:', this.depositAmount);
             console.log('테이블 갯수 ', this.restaurant_table_count);
             if (this.numberOfTables > this.restaurant_table_count) {
-              console.log("예약 가능한 테이블 수가 모자릅니다.");
-              alert("예약 가능한 테이블 수가 모자릅니다.");
-            }
-          } else if (restaurantInfo.restaurant_deposit == null) {
+            console.log("예약 가능한 테이블 수가 모자릅니다.");
+            alert("예약 가능한 테이블 수가 모자릅니다.");
+          }
+          } else if(restaurantInfo.restaurant_deposit==null){
             this.showConfirmationModal = true;
           }
         } else {
@@ -837,7 +834,7 @@ export default {
 
           // 회원 아이디를 서버에 POST로 전달
           await this.sendMemberId(memberId);
-
+          
           this.fetchUserInfo(); // 로그인 후 사용자 정보 요청
         } else {
           console.error('Login failed:', response);
@@ -880,22 +877,10 @@ export default {
       }
     },
     cancelPayment() {
-      axios.post(`${process.env.API_URL}/restaurant/cancelreservation`, {
-        restaurantId: this.$route.params.id,
-        numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
-      })
-        .then(response => {
-          console.log('테이블이 성공적으로 복원되었습니다:', response.data);
-          this.resetReservationData();
-        })
-        .catch(error => {
-          console.error('테이블 복원 중 오류가 발생했습니다:', error);
-          alert("테이블 복원 중 오류가 발생했습니다.");
-        });
       this.showPaymentModal = false;
       this.resetReservationData();
     },
-
+  
     formatPhoneNumber() {
       let cleaned = ('' + this.visitorContact).replace(/\D/g, '');
       let match = cleaned.match(/^(\d{3})(\d{3,4})(\d{4})$/);
@@ -941,12 +926,12 @@ export default {
           this.timerInterval = null;
           this.timer = '7:00';
           if (this.showConfirmationModal || this.showPaymentModal) {
-            this.alertMessage = "결제 시간이 만료되었습니다.";
-            this.alertSnackbar = true;
-            this.showConfirmationModal = false;
-            this.showPaymentModal = false;
-          }
+          this.alertMessage = "결제 시간이 만료되었습니다.";
+          this.alertSnackbar = true;
+          this.showConfirmationModal = false;
+          this.showPaymentModal = false;
         }
+      }
       }, 1000);
     },
     dismissAlert() {
@@ -965,40 +950,40 @@ export default {
     generateTimeOptions() {
       this.timeOptions = []; // 배열 초기화
       for (let hour = 12; hour <= 21; hour++) {
-        this.timeOptions.push(`${hour.toString().padStart(2, '0')}:00`);
-      }
+    this.timeOptions.push(`${hour.toString().padStart(2, '0')}:00`);
+  }
     },
     selectTime(index) {
-      if (this.isDisabled(this.timeOptions[index])) return;
+    if (this.isDisabled(this.timeOptions[index])) return;
 
-      this.selectedButtonIndex = index;
-      const time = this.timeOptions[index];
-      const [hour, minute] = time.split(":");
-      this.selectedHour = hour;
-      this.selectedMinute = minute;
-    },
-    isDisabled(time) {
-      const [hour, minute] = time.split(":").map(Number);
-      const currentHour = this.currentTime.getHours();
-      const currentMinute = this.currentTime.getMinutes();
+    this.selectedButtonIndex = index;
+    const time = this.timeOptions[index];
+    const [hour, minute] = time.split(":");
+    this.selectedHour = hour;
+    this.selectedMinute = minute;
+  },
+  isDisabled(time) {
+    const [hour, minute] = time.split(":").map(Number);
+    const currentHour = this.currentTime.getHours();
+    const currentMinute = this.currentTime.getMinutes();
 
-      const selectedDate = new Date(this.date); // 선택한 날짜로부터 Date 객체 생성
-      const currentDate = new Date();
+    const selectedDate = new Date(this.date); // 선택한 날짜로부터 Date 객체 생성
+    const currentDate = new Date();
 
-      const isToday = selectedDate.toDateString() === currentDate.toDateString();
+    const isToday = selectedDate.toDateString() === currentDate.toDateString();
 
-      if (isToday) {
-        if (hour < currentHour || (hour === currentHour && minute < currentMinute)) {
-          return true;
-        }
+    if (isToday) {
+      if (hour < currentHour || (hour === currentHour && minute < currentMinute)) {
+        return true;
       }
+    }
 
-      return false;
-    },
-    isSelected(time) {
-      const [hour, minute] = time.split(":");
-      return this.selectedHour === hour && this.selectedMinute === minute;
-    },
+    return false;
+  },
+  isSelected(time) {
+    const [hour, minute] = time.split(":");
+    return this.selectedHour === hour && this.selectedMinute === minute;
+  },
     timeToEnum(time) {
       const [hour] = time.split(":").map(Number);
       let period = "AFTERNOON";
@@ -1023,270 +1008,238 @@ export default {
 
         const people = this.numberOfPeople;
         const tablesNeeded = Math.ceil(people / 4);
+        if (tablesNeeded <= this.restaurant_table_count) {
+      // 예약 가능한 테이블이 충분한 경우
+      this.showConfirmationModal = true; // 확정 모달 창 표시
+    } else {
+      // 예약 가능한 테이블이 부족한 경우
+      alert("예약 가능한 테이블 수를 초과했습니다. 다른 시간대를 선택하거나 인원 수를 줄여주세요.");
+    }
+  }
 
-        this.tablesNeeded = tablesNeeded;
-
-        axios.post(`${process.env.API_URL}/restaurant/reservetable`, {
-          numberOfTables: tablesNeeded,
-          restaurantId: this.$route.params.id // 이 부분을 추가하여 restaurantId를 전달합니다.
-
-        })
-          .then(response => {
-            // 성공적으로 테이블이 선점된 경우
-            console.log('테이블이 성공적으로 선점되었습니다:', response.data);
-            // 예약 가능한 테이블이 충분한 경우
-            this.showConfirmationModal = true; // 확정 모달 창 표시
-          })
-          .catch(error => {
-            // 테이블 선점 중 오류 발생 시의 처리
-            alert("남은 테이블이 없어 예약에 실패하였습니다.");
-          });
-
-        // 기존 모달 창은 닫기
-        this.modal = false;
-      }
-    },
+  this.modal = false; // 기존 모달 창은 닫기
+},
     handleTouchMove(event) {
       if (Math.abs(event.touches[0].clientY - event.touches[0].pageY) > 10) {
         event.preventDefault();
       }
     },
     cancelReservation() {
-      axios.post(`${process.env.API_URL}/restaurant/cancelreservation`, {
-        restaurantId: this.$route.params.id,
-        numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
-      })
-        .then(response => {
-          console.log('테이블이 성공적으로 복원되었습니다:', response.data);
-          this.resetReservationData();
-        })
-        .catch(error => {
-          console.error('테이블 복원 중 오류가 발생했습니다:', error);
-          alert("테이블 복원 중 오류가 발생했습니다.");
-        });
-      this.modal = false;
+      this.modal=false;
       this.showConfirmationModal = false;
       this.resetReservationData();
     },
-    confirmReservation() {
-      if (this.depositAmount) {
-        this.showConfirmationModal = false;
-        this.showPaymentModal = true;
-      } else {
-        this.showConfirmationModal = false;
-        this.showReservationConfirmationModal = true;
+      confirmReservation() {
+        if (this.depositAmount) {
+          this.showConfirmationModal = false;
+          this.showPaymentModal = true;
+        } else {
+          this.showConfirmationModal = false;
+          this.showReservationConfirmationModal = true;
 
-        const timeEnum = this.timeToEnum(`${this.selectedHour}:${this.selectedMinute}`);
+          const timeEnum = this.timeToEnum(`${this.selectedHour}:${this.selectedMinute}`);
 
         const reservationData = {
-
-          reservationDate: this.selectedDate,
-          peopleCount: this.numberOfPeople,
-          reservationTime: timeEnum,
-          depositAmount: this.depositAmount,
-          restaurantId: this.$route.params.id
-        };
-        if (this.user) {
-          reservationData.memberId = this.user.id;
-
-        }
-        if (this.riceBallInput > 0) {
-          // 사용한 포인트만큼 차감
-          this.totalRiceBallPoints -= this.riceBallInput;
-          // 서버에도 업데이트된 포인트 정보 전송
-          this.updateUserPoints();
-        }
-        // axios를 사용하여 백엔드로 예약 정보 전송
-        axios.post(`${process.env.API_URL}/restaurant/detail`, reservationData)
-          .then(response => {
-            // 예약 정보가 성공적으로 전송되었을 때의 처리
-            console.log('예약 정보가 성공적으로 전송되었습니다:', reservationData);
-            setTimeout(() => {
-              this.$router.go(0); // 혹은 window.location.reload();
-            }, 4000); if (response.data.success) {
-              // 예약 성공적으로 처리된 경우
-              console.log('예약이 성공적으로 처리되었습니다.');
-            }
-          })
-          .catch(error => {
-            // 예약 정보 전송 중 오류 발생 시의 처리
-            console.error('예약 정보 전송 중 오류가 발생했습니다:', error);
-          });
+               reservationDate: this.selectedDate,
+               peopleCount: this.numberOfPeople,
+               reservationTime: timeEnum,
+               depositAmount: this.depositAmount,
+               restaurantId: this.$route.params.id
+          };
+          if (this.user) {
+        reservationData.memberId = this.user.id;
       }
-    },
-    confirmReservation2() {
-      if (this.depositAmount) {
-        this.showConfirmationModal = false;
-        this.showPaymentModal = true;
-      } else {
-        this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
-        this.showConfirmationModal = false;
-        this.showReservationConfirmationModal = true;
-      }
-    },
-    payment() {
-      // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
-      if (this.reservationPolicyAgreed && this.agreeTerms) {
-        const depositAmount = this.depositAmount;
-        const numberOfPeople = this.numberOfPeople;
-        const riceBallInput = this.riceBallInput;
-        const totalAmount = depositAmount * numberOfPeople - riceBallInput;
-        const merchantUid = `${this.restaurantName}${Date.now()}`
+      if (this.riceBallInput > 0) {
+      // 사용한 포인트만큼 차감
+      this.totalRiceBallPoints -= this.riceBallInput;
+      // 서버에도 업데이트된 포인트 정보 전송
+      this.updateUserPoints();
+    }
+          // axios를 사용하여 백엔드로 예약 정보 전송
+          axios.post(`${process.env.API_URL}/restaurant/detail`, reservationData)
+              .then(response => {
+                  // 예약 정보가 성공적으로 전송되었을 때의 처리
+                  console.log('예약 정보가 성공적으로 전송되었습니다:', reservationData);
+                  if (response.data.success) {
+                    // 예약 성공적으로 처리된 경우
+                    console.log('예약이 성공적으로 처리되었습니다.');
+                } 
+            })
+            .catch(error => {
+                // 예약 정보 전송 중 오류 발생 시의 처리
+                console.error('예약 정보 전송 중 오류가 발생했습니다:', error);
+            });
+    }
+},
+confirmReservation2() {
+        if (this.depositAmount) {
+          this.showConfirmationModal = false;
+          this.showPaymentModal = true;
+        } else {
+          this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
+          this.showConfirmationModal = false;
+          this.showReservationConfirmationModal = true;
+        }
+      },
+      payment() {
+    // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
+    if (this.reservationPolicyAgreed && this.agreeTerms) {
+      const depositAmount = this.depositAmount;
+      const numberOfPeople = this.numberOfPeople;
+      const riceBallInput = this.riceBallInput;
+      const totalAmount = depositAmount * numberOfPeople - riceBallInput;
+      const merchantUid = `${this.restaurantName}${Date.now()}`
 
-        // 결제 정보 설정
-        this.paymentData = {
-          pg: 'html5_inicis',
-          pay_method: totalAmount === 0 ? "point" : "card",
-          merchant_uid: merchantUid,
-          name: this.restaurantName,
-          amount: totalAmount,
-          buyer_email: "",
-          buyer_name: "",
-          buyer_tel: "",
-          paymentTime: new Date().toISOString(),
+      // 결제 정보 설정
+      this.paymentData = {
+        pg: 'html5_inicis',
+        pay_method: totalAmount === 0 ? "point" : "card",
+        merchant_uid: merchantUid,
+        name: this.restaurantName,
+        amount: totalAmount,
+        buyer_email: "",
+        buyer_name: "",
+        buyer_tel: "",
+        paymentTime: new Date().toISOString(),
+        pointUsage: riceBallInput
+      };
+
+      const timeEnum = this.timeToEnum(`${this.selectedHour}:${this.selectedMinute}`);
+
+      this.reservationData = {
+        peopleCount: this.numberOfPeople,
+        reservationDate: this.selectedDate,
+        reservationTime: timeEnum,
+        reservationName: this.visitorName,
+        reservationTel: this.visitorContact,
+        requestContent: this.customerRequest,
+        restaurantId: this.$route.params.id
+      };
+
+      if (this.user) {
+            this.reservationData.memberId = this.user.id; // memberId 추가
+        }
+
+
+      // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
+      if (totalAmount === 0) {
+        this.showSpinner = true;
+        const pointData ={
+          ...this.paymentData,
+          pay_method: "point",
           pointUsage: riceBallInput
-        };
-
-        const timeEnum = this.timeToEnum(`${this.selectedHour}:${this.selectedMinute}`);
-
-        this.reservationData = {
-          peopleCount: this.numberOfPeople,
-          reservationDate: this.selectedDate,
-          reservationTime: timeEnum,
-          reservationName: this.visitorName,
-          reservationTel: this.visitorContact,
-          requestContent: this.customerRequest,
-          restaurantId: this.$route.params.id
-        };
-
-        if (this.user) {
-          this.reservationData.memberId = this.user.id; // memberId 추가
         }
-
-        // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
-        if (totalAmount === 0) {
-          this.showSpinner = true;
-          const pointData = {
-            ...this.paymentData,
-            pay_method: "point",
-            pointUsage: riceBallInput
-          }
-          axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
-            .then(reservationResponse => {
-              console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
-              // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
-              const reservationId = reservationResponse.data;
-              axios.post(`${process.env.API_URL}/restaurant/payment`, pointData, {
-                params: {
-                  reservationId: reservationId
-                }
-              })
-
+        axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
+        .then(reservationResponse => {
+            console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
+            // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
+            const reservationId = reservationResponse.data;
+            axios.post(`${process.env.API_URL}/restaurant/payment`, pointData,{
+              params:{
+                reservationId: reservationId
+              }
+            })
                 .then(paymentResponse => {
-                  this.showSpinner = false;
-                  this.showPaymentModal = false;
-                  console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
-                  this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
-                  setTimeout(() => {
-              this.$router.go(0); // 혹은 window.location.reload();
-            }, 4000);                  alert("예약 및 결제가 완료되었습니다.");
-                  this.resetReservationData();
+                    this.showSpinner = false;
+                    this.showPaymentModal = false;
+                    console.log('결제 정보가 서버에 전송되었습니다:', );
+                    this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
+                    alert("예약 및 결제가 완료되었습니다.");
+                    this.resetReservationData();
+              
                 })
                 .catch(paymentError => {
+                    console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
+                    this.showSpinner = false;
+                });
+        })
+        .catch(reservationError => {
+            console.error('예약 정보를 서버에 전송하는 중에 오류가 발생했습니다:', );
+            this.showSpinner = false;
+        });
+      } else {
+        // 결제 함수 정의
+        const paymentFunction = () => {
+          IMP.init('imp56476634');
+          IMP.request_pay(this.paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
+            if (rsp.success) {
+              const impUid = rsp.imp_uid; 
+              this.showSpinner = true;
 
-                  console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
-
+              // 예약 정보를 서버에 전송
+              axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
+                .then(reservationResponse => {
+                  console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
+                  // 결제 정보를 서버에 전송
+                  const reservationId = reservationResponse.data;
+                  const paymentDataWithImpUid = {
+                  ...this.paymentData,
+                  impUid: impUid  // Add imp_uid to the payment data
+                };
+                  axios.post(`${process.env.API_URL}/restaurant/payment`, paymentDataWithImpUid, {
+                    params: {
+                      reservationId: reservationId
+                    }
+                  })
+                    .then(paymentResponse => {
+                      this.showSpinner = false;
+                      this.showPaymentModal = false;
+                      console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
+                      // 결제 및 예약 정보가 성공적으로 처리되면 페이지 이동
+                      this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
+                      alert("결제 완료 : " + "고객님의 예약이 완료되었습니다.");
+                      this.resetReservationData();
+                    })
+                    .catch(paymentError => {
+                      console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
+                      this.showSpinner = false;
+                    });
+                })
+                .catch(reservationError => {
+                  console.error('예약 정보를 서버에 전송하는 중에 오류가 발생했습니다:', reservationError);
                   this.showSpinner = false;
                 });
-            })
-            .catch(reservationError => {
-              console.error('예약 정보를 서버에 전송하는 중에 오류가 발생했습니다:', reservationError);
-              this.showSpinner = false;
-            });
-        } else {
-          // 결제 함수 정의
-          const paymentFunction = () => {
-            IMP.init('imp56476634');
-            IMP.request_pay(this.paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
-              if (rsp.success) {
-                const impUid = rsp.imp_uid;
-                this.showSpinner = true;
-
-                // 예약 정보를 서버에 전송
-                axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
-                  .then(reservationResponse => {
-                    console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
-                    // 결제 정보를 서버에 전송
-                    const reservationId = reservationResponse.data;
-                    const paymentDataWithImpUid = {
-                      ...this.paymentData,
-                      impUid: impUid  // Add imp_uid to the payment data
-                    };
-                    axios.post(`${process.env.API_URL}/restaurant/payment`, paymentDataWithImpUid, {
-                      params: {
-                        reservationId: reservationId
-                      }
-                    })
-                      .then(paymentResponse => {
-                        this.showSpinner = false;
-                        this.showPaymentModal = false;
-                        console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
-                        // 결제 및 예약 정보가 성공적으로 처리되면 페이지 이동
-                        this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
-                        
-                        alert("결제 완료 : " + "고객님의 예약이 완료되었습니다.");
-                        this.resetReservationData();
-                      })
-                      .catch(paymentError => {
-                        console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
-                        this.showSpinner = false;
-                      });
-                  })
-                  .catch(reservationError => {
-                    console.error('예약 정보를 서버에 전송하는 중에 오류가 발생했습니다:', reservationError);
-                    this.showSpinner = false;
-                  });
-              } else {
-                alert("(" + rsp.error_msg + ")");
-                this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
-              }
-            });
-          }
-
-          // 스크립트를 먼저 로드합니다.
-          const impScript = document.createElement('script');
-          impScript.src = 'https://cdn.iamport.kr/js/iamport.payment-1.2.0.js';
-          document.head.appendChild(impScript);
-
-          // 스크립트 로드 후에 실행합니다.
-          impScript.onload = () => {
-            paymentFunction();
-          };
+            } else {
+              alert("(" + rsp.error_msg + ")");
+              this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
+            }
+          });
         }
-      } else {
-        // 두 체크박스 중 하나라도 체크되지 않은 경우 결제하기 버튼 비활성화
-        console.log("두 개의 필수 동의사항에 모두 동의해야 합니다.");
+
+        // 스크립트를 먼저 로드합니다.
+        const impScript = document.createElement('script');
+        impScript.src = 'https://cdn.iamport.kr/js/iamport.payment-1.2.0.js';
+        document.head.appendChild(impScript);
+
+        // 스크립트 로드 후에 실행합니다.
+        impScript.onload = () => {
+          paymentFunction();
+        };
       }
-    },
-    resetReservationData() {
-      // 예약 및 결제 정보 초기화
-      this.selectedDate = '';
-      this.numberOfPeople = 1;
-      this.selectedTime = '';
-      this.visitorName = '';
-      this.visitorContact = '';
-      this.customerRequest = '';
-      this.riceBallInput = 0;
-      this.reservationPolicyAgreed = false;
-      this.agreeTerms = false;
-      this.date = '';
-      this.selectedHour = '';
-      this.selectedMinute = '';
-    },
+    } else {
+      // 두 체크박스 중 하나라도 체크되지 않은 경우 결제하기 버튼 비활성화
+      console.log("두 개의 필수 동의사항에 모두 동의해야 합니다.");
+    }
+  },
+  resetReservationData() {
+    // 예약 및 결제 정보 초기화
+    this.selectedDate = '';
+    this.numberOfPeople = 1;
+    this.selectedTime = '';
+    this.visitorName = '';
+    this.visitorContact = '';
+    this.customerRequest = '';
+    this.riceBallInput = 0;
+    this.reservationPolicyAgreed = false;
+    this.agreeTerms = false;
+    this.date = '';
+        this.selectedHour = '';
+        this.selectedMinute = '';
+},
 
     redirectToReservation() {
       this.modal = true;
-      clearInterval(this.timerInterval);
+      clearInterval(this.timerInterval);  
       this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
     }
   },
@@ -1294,10 +1247,9 @@ export default {
 </script>
 
 <style scoped>
-.v-date-picker-table {
-  width: 350px;
-}
-
+ .v-date-picker-table {
+    width: 350px;
+  }
 .custom-card {
   background-color: rgba(251, 251, 251, 0.89);
 }
@@ -1391,13 +1343,6 @@ input[type="number"] {
   z-index: 9999;
 }
 
-.time-description {
-  font-size: 12px;
-  color: rgba(0, 0, 0, 0.5);
-  /* 텍스트 색상 흐리게 설정 */
-}
-
-
 .spinner {
   border: 4px solid rgba(255, 255, 255, 0.3);
   border-radius: 50%;
@@ -1408,12 +1353,7 @@ input[type="number"] {
 }
 
 @keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
-
-  100% {
-    transform: rotate(360deg);
-  }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 </style>
