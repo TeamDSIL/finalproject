@@ -13,9 +13,10 @@
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
-            :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
-      :disabled="isDisabled(time)">
-      {{ time }}
+
+              :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
+              :disabled="isDisabled(time)" :style="{ width: '80px' }">
+              {{ time }} 
             </v-btn>
           </v-row>
         </div>
@@ -877,6 +878,19 @@ export default {
       }
     },
     cancelPayment() {
+
+      axios.post('http://localhost:8000/restaurant/cancelreservation', {
+        restaurantId: this.$route.params.id,
+        numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
+      })
+        .then(response => {
+          console.log('테이블이 성공적으로 복원되었습니다:', response.data);
+          this.resetReservationData();
+        })
+        .catch(error => {
+          console.error('테이블 복원 중 오류가 발생했습니다:', error);
+          alert("테이블 복원 중 오류가 발생했습니다.");
+        });
       this.showPaymentModal = false;
       this.resetReservationData();
     },
@@ -1017,15 +1031,49 @@ export default {
     }
   }
 
-  this.modal = false; // 기존 모달 창은 닫기
-},
+
+        this.tablesNeeded = tablesNeeded;
+
+        axios.post('http://localhost:8000/restaurant/reservetable', {
+          numberOfTables: tablesNeeded,
+          restaurantId: this.$route.params.id // 이 부분을 추가하여 restaurantId를 전달합니다.
+
+        })
+          .then(response => {
+            // 성공적으로 테이블이 선점된 경우
+            console.log('테이블이 성공적으로 선점되었습니다:', response.data);
+            // 예약 가능한 테이블이 충분한 경우
+            this.showConfirmationModal = true; // 확정 모달 창 표시
+          })
+          .catch(error => {
+            // 테이블 선점 중 오류 발생 시의 처리
+            alert("남은 테이블이 없어 예약에 실패하였습니다.");
+          });
+
+        // 기존 모달 창은 닫기
+        this.modal = false;
+      }
+    },
     handleTouchMove(event) {
       if (Math.abs(event.touches[0].clientY - event.touches[0].pageY) > 10) {
         event.preventDefault();
       }
     },
     cancelReservation() {
-      this.modal=false;
+
+      axios.post('http://localhost:8000/restaurant/cancelreservation', {
+        restaurantId: this.$route.params.id,
+        numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
+      })
+        .then(response => {
+          console.log('테이블이 성공적으로 복원되었습니다:', response.data);
+          this.resetReservationData();
+        })
+        .catch(error => {
+          console.error('테이블 복원 중 오류가 발생했습니다:', error);
+          alert("테이블 복원 중 오류가 발생했습니다.");
+        });
+      this.modal = false;
       this.showConfirmationModal = false;
       this.resetReservationData();
     },
@@ -1120,6 +1168,58 @@ confirmReservation2() {
             this.reservationData.memberId = this.user.id; // memberId 추가
         }
 
+        // axios를 사용하여 백엔드로 예약 정보 전송
+        axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
+          .then(response => {
+            // 예약 정보가 성공적으로 전송되었을 때의 처리
+            console.log('예약 정보가 성공적으로 전송되었습니다:', reservationData);
+            setTimeout(() => {
+              this.$router.go(0); // 혹은 window.location.reload();
+            }, 4000); if (response.data.success) {
+              // 예약 성공적으로 처리된 경우
+              console.log('예약이 성공적으로 처리되었습니다.');
+            }
+          })
+          .catch(error => {
+            // 예약 정보 전송 중 오류 발생 시의 처리
+            console.error('예약 정보 전송 중 오류가 발생했습니다:', error);
+          });
+      }
+    },
+    confirmReservation2() {
+      if (this.depositAmount) {
+        this.showConfirmationModal = false;
+        this.showPaymentModal = true;
+      } else {
+        this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
+        this.showConfirmationModal = false;
+        this.showReservationConfirmationModal = true;
+      }
+    },
+    payment() {
+      // 결제하기 버튼 활성화를 위해 두 체크박스의 상태를 확인
+      if (this.reservationPolicyAgreed && this.agreeTerms) {
+        const depositAmount = this.depositAmount;
+        const numberOfPeople = this.numberOfPeople;
+        const riceBallInput = this.riceBallInput;
+        const totalAmount = depositAmount * numberOfPeople - riceBallInput;
+        const merchantUid = `${this.restaurantName}${Date.now()}`
+
+        // 결제 정보 설정
+        this.paymentData = {
+          pg: 'html5_inicis',
+          pay_method: totalAmount === 0 ? "point" : "card",
+          merchant_uid: merchantUid,
+          name: this.restaurantName,
+          amount: totalAmount,
+          buyer_email: "",
+          buyer_name: "",
+          buyer_tel: "",
+          paymentTime: new Date().toISOString(),
+          pointUsage: riceBallInput
+        };
+
+
 
       // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
       if (totalAmount === 0) {
@@ -1129,16 +1229,26 @@ confirmReservation2() {
           pay_method: "point",
           pointUsage: riceBallInput
         }
-        axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
-        .then(reservationResponse => {
-            console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
-            // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
-            const reservationId = reservationResponse.data;
-            axios.post(`${process.env.API_URL}/restaurant/payment`, pointData,{
-              params:{
-                reservationId: reservationId
-              }
-            })
+
+        // 결제 금액이 0원인 경우 결제 프로세스 생략하고 바로 예약 완료 처리
+        if (totalAmount === 0) {
+          this.showSpinner = true;
+          const pointData = {
+            ...this.paymentData,
+            pay_method: "point",
+            pointUsage: riceBallInput
+          }
+          axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
+            .then(reservationResponse => {
+              console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
+              // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
+              const reservationId = reservationResponse.data;
+              axios.post('http://localhost:8000/restaurant/payment', pointData, {
+                params: {
+                  reservationId: reservationId
+                }
+              })
+
                 .then(paymentResponse => {
                     this.showSpinner = false;
                     this.showPaymentModal = false;
@@ -1152,34 +1262,51 @@ confirmReservation2() {
                     console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
                     this.showSpinner = false;
                 });
-        })
-        .catch(reservationError => {
-            console.error('예약 정보를 서버에 전송하는 중에 오류가 발생했습니다:', );
-            this.showSpinner = false;
-        });
-      } else {
-        // 결제 함수 정의
-        const paymentFunction = () => {
-          IMP.init('imp56476634');
-          IMP.request_pay(this.paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
-            if (rsp.success) {
-              const impUid = rsp.imp_uid; 
-              this.showSpinner = true;
 
-              // 예약 정보를 서버에 전송
-              axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
-                .then(reservationResponse => {
-                  console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
-                  // 결제 정보를 서버에 전송
-                  const reservationId = reservationResponse.data;
-                  const paymentDataWithImpUid = {
-                  ...this.paymentData,
-                  impUid: impUid  // Add imp_uid to the payment data
-                };
-                  axios.post(`${process.env.API_URL}/restaurant/payment`, paymentDataWithImpUid, {
-                    params: {
-                      reservationId: reservationId
-                    }
+            })
+            .catch(reservationError => {
+              console.error('예약 정보를 서버에 전송하는 중에 오류가 발생했습니다:', reservationError);
+              this.showSpinner = false;
+            });
+        } else {
+          // 결제 함수 정의
+          const paymentFunction = () => {
+            IMP.init('imp56476634');
+            IMP.request_pay(this.paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
+              if (rsp.success) {
+                const impUid = rsp.imp_uid;
+                this.showSpinner = true;
+
+                // 예약 정보를 서버에 전송
+                axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
+                  .then(reservationResponse => {
+                    console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
+                    // 결제 정보를 서버에 전송
+                    const reservationId = reservationResponse.data;
+                    const paymentDataWithImpUid = {
+                      ...this.paymentData,
+                      impUid: impUid  // Add imp_uid to the payment data
+                    };
+                    axios.post('http://localhost:8000/restaurant/payment', paymentDataWithImpUid, {
+                      params: {
+                        reservationId: reservationId
+                      }
+                    })
+                      .then(paymentResponse => {
+                        this.showSpinner = false;
+                        this.showPaymentModal = false;
+                        console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
+                        // 결제 및 예약 정보가 성공적으로 처리되면 페이지 이동
+                        this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
+                        
+                        alert("결제 완료 : " + "고객님의 예약이 완료되었습니다.");
+                        this.resetReservationData();
+                        window.location.reload();
+                      })
+                      .catch(paymentError => {
+                        console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);
+                        this.showSpinner = false;
+                      });
                   })
                     .then(paymentResponse => {
                       this.showSpinner = false;
