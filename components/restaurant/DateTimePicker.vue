@@ -36,7 +36,7 @@
     <v-dialog v-if="depositAmount" v-model="showConfirmationModal" persistent width="333">
       <v-card>
         <v-card-title class="logo-title">
-          <img src="@/assets/images/logo.jpg" alt="Logo" class="logo-img">
+          <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">아래 일정대로 예약하시겠습니까?</p>
@@ -63,7 +63,7 @@
     <v-dialog v-if="!depositAmount" v-model="showConfirmationModal" persistent width="333">
       <v-card>
         <v-card-title class="logo-title">
-          <img src="@/assets/images/logo.jpg" alt="Logo" class="logo-img">
+          <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">아래 일정대로 예약하시겠습니까?</p>
@@ -89,7 +89,7 @@
     <v-dialog v-if="!depositAmount" v-model="showReservationConfirmationModal" persistent width="333">
       <v-card>
         <v-card-title class="logo-title">
-          <img src="@/assets/images/logo.jpg" alt="Logo" class="logo-img">
+          <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">예약이 확정되었습니다!</p>
