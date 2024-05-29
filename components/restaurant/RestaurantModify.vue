@@ -356,7 +356,7 @@ export default {
       console.log('Menu saved:', this.menuItems);
       this.showDialog = false;
     },
-    addMenuItem() {
+    addMenuItem() { 
       const newItem = {
         name: '',
         menuInfo: '',
