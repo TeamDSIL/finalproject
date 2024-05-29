@@ -23,7 +23,7 @@
                         </div>
                         <div class="mb-3">
                             <span v-for="starIndex in 5" :key="starIndex">
-                                <img v-if="starIndex <= averageScore" src="../../assets/images/babscore.png" width="16"
+                                <img v-if="starIndex <= restaurantReviews.averageScore" src="../../assets/images/babscore.png" width="16"
                                     height="16" />
                                 <img v-else src="../../assets/images/graybab.png" width="16" height="16" />
                             </span>
@@ -58,10 +58,10 @@
         
                         <v-col cols="12" xl="6" lg="6" class="tabContent1">
                             <v-tabs v-model="tab" class="mb-8">
-                                <v-tab class="text-capitalize" href="#tab-1">홈</v-tab>
-                                <v-tab class="text-capitalize" href="#tab-2">메뉴</v-tab>
-                                <v-tab class="text-capitalize" href="#tab-3">리뷰</v-tab>
-                                <v-tab class="text-capitalize" href="#tab-4">상세정보</v-tab>
+                                <v-tab class="text-capitalize tabsize" href="#tab-1">홈</v-tab>
+                                <v-tab class="text-capitalize tabsize" href="#tab-2">메뉴</v-tab>
+                                <v-tab class="text-capitalize tabsize" href="#tab-3">리뷰</v-tab>
+                                <v-tab class="text-capitalize tabsize" href="#tab-4">상세정보</v-tab>
                             </v-tabs>
 
                             <v-tabs-items v-model="tab">
@@ -99,7 +99,7 @@
                                         <table class="menutable">
                                             <tbody>
                                                 <tr v-for="menu in menus" :key="menu.id">
-                                                    <td><v-img contain :src="restaurantDetails.menu_img" width="100" height="100"></v-img></td>
+                                                    <td><v-img contain :src="menu.img" width="100" height="100"></v-img></td>
                                                     <td colspan="3">
                                                         <tr class="menutitle">{{ menu.name }}</tr>
                                                         <tr class="menuinfo">{{ menu.menu_info }}</tr>
@@ -314,13 +314,13 @@ export default {
     }),
     computed: {
         // 평균 별점을 계산합니다.
-        averageScore() {
-            const totalReviews = this.ratingsCount.reduce((sum, count) => sum + count, 0);
-            const scoreSum = this.ratingsCount.reduce((sum, count, index) => {
-                return sum + (count * (5 - index));
-            }, 0);
-            return scoreSum / totalReviews;
-        },
+        // averageScore() {
+        //     const totalReviews = this.ratingsCount.reduce((sum, count) => sum + count, 0);
+        //     const scoreSum = this.ratingsCount.reduce((sum, count, index) => {
+        //         return sum + (count * (5 - index));
+        //     }, 0);
+        //     return scoreSum / totalReviews;
+        // },
         restaurantDetails() {
             const restaurantId = this.$route.params.id;
             const found = this.menus.find(menu => menu.restaurant_id === Number(restaurantId));
@@ -376,10 +376,11 @@ export default {
     },
     created() {
         this.fetchReviews();
+        this.fetchMenus();
+        this.getUserInfo();
     },
     async mounted(){
-        this.fetchMenus();
-        await this.getUserInfo();
+        
     },
     methods: {  
         // 비율을 계산하여 백분율로 변환합니다.
@@ -452,12 +453,12 @@ export default {
             // 일정 시간 후 알림 메시지 숨기기
             setTimeout(() => {
                 this.alertMessage = '';
-            }, 2000);
+            }, 1000);
         },
         async saveToFavorites() {
       try {
         if (this.user && this.restaurantId) {
-          const response = await axios.post(`${process.env.API_URL}/bookmark`, {
+          const response = await axios.post(`${process.env.API_URL}/restaurant/bookmark`, {
             member_id: this.user.id,
             restaurant_id: this.restaurantId
           });
@@ -475,7 +476,7 @@ export default {
     async removeFromFavorites() {
       try {
         if (this.user && this.restaurantId) {
-          const response = await axios.delete(`${process.env.API_URL}/bookmark`, {
+          const response = await axios.delete(`${process.env.API_URL}/restaurant/bookmark`, {
             data: {
               member_id: this.user.id,
               restaurant_id: this.restaurantId
@@ -772,7 +773,7 @@ hr {
 }
 
 .rowspan {
-    min-height: 800px;
+    min-height: 1000px;
 }
 .menutitle{
 font-size: medium;
@@ -784,5 +785,8 @@ color:gray;
 .menuprice{
 font-size: small;
 font-weight:bold;
+}
+.tabsize{
+    width: 25%;
 }
 </style>
