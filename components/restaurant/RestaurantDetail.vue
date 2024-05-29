@@ -10,7 +10,7 @@
                 <v-col cols="6" xl="6" lg="6" class="tabContent">
                     <v-img :src="restaurantDetails.img"></v-img>
                     <div class="d-flex justify-space-between flex-wrap align-center mb-3">
-                            <h1 class="me-2">{{ restaurantDetails.name }}</h1>
+                        <div class="subtitle1">{{ restaurantDetails.name }}</div>
 
                             <div class="titleflex">
                                 <div :class="{ 'favorite-dark': !isToggled, 'favorite-color': isToggled }"
@@ -66,9 +66,9 @@
 
                             <v-tabs-items v-model="tab">
                                 <v-tab-item value="tab-1">
-                                    <h2>예약 신청</h2>
+                                    <div class="subtitle">예약 신청</div>
                                     <DateTimePicker :restaurantName="restaurantDetails.name" /><br><br>
-                                    <h2>식당 혼잡도</h2>
+                                    <div class="subtitle" style="margin-bottom: 10px;">식당 혼잡도</div>
                                     <div class="roundstate">
                                         <div :class="crowdClass">
                                             <span v-if="restaurantDetails.crowd === 'BUSY'">혼잡</span>
@@ -81,8 +81,8 @@
                                         <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">매장 식사 이용 시 바로 입장
                                             가능합니다.</span>
                                     </div><br><br>
-                                    <h2>편의시설</h2>
-                                    <div class="icon-container">
+                                    <div class="subtitle" style="margin-bottom: 10px;">편의시설</div>
+                                    <div class="icon-container" >
     <template v-for="facility in allFacilities">
         <div v-if="facilities.includes(facility.name)" :key="facility.name" class="icon-center">
             <div class="icon-item">
@@ -97,7 +97,7 @@
 
                                 <v-tab-item value="tab-2">
                                     <div>
-                                        <h1>메뉴</h1><br>
+                                        <div class="subtitle">메뉴</div><br>
                                         <table class="menutable">
                                             <tbody>
                                                 <tr v-for="menu in menus" :key="menu.id">
@@ -116,7 +116,7 @@
 
                                 <v-tab-item value="tab-3">
                                     <div>
-                                        <h1>리뷰</h1>
+                                        <div class="subtitle">리뷰</div>
                                         <div class="ratings-container">
                                             <div class="ratings-container-sub">
                                                 <img src="~/assets/images/babscore.png" alt="Bob's Score"
@@ -142,11 +142,10 @@
     <div v-for="review in reviews" :key="review.id" class="mb-6">
         <div class="d-flex align-center flex-wrap mb-4">
             <v-avatar size="48" class="me-4">
-                <img src="../../assets/images/faces/review_person.png">
+                <img src="../../assets/images/faces/review_person.png" class="gray-image">
             </v-avatar>
             <div>
                 <h5 class="mb-0">{{ review.name }}</h5>
-                <p class="mb-0 text-14 grey--text text--darken-1">Gold Member</p>
             </div>
         </div>
         <div class="d-flex align-center mb-2">
@@ -162,14 +161,7 @@
             <v-img contain :src="review.review_img"></v-img>
         </v-col>
         <div class="mt-4">
-            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
-                <v-icon left small>mdi-thumb-up-outline</v-icon>
-                Like
-            </v-btn>
-            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
-                <v-icon left small>mdi-comment-text-outline</v-icon>
-                Comment
-            </v-btn>
+            
         </div>
         <v-divider class="my-4"></v-divider>
     </div>
@@ -180,7 +172,7 @@
 
                                 <v-tab-item value="tab-4">
                                     <div>
-                                        <h1>상세정보</h1><br>
+                                        <div class="subtitle">상세정보</div><br>
                                         <h4>전화번호</h4>
                                         <v-icon color="green">mdi-phone</v-icon> {{ restaurantDetails.tel }}<br><br>
                                         <h4>매장 소개</h4>
@@ -394,6 +386,7 @@ export default {
                     console.log('식당 상세정보 불러왔음')
                     this.facilities = response.data[0].facilies;
                     console.log('편의시설 불러왔음')
+                    console.log(process.env.FRONT_URL)
                 })
                 .catch(error => {
                     console.log('메뉴 데이터를 불러올 수 없습니다.')
@@ -483,35 +476,35 @@ export default {
         console.error('즐겨찾기 삭제 중 오류 발생:', error);
       }
     },
-        async getUserInfo() {     // 현재 로그인한 유저정보를 불러오는 메소드
-      try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
+    async getUserInfo() {     // 현재 로그인한 유저정보를 불러오는 메소드
+            try {
+                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                if (!token) {
+                    throw new Error('No token found');
+                }
 
-        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-          headers: {
-            'Authorization': `${token}`
-          },
-          withCredentials: true
-        });
+                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
 
-        if (response.status === 200) {
-          const userInfo = response.data;
-          console.log('User Info:', userInfo);
-          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-          this.user = userInfo;
-          console.log(this.user);
-          console.log(this.user.id);
-        } else {
-          console.error('Failed to fetch user info:', response);
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    },
+                if (response.status === 200) {
+                    const userInfo = response.data;
+                    console.log('User Info:', userInfo);
+                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                    this.user = userInfo;
+                    console.log(this.user);
+                    console.log(this.user.id);
+                } else {
+                    console.error('Failed to fetch user info:', response);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        },
     }
 }
 </script>
@@ -626,7 +619,7 @@ hr {
     width: 100%;
     height: 50px;
     border-radius: 50px;
-    border: 3px solid #000;
+    border: 2px solid #000;
     color: FFFFFF;
     align-items: center;
     justify-content: left;
@@ -681,7 +674,7 @@ hr {
 .icon-item {
     // display: flex;
     // justify-content: center;
-    border: 3.5px solid #000;
+    border: 2px solid #000;
     border-radius: 15%;
     padding: 5px;
     width: 70px;
@@ -778,5 +771,16 @@ font-weight:bold;
 }
 .tabsize{
     width: 25%;
+}
+.subtitle{
+    font-size: large;
+    font-weight: bold;
+}
+.subtitle1{
+    font-size: x-large;
+    font-weight: bold;
+}
+.gray-image{
+    filter:grayscale(100%);
 }
 </style>
