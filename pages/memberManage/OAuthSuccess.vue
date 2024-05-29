@@ -33,24 +33,37 @@ export default {
   justify-content: center;
   align-items: center;
   height: 100vh;
-  background-color: #ffffff;
-  /* 따뜻한 배경색 */
+  background-color: #f0f0f0;
+  /* 부드러운 배경색 */
   border-radius: 12px;
-  /* 부드러운 테두리 */
   box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
-  /* 부드러운 그림자 */
 }
 
 .spinner {
-  width: 60px;
-  height: 60px;
+  width: 64px;
+  height: 64px;
   border-radius: 50%;
-  border: 6px solid #fde8c8;
-  /* 부드러운 외곽선 색상 */
-  border-top: 6px solid #f6ad55;
-  /* 따뜻한 주황색 */
+  border: 8px solid transparent;
+  /* 투명한 테두리 */
+  border-top-color: #D23F57;
+  /* 메인 색상 */
+  border-left-color: #D23F57;
+  /* 메인 색상 */
   animation: spin 1s ease-in-out infinite;
-  /* 부드러운 애니메이션 */
+  position: relative;
+}
+
+.spinner::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 50%;
+  height: 50%;
+  background-color: #D23F57;
+  /* 메인 색상 */
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @keyframes spin {

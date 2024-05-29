@@ -277,9 +277,8 @@ export default {
           console.log('User Info:', userInfo);
           // 사용자 정보를 상태나 컴포넌트 데이터에 저장
           this.user = userInfo;
-          console.log(this.user);
+          console.log(this.user, '헤더부분');
           console.log(this.user.id);
-          await this.loadUserDetails();
         } else {
           console.error('Failed to fetch user info:', response);
         }
@@ -304,6 +303,7 @@ export default {
           console.log("Logout successful");
           localStorage.removeItem("token");
           this.user = null;
+          EventBus.$emit('user-logged-out'); // 로그아웃 이벤트 발행
           this.$router.push("/memberManage/loginPage");
         } else {
           console.error("Failed to logout:", response);
@@ -385,6 +385,10 @@ export default {
 
     EventBus.$on('user-logged-in', async () => {
       await this.checkLoginAndFetchUserInfo();
+    });
+
+    EventBus.$on('user-logged-out', () => {
+      this.user = null;
     });
   },
   computed: {

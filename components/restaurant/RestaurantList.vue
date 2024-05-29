@@ -17,7 +17,7 @@
                       <span>
                         <img src="../../assets/images/facility/list-designation.png" width=24 height=24>
                         　지역별</span>
-                      
+
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-checkbox v-for="clusterarea in clusterareas" :key="clusterarea.id" class="changecheckbox"
@@ -29,29 +29,32 @@
                   <v-expansion-panel>
                     <v-expansion-panel-header class="panel-header">
                       <span>
-                      <img src="../../assets/images/facility/list-high-fiber.png" width=24 height=24>
-                      　음식종류별</span>
+                        <img src="../../assets/images/facility/list-high-fiber.png" width=24 height=24>
+                        　음식종류별</span>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
-                      <v-checkbox v-for="foodType in foodTypes" :key="foodType.id" class="mt-2 changecheckbox" :label="foodType.name"
-                        color="secondary" :value="foodType.value" v-model="selectedCategories"></v-checkbox>
+                      <v-checkbox v-for="foodType in foodTypes" :key="foodType.id" class="mt-2 changecheckbox"
+                        :label="foodType.name" color="secondary" :value="foodType.value"
+                        v-model="selectedCategories"></v-checkbox>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
 
                   <v-expansion-panel>
                     <v-expansion-panel-header class="panel-header">
                       <span>
-                      <img src="../../assets/images/facility/list-welfare.png" width=24 height=24>
-                      　편의시설별</span>
+                        <img src="../../assets/images/facility/list-welfare.png" width=24 height=24>
+                        　편의시설별</span>
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
-                      <v-checkbox v-for="sortType in sortTypes" :key="sortType.id" class="mt-2 changecheckbox" :label="sortType.name"
-                        color="secondary" :value="sortType.value" v-model="selectedFacilities"></v-checkbox>
+                      <v-checkbox v-for="sortType in sortTypes" :key="sortType.id" class="mt-2 changecheckbox"
+                        :label="sortType.name" color="secondary" :value="sortType.value"
+                        v-model="selectedFacilities"></v-checkbox>
                     </v-expansion-panel-content>
                   </v-expansion-panel>
                 </v-expansion-panels>
                 <div class="btn-right">
-                <v-btn color="primary" class="btn-css" @click="submitData">적용</v-btn></div>
+                  <v-btn color="primary" class="btn-css" @click="submitData">적용</v-btn>
+                </div>
               </div>
             </div>
             <div slot="boxContent">
@@ -66,32 +69,33 @@
                     <Card :cardSection="item" />
                   </v-col>
 
-            
 
+
+                </v-row>
+
+              </div>
+            </div>
+
+
+
+          </Box>
+          <div class="pagelocation">
+            <div class="mb-4 me-3">
+              <p class="font-weight-normal mb-0 text-14">Showing {{ startItemIndex
+                }}-{{ endItemIndex }} of {{
+                  CardList.length }} Reviews</p>
+            </div>
+            <div class="mb-4">
+              <!-- 페이지네이션 -->
+              <v-pagination v-model="currentPage" :length="numberOfPages" :total-visible="11" circle
+                @input="navigateToPage"></v-pagination>
+            </div>
+          </div>
+        </v-col>
       </v-row>
-   
-</div>
-</div>
 
- 
-
-  </Box>
-  <div class="pagelocation">
-    <div class="mb-4 me-3">
-      <p class="font-weight-normal mb-0 text-14">Showing {{ startItemIndex
-        }}-{{ endItemIndex }} of {{
-        CardList.length }} Reviews</p>
-    </div>
-    <div class="mb-4">
-      <!-- 페이지네이션 -->
-      <v-pagination v-model="currentPage" :length="numberOfPages" :total-visible="11" circle @input="navigateToPage"></v-pagination>
-    </div>
-  </div>
-  </v-col>
-  </v-row>
-
-  </v-container>
-  <Footer />
+    </v-container>
+    <Footer />
 
   </div>
 </template>
@@ -211,7 +215,7 @@ export default {
     this.fetchList();
   },
   methods: {
-    fetchList() {
+    async fetchList() {
       const categories = this.$route.query.category;
       const facilities = this.$route.query.facility;
       const search = this.$route.query.search;
@@ -237,25 +241,36 @@ export default {
         params.append('search', search);
       }
 
-      axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`)
-        .then(response => {
-          this.CardList = response.data;
-          console.log('식당 정보 불러옴');
-        })
-        .catch(error => {
-          console.log('데이터를 불러올 수 없습니다.');
+      try {
+        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+        const response = await axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
+          },
+          withCredentials: true
         });
+
+        this.CardList = response.data;
+        console.log('식당 정보 불러옴');
+      } catch (error) {
+        console.log('데이터를 불러올 수 없습니다.', error);
+      }
     },
     submitData() {
       const params = new URLSearchParams();
       this.selectedCategories.forEach(category => params.append('category', category));
       this.selectedFacilities.forEach(facility => params.append('facility', facility));
       window.location.href = `${process.env.FRONT_URL}/restaurant/list?${params.toString()}`;
-      
+
     },
     sendRestaurantLink(restaurant_id) {
       window.location.href = `${process.env.FRONT_URL}/restaurant/detail/${restaurant_id}`;
-      
+
     },
     navigateToPage() {
       this.$router.push({ query: { ...this.$route.query, page: this.currentPage } });
@@ -283,21 +298,25 @@ export default {
 .cursor-pointer {
   cursor: pointer;
 }
-.btn-right{
+
+.btn-right {
   display: flex;
   justify-content: end;
 }
-.btn-css{
+
+.btn-css {
   margin: 15px;
   width: 100px;
 
 }
-.panel-header{
-  font-size : 16px;
-  font-weight : bold;
+
+.panel-header {
+  font-size: 16px;
+  font-weight: bold;
   font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
-.changecheckbox{
+
+.changecheckbox {
   margin-top: 10px;
   font-size: 20px;
 

@@ -27,9 +27,14 @@
             <v-text-field v-model="confirmPassword" label="비밀번호 확인" type="password" class="mb-4"
                 :error-messages="confirmPasswordErrors" @input="handleConfirmPasswordInput"></v-text-field>
 
+            <!-- 기존 주소 표시 -->
+            <v-text-field v-if="!addressSelected" v-model="userInfo.address" label="주소" type="text" readonly
+                class="mb-4"></v-text-field>
+
             <!-- 주소 찾기 버튼 -->
             <v-btn @click="sample6_execDaumPostcode" style="margin-bottom: 20px" small color="primary">주소 찾기</v-btn>
 
+            <!-- 새로운 주소 입력 -->
             <div v-if="addressSelected">
                 <v-text-field v-model="userInfo.postcode" label="우편번호" type="text" placeholder="우편번호"
                     class="mb-4"></v-text-field>
@@ -84,6 +89,12 @@ export default {
         script.src =
             "https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js";
         document.head.appendChild(script);
+        // 기존 주소를 나눠서 초기화
+        if (this.userInfo.address) {
+            const addressParts = this.userInfo.address.split(' ');
+            this.userInfo.dynamicAddress = addressParts.slice(0, -1).join(' ');
+            this.userInfo.detailAddress = addressParts.slice(-1).join(' ');
+        }
     },
     methods: {
         handleNameInput() {
@@ -157,16 +168,18 @@ export default {
             }
 
             try {
-                // API 요청을 보내기 전에 데이터 유효성 검사를 수행할 수 있습니다.
+                // 주소와 관련된 필드가 비어있으면 기존 값을 사용
+                const address = this.addressSelected
+                    ? `${this.userInfo.dynamicAddress} ${this.userInfo.detailAddress}`
+                    : this.userInfo.address;
 
-                // API 요청을 보낼 데이터 생성
-                const requestData = {
+                const modifiedData = {
                     email: this.userInfo.email,
                     password: this.modifiedPassword,
                     name: this.userInfo.name,
                     tel: this.userInfo.tel,
-                    address: `${this.userInfo.dynamicAddress} ${this.userInfo.detailAddress}`,
-                    postcode: this.userInfo.postcode,
+                    address: address, // 수정된 부분
+                    postcode: this.userInfo.postcode || this.userInfo.oldPostcode,
                     point: {
                         id: this.userInfo.point.id,
                         accmulatePoint: this.userInfo.point.accmulatePoint,
@@ -175,23 +188,25 @@ export default {
                 };
 
                 // API 요청 보내기
-                const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageUserPage`, requestData);
+                const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageUserPage`, modifiedData);
 
                 // 응답 처리
                 console.log('수정 응답:', response.data);
+                alert('회원 정보가 수정되었습니다.');
 
                 // 부모 컴포넌트로 수정된 정보를 전달
-                this.$emit('modify-user', requestData);
+                this.$emit('modify-user', modifiedData);
 
                 // 모달 창을 닫음
                 this.$emit('close');
 
-                // 수정이 완료되면 이전 페이지로 이동하거나 필요한 작업을 수행할 수 있습니다.
-                this.$router.push('/memberManage/AdminManageUserPage');
+                // 현재 페이지로 리다이렉션 (새로고침)
+                this.$router.go(0);
 
             } catch (error) {
                 // API 요청 실패 시 에러 처리
                 console.error('수정 요청 실패:', error);
+                alert('회원 정보 수정 실패했습니다.');
             }
         },
         async handleDelete() {
@@ -201,8 +216,8 @@ export default {
                 // 삭제 완료 후 모달 창 닫음
                 this.$emit('close');
 
-                // 페이지 리다이렉션
-                this.$router.push('/memberManage/AdminManageUserPage');
+                // 현재 페이지로 리다이렉션 (새로고침)
+                this.$router.go(0);
 
             } catch (error) {
                 console.error('삭제 요청 실패:', error);
