@@ -45,7 +45,21 @@ import axios from 'axios';
 
 export default {
     props: {
-        selectedOwnerInfo: Object,
+        selectedOwnerInfo: {
+            type: Object,
+            default: () => ({
+                ownerName: '',
+                email: '',
+                registerNumber: '',
+                name: '',
+                tel: '',
+                address: '',
+                postcode: '',
+                dynamicAddress: '',
+                detailAddress: '',
+                extraAddress: '',
+            }),
+        },
         dialogModify: Boolean
     },
     data() {
@@ -146,10 +160,14 @@ export default {
             }
 
             try {
+                const address = this.addressSelected
+                    ? `${this.localUserInfo.dynamicAddress} ${this.localUserInfo.detailAddress}`
+                    : this.localUserInfo.address;
+
                 const modifiedData = {
                     password: this.modifiedPassword,
                     tel: this.localUserInfo.tel,
-                    address: `${this.localUserInfo.dynamicAddress} ${this.localUserInfo.detailAddress}`,
+                    address: address,
                     registerNumber: this.localUserInfo.registerNumber,
                     email: this.localUserInfo.email,
                     ownerName: this.localUserInfo.ownerName,

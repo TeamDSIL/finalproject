@@ -197,7 +197,12 @@ export default {
   methods: {
     async fetchCategories(restaurantId) {
       try {
-        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/categories`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/categories`, {
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+          withCredentials: true
+        });
         const selectedCategories = response.data.map((category) => category.name);
         this.restaurant.categories = selectedCategories;
         this.allCategories = [
@@ -242,7 +247,12 @@ export default {
     },
     async fetchFacilities(restaurantId) {
       try {
-        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/facilities`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/facilities`, {
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+          withCredentials: true
+        });
         const selectedFacilities = response.data.map((facility) => facility.name);
         this.restaurant.facilities = selectedFacilities;
         this.allFacilities = [
@@ -265,7 +275,12 @@ export default {
     },
     async fetchMenus(restaurantId) {
       try {
-        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/menus`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/menus`, {
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+          withCredentials: true
+        });
         this.menuItems = response.data.map((menu) => ({
           id: menu.id,
           name: menu.name,
@@ -324,7 +339,12 @@ export default {
         }
       });
       try {
-        const response = await axios.put(`${process.env.API_URL}/restaurant/${this.restaurant.id}`, formData);
+        const response = await axios.put(`${process.env.API_URL}/restaurant/${this.restaurant.id}`, formData, {
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+          withCredentials: true
+        });
         console.log('식당 정보가 성공적으로 업데이트되었습니다:', response.data);
         alert('식당 정보가 성공적으로 업데이트되었습니다.');
       } catch (error) {
@@ -336,7 +356,7 @@ export default {
       console.log('Menu saved:', this.menuItems);
       this.showDialog = false;
     },
-    addMenuItem() {
+    addMenuItem() { 
       const newItem = {
         name: '',
         menuInfo: '',
