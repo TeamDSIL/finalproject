@@ -8,14 +8,14 @@
       <v-card>
         <!-- 예약 날짜 선택 -->
         <v-date-picker v-model="date" :min="minDate" scrollable locale="ko" full-width></v-date-picker>
-        <p style="margin-left: 10px;">예약 시간을 선택해주세요.<span class="time-description">(테이블 개수)</span></p>
+        <p style="margin-left: 10px;">예약 시간을 선택해주세요.<span class="time-description"></span></p>
         <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
               :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
               :disabled="isDisabled(time)" :style="{ width: '80px' }">
-              {{ time }} ({{ restaurant_table_count }})
+              {{ time }}
             </v-btn>
           </v-row>
         </div>
@@ -36,7 +36,7 @@
     <v-dialog v-if="depositAmount" v-model="showConfirmationModal" persistent width="333">
       <v-card>
         <v-card-title class="logo-title">
-          <img src="@/assets/images/logo.jpg" alt="Logo" class="logo-img">
+          <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">아래 일정대로 예약하시겠습니까?</p>
@@ -63,7 +63,7 @@
     <v-dialog v-if="!depositAmount" v-model="showConfirmationModal" persistent width="333">
       <v-card>
         <v-card-title class="logo-title">
-          <img src="@/assets/images/logo.jpg" alt="Logo" class="logo-img">
+          <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">아래 일정대로 예약하시겠습니까?</p>
@@ -89,7 +89,7 @@
     <v-dialog v-if="!depositAmount" v-model="showReservationConfirmationModal" persistent width="333">
       <v-card>
         <v-card-title class="logo-title">
-          <img src="@/assets/images/logo.jpg" alt="Logo" class="logo-img">
+          <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
         <v-card-text style="text-align: center; margin-top: -20px;">
           <p style="font-weight: bold;">예약이 확정되었습니다!</p>
@@ -880,7 +880,7 @@ export default {
       }
     },
     cancelPayment() {
-      axios.post(`${process.env.API_URL}/restaurant/cancelreservation`, {
+      axios.post('http://localhost:8000/restaurant/cancelreservation', {
         restaurantId: this.$route.params.id,
         numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
       })
@@ -1026,7 +1026,7 @@ export default {
 
         this.tablesNeeded = tablesNeeded;
 
-        axios.post(`${process.env.API_URL}/restaurant/reservetable`, {
+        axios.post('http://localhost:8000/restaurant/reservetable', {
           numberOfTables: tablesNeeded,
           restaurantId: this.$route.params.id // 이 부분을 추가하여 restaurantId를 전달합니다.
 
@@ -1052,7 +1052,7 @@ export default {
       }
     },
     cancelReservation() {
-      axios.post(`${process.env.API_URL}/restaurant/cancelreservation`, {
+      axios.post('http://localhost:8000/restaurant/cancelreservation', {
         restaurantId: this.$route.params.id,
         numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
       })
@@ -1097,7 +1097,7 @@ export default {
           this.updateUserPoints();
         }
         // axios를 사용하여 백엔드로 예약 정보 전송
-        axios.post(`${process.env.API_URL}/restaurant/detail`, reservationData)
+        axios.post(`http://localhost:8000/restaurant/detail`, reservationData)
           .then(response => {
             // 예약 정보가 성공적으로 전송되었을 때의 처리
             console.log('예약 정보가 성공적으로 전송되었습니다:', reservationData);
@@ -1171,25 +1171,22 @@ export default {
             pay_method: "point",
             pointUsage: riceBallInput
           }
-          axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
+          axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
             .then(reservationResponse => {
               console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
               // 예약 정보 전송 후에 결제 정보를 서버에 보냅니다.
               const reservationId = reservationResponse.data;
-              axios.post(`${process.env.API_URL}/restaurant/payment`, pointData, {
+              axios.post('http://localhost:8000/restaurant/payment', pointData, {
                 params: {
                   reservationId: reservationId
                 }
               })
-
                 .then(paymentResponse => {
                   this.showSpinner = false;
                   this.showPaymentModal = false;
                   console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
                   this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
-                  setTimeout(() => {
-              this.$router.go(0); // 혹은 window.location.reload();
-            }, 4000);                  alert("예약 및 결제가 완료되었습니다.");
+                  alert("예약 및 결제가 완료되었습니다.");
                   this.resetReservationData();
                 })
                 .catch(paymentError => {
@@ -1213,7 +1210,7 @@ export default {
                 this.showSpinner = true;
 
                 // 예약 정보를 서버에 전송
-                axios.post(`${process.env.API_URL}/restaurant/detail`, this.reservationData)
+                axios.post(`http://localhost:8000/restaurant/detail`, this.reservationData)
                   .then(reservationResponse => {
                     console.log('예약 정보가 서버에 전송되었습니다:', reservationResponse.data);
                     // 결제 정보를 서버에 전송
@@ -1222,7 +1219,7 @@ export default {
                       ...this.paymentData,
                       impUid: impUid  // Add imp_uid to the payment data
                     };
-                    axios.post(`${process.env.API_URL}/restaurant/payment`, paymentDataWithImpUid, {
+                    axios.post('http://localhost:8000/restaurant/payment', paymentDataWithImpUid, {
                       params: {
                         reservationId: reservationId
                       }
@@ -1236,6 +1233,7 @@ export default {
                         
                         alert("결제 완료 : " + "고객님의 예약이 완료되었습니다.");
                         this.resetReservationData();
+                        window.location.reload();
                       })
                       .catch(paymentError => {
                         console.error('결제 정보를 서버에 전송하는 중에 오류가 발생했습니다:', paymentError);

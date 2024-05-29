@@ -447,23 +447,42 @@ export default {
             }, 1000);
         },
         async saveToFavorites() {
-            try {
-                if (this.user && this.restaurantId) {
-                    const response = await axios.post(`${process.env.API_URL}/restaurant/bookmark`, {
-                        member_id: this.user.id,
-                        restaurant_id: this.restaurantId
-                    });
+    try {
+        if (this.user && this.restaurantId) {
+            // 사용자와 레스토랑 ID가 유효한지 로그 출력
+            console.log('User ID:', this.user.id);
+            console.log('Restaurant ID:', this.restaurantId);
 
-                    if (response.status === 200) {
-                        console.log('즐겨찾기에 저장되었습니다.');
-                    } else {
-                        console.error('즐겨찾기 저장 실패:', response);
-                    }
+            const response = await axios.post(`${process.env.API_URL}/restaurant/bookmark`, {
+                member_id: this.user.id,
+                restaurant_id: this.restaurantId
+            }, {
+                headers: {
+                    'Content-Type': 'application/json' // Content-Type 헤더 설정
                 }
-            } catch (error) {
-                console.error('즐겨찾기 저장 중 오류 발생:', error);
+            });
+
+            if (response.status === 200) {
+                console.log('즐겨찾기에 저장되었습니다.');
+            } else {
+                console.error('즐겨찾기 저장 실패:', response);
             }
-        },
+        } else {
+            // 유효하지 않은 경우의 로그 출력
+            if (!this.user) {
+                console.error('User is not logged in');
+            }
+            if (!this.restaurantId) {
+                console.error('Restaurant ID is not provided');
+            }
+        }
+    } catch (error) {
+        console.error('즐겨찾기 저장 중 오류 발생:', error);
+        if (error.response) {
+            console.error('Response data:', error.response.data); // 서버의 응답 데이터를 로그로 출력
+        }
+    }
+},
         async removeFromFavorites() {
             try {
                 if (this.user && this.restaurantId) {
@@ -484,35 +503,32 @@ export default {
                 console.error('즐겨찾기 삭제 중 오류 발생:', error);
             }
         },
-        async getUserInfo() {     // 현재 로그인한 유저정보를 불러오는 메소드
-            try {
-                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-                if (!token) {
-                    throw new Error('No token found');
-                }
-
-                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-                    headers: {
-                        'Authorization': `${token}`
-                    },
-                    withCredentials: true
-                });
-
-                if (response.status === 200) {
-                    const userInfo = response.data;
-                    console.log('User Info:', userInfo);
-                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-                    this.user = userInfo;
-                    console.log(this.user);
-                    console.log(this.user.id);
-                } else {
-                    console.error('Failed to fetch user info:', response);
-                }
-            } catch (error) {
-                console.error('Error fetching user info:', error);
-            }
-        },
+async getUserInfo() {
+try {
+const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+if (!token) {
+throw new Error('No token found');
+}
+// 토큰을 Authorization 헤더에 포함하여 요청 보내기
+const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+headers: {
+'Authorization': `${token}`
+},
+withCredentials: true
+});
+if (response.status === 200) {
+const userInfo = response.data;
+console.log('User Info:', userInfo);
+// 사용자 정보를 상태나 컴포넌트 데이터에 저장
+this.user = userInfo;
+console.log(this.user);
+} else {
+console.error('Failed to fetch user info:', response);
+}
+} catch (error) {
+console.error('Error fetching user info:', error);
+}
+},
     }
 }
 </script>

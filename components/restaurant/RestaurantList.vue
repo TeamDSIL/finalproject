@@ -17,7 +17,6 @@
                       <span>
                         <img src="../../assets/images/facility/list-designation.png" width=24 height=24>
                         　지역별</span>
-
                     </v-expansion-panel-header>
                     <v-expansion-panel-content>
                       <v-checkbox v-for="clusterarea in clusterareas" :key="clusterarea.id" class="changecheckbox"
@@ -107,67 +106,62 @@ export default {
   components: {
     Card: () => import('@/components/Card.vue')
   },
-  head: {
-    title: 'Resturant Column'
+  data() {
+    return {
+      foodTypes: [
+        { id: 1, name: '한식', value: 'KOREAN' },
+        { id: 2, name: '중식', value: 'CHINESE' },
+        { id: 3, name: '일식', value: 'JAPANESE' },
+        { id: 4, name: '양식', value: 'WESTERN' },
+        { id: 5, name: '베트남', value: 'VIETNAMESE' },
+        { id: 6, name: '아메리칸', value: 'AMERICAN' },
+        { id: 7, name: '인도', value: 'INDIAN' },
+        { id: 8, name: '기타세계', value: 'OTHERGLOBALFOOD' }
+      ],
+      clusterareas: [
+        { id: 1, name: '여의도-마포', value: 'YEOUIDO_MAPO' },
+        { id: 2, name: '용산(Y밸리)', value: 'YONGSAN_VALLEY' },
+        { id: 3, name: '양재', value: 'YANGJAE' },
+        { id: 4, name: '수서', value: 'SUSEO' },
+        { id: 5, name: '홍릉', value: 'HONGNEUNG' },
+        { id: 6, name: '마곡', value: 'MAGOK' },
+        { id: 7, name: '가산디지털단지(G밸리1)', value: 'GASAN_DIGITAL_VALLEY' },
+        { id: 8, name: '구로디지털단지(G밸리2)', value: 'GURO_DIGITAL_VALLEY' }
+      ],
+      sortTypes: [
+        { id: 1, name: '주차가능', value: 'PARKING_AVAILABLE' },
+        { id: 2, name: '발렛가능', value: 'VALET_AVAILABLE' },
+        { id: 3, name: '콜키지 프리', value: 'CORKAGE_FREE' },
+        { id: 4, name: '콜키지 가능', value: 'CORKAGE_AVAILABLE' },
+        { id: 5, name: '웰컴키즈존', value: 'WELCOME_KIDS_ZONE' },
+        { id: 6, name: '노키즈존', value: 'NO_KIDS_ZONE' },
+        { id: 7, name: '대관 가능', value: 'RENTAL_AVAILABLE' },
+        { id: 8, name: '전문 소믈리에', value: 'SOMMELIER_AVAILABLE' },
+        { id: 9, name: '장애인 편의시설', value: 'DISABLED_FACILITIES_AVAILABLE' },
+        { id: 10, name: '반려동물 동반', value: 'PET_FRIENDLY' },
+        { id: 11, name: '무료와이파이', value: 'FREE_WIFI_AVAILABLE' },
+        { id: 12, name: '흡연구역', value: 'SMOKING_ZONE' },
+      ],
+      CardList: [],
+      reviews: [],
+      selectedCategories: [],
+      selectedFacilities: [],
+      currentPage: 1,
+      itemsPerPage: 12,
+      items: [
+        {
+          text: '메인화면',
+          disabled: true,
+          href: `${process.env.FRONT_URL}/`,
+        },
+        {
+          text: '식당 검색 리스트',
+          disabled: false,
+          href: '/',
+        }
+      ],
+    };
   },
-  data: () => ({
-    foodTypes: [
-      { id: 1, name: '한식', value: 'KOREAN' },
-      { id: 2, name: '중식', value: 'CHINESE' },
-      { id: 3, name: '일식', value: 'JAPANESE' },
-      { id: 4, name: '양식', value: 'WESTERN' },
-      { id: 5, name: '베트남', value: 'VIETNAMESE' },
-      { id: 6, name: '아메리칸', value: 'AMERICAN' },
-      { id: 7, name: '인도', value: 'INDIAN' },
-      { id: 8, name: '기타세계', value: 'OTHERGLOBALFOOD' }
-    ],
-    clusterareas: [
-      { id: 1, name: '여의도-마포', value: 'YEOUIDO_MAPO' },
-      { id: 2, name: '용산(Y밸리)', value: 'YONGSAN_VALLEY' },
-      { id: 3, name: '양재', value: 'YANGJAE' },
-      { id: 4, name: '수서', value: 'SUSEO' },
-      { id: 5, name: '홍릉', value: 'HONGNEUNG' },
-      { id: 6, name: '마곡', value: 'MAGOK' },
-      { id: 7, name: '가산디지털단지(G밸리1)', value: 'GASAN_DIGITAL_VALLEY' },
-      { id: 8, name: '구로디지털단지(G밸리2)', value: 'GURO_DIGITAL_VALLEY' }
-    ],
-    sortTypes: [
-      { id: 1, name: '주차가능', value: 'PARKING_AVAILABLE' },
-      { id: 2, name: '발렛가능', value: 'VALET_AVAILABLE' },
-      { id: 3, name: '콜키지 프리', value: 'CORKAGE_FREE' },
-      { id: 4, name: '콜키지 가능', value: 'CORKAGE_AVAILABLE' },
-      { id: 5, name: '웰컴키즈존', value: 'WELCOME_KIDS_ZONE' },
-      { id: 6, name: '노키즈존', value: 'NO_KIDS_ZONE' },
-      { id: 7, name: '대관 가능', value: 'RENTAL_AVAILABLE' },
-      { id: 8, name: '전문 소믈리에', value: 'SOMMELIER_AVAILABLE' },
-      { id: 9, name: '장애인 편의시설', value: 'DISABLED_FACILITIES_AVAILABLE' },
-      { id: 10, name: '반려동물 동반', value: 'PET_FRIENDLY' },
-      { id: 11, name: '무료와이파이', value: 'FREE_WIFI_AVAILABLE' },
-      { id: 12, name: '흡연구역', value: 'SMOKING_ZONE' },
-    ],
-    CardList: [],
-    cardSection: [],
-    selectedCategories: [],
-    selectedFacilities: [],
-    page: 1,
-    step: 1,
-    currentPage: 1,
-    itemsPerPage: 12,
-    items: [
-      {
-        text: '메인화면',
-        disabled: true,
-        href: `${process.env.FRONT_URL}/`,
-      },
-      {
-        text: '식당 검색 리스트',
-        disabled: false,
-        href: '/',
-      }
-    ],
-    checkbox: true,
-    radioGroup: 1
-  }),
   computed: {
     displayedCardCount() {
       return this.CardList.length;
@@ -181,41 +175,14 @@ export default {
     },
     numberOfPages() {
       return Math.ceil(this.CardList.length / this.itemsPerPage);
-    },
-    listRestaurant() {
-      const restaurantId = this.$route.params.id;
-      const cardSection = this.CardList.find(list => list.restaurant_id === Number(restaurantId));
-      return cardSection ? {
-        img: cardSection.restaurant_img,
-        name: cardSection.restaurant_name,
-        chip: false,
-        price: cardSection.price,
-        waitTime: cardSection.restaurant_deposit,
-        detail: cardSection.categoryNames
-      } : {
-        img: '',
-        name: 'Restaurant not found',
-        chip: '',
-        price: '',
-        waitTime: '',
-        detail: ''
-      };
-    },
-    translatedCategories() {
-      const categoryMap = {
-        KOREAN: "한식",
-        OTHERGLOBALFOOD: "기타 세계 음식",
-        TRIPE: "곱창/막창",
-        YONGSAN_VALLEY: "용산 밸리"
-      };
-      return this.categories.map(cat => categoryMap[cat] || cat);
     }
   },
   created() {
     this.fetchList();
+    // this.fetchReviews();
   },
   methods: {
-    async fetchList() {
+    fetchList() {
       const categories = this.$route.query.category;
       const facilities = this.$route.query.facility;
       const search = this.$route.query.search;
@@ -241,26 +208,35 @@ export default {
         params.append('search', search);
       }
 
-      try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
-
-        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          withCredentials: true
+      axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`)
+        .then(response => {
+          this.CardList = response.data;
+          console.log('식당 정보 불러옴');
+        })
+        .catch(error => {
+          console.log('데이터를 불러올 수 없습니다.');
         });
-
-        this.CardList = response.data;
-        console.log('식당 정보 불러옴');
-      } catch (error) {
-        console.log('데이터를 불러올 수 없습니다.', error);
-      }
     },
+    // fetchReviews() {
+    //   const id = this.$route.params.id;
+    //   axios.get(`${process.env.API_URL}/restaurant/detail/review/${id}`)
+    //     .then(response => {
+    //       this.reviews = response.data;
+    //       console.log('리뷰 데이터 불러왔음');
+
+    //       // reviews 데이터에서 ratingsCount 리스트를 생성
+    //       const ratingsCount = [0, 0, 0, 0, 0];
+    //       this.reviews.forEach(review => {
+    //         if (review.score >= 1 && review.score <= 5) {
+    //           ratingsCount[review.score - 1]++;
+    //         }
+    //       });
+    //       this.ratingsCount = ratingsCount;
+    //     })
+    //     .catch(error => {
+    //       console.log('리뷰 데이터를 불러올 수 없습니다.', error);
+    //     });
+    // },
     submitData() {
       const params = new URLSearchParams();
       this.selectedCategories.forEach(category => params.append('category', category));
@@ -272,9 +248,13 @@ export default {
       window.location.href = `${process.env.FRONT_URL}/restaurant/detail/${restaurant_id}`;
 
     },
+    // getReviewByRestaurantId(restaurantId) {
+    //   const review = this.reviews.find(review => review.restaurant_id === restaurantId);
+    //   return review ? { Score: review.averageScore } : { Score: '' };
+    // },
     navigateToPage() {
       this.$router.push({ query: { ...this.$route.query, page: this.currentPage } });
-    },
+    }
   },
   watch: {
     '$route.query.page': {
@@ -319,6 +299,5 @@ export default {
 .changecheckbox {
   margin-top: 10px;
   font-size: 20px;
-
 }
 </style>
