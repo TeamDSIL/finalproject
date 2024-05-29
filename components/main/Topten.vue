@@ -2,176 +2,83 @@
   <v-container>
     <!-- Top 10 조회 -->
     <div style="display: flex">
-      <v-img
-        contain
-        :src="require('~/assets/images/ranking/ranking.png')"
-        width="15px"
-        style="max-width: 25px; margin-right: 10px"
-      ></v-img>
+      <v-img contain :src="require('~/assets/images/ranking/ranking.png')" width="15px"
+        style="max-width: 25px; margin-right: 10px"></v-img>
       <span style="font-size: x-large; font-weight: bold">조회수 TOP 10</span>
     </div>
 
     <v-row style="margin-top: 10px; margin-bottom: 10px">
-      <v-col
-        cols="12"
-        sm="6"
-        md="3"
-        v-for="item in currentTopViews"
-        :key="item.restaurantId"
-      >
+      <v-col cols="12" sm="6" md="3" v-for="item in currentTopViews" :key="item.restaurantId">
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
 
           <!-- <v-card-title>{{ item.rank }}위 {{ item.name }}</v-card-title>
           <v-card-text>{{ item.description }}</v-card-text> -->
           <v-card-title>
-            <span v-if="item.rank === 1"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/first.png')"
-                width="20px"
-                style="max-width: 40px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 1"><v-img contain :src="require('~/assets/images/ranking/first.png')" width="20px"
+                style="max-width: 40px; margin-right: 5px"></v-img></span>
 
-            <span v-if="item.rank === 2"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/second.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 2"><v-img contain :src="require('~/assets/images/ranking/second.png')"
+                width="20px" style="max-width: 20px; margin-right: 5px"></v-img></span>
 
-            <span v-if="item.rank === 3"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/third.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 3"><v-img contain :src="require('~/assets/images/ranking/third.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px"></v-img></span>
 
-            <span style="color: rgb(210, 63, 87); font-weight: bold"
-              >{{ item.rank }}위 &nbsp;</span
-            >
-            {{ item.name }}</v-card-title
-          >
+            <span style="color: rgb(210, 63, 87); font-weight: bold">{{ item.rank }}위 &nbsp;</span>
+            {{ item.name }}</v-card-title>
           <v-card-text>{{ item.description }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
     <!-- Top 10 북마크 -->
     <div style="display: flex">
-      <v-img
-        contain
-        :src="require('~/assets/images/ranking/ranking.png')"
-        width="15px"
-        style="max-width: 25px; margin-right: 10px"
-      ></v-img>
+      <v-img contain :src="require('~/assets/images/ranking/ranking.png')" width="15px"
+        style="max-width: 25px; margin-right: 10px"></v-img>
       <span style="font-size: x-large; font-weight: bold">즐겨찾기 TOP 10</span>
     </div>
     <v-row style="margin-top: 10px; margin-bottom: 10px">
-      <v-col
-        cols="12"
-        sm="6"
-        md="3"
-        v-for="item in currentTopBookmarks"
-        :key="item.restaurantId"
-      >
+      <v-col cols="12" sm="6" md="3" v-for="item in currentTopBookmarks" :key="item.restaurantId">
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
 
           <v-card-title>
-            <span v-if="item.rank === 1"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/first.png')"
-                width="20px"
-                style="max-width: 40px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 1"><v-img contain :src="require('~/assets/images/ranking/first.png')" width="20px"
+                style="max-width: 40px; margin-right: 5px"></v-img></span>
 
-            <span v-if="item.rank === 2"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/second.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 2"><v-img contain :src="require('~/assets/images/ranking/second.png')"
+                width="20px" style="max-width: 20px; margin-right: 5px"></v-img></span>
 
-            <span v-if="item.rank === 3"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/third.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 3"><v-img contain :src="require('~/assets/images/ranking/third.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px"></v-img></span>
 
-            <span style="color: rgb(210, 63, 87); font-weight: bold"
-              >{{ item.rank }}위 &nbsp;</span
-            >
-            {{ item.name }}</v-card-title
-          >
+            <span style="color: rgb(210, 63, 87); font-weight: bold">{{ item.rank }}위 &nbsp;</span>
+            {{ item.name }}</v-card-title>
           <v-card-text>{{ item.description }}</v-card-text>
         </v-card>
       </v-col>
     </v-row>
     <!-- Top 10 예약 -->
     <div style="display: flex">
-      <v-img
-        contain
-        :src="require('~/assets/images/ranking/ranking.png')"
-        width="15px"
-        style="max-width: 25px; margin-right: 10px"
-      ></v-img>
+      <v-img contain :src="require('~/assets/images/ranking/ranking.png')" width="15px"
+        style="max-width: 25px; margin-right: 10px"></v-img>
       <span style="font-size: x-large; font-weight: bold">예약수 TOP 10</span>
     </div>
     <v-row style="margin-top: 10px; margin-bottom: 10px">
-      <v-col
-        cols="12"
-        sm="6"
-        md="3"
-        v-for="item in currentTopReservations"
-        :key="item.restaurantId"
-      >
+      <v-col cols="12" sm="6" md="3" v-for="item in currentTopReservations" :key="item.restaurantId">
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
           <v-img :src="item.img" height="200px" />
           <v-card-title>
-            <span v-if="item.rank === 1"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/first.png')"
-                width="20px"
-                style="max-width: 40px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 1"><v-img contain :src="require('~/assets/images/ranking/first.png')" width="20px"
+                style="max-width: 40px; margin-right: 5px"></v-img></span>
 
-            <span v-if="item.rank === 2"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/second.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 2"><v-img contain :src="require('~/assets/images/ranking/second.png')"
+                width="20px" style="max-width: 20px; margin-right: 5px"></v-img></span>
 
-            <span v-if="item.rank === 3"
-              ><v-img
-                contain
-                :src="require('~/assets/images/ranking/third.png')"
-                width="20px"
-                style="max-width: 20px; margin-right: 5px"
-              ></v-img
-            ></span>
+            <span v-if="item.rank === 3"><v-img contain :src="require('~/assets/images/ranking/third.png')" width="20px"
+                style="max-width: 20px; margin-right: 5px"></v-img></span>
 
-            <span style="color: rgb(210, 63, 87); font-weight: bold"
-              >{{ item.rank }}위 &nbsp;</span
-            >
-            {{ item.name }}</v-card-title
-          >
+            <span style="color: rgb(210, 63, 87); font-weight: bold">{{ item.rank }}위 &nbsp;</span>
+            {{ item.name }}</v-card-title>
           <v-card-text>{{ item.description }}</v-card-text>
         </v-card>
       </v-col>
@@ -180,6 +87,7 @@
 </template>
 <script>
 import axios from "axios";
+
 export default {
   data() {
     return {
@@ -287,19 +195,29 @@ export default {
 </script>
 <style scoped>
 .v-container {
-  margin-bottom: 40px; /* 각 섹션의 하단 여백을 40px로 설정 */
+  margin-bottom: 40px;
+  /* 각 섹션의 하단 여백을 40px로 설정 */
 }
+
 .v-card {
   max-width: 100%;
-  margin-bottom: 20px; /* 카드 간의 간격을 20px로 설정 */
+  margin-bottom: 20px;
+  /* 카드 간의 간격을 20px로 설정 */
 }
+
 .v-img {
-  width: 100%; /* 이미지가 카드 너비에 맞도록 설정 */
+  width: 100%;
+  /* 이미지가 카드 너비에 맞도록 설정 */
 }
+
 .v-card-text {
-  height: 60px; /* 카드 텍스트 영역의 높이를 고정 */
-  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
-  text-overflow: ellipsis; /* 넘치는 텍스트는 말줄임표로 표시 */
-  white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+  height: 60px;
+  /* 카드 텍스트 영역의 높이를 고정 */
+  overflow: hidden;
+  /* 내용이 넘칠 경우 숨김 처리 */
+  text-overflow: ellipsis;
+  /* 넘치는 텍스트는 말줄임표로 표시 */
+  white-space: nowrap;
+  /* 텍스트를 한 줄로 표시 */
 }
 </style>
