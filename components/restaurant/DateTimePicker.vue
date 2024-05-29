@@ -15,7 +15,7 @@
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
               :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
               :disabled="isDisabled(time)" :style="{ width: '80px' }">
-              {{ time }} 
+              {{ time }}
             </v-btn>
           </v-row>
         </div>
@@ -1181,15 +1181,12 @@ export default {
                   reservationId: reservationId
                 }
               })
-
                 .then(paymentResponse => {
                   this.showSpinner = false;
                   this.showPaymentModal = false;
                   console.log('결제 정보가 서버에 전송되었습니다:', paymentResponse.data);
                   this.$router.push(`/restaurant/detail/${this.$route.params.id}`);
-                  setTimeout(() => {
-              this.$router.go(0); // 혹은 window.location.reload();
-            }, 4000);                  alert("예약 및 결제가 완료되었습니다.");
+                  alert("예약 및 결제가 완료되었습니다.");
                   this.resetReservationData();
                 })
                 .catch(paymentError => {
