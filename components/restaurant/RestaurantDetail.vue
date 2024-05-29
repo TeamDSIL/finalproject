@@ -10,207 +10,208 @@
                 <v-col cols="6" xl="6" lg="6" class="tabContent">
                     <v-img :src="restaurantDetails.img"></v-img>
                     <div class="d-flex justify-space-between flex-wrap align-center mb-3">
-                            <h1 class="me-2">{{ restaurantDetails.name }}</h1>
+                        <h1 class="me-2">{{ restaurantDetails.name }}</h1>
 
-                            <div class="titleflex">
-                                <div :class="{ 'favorite-dark': !isToggled, 'favorite-color': isToggled }"
-                                    @click="toggleImage">
-                                </div>
+                        <div class="titleflex">
+                            <div :class="{ 'favorite-dark': !isToggled, 'favorite-color': isToggled }"
+                                @click="toggleImage">
                             </div>
-                            <v-alert v-if="alertMessage" :type="alertType" dismissible>
-                                {{ alertMessage }}
-                            </v-alert>
                         </div>
-                        <div class="mb-3">
-                            <span v-for="starIndex in 5" :key="starIndex">
-                                <img v-if="starIndex <= averageScore" src="../../assets/images/babscore.png" width="16"
-                                    height="16" />
-                                <img v-else src="../../assets/images/graybab.png" width="16" height="16" />
-                            </span>
-                            <span class="text-14 me-1"> {{ restaurantReviews.averageScore }}
-                                <span class="grey--text">({{ restaurantReviews.reviewCount }})</span>
-                            </span>
-                        </div>
-                        <p class="mb-5 text-14">{{ formatCategories(restaurantDetails.categories) }}</p>
-                        <p class="mb-5 text-18">{{ restaurantDetails.description }}</p>
+                        <v-alert v-if="alertMessage" :type="alertType" dismissible>
+                            {{ alertMessage }}
+                        </v-alert>
+                    </div>
+                    <div class="mb-3">
+                        <span v-for="starIndex in 5" :key="starIndex">
+                            <img v-if="starIndex <= averageScore" src="../../assets/images/babscore.png" width="16"
+                                height="16" />
+                            <img v-else src="../../assets/images/graybab.png" width="16" height="16" />
+                        </span>
+                        <span class="text-14 me-1"> {{ restaurantReviews.averageScore }}
+                            <span class="grey--text">({{ restaurantReviews.reviewCount }})</span>
+                        </span>
+                    </div>
+                    <p class="mb-5 text-14">{{ formatCategories(restaurantDetails.categories) }}</p>
+                    <p class="mb-5 text-18">{{ restaurantDetails.description }}</p>
 
-                        <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
-                            <v-icon left small color="grey">mdi-map-marker</v-icon>
-                            {{ restaurantDetails.address }}
-                            <v-dialog ref="dialog" v-model="modal" width="500px" height="500px">
-                                <template v-slot:activator="{ on }">
-                                    <v-btn v-on="on" text> 매장 위치 보기 </v-btn>
-                                </template>
-                                <v-card>
-                                    <KakaoMap1 />
-                                    <v-card-actions>
-                                        <v-spacer></v-spacer>
-                                        <v-btn color="primary" text @click="modal = false">닫기</v-btn>
-                                    </v-card-actions>
-                                </v-card>
-                            </v-dialog>
-                        </div>
-                        <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
-                            <v-icon left small color="grey">mdi-clock-outline</v-icon>
-                            <span class="primary--text me-2">매장 오픈 시간</span> - Sun - Mon: 9am - 10pm 영업중
-                        </div>
+                    <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
+                        <v-icon left small color="grey">mdi-map-marker</v-icon>
+                        {{ restaurantDetails.address }}
+                        <v-dialog ref="dialog" v-model="modal" width="500px" height="500px">
+                            <template v-slot:activator="{ on }">
+                                <v-btn v-on="on" text> 매장 위치 보기 </v-btn>
+                            </template>
+                            <v-card>
+                                <KakaoMap1 />
+                                <v-card-actions>
+                                    <v-spacer></v-spacer>
+                                    <v-btn color="primary" text @click="modal = false">닫기</v-btn>
+                                </v-card-actions>
+                            </v-card>
+                        </v-dialog>
+                    </div>
+                    <div class="grey--text text--darken-1 align-middle text-14 mb-4 d-flex align-center flex-wrap">
+                        <v-icon left small color="grey">mdi-clock-outline</v-icon>
+                        <span class="primary--text me-2">매장 오픈 시간</span> - Sun - Mon: 9am - 10pm 영업중
+                    </div>
                 </v-col>
-        
-                        <v-col cols="12" xl="6" lg="6" class="tabContent1">
-                            <v-tabs v-model="tab" class="mb-8">
-                                <v-tab class="text-capitalize" href="#tab-1">홈</v-tab>
-                                <v-tab class="text-capitalize" href="#tab-2">메뉴</v-tab>
-                                <v-tab class="text-capitalize" href="#tab-3">리뷰</v-tab>
-                                <v-tab class="text-capitalize" href="#tab-4">상세정보</v-tab>
-                            </v-tabs>
 
-                            <v-tabs-items v-model="tab">
-                                <v-tab-item value="tab-1">
-                                    <h2>예약 신청</h2>
-                                    <DateTimePicker :restaurantName="restaurantDetails.name" /><br><br>
-                                    <h2>식당 혼잡도</h2>
-                                    <div class="roundstate">
-                                        <div :class="crowdClass">
-                                            <span v-if="restaurantDetails.crowd === 'BUSY'">혼잡</span>
-                                            <span v-else-if="restaurantDetails.crowd === 'NORMAL'">보통</span>
-                                            <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">여유</span>
+                <v-col cols="12" xl="6" lg="6" class="tabContent1">
+                    <v-tabs v-model="tab" class="mb-8">
+                        <v-tab class="text-capitalize" href="#tab-1">홈</v-tab>
+                        <v-tab class="text-capitalize" href="#tab-2">메뉴</v-tab>
+                        <v-tab class="text-capitalize" href="#tab-3">리뷰</v-tab>
+                        <v-tab class="text-capitalize" href="#tab-4">상세정보</v-tab>
+                    </v-tabs>
+
+                    <v-tabs-items v-model="tab">
+                        <v-tab-item value="tab-1">
+                            <h2>예약 신청</h2>
+                            <DateTimePicker :restaurantName="restaurantDetails.name" /><br><br>
+                            <h2>식당 혼잡도</h2>
+                            <div class="roundstate">
+                                <div :class="crowdClass">
+                                    <span v-if="restaurantDetails.crowd === 'BUSY'">혼잡</span>
+                                    <span v-else-if="restaurantDetails.crowd === 'NORMAL'">보통</span>
+                                    <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">여유</span>
+                                </div>
+                                <span v-if="restaurantDetails.crowd === 'BUSY'">웨이팅이 길게 발생할 수 있습니다.</span>
+                                <span v-else-if="restaurantDetails.crowd === 'NORMAL'">약간의 웨이팅이 발생할 수
+                                    있습니다.</span>
+                                <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">매장 식사 이용 시 바로 입장
+                                    가능합니다.</span>
+                            </div><br><br>
+                            <h2>편의시설</h2>
+                            <div class="icon-container">
+                                <template v-for="facility in allFacilities">
+                                    <div v-if="facilities.includes(facility.name)" :key="facility.name"
+                                        class="icon-center">
+                                        <div class="icon-item">
+                                            <img :src="facility.icon" width="50" height="50">
                                         </div>
-                                        <span v-if="restaurantDetails.crowd === 'BUSY'">웨이팅이 길게 발생할 수 있습니다.</span>
-                                        <span v-else-if="restaurantDetails.crowd === 'NORMAL'">약간의 웨이팅이 발생할 수
-                                            있습니다.</span>
-                                        <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">매장 식사 이용 시 바로 입장
-                                            가능합니다.</span>
-                                    </div><br><br>
-                                    <h2>편의시설</h2>
-                                    <div class="icon-container">
-                                        <div v-for="facility in allFacilities" :key="facility.name"
-                                            v-if="facilities.includes(facility.name)" class="icon-center">
-                                            <div class="icon-item">
-                                                <img :src="facility.icon" width="50" height="50">
+                                        <div>{{ facility.label }}</div>
+                                    </div>
+                                </template>
+                            </div>
+
+                        </v-tab-item>
+
+                        <v-tab-item value="tab-2">
+                            <div>
+                                <h1>메뉴</h1><br>
+                                <table class="menutable">
+                                    <tbody>
+                                        <tr v-for="menu in menus" :key="menu.id">
+                                            <td><v-img contain :src="restaurantDetails.menu_img" width="100"
+                                                    height="100"></v-img>
+                                            </td>
+                                            <td colspan="3">
+                                        <tr class="menutitle">{{ menu.name }}</tr>
+                                        <tr class="menuinfo">{{ menu.menu_info }}</tr>
+                                        <tr class="menuprice">{{ menu.price }}원</tr>
+                                        </td>
+                                        <td></td>
+                                        <td></td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </v-tab-item>
+
+                        <v-tab-item value="tab-3">
+                            <div>
+                                <h1>리뷰</h1>
+                                <div class="ratings-container">
+                                    <div class="ratings-container-sub">
+                                        <img src="~/assets/images/babscore.png" alt="Bob's Score" class="score-image">
+                                        <div class="score-value">{{ restaurantReviews.averageScore }}</div>
+                                    </div>
+                                    <div class="rating-bars">
+                                        <div v-for="(count, index) in ratingsCount.slice().reverse()" :key="index"
+                                            class="rating-bar-container">
+                                            <span class="rating-score">{{ 5 - index }}점</span>
+                                            <div class="rating-bar-background">
+                                                <div class="rating-bar-fill"
+                                                    :style="{ width: getPercentage(count) + '%' }">
+                                                </div>
                                             </div>
-                                            <div>{{ facility.label }}</div>
+                                            <span class="rating-count">{{ count }}</span>
                                         </div>
                                     </div>
-                                </v-tab-item>
+                                </div><br>
+                                <hr>
 
-                                <v-tab-item value="tab-2">
-                                    <div>
-                                        <h1>메뉴</h1><br>
-                                        <table class="menutable">
-                                            <tbody>
-                                                <tr v-for="menu in menus" :key="menu.id">
-                                                    <td><v-img contain :src="restaurantDetails.menu_img" width="100" height="100"></v-img></td>
-                                                    <td colspan="3">
-                                                        <tr class="menutitle">{{ menu.name }}</tr>
-                                                        <tr class="menuinfo">{{ menu.menu_info }}</tr>
-                                                        <tr class="menuprice">{{ menu.price }}원</tr>
-                                                    </td>
-                                                    <td></td><td></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </v-tab-item>
-
-                                <v-tab-item value="tab-3">
-                                    <div>
-                                        <h1>리뷰</h1>
-                                        <div class="ratings-container">
-                                            <div class="ratings-container-sub">
-                                                <img src="~/assets/images/babscore.png" alt="Bob's Score"
-                                                    class="score-image">
-                                                <div class="score-value">{{ restaurantReviews.averageScore }}</div>
+                                <v-col cols="12" xl="12" lg="12">
+                                    <div v-for="review in reviews" :key="review.id" class="mb-6">
+                                        <div class="d-flex align-center flex-wrap mb-4">
+                                            <v-avatar size="48" class="me-4">
+                                                <img src="../../assets/images/faces/review_person.png">
+                                            </v-avatar>
+                                            <div>
+                                                <h5 class="mb-0">{{ review.name }}</h5>
+                                                <p class="mb-0 text-14 grey--text text--darken-1">Gold Member</p>
                                             </div>
-                                            <div class="rating-bars">
-                                                <div v-for="(count, index) in ratingsCount.slice().reverse()"
-                                                    :key="index" class="rating-bar-container">
-                                                    <span class="rating-score">{{ 5 - index }}점</span>
-                                                    <div class="rating-bar-background">
-                                                        <div class="rating-bar-fill"
-                                                            :style="{ width: getPercentage(count) + '%' }">
-                                                        </div>
-                                                    </div>
-                                                    <span class="rating-count">{{ count }}</span>
-                                                </div>
-                                            </div>
-                                        </div><br>
-                                        <hr>
-
-                                        <v-col cols="12" xl="12" lg="12">
-                                            <div v-for="review in reviews" :key="reviews.length" class="mb-6">
-                                                <div class="d-flex align-center flex-wrap mb-4">
-                                                    <v-avatar size="48" class="me-4">
-                                                        <img src="../../assets/images/faces/review_person.png">
-                                                    </v-avatar>
-                                                    <div>
-                                                        <h5 class="mb-0">{{ review.name }}</h5>
-                                                        <p class="mb-0 text-14 grey--text text--darken-1">Gold Member
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-center mb-2">
-                                                    <span v-for="starIndex in 5" :key="starIndex">
-                                                        <img v-if="starIndex <= review.score"
-                                                            src="../../assets/images/babscore.png" width="16"
-                                                            height="16" />
-                                                        <img v-else src="../../assets/images/graybab.png" width="16"
-                                                            height="16" />
-                                                    </span>
-                                                    <span class="font-weight-bold text-14 ms-2">{{ review.score
-                                                        }}</span>
-                                                    <span class="grey--text text--darken-1 text-14 ms-2">{{
-                review.registerDate
-            }}</span>
-                                                </div>
-                                                <h5 class="grey--text text--darken-2 font-weight-regular mb-3">{{
-                    review.content }}
-                                                </h5>
-                                                <v-col cols="12" lg="6">
-                                                    <v-img contain :src="review.review_img"></v-img>
-                                                </v-col>
-                                                <div>
-                                                    <div class="mt-4">
-                                                        <v-btn class="grey--text text--darken-2 text-capitalize" text
-                                                            elevation="0" small>
-                                                            <v-icon left small>mdi-thumb-up-outline</v-icon>
-                                                            Like
-                                                        </v-btn>
-                                                        <v-btn class="grey--text text--darken-2 text-capitalize" text
-                                                            elevation="0" small>
-                                                            <v-icon left small>mdi-comment-text-outline</v-icon>
-                                                            Comment
-                                                        </v-btn>
-                                                    </div>
-                                                </div>
-                                                <v-divider class="my-4"></v-divider>
-                                            </div>
+                                        </div>
+                                        <div class="d-flex align-center mb-2">
+                                            <span v-for="starIndex in 5" :key="starIndex">
+                                                <img v-if="starIndex <= review.score"
+                                                    src="../../assets/images/babscore.png" width="16" height="16" />
+                                                <img v-else src="../../assets/images/graybab.png" width="16"
+                                                    height="16" />
+                                            </span>
+                                            <span class="font-weight-bold text-14 ms-2">{{ review.score }}</span>
+                                            <span class="grey--text text--darken-1 text-14 ms-2">{{ review.registerDate
+                                                }}</span>
+                                        </div>
+                                        <h5 class="grey--text text--darken-2 font-weight-regular mb-3">{{ review.content
+                                            }}</h5>
+                                        <v-col cols="12" lg="6">
+                                            <v-img contain :src="review.review_img"></v-img>
                                         </v-col>
+                                        <div class="mt-4">
+                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                                small>
+                                                <v-icon left small>mdi-thumb-up-outline</v-icon>
+                                                Like
+                                            </v-btn>
+                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
+                                                small>
+                                                <v-icon left small>mdi-comment-text-outline</v-icon>
+                                                Comment
+                                            </v-btn>
+                                        </div>
+                                        <v-divider class="my-4"></v-divider>
                                     </div>
-                                </v-tab-item>
+                                </v-col>
 
-                                <v-tab-item value="tab-4">
-                                    <div>
-                                        <h1>상세정보</h1><br>
-                                        <h4>전화번호</h4>
-                                        <v-icon color="green">mdi-phone</v-icon> {{ restaurantDetails.tel }}<br><br>
-                                        <h4>매장 소개</h4>
-                                        {{ restaurantDetails.description }}<br><br>
-                                        <h4>영업시간 및 정기 휴무</h4>
-                                        10:00 - 21:30<br>
-                                        20:30 라스트오더<br>
-                                        정기 휴무 : 매주 일<br><br>
-                                        <h4>매장 주소</h4>
-                                        {{ restaurantDetails.address }}
-                                    </div>
-                                </v-tab-item>
-                            </v-tabs-items>
-                        </v-col>
+                            </div>
+                        </v-tab-item>
+
+                        <v-tab-item value="tab-4">
+                            <div>
+                                <h1>상세정보</h1><br>
+                                <h4>전화번호</h4>
+                                <v-icon color="green">mdi-phone</v-icon> {{ restaurantDetails.tel }}<br><br>
+                                <h4>매장 소개</h4>
+                                {{ restaurantDetails.description }}<br><br>
+                                <h4>영업시간 및 정기 휴무</h4>
+                                10:00 - 21:30<br>
+                                20:30 라스트오더<br>
+                                정기 휴무 : 매주 일<br><br>
+                                <h4>매장 주소</h4>
+                                {{ restaurantDetails.address }}
+                            </div>
+                        </v-tab-item>
+                    </v-tabs-items>
+                </v-col>
             </v-row>
-            <div><Footer /></div>
+            <div>
+                <Footer />
+            </div>
         </v-container>
-        
+
     </div>
-    
+
 </template>
 <script>
 import axios from 'axios';
@@ -310,7 +311,7 @@ export default {
         alertMessage: '',
         alertType: '',
         user: null,
-      restaurantId: null
+        restaurantId: null
     }),
     computed: {
         // 평균 별점을 계산합니다.
@@ -333,7 +334,7 @@ export default {
                 img: found.restaurant_img,
                 description: found.restaurant_description,
                 categories: found.categories,
-                menu_img : found.img
+                menu_img: found.img
             } : {
                 name: 'Restaurant not found',
                 address: '',
@@ -377,11 +378,11 @@ export default {
     created() {
         this.fetchReviews();
     },
-    async mounted(){
+    async mounted() {
         this.fetchMenus();
         await this.getUserInfo();
     },
-    methods: {  
+    methods: {
         // 비율을 계산하여 백분율로 변환합니다.
         getPercentage(count) {
             const total = this.ratingsCount.reduce((sum, count) => sum + count, 0);
@@ -455,72 +456,72 @@ export default {
             }, 2000);
         },
         async saveToFavorites() {
-      try {
-        if (this.user && this.restaurantId) {
-          const response = await axios.post(`${process.env.API_URL}/bookmark`, {
-            member_id: this.user.id,
-            restaurant_id: this.restaurantId
-          });
+            try {
+                if (this.user && this.restaurantId) {
+                    const response = await axios.post(`${process.env.API_URL}/bookmark`, {
+                        member_id: this.user.id,
+                        restaurant_id: this.restaurantId
+                    });
 
-          if (response.status === 200) {
-            console.log('즐겨찾기에 저장되었습니다.');
-          } else {
-            console.error('즐겨찾기 저장 실패:', response);
-          }
-        }
-      } catch (error) {
-        console.error('즐겨찾기 저장 중 오류 발생:', error);
-      }
-    },
-    async removeFromFavorites() {
-      try {
-        if (this.user && this.restaurantId) {
-          const response = await axios.delete(`${process.env.API_URL}/bookmark`, {
-            data: {
-              member_id: this.user.id,
-              restaurant_id: this.restaurantId
+                    if (response.status === 200) {
+                        console.log('즐겨찾기에 저장되었습니다.');
+                    } else {
+                        console.error('즐겨찾기 저장 실패:', response);
+                    }
+                }
+            } catch (error) {
+                console.error('즐겨찾기 저장 중 오류 발생:', error);
             }
-          });
+        },
+        async removeFromFavorites() {
+            try {
+                if (this.user && this.restaurantId) {
+                    const response = await axios.delete(`${process.env.API_URL}/bookmark`, {
+                        data: {
+                            member_id: this.user.id,
+                            restaurant_id: this.restaurantId
+                        }
+                    });
 
-          if (response.status === 200) {
-            console.log('즐겨찾기에서 삭제되었습니다.');
-          } else {
-            console.error('즐겨찾기 삭제 실패:', response);
-          }
-        }
-      } catch (error) {
-        console.error('즐겨찾기 삭제 중 오류 발생:', error);
-      }
-    },
+                    if (response.status === 200) {
+                        console.log('즐겨찾기에서 삭제되었습니다.');
+                    } else {
+                        console.error('즐겨찾기 삭제 실패:', response);
+                    }
+                }
+            } catch (error) {
+                console.error('즐겨찾기 삭제 중 오류 발생:', error);
+            }
+        },
         async getUserInfo() {     // 현재 로그인한 유저정보를 불러오는 메소드
-      try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
+            try {
+                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                if (!token) {
+                    throw new Error('No token found');
+                }
 
-        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-          headers: {
-            'Authorization': `${token}`
-          },
-          withCredentials: true
-        });
+                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
 
-        if (response.status === 200) {
-          const userInfo = response.data;
-          console.log('User Info:', userInfo);
-          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-          this.user = userInfo;
-          console.log(this.user);
-          console.log(this.user.id);
-        } else {
-          console.error('Failed to fetch user info:', response);
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    },
+                if (response.status === 200) {
+                    const userInfo = response.data;
+                    console.log('User Info:', userInfo);
+                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                    this.user = userInfo;
+                    console.log(this.user);
+                    console.log(this.user.id);
+                } else {
+                    console.error('Failed to fetch user info:', response);
+                }
+            } catch (error) {
+                console.error('Error fetching user info:', error);
+            }
+        },
     }
 }
 </script>
@@ -774,15 +775,18 @@ hr {
 .rowspan {
     min-height: 800px;
 }
-.menutitle{
-font-size: medium;
+
+.menutitle {
+    font-size: medium;
 }
-.menuinfo{
-font-size: small;
-color:gray;
+
+.menuinfo {
+    font-size: small;
+    color: gray;
 }
-.menuprice{
-font-size: small;
-font-weight:bold;
+
+.menuprice {
+    font-size: small;
+    font-weight: bold;
 }
 </style>

@@ -89,7 +89,8 @@ export default {
     baseURL: process.env.apiURL || `${process.env.API_URL}`, // 환경 변수 또는 기본 URL 설정
   },
   publicRuntimeConfig: {
-    apiUrl: process.env.API_URL
+    apiURL: process.env.API_URL,
+    frontURL: process.env.FRONT_URL
   },
   // Vuetify module configuration: https://go.nuxtjs.dev/config-vuetify
   vuetify: {

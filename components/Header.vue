@@ -265,7 +265,7 @@ export default {
     async fetchUserInfo(token) {
       try {
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get('http://localhost:8000/userInfo/me', {
+        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
           headers: {
             'Authorization': `${token}`
           },
@@ -277,7 +277,7 @@ export default {
           console.log('User Info:', userInfo);
           // 사용자 정보를 상태나 컴포넌트 데이터에 저장
           this.user = userInfo;
-          console.log(this.user);
+          console.log(this.user, '헤더부분');
           console.log(this.user.id);
         } else {
           console.error('Failed to fetch user info:', response);
