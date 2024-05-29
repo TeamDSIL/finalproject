@@ -30,7 +30,7 @@
    
       <div class="crowdClass">
                               <span v-if="cardSection.restaurant_crowd === 'BUSY'" class="busy1">　혼잡　</span>
-                              <span v-else-if="cardSection.restaurant_crowd === 'NORMAL' "class="normal1">　보통　</span>
+                              <span v-else-if="cardSection.restaurant_crowd === 'NORMAL'" class="normal1">　보통　</span>
                               <span v-else-if="cardSection.restaurant_crowd === 'AVAILABLE'" class="available1">　여유　</span>
                           </div>
                          

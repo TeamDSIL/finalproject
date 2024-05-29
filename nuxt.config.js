@@ -1,10 +1,10 @@
 import colors from "vuetify/es5/util/colors";
 
 export default {
-  // server: {
-  //   host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
-  //   port: 3000, // 원하는 포트 번호
-  // },
+  server: {
+    host: "0.0.0.0", // 모든 IP 주소에서 접근 가능
+    port: 3000, // 원하는 포트 번호
+  },
   // Global page headers: https://go.nuxtjs.dev/config-head
   router: {
     extendRoutes(routes, resolve) {
@@ -68,6 +68,7 @@ export default {
   // Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
   plugins: [
     '~/plugins/axios.js', // 추가된 플러그인 경로
+    '~/plugins/event-bus.js'
   ],
   // Auto import components: https://go.nuxtjs.dev/config-components
   components: {
@@ -85,7 +86,7 @@ export default {
   ],
   // Axios 모듈 설정
   axios: {
-    baseURL: process.env.apiURL || `${process.env.API_URL}`, // 환경 변수 또는 기본 URL 설정
+    baseURL: `${process.env.API_URL}`, // 환경 변수 또는 기본 URL 설정
   },
   publicRuntimeConfig: {
     apiUrl: process.env.API_URL
@@ -124,6 +125,6 @@ export default {
     },
   },
   env: {
-    apiURL: process.env.VUE_APP_API_URL,
+    apiURL: process.env.API_URL,
   },
 };

@@ -455,7 +455,7 @@ export default {
     deleteNotice(id) {
       if (confirm("진짜 삭제하시겠습니까?")) {
         axios
-          .delete(`http://localhost:8000/informs/${id}`)
+          .delete(`${process.env.API_URL}/informs/${id}`)
           .then(() => {
             this.notices = this.notices.filter((notice) => notice.id !== id);
             alert("공지사항이 성공적으로 삭제되었습니다.");

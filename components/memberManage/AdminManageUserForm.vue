@@ -57,9 +57,6 @@
                                         <div
                                             class="d-flex justify-center align-center justify-sm-space-between flex-wrap">
                                             <div class="mb-4 me-3">
-                                                <p class="font-weight-normal mb-0 text-14">Showing {{ startItemIndex
-                                                    }}-{{ endItemIndex }} of {{
-                                                        filteredMembers.length }} Reviews</p>
                                             </div>
                                             <div class="mb-4">
                                                 <!-- 페이지네이션 -->

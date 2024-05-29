@@ -83,14 +83,16 @@
                                     </div><br><br>
                                     <h2>편의시설</h2>
                                     <div class="icon-container">
-                                        <div v-for="facility in allFacilities" :key="facility.name"
-                                            v-if="facilities.includes(facility.name)" class="icon-center">
-                                            <div class="icon-item">
-                                                <img :src="facility.icon" width="50" height="50">
-                                            </div>
-                                            <div>{{ facility.label }}</div>
-                                        </div>
-                                    </div>
+    <template v-for="facility in allFacilities">
+        <div v-if="facilities.includes(facility.name)" :key="facility.name" class="icon-center">
+            <div class="icon-item">
+                <img :src="facility.icon" width="50" height="50">
+            </div>
+            <div>{{ facility.label }}</div>
+        </div>
+    </template>
+</div>
+
                                 </v-tab-item>
 
                                 <v-tab-item value="tab-2">
@@ -137,54 +139,42 @@
                                         <hr>
 
                                         <v-col cols="12" xl="12" lg="12">
-                                            <div v-for="review in reviews" :key="reviews.length" class="mb-6">
-                                                <div class="d-flex align-center flex-wrap mb-4">
-                                                    <v-avatar size="48" class="me-4">
-                                                        <img src="../../assets/images/faces/review_person.png">
-                                                    </v-avatar>
-                                                    <div>
-                                                        <h5 class="mb-0">{{ review.name }}</h5>
-                                                        <p class="mb-0 text-14 grey--text text--darken-1">Gold Member
-                                                        </p>
-                                                    </div>
-                                                </div>
-                                                <div class="d-flex align-center mb-2">
-                                                    <span v-for="starIndex in 5" :key="starIndex">
-                                                        <img v-if="starIndex <= review.score"
-                                                            src="../../assets/images/babscore.png" width="16"
-                                                            height="16" />
-                                                        <img v-else src="../../assets/images/graybab.png" width="16"
-                                                            height="16" />
-                                                    </span>
-                                                    <span class="font-weight-bold text-14 ms-2">{{ review.score
-                                                        }}</span>
-                                                    <span class="grey--text text--darken-1 text-14 ms-2">{{
-                review.registerDate
-            }}</span>
-                                                </div>
-                                                <h5 class="grey--text text--darken-2 font-weight-regular mb-3">{{
-                    review.content }}
-                                                </h5>
-                                                <v-col cols="12" lg="6">
-                                                    <v-img contain :src="review.review_img"></v-img>
-                                                </v-col>
-                                                <div>
-                                                    <div class="mt-4">
-                                                        <v-btn class="grey--text text--darken-2 text-capitalize" text
-                                                            elevation="0" small>
-                                                            <v-icon left small>mdi-thumb-up-outline</v-icon>
-                                                            Like
-                                                        </v-btn>
-                                                        <v-btn class="grey--text text--darken-2 text-capitalize" text
-                                                            elevation="0" small>
-                                                            <v-icon left small>mdi-comment-text-outline</v-icon>
-                                                            Comment
-                                                        </v-btn>
-                                                    </div>
-                                                </div>
-                                                <v-divider class="my-4"></v-divider>
-                                            </div>
-                                        </v-col>
+    <div v-for="review in reviews" :key="review.id" class="mb-6">
+        <div class="d-flex align-center flex-wrap mb-4">
+            <v-avatar size="48" class="me-4">
+                <img src="../../assets/images/faces/review_person.png">
+            </v-avatar>
+            <div>
+                <h5 class="mb-0">{{ review.name }}</h5>
+                <p class="mb-0 text-14 grey--text text--darken-1">Gold Member</p>
+            </div>
+        </div>
+        <div class="d-flex align-center mb-2">
+            <span v-for="starIndex in 5" :key="starIndex">
+                <img v-if="starIndex <= review.score" src="../../assets/images/babscore.png" width="16" height="16" />
+                <img v-else src="../../assets/images/graybab.png" width="16" height="16" />
+            </span>
+            <span class="font-weight-bold text-14 ms-2">{{ review.score }}</span>
+            <span class="grey--text text--darken-1 text-14 ms-2">{{ review.registerDate }}</span>
+        </div>
+        <h5 class="grey--text text--darken-2 font-weight-regular mb-3">{{ review.content }}</h5>
+        <v-col cols="12" lg="6">
+            <v-img contain :src="review.review_img"></v-img>
+        </v-col>
+        <div class="mt-4">
+            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
+                <v-icon left small>mdi-thumb-up-outline</v-icon>
+                Like
+            </v-btn>
+            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0" small>
+                <v-icon left small>mdi-comment-text-outline</v-icon>
+                Comment
+            </v-btn>
+        </div>
+        <v-divider class="my-4"></v-divider>
+    </div>
+</v-col>
+
                                     </div>
                                 </v-tab-item>
 
