@@ -8,14 +8,14 @@
       <v-card>
         <!-- 예약 날짜 선택 -->
         <v-date-picker v-model="date" :min="minDate" scrollable locale="ko" full-width></v-date-picker>
-        <p style="margin-left: 10px;">예약 시간을 선택해주세요.<span class="time-description">(테이블 개수)</span></p>
+        <p style="margin-left: 10px;">예약 시간을 선택해주세요.<span class="time-description"></span></p>
         <!-- 시간 선택 버튼 -->
         <div class="time-buttons-container" @touchmove.prevent="handleTouchMove">
           <v-row class="time-buttons" justify="center">
             <v-btn v-for="(time, index) in timeOptions" :key="index" @click="selectTime(index)"
               :class="['time-button', isSelected(time) ? 'selected' : '', isDisabled(time) ? 'disabled' : '']"
               :disabled="isDisabled(time)" :style="{ width: '80px' }">
-              {{ time }} ({{ restaurant_table_count }})
+              {{ time }}
             </v-btn>
           </v-row>
         </div>
