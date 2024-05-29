@@ -199,7 +199,7 @@ export default {
       try {
         const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/categories`, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${this.token}`
           },
           withCredentials: true
         });
@@ -249,7 +249,7 @@ export default {
       try {
         const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/facilities`, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${this.token}`
           },
           withCredentials: true
         });
@@ -277,7 +277,7 @@ export default {
       try {
         const response = await axios.get(`${process.env.API_URL}/restaurant/${restaurantId}/menus`, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${this.token}`
           },
           withCredentials: true
         });
@@ -341,7 +341,7 @@ export default {
       try {
         const response = await axios.put(`${process.env.API_URL}/restaurant/${this.restaurant.id}`, formData, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `Bearer ${this.token}`
           },
           withCredentials: true
         });
