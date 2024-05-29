@@ -15,14 +15,13 @@
 </td>
 <td width="300" align="center">
 <b>식당 검색</b>
-
 </td>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td width="300" align="center">
-<img src="https://github.com/TeamDSIL/finalproject/assets/147921376/b1ca9777-51b8-429f-836b-54d553d15664.gif" width="350">
+<img src="https://github.com/TeamDSIL/finalproject/assets/147921376/cf1b8cc6-3eba-4423-9524-e1d4a354a86b.gif" width="350">
 </td>
 <td width="300" align="center">
 <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/15e40aed-9bc8-460d-bf1d-1b92edf7e64b.gif" width="350">
