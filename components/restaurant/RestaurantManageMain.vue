@@ -491,7 +491,12 @@ export default {
 
     async getRestaurantSentiment(id) {
       try {
-        const response = await axios.get(`${process.env.API_URL}/restaurant/${id}/sentiment`);
+        const response = await axios.get(`${process.env.API_URL}/restaurant/${id}/sentiment`, {
+          headers: {
+            'Authorization': `Bearer ${this.token}`
+          },
+          withCredentials: true
+        });
         this.sentiment = response.data;
         this.calculateSentimentScore(); // 감정 평가 점수 계산
       } catch (error) {
@@ -513,7 +518,13 @@ export default {
       const restaurantId = this.$route.params.id;
       try {
         const response = await axios.get(
-          `${process.env.API_URL}/restaurant/monthly/${restaurantId}/${this.year}`
+          `${process.env.API_URL}/restaurant/monthly/${restaurantId}/${this.year}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
+          }
         );
         this.stats = Object.keys(response.data).map((month) => ({
           period: `${month}월`,
@@ -527,7 +538,13 @@ export default {
       const restaurantId = this.$route.params.id;
       try {
         const response = await axios.get(
-          `${process.env.API_URL}/restaurant/weekly/${restaurantId}/${this.year}`
+          `${process.env.API_URL}/restaurant/weekly/${restaurantId}/${this.year}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
+          }
         );
         this.stats = Object.keys(response.data).map((week) => {
           const month =
@@ -553,6 +570,10 @@ export default {
               params: {
                 slot: time.slot,
               },
+              headers: {
+                'Authorization': `Bearer ${this.token}`
+              },
+              withCredentials: true
             }
           );
           time.clicked = false;
@@ -568,6 +589,10 @@ export default {
               params: {
                 slot: time.slot,
               },
+              headers: {
+                'Authorization': `Bearer ${this.token}`
+              },
+              withCredentials: true
             }
           );
           time.clicked = true;
@@ -579,7 +604,13 @@ export default {
     async fetchRestaurantDetails(restaurantId) {
       try {
         const response = await axios.get(
-          `${process.env.API_URL}/restaurant/${restaurantId}`
+          `${process.env.API_URL}/restaurant/${restaurantId}`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
+          }
         );
         this.restaurant = response.data;
         console.log("Restaurant details fetched successfully");
@@ -591,7 +622,13 @@ export default {
       console.log("예약목록을 불러올 식당의 아이디:", restaurantId);
       try {
         const response = await axios.get(
-          `${process.env.API_URL}/restaurant/${restaurantId}/reservations`
+          `${process.env.API_URL}/restaurant/${restaurantId}/reservations`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
+          }
         );
         this.reservations = response.data;
         console.log("불러온 예약목록들: ", this.reservations);
@@ -607,7 +644,13 @@ export default {
     async fetchAvailableTimes(restaurantId) {
       try {
         const response = await axios.get(
-          `${process.env.API_URL}/restaurant/${restaurantId}/available-times`
+          `${process.env.API_URL}/restaurant/${restaurantId}/available-times`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
+          }
         );
         const availableTimes = response.data;
         console.log("가져온 예약 가능 시간들: ", availableTimes);
@@ -630,7 +673,13 @@ export default {
       console.log("리뷰목록을 불러올 식당의 아이디:", restaurantId);
       try {
         const response = await axios.get(
-          `${process.env.API_URL}/restaurant/${restaurantId}/reviews`
+          `${process.env.API_URL}/restaurant/${restaurantId}/reviews`,
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
+          }
         );
         this.reviews = response.data.map((review) => {
           return {
@@ -703,6 +752,10 @@ export default {
             params: {
               status: crowd,
             },
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
           }
         );
         this.restaurant.crowd = response.data.crowd;
@@ -727,6 +780,10 @@ export default {
             params: {
               deleteStatus: true,
             },
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
           }
         );
 
@@ -749,7 +806,13 @@ export default {
       try {
         const response = await axios.post(
           `${process.env.API_URL}/restaurant/reviews/${reviewId}`,
-          { content: this.reply }
+          { content: this.reply },
+          {
+            headers: {
+              'Authorization': `Bearer ${this.token}`
+            },
+            withCredentials: true
+          }
         );
         const reply = response.data;
         const review = this.reviews.find((r) => r.id === reviewId);
