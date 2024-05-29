@@ -35,13 +35,6 @@ export default {
                 },
                 {
                     id: 2,
-                    icon: 'mdi-lock-check-outline',
-                    title: '비밀번호 변경',
-                    link: '/restaurant/RestaurantListPage'
-
-                },
-                {
-                    id: 3,
                     icon: 'mdi-store',
                     title: '식당 관리 페이지',
                     link: '/restaurant/RestaurantManagePage'

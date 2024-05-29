@@ -1,7 +1,6 @@
 <template>
   <div>
-    <!-- <header></header> -->
-    <div style="margin-top: -50px;">
+    <div style="margin-top: -50px">
       <MainForm></MainForm>
     </div>
     <!-- 카테고리 -->
@@ -22,7 +21,7 @@
             style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
             <v-col
-              v-for="(item, index) in food"
+              v-for="(item) in food"
               :key="item.name"
               cols="12"
               lg="3"
@@ -31,16 +30,16 @@
             >
               <div class="text-center">
                 <nuxt-link
-    :to="`/restaurant/list?category=${item.name}`"
-    class="text-decoration-none"
-  >
-    <v-avatar size="200" class="mb-4 hover-effect">
-      <img :src="item.img" alt="" />
-    </v-avatar>
-    <h4 class="grey--text text--darken-2">
-      {{ item.displayName }}
-    </h4>
-  </nuxt-link>
+                  :to="`/restaurant/list?category=${item.name}`"
+                  class="text-decoration-none"
+                >
+                  <v-avatar size="200" class="mb-4 hover-effect">
+                    <img :src="item.img" alt="" />
+                  </v-avatar>
+                  <h4 class="grey--text text--darken-2">
+                    {{ item.displayName }}
+                  </h4>
+                </nuxt-link>
               </div>
             </v-col>
           </v-row>
@@ -61,7 +60,7 @@
             style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
             <v-col
-              v-for="(item, index) in alcohol"
+              v-for="(item) in alcohol"
               :key="item.name"
               cols="12"
               lg="3"
@@ -70,7 +69,7 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/alcohol?category=${item.name}`"
+                  :to="`/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -100,7 +99,7 @@
             style="padding: 16px; border-radius: 8px; margin-top: 0px"
           >
             <v-col
-              v-for="(item, index) in who"
+              v-for="(item) in who"
               :key="item.name"
               cols="12"
               lg="3"
@@ -109,7 +108,7 @@
             >
               <div class="text-center">
                 <nuxt-link
-                  :to="`/restaurant/custom?category=${item.name}`"
+                  :to="`/restaurant/list?category=${item.name}`"
                   class="text-decoration-none"
                 >
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -166,12 +165,12 @@ export default {
       CardList: CardSection,
       isRouletteOpen: false, // 모달 상태
       randomImageStyle: {
-        position: "fixed", // Change to fixed positioning
-        bottom: "100px", // Position 20px from the bottom
-        right: "50px", // Position 20px from the right
-        width: "100px", // Set a fixed width
-        height: "150px", // Set a fixed height
-        cursor: "pointer", // Change cursor to pointer on hover
+        position: "fixed",
+        bottom: "100px",
+        right: "50px",
+        width: "100px",
+        height: "150px",
+        cursor: "pointer",
       },
       food: [
         {
@@ -301,7 +300,7 @@ export default {
   left: 50%; // 수평 중앙에 위치
   transform: translate(-50%, -100%); // 중앙에서 위로 이동
   padding: 8px 12px;
-  background-color: #D23F57; // 말풍선 배경
+  background-color: #d23f57; // 말풍선 배경
   color: white; // 텍스트 색상
   border-radius: 8px; // 둥근 모서리
   z-index: 1000; // 높은 z-index
@@ -311,10 +310,6 @@ export default {
 .random-image:hover .info-text {
   visibility: visible; // hover 시에만 텍스트 보이게 설정
 }
-.hover-effect {
-  // transition: border 0.3s ease;
-}
-
 .hover-effect:hover {
   border: 6px solid rgb(210, 63, 87);
   border-radius: 50%; /* 동그란 테두리를 원하면 사용 */
