@@ -139,7 +139,7 @@
                                                 <span v-if="userInfo.point">
                                                     &nbsp; 지금까지 {{ userInfo.point.accumulatePoint ?
                                                         formatNumber((userInfo.point.accumulatePoint /
-                                                    100).toFixed(2)) : 0 }} 공기 드셨어요.
+                                                            100).toFixed(2)) : 0 }} 공기 드셨어요.
                                                 </span>
                                             </div>
                                         </v-card>
@@ -196,6 +196,7 @@ export default {
         };
     },
     methods: {
+
         async getUserInfo() {
             if (typeof window !== 'undefined') {
                 try {
@@ -214,7 +215,7 @@ export default {
 
                     if (response.status === 200) {
                         const userInfo = response.data;
-                        console.log('User Info:', userInfo);
+                        console.log('유저 User Info:', userInfo);
                         // 사용자 정보를 상태나 컴포넌트 데이터에 저장
                         this.user = userInfo;
                     } else {
@@ -230,14 +231,29 @@ export default {
         async fetchUserInfo() {
             if (this.user && this.user.email) {
                 const email = this.user.email;
-                const response = await axios
-                    .get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`)
-                    .then((response) => {
-                        this.userInfo = response.data;
-                    })
-                    .catch((error) => {
-                        console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+                try {
+                    const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                    if (!token) {
+                        throw new Error('No token found');
+                    }
+
+                    // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                    const response = await axios.get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`, {
+                        headers: {
+                            'Authorization': `Bearer ${token}`
+                        },
+                        withCredentials: true
                     });
+
+                    if (response.status === 200) {
+                        this.userInfo = response.data;
+                        console.log(this.userInfo, '중간점검');
+                    } else {
+                        console.error('Failed to fetch user info:', response);
+                    }
+                } catch (error) {
+                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+                }
             } else {
                 console.error('User information is not available');
             }

@@ -1,3 +1,4 @@
+// CheckUserDeleteForm.vue
 <template>
     <v-card>
         <div class="px-3 px-md-10 py-8 ">
@@ -18,6 +19,8 @@
 
 <script>
 import axios from 'axios';
+import { EventBus } from '~/plugins/event-bus.js';
+
 
 export default {
     props: {
@@ -34,9 +37,10 @@ export default {
     methods: {
         // 수정 확인 버튼 클릭 시 실행될 메서드
         async handleDelete() {
-            this.logout();
+            await this.logout(); // 로그아웃 먼저 처리
             try {
                 const response = await axios.delete(`${process.env.API_URL}/memberManage/userMyPage?email=${this.userInfo.email}`);
+                EventBus.$emit('user-logged-out'); // 로그아웃 이벤트 발행
                 this.$router.push('/');
             } catch (error) {
                 alert('삭제 요청에 실패하였습니다.');

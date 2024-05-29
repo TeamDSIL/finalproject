@@ -218,20 +218,30 @@ export default {
       if (this.user && this.user.email) {
         // API 통신을 통해 식당 정보를 받아옵니다.
         const email = this.user.email;
-        const response = await axios.get(`${process.env.API_URL}/memberManage/ownerMyPage?email=${email}`)
-          // this.selectedOwnerInfo.email
-          .then((response) => {
-            // 받아온 식당 정보를 restaurants에 저장합니다.
-            console.log(response.data);
-            this.ownerInfos = response.data;
-            // 데이터를 성공적으로 가져온 후에 첫 번째 항목을 선택합니다.
-            this.selectedItem = 0;
-            this.selectedOwnerInfo = this.ownerInfos[0];
+        try {
+          const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+          if (!token) {
+            throw new Error('No token found');
+          }
 
-          })
-          .catch((error) => {
-            console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-          })
+          // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+          const response = await axios.get(`${process.env.API_URL}/memberManage/ownerMyPage?email=${email}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true
+          });
+
+          // 응답 처리
+          console.log(response.data);
+          this.ownerInfos = response.data;
+          // 데이터를 성공적으로 가져온 후에 첫 번째 항목을 선택합니다.
+          this.selectedItem = 0;
+          this.selectedOwnerInfo = this.ownerInfos[0];
+
+        } catch (error) {
+          console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+        }
       } else {
         console.error('User information is not available');
       }
