@@ -286,6 +286,15 @@ export default {
         console.error('Error fetching user info:', error);
       }
     },
+    async loadUserDetails() {
+      try {
+        const email = this.user.email;
+        const response = await axios.get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`);
+        this.userInfo = response.data;
+      } catch (error) {
+        console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
+      }
+    },
     async logout() {
       try {
         console.log('Sending logout request...');

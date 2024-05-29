@@ -1,9 +1,9 @@
 function saveAuthToCookie(value) {
-  document.cookie = `til_auth=${value}`;
+  document.cookie = `til_auth=${value}; SameSite=Lax`;
 }
 
 function saveUserToCookie(value) {
-  document.cookie = `til_user=${value}`;
+  document.cookie = `til_user=${value}; SameSite=Lax`;
 }
 
 function getAuthFromCookie() {
@@ -21,7 +21,7 @@ function getUserFromCookie() {
 }
 
 function deleteCookie(value) {
-  document.cookie = `${value}=; expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+  document.cookie = `${value}=; expires=Thu, 01 Jan 1970 00:00:01 GMT; SameSite=Lax`;
 }
 
 export {

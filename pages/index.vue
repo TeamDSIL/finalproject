@@ -13,7 +13,7 @@
             <span style="font-size: x-large; font-weight: bold">드실 음식</span>
           </v-col>
           <v-row class="elevation-2" style="padding: 16px; border-radius: 8px; margin-top: 0px">
-            <v-col v-for="item in food" :key="item.name" cols="12" lg="3" md="4" sm="6">
+            <v-col v-for="(item) in food" :key="item.name" cols="12" lg="3" md="4" sm="6">
               <div class="text-center">
                 <nuxt-link :to="`/restaurant/list?category=${item.name}`" class="text-decoration-none">
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -35,7 +35,7 @@
             <span style="font-size: x-large; font-weight: bold">드실 주류</span>
           </v-col>
           <v-row class="elevation-2" style="padding: 16px; border-radius: 8px; margin-top: 0px">
-            <v-col v-for="item in alcohol" :key="item.name" cols="12" lg="3" md="4" sm="6">
+            <v-col v-for="(item) in alcohol" :key="item.name" cols="12" lg="3" md="4" sm="6">
               <div class="text-center">
                 <nuxt-link :to="`/restaurant/list?category=${item.name}`" class="text-decoration-none">
                   <v-avatar size="200" class="mb-4 hover-effect">
@@ -57,7 +57,7 @@
             <span style="font-size: x-large; font-weight: bold">고객 맞춤</span>
           </v-col>
           <v-row class="elevation-2" style="padding: 16px; border-radius: 8px; margin-top: 0px">
-            <v-col v-for="item in who" :key="item.name" cols="12" lg="3" md="4" sm="6">
+            <v-col v-for="(item) in who" :key="item.name" cols="12" lg="3" md="4" sm="6">
               <div class="text-center">
                 <nuxt-link :to="`/restaurant/list?category=${item.name}`" class="text-decoration-none">
                   <v-avatar size="200" class="mb-4 hover-effect">

@@ -10,7 +10,7 @@
                 <v-col cols="6" xl="6" lg="6" class="tabContent">
                     <v-img :src="restaurantDetails.img"></v-img>
                     <div class="d-flex justify-space-between flex-wrap align-center mb-3">
-                        <h1 class="me-2">{{ restaurantDetails.name }}</h1>
+                        <div class="subtitle1">{{ restaurantDetails.name }}</div>
 
                         <div class="titleflex">
                             <div :class="{ 'favorite-dark': !isToggled, 'favorite-color': isToggled }"
@@ -23,8 +23,8 @@
                     </div>
                     <div class="mb-3">
                         <span v-for="starIndex in 5" :key="starIndex">
-                            <img v-if="starIndex <= averageScore" src="../../assets/images/babscore.png" width="16"
-                                height="16" />
+                            <img v-if="starIndex <= restaurantReviews.averageScore"
+                                src="../../assets/images/babscore.png" width="16" height="16" />
                             <img v-else src="../../assets/images/graybab.png" width="16" height="16" />
                         </span>
                         <span class="text-14 me-1"> {{ restaurantReviews.averageScore }}
@@ -58,17 +58,17 @@
 
                 <v-col cols="12" xl="6" lg="6" class="tabContent1">
                     <v-tabs v-model="tab" class="mb-8">
-                        <v-tab class="text-capitalize" href="#tab-1">홈</v-tab>
-                        <v-tab class="text-capitalize" href="#tab-2">메뉴</v-tab>
-                        <v-tab class="text-capitalize" href="#tab-3">리뷰</v-tab>
-                        <v-tab class="text-capitalize" href="#tab-4">상세정보</v-tab>
+                        <v-tab class="text-capitalize tabsize" href="#tab-1">홈</v-tab>
+                        <v-tab class="text-capitalize tabsize" href="#tab-2">메뉴</v-tab>
+                        <v-tab class="text-capitalize tabsize" href="#tab-3">리뷰</v-tab>
+                        <v-tab class="text-capitalize tabsize" href="#tab-4">상세정보</v-tab>
                     </v-tabs>
 
                     <v-tabs-items v-model="tab">
                         <v-tab-item value="tab-1">
-                            <h2>예약 신청</h2>
+                            <div class="subtitle">예약 신청</div>
                             <DateTimePicker :restaurantName="restaurantDetails.name" /><br><br>
-                            <h2>식당 혼잡도</h2>
+                            <div class="subtitle" style="margin-bottom: 10px;">식당 혼잡도</div>
                             <div class="roundstate">
                                 <div :class="crowdClass">
                                     <span v-if="restaurantDetails.crowd === 'BUSY'">혼잡</span>
@@ -81,7 +81,7 @@
                                 <span v-else-if="restaurantDetails.crowd === 'AVAILABLE'">매장 식사 이용 시 바로 입장
                                     가능합니다.</span>
                             </div><br><br>
-                            <h2>편의시설</h2>
+                            <div class="subtitle" style="margin-bottom: 10px;">편의시설</div>
                             <div class="icon-container">
                                 <template v-for="facility in allFacilities">
                                     <div v-if="facilities.includes(facility.name)" :key="facility.name"
@@ -98,13 +98,11 @@
 
                         <v-tab-item value="tab-2">
                             <div>
-                                <h1>메뉴</h1><br>
+                                <div class="subtitle">메뉴</div><br>
                                 <table class="menutable">
                                     <tbody>
                                         <tr v-for="menu in menus" :key="menu.id">
-                                            <td><v-img contain :src="restaurantDetails.menu_img" width="100"
-                                                    height="100"></v-img>
-                                            </td>
+                                            <td><v-img contain :src="menu.img" width="100" height="100"></v-img></td>
                                             <td colspan="3">
                                         <tr class="menutitle">{{ menu.name }}</tr>
                                         <tr class="menuinfo">{{ menu.menu_info }}</tr>
@@ -120,7 +118,7 @@
 
                         <v-tab-item value="tab-3">
                             <div>
-                                <h1>리뷰</h1>
+                                <div class="subtitle">리뷰</div>
                                 <div class="ratings-container">
                                     <div class="ratings-container-sub">
                                         <img src="~/assets/images/babscore.png" alt="Bob's Score" class="score-image">
@@ -145,11 +143,11 @@
                                     <div v-for="review in reviews" :key="review.id" class="mb-6">
                                         <div class="d-flex align-center flex-wrap mb-4">
                                             <v-avatar size="48" class="me-4">
-                                                <img src="../../assets/images/faces/review_person.png">
+                                                <img src="../../assets/images/faces/review_person.png"
+                                                    class="gray-image">
                                             </v-avatar>
                                             <div>
                                                 <h5 class="mb-0">{{ review.name }}</h5>
-                                                <p class="mb-0 text-14 grey--text text--darken-1">Gold Member</p>
                                             </div>
                                         </div>
                                         <div class="d-flex align-center mb-2">
@@ -169,16 +167,7 @@
                                             <v-img contain :src="review.review_img"></v-img>
                                         </v-col>
                                         <div class="mt-4">
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-thumb-up-outline</v-icon>
-                                                Like
-                                            </v-btn>
-                                            <v-btn class="grey--text text--darken-2 text-capitalize" text elevation="0"
-                                                small>
-                                                <v-icon left small>mdi-comment-text-outline</v-icon>
-                                                Comment
-                                            </v-btn>
+
                                         </div>
                                         <v-divider class="my-4"></v-divider>
                                     </div>
@@ -189,7 +178,7 @@
 
                         <v-tab-item value="tab-4">
                             <div>
-                                <h1>상세정보</h1><br>
+                                <div class="subtitle">상세정보</div><br>
                                 <h4>전화번호</h4>
                                 <v-icon color="green">mdi-phone</v-icon> {{ restaurantDetails.tel }}<br><br>
                                 <h4>매장 소개</h4>
@@ -315,13 +304,13 @@ export default {
     }),
     computed: {
         // 평균 별점을 계산합니다.
-        averageScore() {
-            const totalReviews = this.ratingsCount.reduce((sum, count) => sum + count, 0);
-            const scoreSum = this.ratingsCount.reduce((sum, count, index) => {
-                return sum + (count * (5 - index));
-            }, 0);
-            return scoreSum / totalReviews;
-        },
+        // averageScore() {
+        //     const totalReviews = this.ratingsCount.reduce((sum, count) => sum + count, 0);
+        //     const scoreSum = this.ratingsCount.reduce((sum, count, index) => {
+        //         return sum + (count * (5 - index));
+        //     }, 0);
+        //     return scoreSum / totalReviews;
+        // },
         restaurantDetails() {
             const restaurantId = this.$route.params.id;
             const found = this.menus.find(menu => menu.restaurant_id === Number(restaurantId));
@@ -377,10 +366,11 @@ export default {
     },
     created() {
         this.fetchReviews();
+        this.fetchMenus();
+        this.getUserInfo();
     },
     async mounted() {
-        this.fetchMenus();
-        await this.getUserInfo();
+
     },
     methods: {
         // 비율을 계산하여 백분율로 변환합니다.
@@ -404,6 +394,7 @@ export default {
                     console.log('식당 상세정보 불러왔음')
                     this.facilities = response.data[0].facilies;
                     console.log('편의시설 불러왔음')
+                    console.log(process.env.FRONT_URL)
                 })
                 .catch(error => {
                     console.log('메뉴 데이터를 불러올 수 없습니다.')
@@ -453,12 +444,12 @@ export default {
             // 일정 시간 후 알림 메시지 숨기기
             setTimeout(() => {
                 this.alertMessage = '';
-            }, 2000);
+            }, 1000);
         },
         async saveToFavorites() {
             try {
                 if (this.user && this.restaurantId) {
-                    const response = await axios.post(`${process.env.API_URL}/bookmark`, {
+                    const response = await axios.post(`${process.env.API_URL}/restaurant/bookmark`, {
                         member_id: this.user.id,
                         restaurant_id: this.restaurantId
                     });
@@ -476,7 +467,7 @@ export default {
         async removeFromFavorites() {
             try {
                 if (this.user && this.restaurantId) {
-                    const response = await axios.delete(`${process.env.API_URL}/bookmark`, {
+                    const response = await axios.delete(`${process.env.API_URL}/restaurant/bookmark`, {
                         data: {
                             member_id: this.user.id,
                             restaurant_id: this.restaurantId
@@ -636,7 +627,7 @@ hr {
     width: 100%;
     height: 50px;
     border-radius: 50px;
-    border: 3px solid #000;
+    border: 2px solid #000;
     color: FFFFFF;
     align-items: center;
     justify-content: left;
@@ -691,7 +682,7 @@ hr {
 .icon-item {
     // display: flex;
     // justify-content: center;
-    border: 3.5px solid #000;
+    border: 2px solid #000;
     border-radius: 15%;
     padding: 5px;
     width: 70px;
@@ -773,7 +764,7 @@ hr {
 }
 
 .rowspan {
-    min-height: 800px;
+    min-height: 1000px;
 }
 
 .menutitle {
@@ -788,5 +779,23 @@ hr {
 .menuprice {
     font-size: small;
     font-weight: bold;
+}
+
+.tabsize {
+    width: 25%;
+}
+
+.subtitle {
+    font-size: large;
+    font-weight: bold;
+}
+
+.subtitle1 {
+    font-size: x-large;
+    font-weight: bold;
+}
+
+.gray-image {
+    filter: grayscale(100%);
 }
 </style>

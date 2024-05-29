@@ -102,7 +102,9 @@ export default {
 
       try {
         const loginDTO = { email: this.email, password: this.password };
-        const response = await axios.post(`${this.apiUrl}/memberManage/loginPage`, loginDTO, { withCredentials: true });
+        console.log(loginDTO);
+        const response = await axios.post(`${process.env.API_URL}/memberManage/loginPage`, loginDTO, { withCredentials: true });
+        console.log('post 요청');
 
         if (response.status === 200) {
           const token = response.headers['authorization'];
