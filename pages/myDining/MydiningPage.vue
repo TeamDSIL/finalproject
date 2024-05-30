@@ -488,7 +488,6 @@ export default {
         });
         // 응답 데이터를 reservations 배열에 저장합니다
         this.reserveRestaurantList = response.data;
-        console.log("레저베이션" + this.reserveRestaurantList);
       } catch (error) {
         console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
       }
@@ -511,7 +510,6 @@ export default {
         });
         // 응답 데이터를 bookmarksList 배열에 저장합니다
         this.bookmarksList = response.data;
-        console.log("북마크데이터~~", this.bookmarksList);
       } catch (error) {
         console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
       }

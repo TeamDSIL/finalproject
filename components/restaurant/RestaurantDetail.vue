@@ -447,23 +447,42 @@ export default {
             }, 1000);
         },
         async saveToFavorites() {
-            try {
-                if (this.user && this.restaurantId) {
-                    const response = await axios.post(`${process.env.API_URL}/restaurant/bookmark`, {
-                        member_id: this.user.id,
-                        restaurant_id: this.restaurantId
-                    });
+    try {
+        if (this.user && this.restaurantId) {
+            // 사용자와 레스토랑 ID가 유효한지 로그 출력
+            console.log('User ID:', this.user.id);
+            console.log('Restaurant ID:', this.restaurantId);
 
-                    if (response.status === 200) {
-                        console.log('즐겨찾기에 저장되었습니다.');
-                    } else {
-                        console.error('즐겨찾기 저장 실패:', response);
-                    }
+            const response = await axios.post(`${process.env.API_URL}/restaurant/bookmark`, {
+                member_id: this.user.id,
+                restaurant_id: this.restaurantId
+            }, {
+                headers: {
+                    'Content-Type': 'application/json' // Content-Type 헤더 설정
                 }
-            } catch (error) {
-                console.error('즐겨찾기 저장 중 오류 발생:', error);
+            });
+
+            if (response.status === 200) {
+                console.log('즐겨찾기에 저장되었습니다.');
+            } else {
+                console.error('즐겨찾기 저장 실패:', response);
             }
-        },
+        } else {
+            // 유효하지 않은 경우의 로그 출력
+            if (!this.user) {
+                console.error('User is not logged in');
+            }
+            if (!this.restaurantId) {
+                console.error('Restaurant ID is not provided');
+            }
+        }
+    } catch (error) {
+        console.error('즐겨찾기 저장 중 오류 발생:', error);
+        if (error.response) {
+            console.error('Response data:', error.response.data); // 서버의 응답 데이터를 로그로 출력
+        }
+    }
+},
         async removeFromFavorites() {
             try {
                 if (this.user && this.restaurantId) {
@@ -484,6 +503,7 @@ export default {
                 console.error('즐겨찾기 삭제 중 오류 발생:', error);
             }
         },
+
         // async getUserInfo() {     // 현재 로그인한 유저정보를 불러오는 메소드
         //     try {
         //         // const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
@@ -514,6 +534,7 @@ export default {
         //         console.error('Error fetching user info:', error);
         //     }
         // },
+
     }
 }
 </script>
@@ -675,13 +696,13 @@ hr {
 
 .icon-center {
     display: flex;
-    // justify-content: center;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
 }
 
 .icon-item {
-    // display: flex;
+    display: block;
     // justify-content: center;
     border: 2px solid #000;
     border-radius: 15%;

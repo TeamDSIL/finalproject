@@ -1,5 +1,12 @@
 <template>
   <div>
+    <v-progress-linear 
+            v-if="isLoading" 
+            color="error" 
+            indeterminate
+            class="my-4"
+        ></v-progress-linear>
+        <div v-else>
     <v-container>
       <v-breadcrumbs class="ps-0" :items="items">
         <template v-slot:divider>
@@ -65,7 +72,7 @@
                   <v-col cols="12" xl="4" lg="4" md="4" sm="6"
                     v-for="(item, index) in CardList.slice(startItemIndex - 1, endItemIndex)" :key="index"
                     @click="sendRestaurantLink(item.restaurant_id)" class="cursor-pointer">
-                    <Card :cardSection="item" :cardSection1="getReviewByRestaurantId(item.restaurant_id)" />
+                    <Card :cardSection="item" />
                   </v-col>
 
 
@@ -95,7 +102,7 @@
 
     </v-container>
     <Footer />
-
+  </div>
   </div>
 </template>
 
@@ -148,6 +155,7 @@ export default {
       selectedFacilities: [],
       currentPage: 1,
       itemsPerPage: 12,
+      isLoading: true,
       items: [
         {
           text: '메인화면',
@@ -182,11 +190,13 @@ export default {
     // this.fetchReviews();
   },
   methods: {
-    async fetchList() {
+    fetchList() {
+      this.isLoading = true;
       const categories = this.$route.query.category;
       const facilities = this.$route.query.facility;
       const search = this.$route.query.search;
       const params = new URLSearchParams();
+
       if (categories) {
         if (Array.isArray(categories)) {
           categories.forEach(category => params.append('categoryNames', category));
@@ -194,6 +204,7 @@ export default {
           params.append('categoryNames', categories);
         }
       }
+
       if (facilities) {
         if (Array.isArray(facilities)) {
           facilities.forEach(facility => params.append('facilityNames', facility));
@@ -201,26 +212,22 @@ export default {
           params.append('facilityNames', facilities);
         }
       }
+
       if (search) {
         params.append('search', search);
       }
-      try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
-        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          },
-          withCredentials: true
+
+      axios.get(`${process.env.API_URL}/restaurant/list?${params.toString()}`)
+        .then(response => {
+          this.CardList = response.data;
+          console.log('식당 정보 불러옴');
+        })
+        .catch(error => {
+          console.log('데이터를 불러올 수 없습니다.');
+        })
+        .finally(() => {
+            this.isLoading = false;
         });
-        this.CardList = response.data;
-        console.log('식당 정보 불러옴');
-      } catch (error) {
-        console.log('데이터를 불러올 수 없습니다.', error);
-      }
     },
     // fetchReviews() {
     //   const id = this.$route.params.id;

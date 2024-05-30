@@ -227,8 +227,20 @@ export default {
   },
   methods: {
     fetchNotices() {
+      // Vuex 스토어 또는 로컬 스토리지에서 토큰 가져오기
+      const token = this.$store.state.token || localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
       axios
-        .get(`${process.env.API_URL}/informs/`)
+        .get(`${process.env.API_URL}/informs/`, {
+          headers: {
+            'Authorization': `${token}`
+          },
+          withCredentials: true
+        })
         .then((response) => {
           this.notices = response.data;
         })
@@ -296,9 +308,19 @@ export default {
         formData.append("file", this.currentNotice.filePath);
       }
 
+      const token = this.$store.state.token || localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
       axios
         .post(`${process.env.API_URL}/informs/`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+          headers: {
+            'Authorization': `${token}`,
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true
         })
         .then((response) => {
           this.notices.push(response.data);
@@ -339,9 +361,19 @@ export default {
         }
       }
 
+      const token = this.$store.state.token || localStorage.getItem('token');
+      if (!token) {
+        console.error('No token found');
+        return;
+      }
+
       axios
-        .put(`${process.env.API_URL}/${this.editingNotice.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
+        .put(`${process.env.API_URL}/informs/${this.editingNotice.id}`, formData, {
+          headers: {
+            'Authorization': `${token}`,
+            'Content-Type': 'multipart/form-data'
+          },
+          withCredentials: true
         })
         .then((response) => {
           const index = this.notices.findIndex(
@@ -360,16 +392,31 @@ export default {
     },
     deleteNotice(id) {
       if (confirm("진짜 삭제하시겠습니까?")) {
-        axios
-          .delete(`${process.env.API_URL}/informs/${id}`)
-          .then(() => {
-            this.notices = this.notices.filter((notice) => notice.id !== id);
-            alert("공지사항이 성공적으로 삭제되었습니다.");
-          })
-          .catch((error) => {
-            console.error("Error deleting the notice:", error);
-            alert("공지사항 삭제 실패: " + error.message);
-          });
+        const token = this.$store.state.token || localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          return;
+        }
+
+        if (confirm("진짜 삭제하시겠습니까?")) {
+          axios
+            .delete(`${process.env.API_URL}/informs/${id}`, {
+              headers: {
+                'Authorization': `${token}`
+              },
+              withCredentials: true
+            })
+            .then(() => {
+              this.notices = this.notices.filter((notice) => notice.id !== id);
+              alert("공지사항이 성공적으로 삭제되었습니다.");
+            })
+            .catch((error) => {
+              console.error("Error deleting the notice:", error);
+              alert("공지사항 삭제 실패: " + error.message);
+            });
+        } else {
+          console.log("삭제 취소됩니다.");
+        }
       } else {
         console.log("삭제 취소됩니다.");
       }

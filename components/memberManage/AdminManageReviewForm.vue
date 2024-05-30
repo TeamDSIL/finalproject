@@ -134,16 +134,36 @@ export default {
     },
   },
   methods: {
-    fetchReviews() {
-      axios
-        .get(`${process.env.API_URL}/memberManage/reviewManage`)
-        .then((response) => {
-          this.reviewInfos = response.data;
-          console.log(this.reviewInfos);
-        })
-        .catch((error) => {
-          console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+    async fetchReviews() {
+      try {
+        console.log('Fetching reviews...');
+
+        // Vuex 스토어 또는 로컬 스토리지에서 토큰 가져오기
+        const token = this.$store.state.token || localStorage.getItem('token');
+        if (!token) {
+          throw new Error('No token found');
+        }
+
+        // axios 요청에 헤더 추가
+        const response = await axios.get(`${process.env.API_URL}/memberManage/reviewManage`, {
+          headers: {
+            'Authorization': `${token}`
+          },
+          withCredentials: true
         });
+
+        if (Array.isArray(response.data)) {
+          this.reviewInfos = response.data;
+        } else if (response.data && Array.isArray(response.data.reviews)) {
+          this.reviewInfos = response.data.reviews;
+        } else {
+          console.error("Invalid data format:", response.data);
+          this.reviewInfos = [];
+        }
+      } catch (error) {
+        console.error("데이터를 불러오는 중 오류가 발생했습니다:", error);
+        this.reviewInfos = [];
+      }
     },
     truncateString(str, num) {
       if (!str) {

@@ -16,38 +16,19 @@
     <div class="d-flex mt-3" style="justify-content: flex-start">
       <v-icon class="mr-2 align-baseline">mdi-message-text</v-icon>
       <span class="font-weight-bold mr-2">리뷰:</span>
-      <v-textarea
-        v-model="reviewInfo.reviewContent"
-        outlined
-        readonly
-        auto-grow
-        rows="1"
-      ></v-textarea>
+      <v-textarea v-model="reviewInfo.reviewContent" outlined readonly auto-grow rows="1"></v-textarea>
     </div>
     <v-divider></v-divider>
     <div class="d-flex mt-3" style="justify-content: flex-start">
       <v-icon class="mr-2 align-baseline">mdi-comment</v-icon>
       <span class="font-weight-bold mr-2">댓글:</span>
       <!-- placeholder를 사용하여 "댓글이 없습니다." 표시 -->
-      <v-textarea
-        v-model="reviewInfo.replyContent"
-        :placeholder="reviewInfo.replyContent ? '' : '댓글이 없습니다.'"
-        outlined
-        readonly
-        auto-grow
-        rows="1"
-      ></v-textarea>
+      <v-textarea v-model="reviewInfo.replyContent" :placeholder="reviewInfo.replyContent ? '' : '댓글이 없습니다.'" outlined
+        readonly auto-grow rows="1"></v-textarea>
     </div>
     <div class="mt-5 d-flex justify-end">
-      <v-btn color="secondary" class="mr-4" @click="removeReview(reviewInfo.reviewId)"
-        >리뷰 삭제</v-btn
-      >
-      <v-btn
-        color="error"
-        class="mr-4"
-        @click="removeReply(reviewInfo.replyId)"
-        >댓글 삭제</v-btn
-      >
+      <v-btn color="secondary" class="mr-4" @click="removeReview(reviewInfo.reviewId)">리뷰 삭제</v-btn>
+      <v-btn color="error" class="mr-4" @click="removeReply(reviewInfo.replyId)">댓글 삭제</v-btn>
       <!-- <v-btn color="success" class="mr-4" @click="processRequest">요청 처리</v-btn> -->
       <!-- <v-btn color="warning" @click="closeDialog">닫기</v-btn> -->
     </div>
@@ -72,8 +53,17 @@ export default {
   },
   methods: {
     async removeReview(reviewId) {
-          try {
-        console.log(reviewId+"삭제할 리뷰아이디");
+      try {
+        console.log(reviewId + " 삭제할 리뷰아이디");
+
+        // 토큰을 Vuex 스토어나 로컬 스토리지에서 가져오기
+        const token = this.$store.state.token || localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          alert('토큰을 찾을 수 없습니다.');
+          return;
+        }
+
         const response = await axios.delete(
           `${process.env.API_URL}/memberManage/removeReview`,
           {
@@ -81,30 +71,44 @@ export default {
               reviewId: reviewId, // bookmarkId를 reviewId로 전달
             },
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
+              'Authorization': `${token}`
             },
+            withCredentials: true
           }
         );
-        alert("댓글이 삭제되었습니다.");
+        alert("리뷰가 삭제되었습니다.");
 
         location.reload();
       } catch (error) {
-        console.error("댓글 삭제 중 오류가 발생했습니다.", error);
-        alert("댓글 삭제에 실패했습니다.");
+        console.error("리뷰 삭제 중 오류가 발생했습니다.", error);
+        alert("리뷰 삭제에 실패했습니다.");
       }
-      },
-      async removeReply(reviewId) {
-          try {
-        console.log(reviewId+"삭제할 댓글아이디");
+    },
+
+    async removeReply(reviewId) {
+      try {
+        console.log(reviewId + " 삭제할 댓글아이디");
+
+        // 토큰을 Vuex 스토어나 로컬 스토리지에서 가져오기
+        const token = this.$store.state.token || localStorage.getItem('token');
+        if (!token) {
+          console.error('No token found');
+          alert('토큰을 찾을 수 없습니다.');
+          return;
+        }
+
         const response = await axios.delete(
           `${process.env.API_URL}/memberManage/removeReply`,
           {
             data: {
-                reviewId: reviewId, // bookmarkId를 reviewId로 전달
+              reviewId: reviewId, // bookmarkId를 reviewId로 전달
             },
             headers: {
-              "Content-Type": "application/json",
+              'Content-Type': 'application/json',
+              'Authorization': `${token}`
             },
+            withCredentials: true
           }
         );
         alert("댓글이 삭제되었습니다.");
@@ -115,7 +119,7 @@ export default {
         alert("댓글 삭제에 실패했습니다.");
       }
     },
-  },
+  }
 };
 </script>
 

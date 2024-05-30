@@ -187,8 +187,21 @@ export default {
                     }
                 };
 
+                // 토큰을 Vuex 스토어나 로컬 스토리지에서 가져오기
+                const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    alert('토큰을 찾을 수 없습니다.');
+                    return;
+                }
+
                 // API 요청 보내기
-                const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageUserPage`, modifiedData);
+                const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageUserPage`, modifiedData, {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
 
                 // 응답 처리
                 console.log('수정 응답:', response.data);
@@ -209,9 +222,24 @@ export default {
                 alert('회원 정보 수정 실패했습니다.');
             }
         },
+
         async handleDelete() {
             try {
-                const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageUserPage?email=${this.userInfo.email}`);
+                // 토큰을 Vuex 스토어나 로컬 스토리지에서 가져오기
+                const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    alert('토큰을 찾을 수 없습니다.');
+                    return;
+                }
+                confirm('삭제하시겠습니까?');
+
+                const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageUserPage?email=${this.userInfo.email}`, {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
 
                 // 삭제 완료 후 모달 창 닫음
                 this.$emit('close');
