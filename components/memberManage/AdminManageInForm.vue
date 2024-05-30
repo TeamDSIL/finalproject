@@ -17,11 +17,22 @@
                     <div>
                       <v-container>
                         <!-- 검색 필드 -->
-                        <v-text-field v-model="searchQuery" label="검색어를 입력하세요" outlined dense clearable
-                          append-icon="mdi-magnify" @keyup.enter="performSearch"></v-text-field>
+                        <v-text-field
+                          v-model="searchQuery"
+                          label="검색어를 입력하세요"
+                          outlined
+                          dense
+                          clearable
+                          append-icon="mdi-magnify"
+                          @keyup.enter="performSearch"
+                        ></v-text-field>
 
                         <!-- 공지사항 목록 테이블 -->
-                        <v-data-table :headers="headers" :items="displayedNotices" hide-default-footer>
+                        <v-data-table
+                          :headers="headers"
+                          :items="displayedNotices"
+                          hide-default-footer
+                        >
                           <template v-slot:item="{ item }">
                             <tr>
                               <td>{{ item.category }}</td>
@@ -30,12 +41,19 @@
                               </td>
                               <td>{{ item.postDate }}</td>
                               <td>
-                                <v-btn color="primary" @click="editNotice(item)">
+                                <v-btn
+                                  color="primary"
+                                  @click="editNotice(item)"
+                                >
                                   상세정보
                                 </v-btn>
                               </td>
                               <td>
-                                <v-btn icon color="red" @click.stop="deleteNotice(item.id)">
+                                <v-btn
+                                  icon
+                                  color="red"
+                                  @click.stop="deleteNotice(item.id)"
+                                >
                                   <v-icon>mdi-delete</v-icon>
                                 </v-btn>
                               </td>
@@ -47,16 +65,26 @@
                   </v-col>
 
                   <v-col cols="12">
-                    <div class="d-flex justify-center align-center justify-sm-space-between flex-wrap">
+                    <div
+                      class="d-flex justify-center align-center justify-sm-space-between flex-wrap"
+                    >
                       <div class="mb-4 me-3" style="margin-left: 10px">
-                        <v-btn @click="openModal" style="color: rgb(210, 63, 87); border-radius: 10px">
+                        <v-btn
+                          @click="openModal"
+                          style="color: rgb(210, 63, 87); border-radius: 10px"
+                        >
                           <v-icon>mdi-plus</v-icon>글 등록
                         </v-btn>
                       </div>
                       <div class="d-flex mb-4 align-center">
                         <!-- 페이지네이션 -->
-                        <v-pagination v-model="currentPage" :length="numberOfPages" circle @input="navigateToPage"
-                          :total-visible="10" style="margin-left: 5px"></v-pagination>
+                        <v-pagination
+                          v-model="currentPage"
+                          :length="numberOfPages"
+                          circle
+                          @input="navigateToPage"
+                          style="margin-left: 5px"
+                        ></v-pagination>
                       </div>
                     </div>
                   </v-col>
@@ -71,44 +99,84 @@
 
     <!-- Create and Edit Notice Modal -->
     <v-dialog v-model="showCreateNoticeModal" max-width="600px">
-      <v-card class="pa-4" style="border-radius: 12px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1)">
-        <v-card-title class="headline" :class="editingNotice ? 'notice-edit' : 'notice-create'" style="
+      <v-card
+        class="pa-4"
+        style="border-radius: 12px; box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1)"
+      >
+        <v-card-title
+          class="headline"
+          :class="editingNotice ? 'notice-edit' : 'notice-create'"
+          style="
             font-weight: bold;
             margin-left: 10px;
             font-size: larger;
             color: #333;
-          ">
+          "
+        >
           {{ editingNotice ? "공지사항 수정" : "공지사항 작성" }}
         </v-card-title>
         <v-card-text>
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-select v-model="currentNotice.category" :items="noticeCategories" label="공지사항 유형" required outlined
-                  dense></v-select>
+                <v-select
+                  v-model="currentNotice.category"
+                  :items="noticeCategories"
+                  label="공지사항 유형"
+                  required
+                  outlined
+                  dense
+                ></v-select>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="currentNotice.title" label="공지 제목" required outlined dense></v-text-field>
+                <v-text-field
+                  v-model="currentNotice.title"
+                  label="공지 제목"
+                  required
+                  outlined
+                  dense
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-textarea v-model="currentNotice.contents" label="내용" required outlined rows="6" dense></v-textarea>
+                <v-textarea
+                  v-model="currentNotice.contents"
+                  label="내용"
+                  required
+                  outlined
+                  rows="6"
+                  dense
+                ></v-textarea>
               </v-col>
               <v-col cols="12">
-                <v-file-input v-model="currentNotice.filePath" label="파일 첨부" prepend-icon="mdi-paperclip"
-                  accept="image/*, application/pdf" @change="onFileChanged" outlined dense></v-file-input>
+                <v-file-input
+                  v-model="currentNotice.filePath"
+                  label="파일 첨부"
+                  prepend-icon="mdi-paperclip"
+                  accept="image/*, application/pdf"
+                  @change="onFileChanged"
+                  outlined
+                  dense
+                ></v-file-input>
                 <!-- 이미지 미리보기 -->
-                <v-img v-if="imageUrl" :src="imageUrl" height="200" class="mt-4"
-                  style="border-radius: 8px; object-fit: cover"></v-img>
+                <v-img
+                  v-if="imageUrl"
+                  :src="imageUrl"
+                  :aspect-ratio="aspectRatio"
+                  class="mt-4"
+                  style="border-radius: 8px; object-fit: contain"
+                ></v-img>
               </v-col>
-            </v-row>
-          </v-container>
-        </v-card-text>
+            </v-row> </v-container
+        ></v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
           <v-btn color="red" text @click="closeModal">취소</v-btn>
-          <v-btn class="register-btn" :class="editingNotice ? 'update-btn' : 'create-btn'"
+          <v-btn
+            class="register-btn"
+            :class="editingNotice ? 'update-btn' : 'create-btn'"
             @click="editingNotice ? updateNotice() : createNotice()"
-            style="background-color: rgb(210, 63, 87); color: white">
+            style="background-color: rgb(210, 63, 87); color: white"
+          >
             등록
           </v-btn>
         </v-card-actions>
@@ -125,24 +193,50 @@
           <v-container>
             <v-row>
               <v-col cols="12">
-                <v-text-field v-model="detailsNotice.category" label="공지 유형" readonly outlined></v-text-field>
+                <v-text-field
+                  v-model="detailsNotice.category"
+                  label="공지 유형"
+                  readonly
+                  outlined
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-text-field v-model="detailsNotice.title" label="제목" readonly outlined></v-text-field>
+                <v-text-field
+                  v-model="detailsNotice.title"
+                  label="제목"
+                  readonly
+                  outlined
+                ></v-text-field>
               </v-col>
               <v-col cols="12">
-                <v-textarea v-model="detailsNotice.contents" label="내용" readonly outlined></v-textarea>
+                <v-textarea
+                  v-model="detailsNotice.contents"
+                  label="내용"
+                  readonly
+                  outlined
+                ></v-textarea>
               </v-col>
               <v-col cols="12">
                 <!-- 이미지 파일이 있을 경우 이미지 미리보기를 표시 -->
-                <v-img v-if="
-                  detailsNotice.img && detailsNotice.img.startsWith('http')
-                " :src="detailsNotice.img" alt="첨부 이미지" height="200"></v-img>
+                <v-img
+                  v-if="
+                    detailsNotice.img && detailsNotice.img.startsWith('http')
+                  "
+                  :src="detailsNotice.img"
+                  alt="첨부 이미지"
+                  :aspect-ratio="aspectRatio"
+                ></v-img>
                 <!-- 파일 이름을 표시 -->
-                <v-text-field v-if="
-                  detailsNotice.img && !detailsNotice.img.startsWith('http')
-                " v-model="detailsNotice.img" label="첨부 파일" readonly prepend-icon="mdi-paperclip"
-                  outlined></v-text-field>
+                <v-text-field
+                  v-if="
+                    detailsNotice.img && !detailsNotice.img.startsWith('http')
+                  "
+                  v-model="detailsNotice.img"
+                  label="첨부 파일"
+                  readonly
+                  prepend-icon="mdi-paperclip"
+                  outlined
+                ></v-text-field>
               </v-col>
             </v-row>
           </v-container>
@@ -193,6 +287,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 10,
       showDialog: false,
+      aspectRatio: 1,
     };
   },
   computed: {
@@ -227,20 +322,8 @@ export default {
   },
   methods: {
     fetchNotices() {
-      // Vuex 스토어 또는 로컬 스토리지에서 토큰 가져오기
-      const token = this.$store.state.token || localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
       axios
-        .get(`${process.env.API_URL}/informs/`, {
-          headers: {
-            'Authorization': `${token}`
-          },
-          withCredentials: true
-        })
+        .get(`${process.env.API_URL}/informs/`)
         .then((response) => {
           this.notices = response.data;
         })
@@ -259,12 +342,14 @@ export default {
       this.editingNotice = null;
       this.showCreateNoticeModal = true;
       this.imageUrl = null;
+      this.aspectRatio = 1;
     },
     editNotice(item) {
       this.currentNotice = { ...item };
       this.editingNotice = item;
       this.showCreateNoticeModal = true;
       this.imageUrl = item.filePath || null;
+      this.aspectRatio = 1;
     },
     closeModal() {
       this.showCreateNoticeModal = false;
@@ -277,6 +362,7 @@ export default {
         postDate: null,
       };
       this.imageUrl = null;
+      this.aspectRatio = 1;
     },
     async createNotice() {
       const formData = new FormData();
@@ -308,19 +394,9 @@ export default {
         formData.append("file", this.currentNotice.filePath);
       }
 
-      const token = this.$store.state.token || localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
       axios
         .post(`${process.env.API_URL}/informs/`, formData, {
-          headers: {
-            'Authorization': `${token}`,
-            'Content-Type': 'multipart/form-data'
-          },
-          withCredentials: true
+          headers: { "Content-Type": "multipart/form-data" },
         })
         .then((response) => {
           this.notices.push(response.data);
@@ -361,19 +437,9 @@ export default {
         }
       }
 
-      const token = this.$store.state.token || localStorage.getItem('token');
-      if (!token) {
-        console.error('No token found');
-        return;
-      }
-
       axios
-        .put(`${process.env.API_URL}/informs/${this.editingNotice.id}`, formData, {
-          headers: {
-            'Authorization': `${token}`,
-            'Content-Type': 'multipart/form-data'
-          },
-          withCredentials: true
+        .put(`${process.env.API_URL}/${this.editingNotice.id}`, formData, {
+          headers: { "Content-Type": "multipart/form-data" },
         })
         .then((response) => {
           const index = this.notices.findIndex(
@@ -392,31 +458,16 @@ export default {
     },
     deleteNotice(id) {
       if (confirm("진짜 삭제하시겠습니까?")) {
-        const token = this.$store.state.token || localStorage.getItem('token');
-        if (!token) {
-          console.error('No token found');
-          return;
-        }
-
-        if (confirm("진짜 삭제하시겠습니까?")) {
-          axios
-            .delete(`${process.env.API_URL}/informs/${id}`, {
-              headers: {
-                'Authorization': `${token}`
-              },
-              withCredentials: true
-            })
-            .then(() => {
-              this.notices = this.notices.filter((notice) => notice.id !== id);
-              alert("공지사항이 성공적으로 삭제되었습니다.");
-            })
-            .catch((error) => {
-              console.error("Error deleting the notice:", error);
-              alert("공지사항 삭제 실패: " + error.message);
-            });
-        } else {
-          console.log("삭제 취소됩니다.");
-        }
+        axios
+          .delete(`http://localhost:8000/informs/${id}`)
+          .then(() => {
+            this.notices = this.notices.filter((notice) => notice.id !== id);
+            alert("공지사항이 성공적으로 삭제되었습니다.");
+          })
+          .catch((error) => {
+            console.error("Error deleting the notice:", error);
+            alert("공지사항 삭제 실패: " + error.message);
+          });
       } else {
         console.log("삭제 취소됩니다.");
       }
@@ -430,6 +481,12 @@ export default {
           const reader = new FileReader();
           reader.onload = (e) => {
             this.imageUrl = e.target.result;
+
+            const img = new Image();
+            img.onload = () => {
+              this.aspectRatio = img.width / img.height;
+            };
+            img.src = e.target.result;
           };
           reader.readAsDataURL(resizedImage);
         } catch (error) {
@@ -443,6 +500,13 @@ export default {
     showDetails(item) {
       this.detailsNotice = { ...item };
       this.showDetailsModal = true;
+      if (item.filePath && item.filePath.startsWith("http")) {
+        const img = new Image();
+        img.onload = () => {
+          this.aspectRatio = img.width / img.height;
+        };
+        img.src = item.filePath;
+      }
     },
     closeDetailsModal() {
       this.showDetailsModal = false;
