@@ -446,12 +446,24 @@ export default {
                 this.alertMessage = '';
             }, 1000);
         },
+        // Method to retrieve token from Vuex store or localStorage
         async saveToFavorites() {
             try {
+                const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return;
+                }
+
                 if (this.user && this.restaurantId) {
                     const response = await axios.post(`${process.env.API_URL}/restaurant/bookmark`, {
                         member_id: this.user.id,
                         restaurant_id: this.restaurantId
+                    }, {
+                        headers: {
+                            'Authorization': `${token}`
+                        },
+                        withCredentials: true
                     });
 
                     if (response.status === 200) {
@@ -464,14 +476,25 @@ export default {
                 console.error('즐겨찾기 저장 중 오류 발생:', error);
             }
         },
+
         async removeFromFavorites() {
             try {
+                const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return;
+                }
+
                 if (this.user && this.restaurantId) {
                     const response = await axios.delete(`${process.env.API_URL}/restaurant/bookmark`, {
                         data: {
                             member_id: this.user.id,
                             restaurant_id: this.restaurantId
-                        }
+                        },
+                        headers: {
+                            'Authorization': `${token}`
+                        },
+                        withCredentials: true
                     });
 
                     if (response.status === 200) {
@@ -484,16 +507,16 @@ export default {
                 console.error('즐겨찾기 삭제 중 오류 발생:', error);
             }
         },
-        async getUserInfo() {     // 현재 로그인한 유저정보를 불러오는 메소드
-            try {
-                // const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-                // if (!token) {
-                //     throw new Error('No token found');
-                // }
 
-                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, 
-                {
+        async getUserInfo() {
+            try {
+                const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    return;
+                }
+
+                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
                     headers: {
                         'Authorization': `${token}`
                     },
@@ -503,7 +526,6 @@ export default {
                 if (response.status === 200) {
                     const userInfo = response.data;
                     console.log('User Info:', userInfo);
-                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
                     this.user = userInfo;
                     console.log(this.user);
                     console.log(this.user.id);
@@ -513,7 +535,8 @@ export default {
             } catch (error) {
                 console.error('Error fetching user info:', error);
             }
-        },
+        }
+
     }
 }
 </script>
