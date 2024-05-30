@@ -140,17 +140,38 @@ export default {
         },
     },
     methods: {
-        // API를 호출하여 식당 정보를 받아오는 메서드입니다.
         async fetchRestaurants() {
-            // API 통신을 통해 식당 정보를 받아옵니다.
-            const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`)
-                .then((response) => {
-                    // 받아온 식당 정보를 restaurants에 저장합니다.
+            try {
+                console.log('Fetching restaurants...');
+
+                // Vuex 스토어 또는 로컬 스토리지에서 토큰 가져오기
+                const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                // axios 요청에 헤더 추가
+                const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`, {
+                    headers: {
+                        'Authorization': `Bearer ${token}`
+                    },
+                    withCredentials: true
+                });
+
+                console.log('API response:', response.data);
+                console.log('식당 관리자 응답', response.data);
+
+                // 데이터가 배열인지 확인하고 설정
+                if (Array.isArray(response.data)) {
                     this.restaurants = response.data;
-                })
-                .catch((error) => {
-                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-                })
+                } else {
+                    console.error('Invalid data format:', response.data);
+                    this.restaurants = [];
+                }
+            } catch (error) {
+                console.error('Error fetching restaurant data:', error);
+                this.restaurants = [];
+            }
         },
         // 페이지 변경 시 실행되는 이벤트 핸들러
         navigateToPage(newPage) {
