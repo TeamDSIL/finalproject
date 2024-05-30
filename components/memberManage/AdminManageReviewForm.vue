@@ -152,9 +152,6 @@ export default {
           withCredentials: true
         });
 
-        console.log(response.data);
-        console.log('리뷰 데이터 응답', response.data);
-
         if (Array.isArray(response.data)) {
           this.reviewInfos = response.data;
         } else if (response.data && Array.isArray(response.data.reviews)) {
