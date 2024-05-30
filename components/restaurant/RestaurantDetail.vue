@@ -690,13 +690,13 @@ hr {
 
 .icon-center {
     display: flex;
-    // justify-content: center;
+    justify-content: center;
     flex-direction: column;
     align-items: center;
 }
 
 .icon-item {
-    // display: flex;
+    display: block;
     // justify-content: center;
     border: 2px solid #000;
     border-radius: 15%;
