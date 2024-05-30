@@ -80,7 +80,11 @@
 > 사용 API
 - KAKAO Map, PORTONE
 ## 🎈 배포 주소
-> 개발 버전:
+> <a href="https://github.com/TeamDSIL/DSILbackend">Back-end Git<a>
+
+> <a href="https://www.notion.so/WHATDANG-60e911a34fda4ce6aceccc41513a88ee">DSIL Notion<a>
+
+> <a href="">ERD<a>
 
 ## 👫 팀원소개
 <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/8bf1d67d-fa89-4737-a3da-3db81d0c4cff">
@@ -88,28 +92,28 @@
 <tr>
   <td>
     <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/ff02f702-7ba6-49f9-832b-b66c8700c3b5" width="100px"><br>
-    <a href ="">팀장 : 정휘제</a><br>
+    <a href ="https://github.com/Hwije-Jung">팀장 : 정휘제</a><br>
   </td>
   <td>
     <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/99d1cb59-9bc4-403d-a20a-74fcfaad2ec5" width="100px"><br>
-    <a href ="">팀원 : 윤여빈</a>
+    <a href ="https://github.com/yunyeobin">팀원 : 윤여빈</a>
   </td>
   <td>
     <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/f424263b-8a8a-4709-949d-abd5e2feba50" width="100px"><br>
-    <a href ="">팀원 : 문상현</a></td>
+    <a href ="https://github.com/MSH0512">팀원 : 문상현</a></td>
 </tr>
 <tr>
   <td>
        <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/b9e56d70-dc91-4413-b390-834298b42048" width="100px"><br>
-    <a href ="">팀원 : 임태환</a>
+    <a href ="https://github.com/Imhwan112">팀원 : 임태환</a>
   </td>
   <td>
     <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/f1506a33-735a-475b-9795-076d57b9d5a8" width="100px"><br>
-    <a href ="">팀원 : 윤호상</a>
+    <a href ="https://github.com/yhs55">팀원 : 윤호상</a>
   </td>
   <td>
     <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/14e61fbd-c6a5-437f-a5be-cb76c93a6c37" width="100px"><br>
-    <a href ="">팀원 : 이다혜</a>
+    <a href ="https://github.com/LEEDAHYE0513">팀원 : 이다혜</a>
   </td>
 </tr>
 </table>
