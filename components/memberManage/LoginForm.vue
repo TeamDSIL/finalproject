@@ -163,7 +163,7 @@ export default {
         if (response.status === 200) {
           const token = response.headers['authorization'];
           localStorage.setItem('token', token); // Access Token 저장
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
+          axios.defaults.headers.common['Authorization'] = `${token}`; // Axios 인터셉터에 토큰 설정
           alert('Access 토큰이 갱신되었습니다.');
         } else {
           console.log('Access Token을 가져오지 못했습니다.');

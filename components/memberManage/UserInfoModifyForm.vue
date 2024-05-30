@@ -197,6 +197,7 @@ export default ({
                 // 부모 컴포넌트로 수정된 정보를 전달하고 모달 창을 닫음
                 this.$emit('modify-user', requestData);
                 this.$emit('close');
+                this.$router.go(0);
 
             } catch (error) {
                 // API 요청 실패 시 에러 처리
