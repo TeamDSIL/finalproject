@@ -38,7 +38,7 @@
         <v-card-title class="logo-title">
           <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
-        <v-card-text style="text-align: center; margin-top: -20px;">
+        <v-card-text style="text-align: center; margin-top: 5px;">
           <p style="font-weight: bold;">아래 일정대로 예약하시겠습니까?</p>
           <v-card-text style="text-align: center;">
             <p><strong>예약정보</strong></p>
@@ -65,7 +65,7 @@
         <v-card-title class="logo-title">
           <img src="@/assets/images/DSILnewLOGO.png" alt="Logo" class="logo-img">
         </v-card-title>
-        <v-card-text style="text-align: center; margin-top: -20px;">
+        <v-card-text style="text-align: center; margin-top: 10px;">
           <p style="font-weight: bold;">아래 일정대로 예약하시겠습니까?</p>
           <v-card-text style="text-align: center;">
             <p><strong>예약정보</strong></p>
@@ -182,10 +182,7 @@
           <div
             style="background-color:rgba(251, 251, 251, 0.89);; padding: 10px; border: 1px solid #ccc; border-radius: 5px; margin-top: 10px;">
             <textarea readonly rows="4" cols="50" style="resize: none; border: none; background-color: transparent;">
-          2일전 취소 : 100% 환불
-          1일전 취소 : 50% 환불
-          당일 취소 : 환불 불가
-          노쇼 시 : 환불 불가
+          당일 취소의 경우 환불 불가합니다.
         </textarea>
           </div>
         </div>
@@ -724,13 +721,19 @@ export default {
       selectedDate: new Date(),
       user: null,
       restaurant_table_count: 0, // 테이블 수 추가
+      excludeCancelReservationOnLeave: false, // 특정 메서드 호출을 제외하기 위한 플래그
     };
   },
   mounted() {
     this.generateTimeOptions();
     this.fetchUserInfo();
     this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
+    window.addEventListener('beforeunload', this.cancelReservationOnLeave);
   },
+  beforeDestroy() {
+    // 페이지를 떠날 때 이벤트 리스너 제거
+    window.removeEventListener('beforeunload', this.cancelReservationOnLeave);
+},
   watch: {
     selectedDate(newVal) {
       // 선택된 날짜가 변경될 때마다 현재 시간을 갱신
@@ -792,6 +795,13 @@ export default {
   },
 
   methods: {
+    handleBeforeUnload(event) {
+      if (!this.excludeFromUnload.includes('cancelReservationOnLeave')) {
+            event.preventDefault();
+            event.returnValue = ''; // 크로스 브라우징을 위해 이벤트 returnValue 설정
+        }
+    },
+
     async fetchRestaurantInfo() {
       try {
         const restaurantId = this.$route.params.id
@@ -880,10 +890,11 @@ export default {
       }
     },
     cancelPayment() {
-      axios.post('http://localhost:8000/restaurant/cancelreservation', {
-        restaurantId: this.$route.params.id,
-        numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
-      })
+        this.excludeCancelReservationOnLeave = true; // 플래그 설정
+        axios.post('http://localhost:8000/restaurant/cancelreservation', {
+            restaurantId: this.$route.params.id,
+            numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
+        })
         .then(response => {
           console.log('테이블이 성공적으로 복원되었습니다:', response.data);
           this.resetReservationData();
@@ -891,11 +902,14 @@ export default {
         .catch(error => {
           console.error('테이블 복원 중 오류가 발생했습니다:', error);
           alert("테이블 복원 중 오류가 발생했습니다.");
+        })
+        .finally(() => {
+            this.excludeCancelReservationOnLeave = false; // 플래그 해제
         });
-      this.showPaymentModal = false;
-      this.resetReservationData();
-    },
 
+        this.showPaymentModal = false;
+        this.resetReservationData();
+    },
     formatPhoneNumber() {
       let cleaned = ('' + this.visitorContact).replace(/\D/g, '');
       let match = cleaned.match(/^(\d{3})(\d{3,4})(\d{4})$/);
@@ -1051,22 +1065,28 @@ export default {
         event.preventDefault();
       }
     },
+    
     cancelReservation() {
-      axios.post('http://localhost:8000/restaurant/cancelreservation', {
-        restaurantId: this.$route.params.id,
-        numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
-      })
+        this.excludeCancelReservationOnLeave = true; // 플래그 설정
+        axios.post('http://localhost:8000/restaurant/cancelreservation', {
+            restaurantId: this.$route.params.id,
+            numberOfTables: this.tablesNeeded // 예약 시 차감했던 테이블 수
+        })
         .then(response => {
-          console.log('테이블이 성공적으로 복원되었습니다:', response.data);
-          this.resetReservationData();
+            console.log('테이블이 성공적으로 복원되었습니다:', response.data);
+            this.resetReservationData();
         })
         .catch(error => {
-          console.error('테이블 복원 중 오류가 발생했습니다:', error);
-          alert("테이블 복원 중 오류가 발생했습니다.");
+            console.error('테이블 복원 중 오류가 발생했습니다:', error);
+            alert("테이블 복원 중 오류가 발생했습니다.");
+        })
+        .finally(() => {
+            this.excludeCancelReservationOnLeave = false; // 플래그 해제
         });
-      this.modal = false;
-      this.showConfirmationModal = false;
-      this.resetReservationData();
+
+        this.modal = false;
+        this.showConfirmationModal = false;
+        this.resetReservationData();
     },
     confirmReservation() {
       if (this.depositAmount) {
@@ -1280,6 +1300,7 @@ export default {
       this.date = '';
       this.selectedHour = '';
       this.selectedMinute = '';
+      this.excludeCancelReservationOnLeave = false; // 플래그 초기화
     },
 
     redirectToReservation() {
@@ -1354,8 +1375,8 @@ input[type="number"] {
 }
 
 .logo-img {
-  height: 130px;
-  width: 130px;
+  height: 60px; /* 높이를 조절하여 이미지 크기를 줄입니다 */
+  width: auto; /* 너비를 자동으로 조정하여 원래 가로 세로 비율을 유지합니다 */
 }
 
 .btn-large {
