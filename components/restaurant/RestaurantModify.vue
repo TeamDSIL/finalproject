@@ -133,7 +133,8 @@ export default {
         });
         const selectedCategories = response.data.map((category) => category.name);
         this.restaurant.categories = selectedCategories;
-        this.allCategories = [
+        // 중복 항목 제거
+        const uniqueCategories = [
           { text: '한식', value: 'KOREAN' },
           { text: '중식', value: 'CHINESE' },
           { text: '일식', value: 'JAPANESE' },
@@ -168,7 +169,12 @@ export default {
           { text: '마곡', value: 'MAGOK' },
           { text: '가산 디지털 밸리', value: 'GASAN_DIGITAL_VALLEY' },
           { text: '구로 디지털 밸리', value: 'GURO_DIGITAL_VALLEY' },
-        ];
+        ].filter((value, index, self) =>
+          index === self.findIndex((t) => (
+            t.value === value.value
+          ))
+        );
+        this.allCategories = uniqueCategories;
       } catch (error) {
         console.error('Failed to fetch categories:', error);
       }
@@ -183,7 +189,8 @@ export default {
         });
         const selectedFacilities = response.data.map((facility) => facility.name);
         this.restaurant.facilities = selectedFacilities;
-        this.allFacilities = [
+        // 중복 항목 제거
+        const uniqueFacilities = [
           { text: '주차 가능', value: 'PARKING_AVAILABLE' },
           { text: '발렛 파킹', value: 'VALET_AVAILABLE' },
           { text: '콜키지 무료', value: 'CORKAGE_FREE' },
@@ -196,7 +203,12 @@ export default {
           { text: '반려동물 동반 가능', value: 'PET_FRIENDLY' },
           { text: '무료 와이파이', value: 'FREE_WIFI_AVAILABLE' },
           { text: '흡연 구역', value: 'SMOKING_ZONE' },
-        ];
+        ].filter((value, index, self) =>
+          index === self.findIndex((t) => (
+            t.value === value.value
+          ))
+        );
+        this.allFacilities = uniqueFacilities;
       } catch (error) {
         console.error('Failed to fetch facilities:', error);
       }
@@ -255,7 +267,7 @@ export default {
           img: item.img instanceof File ? null : item.img,
         })),
       };
-      console.log("restaurantData에 들어가는 메뉴이미지:", this.menuItems);
+
       const formData = new FormData();
       formData.append('restaurantData', JSON.stringify(restaurantData));
       if (this.restaurant.img instanceof File) {
@@ -266,6 +278,7 @@ export default {
           formData.append(`menuImages[${item.name}]`, item.img);
         }
       });
+
       try {
         const response = await axios.put(`${process.env.API_URL}/restaurant/${this.restaurant.id}`, formData, {
           headers: {
@@ -284,7 +297,7 @@ export default {
       console.log('Menu saved:', this.menuItems);
       this.showDialog = false;
     },
-    addMenuItem() { 
+    addMenuItem() {
       const newItem = {
         name: '',
         menuInfo: '',
