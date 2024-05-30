@@ -1,5 +1,12 @@
 <template>
   <div>
+    <v-progress-linear 
+            v-if="isLoading" 
+            color="error" 
+            indeterminate
+            class="my-4"
+        ></v-progress-linear>
+        <div v-else>
     <v-container>
       <v-breadcrumbs class="ps-0" :items="items">
         <template v-slot:divider>
@@ -95,7 +102,7 @@
 
     </v-container>
     <Footer />
-
+  </div>
   </div>
 </template>
 
@@ -148,6 +155,7 @@ export default {
       selectedFacilities: [],
       currentPage: 1,
       itemsPerPage: 12,
+      isLoading: true,
       items: [
         {
           text: '메인화면',
@@ -183,6 +191,7 @@ export default {
   },
   methods: {
     fetchList() {
+      this.isLoading = true;
       const categories = this.$route.query.category;
       const facilities = this.$route.query.facility;
       const search = this.$route.query.search;
@@ -215,6 +224,9 @@ export default {
         })
         .catch(error => {
           console.log('데이터를 불러올 수 없습니다.');
+        })
+        .finally(() => {
+            this.isLoading = false;
         });
     },
     // fetchReviews() {
