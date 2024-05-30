@@ -15,75 +15,25 @@
       <v-row>
         <v-col cols="12">
           <v-form>
-            <v-text-field
-              v-model="restaurant.name"
-              label="식당명"
-              outlined
-              readonly
-              prepend-icon="mdi-store"
-              class="mb-4"
-            ></v-text-field>
-            <v-text-field
-              v-model="restaurant.address"
-              label="식당 주소"
-              outlined
-              readonly
-              prepend-icon="mdi-map-marker"
-              class="mb-4"
-            ></v-text-field>
-            <v-text-field
-              v-model="restaurant.tel"
-              label="식당 연락처"
-              outlined
-              prepend-icon="mdi-phone"
-              class="mb-4"
-            ></v-text-field>
-            <v-text-field
-              v-model="restaurant.tableCount"
-              label="테이블 수"
-              outlined
-              prepend-icon="mdi-table"
-              class="mb-4"
-            ></v-text-field>
-            <v-select
-              v-model="restaurant.categories"
-              :items="allCategories"
-              label="카테고리 설정"
-              multiple
-              outlined
-              attach
-              chips
-              small-chips
-              class="mb-4"
-            ></v-select>
-            <v-select
-              v-model="restaurant.facilities"
-              :items="allFacilities"
-              label="편의시설 선택"
-              multiple
-              outlined
-              attach
-              chips
-              small-chips
-              class="mb-4"
-            ></v-select>
+            <v-text-field v-model="restaurant.name" label="식당명" outlined readonly prepend-icon="mdi-store"
+              class="mb-4"></v-text-field>
+            <v-text-field v-model="restaurant.address" label="식당 주소" outlined readonly prepend-icon="mdi-map-marker"
+              class="mb-4"></v-text-field>
+            <v-text-field v-model="restaurant.tel" label="식당 연락처" outlined prepend-icon="mdi-phone"
+              class="mb-4"></v-text-field>
+            <v-text-field v-model="restaurant.tableCount" label="테이블 수" outlined prepend-icon="mdi-table"
+              class="mb-4"></v-text-field>
+            <v-select v-model="restaurant.categories" :items="allCategories" label="카테고리 설정" multiple outlined attach
+              chips small-chips class="mb-4"></v-select>
+            <v-select v-model="restaurant.facilities" :items="allFacilities" label="편의시설 선택" multiple outlined attach
+              chips small-chips class="mb-4"></v-select>
             <v-btn color="primary" @click="showDialog = true" class="mb-4">
               메뉴 수정
             </v-btn>
-            <v-text-field
-              v-model="restaurant.deposit"
-              label="예약금 설정"
-              outlined
-              prepend-icon="mdi-cash"
-              class="mb-4"
-            ></v-text-field>
-            <v-file-input
-              v-model="restaurant.img"
-              label="식당 사진"
-              prepend-icon="mdi-camera"
-              outlined
-              class="mb-4"
-            ></v-file-input>
+            <v-text-field v-model="restaurant.deposit" label="예약금 설정" outlined prepend-icon="mdi-cash"
+              class="mb-4"></v-text-field>
+            <v-file-input v-model="restaurant.img" label="식당 사진" prepend-icon="mdi-camera" outlined
+              class="mb-4"></v-file-input>
             <v-btn color="rgb(255,207,2)" class="mb-4" @click="updateRestaurantInfo">
               수정 완료
             </v-btn>
@@ -97,42 +47,20 @@
             <v-container>
               <v-row v-for="(item, index) in menuItems" :key="index" class="menu-item mb-4">
                 <v-col cols="12">
-                  <v-text-field
-                    v-model="item.name"
-                    label="메뉴 이름"
-                    outlined
-                    prepend-icon="mdi-food"
-                    class="mb-2"
-                  ></v-text-field>
+                  <v-text-field v-model="item.name" label="메뉴 이름" outlined prepend-icon="mdi-food"
+                    class="mb-2"></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field
-                    v-model="item.menuInfo"
-                    label="메뉴 설명"
-                    outlined
-                    prepend-icon="mdi-information"
-                    class="mb-2"
-                  ></v-text-field>
+                  <v-text-field v-model="item.menuInfo" label="메뉴 설명" outlined prepend-icon="mdi-information"
+                    class="mb-2"></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-text-field
-                    v-model="item.price"
-                    label="메뉴 가격"
-                    type="number"
-                    prefix="₩"
-                    outlined
-                    prepend-icon="mdi-currency-usd"
-                    class="mb-2"
-                  ></v-text-field>
+                  <v-text-field v-model="item.price" label="메뉴 가격" type="number" prefix="₩" outlined
+                    prepend-icon="mdi-currency-usd" class="mb-2"></v-text-field>
                 </v-col>
                 <v-col cols="12">
-                  <v-file-input
-                    v-model="item.img"
-                    label="메뉴 사진"
-                    prepend-icon="mdi-camera"
-                    outlined
-                    class="mb-2"
-                  ></v-file-input>
+                  <v-file-input v-model="item.img" label="메뉴 사진" prepend-icon="mdi-camera" outlined
+                    class="mb-2"></v-file-input>
                 </v-col>
                 <v-col cols="12" class="d-flex justify-end">
                   <v-btn color="red" @click="removeMenuItem(index)" class="ma-2">삭제</v-btn>
@@ -374,60 +302,76 @@ export default {
 <style>
 .restaurant-manage {
   padding: 20px;
-  background-color: #FFFFFF; /* 배경색을 하얀색으로 설정 */
+  background-color: #FFFFFF;
+  /* 배경색을 하얀색으로 설정 */
   border-radius: 8px;
 }
+
 .tabs {
   background-color: #FFFFFF;
   border-bottom: 2px solid #ddd;
 }
+
 .v-text-field,
 .v-select,
 .v-file-input {
   margin-bottom: 16px;
-  background-color: #FFFFFF; /* 수정 가능한 input 박스의 기본 배경색을 하얀색으로 설정 */
+  background-color: #FFFFFF;
+  /* 수정 가능한 input 박스의 기본 배경색을 하얀색으로 설정 */
 }
+
 .v-text-field input,
 .v-select input,
 .v-file-input input {
   background-color: #FFFFFF;
 }
+
 .v-text-field input:focus,
 .v-select input:focus,
 .v-file-input input:focus {
-  background-color: #FFFFFF; /* 커서 클릭 시 하얀색으로 변경 */
+  background-color: #FFFFFF;
+  /* 커서 클릭 시 하얀색으로 변경 */
 }
+
 .v-btn {
   border-radius: 8px;
   font-weight: bold;
 }
+
 .v-btn.primary {
   background-color: #1976D2;
   color: #fff;
 }
+
 .v-btn.red {
   background-color: #E53935;
   color: #fff;
 }
+
 .v-btn.success {
   background-color: #43A047;
   color: #fff;
 }
+
 .v-dialog .v-card {
   border-radius: 12px;
 }
+
 .headline {
   font-size: 1.5rem;
   font-weight: bold;
 }
+
 .v-card-title {
   padding: 16px;
   background-color: #F5F5F5;
   font-weight: bold;
 }
+
 .v-card-text {
   padding: 16px;
 }
+
 .v-card-actions {
   padding: 16px;
   background-color: #F5F5F5;

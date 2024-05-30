@@ -228,6 +228,7 @@ export default {
                 console.error('localStorage is not defined');
             }
         },
+        
         async fetchUserInfo() {
             if (this.user && this.user.email) {
                 const email = this.user.email;
@@ -240,7 +241,7 @@ export default {
                     // 토큰을 Authorization 헤더에 포함하여 요청 보내기
                     const response = await axios.get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`, {
                         headers: {
-                            'Authorization': `Bearer ${token}`
+                            'Authorization': `${token}`
                         },
                         withCredentials: true
                     });
