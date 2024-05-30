@@ -70,11 +70,15 @@
 </table>
 
 ### 기술스택 
-> FRONT : HTML, CSS, VUE.JS
+> FRONT
+ - HTML, CSS, VUE.JS
 
-> BACKEND : JAVA, SPRING, JPA, 
+> BACKEND 
+ - Java 17, Spring Boot, JPA, Spring Security
+ - MySql, NCP(NaverCloudPlatform)
 
-> 사용 API : KAKAO Map, PORTONE ...
+> 사용 API
+- KAKAO Map, PORTONE
 ## 🎈 배포 주소
 > 개발 버전:
 
