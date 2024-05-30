@@ -3,8 +3,8 @@
     <v-container>
       <v-row>
         <v-col cols="12" lg="3">
-          <a href
-            <img src="~/assets/images/DSILnewLOGO.png" alt="" style="width: 150px; padding-bottom: 20px;"/>
+          <a href ="/">
+            <img src="~/assets/images/DSILnewLOGO.png" alt="" style="width: 150px; padding-bottom: 20px;"/></a>
           <div class="d-flex flex-wrap">
             <v-avatar class="me-4" tile width="120" height="45">
               <img src="~/assets/images/google-play.png" alt="" />
