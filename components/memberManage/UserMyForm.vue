@@ -228,6 +228,7 @@ export default {
                 console.error('localStorage is not defined');
             }
         },
+        
         async fetchUserInfo() {
             if (this.user && this.user.email) {
                 const email = this.user.email;
