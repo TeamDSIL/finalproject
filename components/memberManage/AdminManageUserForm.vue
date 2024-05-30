@@ -151,7 +151,7 @@ export default {
                     // 토큰을 Authorization 헤더에 포함하여 요청 보내기
                     const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
                         headers: {
-                            'Authorization': `Bearer ${token}`
+                            'Authorization': `${token}`
                         },
                         withCredentials: true
                     });
@@ -185,7 +185,7 @@ export default {
                 // axios 요청에 헤더 추가
                 const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageUserPage`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `${token}`
                     },
                     withCredentials: true
                 });

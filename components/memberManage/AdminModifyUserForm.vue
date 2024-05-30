@@ -198,7 +198,7 @@ export default {
                 // API 요청 보내기
                 const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageUserPage`, modifiedData, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `${token}`
                     },
                     withCredentials: true
                 });
@@ -236,7 +236,7 @@ export default {
 
                 const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageUserPage?email=${this.userInfo.email}`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `${token}`
                     },
                     withCredentials: true
                 });

@@ -237,7 +237,7 @@ export default {
       axios
         .get(`${process.env.API_URL}/informs/`, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `${token}`
           },
           withCredentials: true
         })
@@ -317,7 +317,7 @@ export default {
       axios
         .post(`${process.env.API_URL}/informs/`, formData, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `${token}`,
             'Content-Type': 'multipart/form-data'
           },
           withCredentials: true
@@ -370,7 +370,7 @@ export default {
       axios
         .put(`${process.env.API_URL}/informs/${this.editingNotice.id}`, formData, {
           headers: {
-            'Authorization': `Bearer ${token}`,
+            'Authorization': `${token}`,
             'Content-Type': 'multipart/form-data'
           },
           withCredentials: true
@@ -402,7 +402,7 @@ export default {
           axios
             .delete(`${process.env.API_URL}/informs/${id}`, {
               headers: {
-                'Authorization': `Bearer ${token}`
+                'Authorization': `${token}`
               },
               withCredentials: true
             })

@@ -142,7 +142,7 @@ export default {
                 // API 요청 보내기
                 const response = await axios.post(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`, requestData, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `${token}`
                     },
                     withCredentials: true
                 });
@@ -164,7 +164,6 @@ export default {
                 console.error('수정 요청 실패:', error);
             }
         },
-
         async handleDelete() {
             try {
                 // 토큰을 Vuex 스토어나 로컬 스토리지에서 가져오기
@@ -175,10 +174,13 @@ export default {
                     return;
                 }
 
-                const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageRestaurantPage?restaurantName=${this.restaurantInfo.name}`, {
+                // 전체 restaurantInfo 객체를 data 속성에 포함
+                const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`, {
                     headers: {
-                        'Authorization': `Bearer ${token}`
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
                     },
+                    data: this.restaurantInfo,
                     withCredentials: true
                 });
 
