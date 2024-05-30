@@ -232,7 +232,12 @@ export default {
                     alert('토큰을 찾을 수 없습니다.');
                     return;
                 }
-                confirm('삭제하시겠습니까?');
+
+                // 삭제 확인
+                const confirmed = confirm('삭제하시겠습니까?');
+                if (!confirmed) {
+                    return; // 확인을 누르지 않으면 현재 상태 유지
+                }
 
                 const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageUserPage?email=${this.userInfo.email}`, {
                     headers: {
