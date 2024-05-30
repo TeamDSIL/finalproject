@@ -16,7 +16,7 @@
         cols="12"
         sm="6"
         md="3"
-        v-for="(item) in currentTopViews"
+        v-for="item in currentTopViews"
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
@@ -76,7 +76,7 @@
         cols="12"
         sm="6"
         md="3"
-        v-for="(item) in currentTopBookmarks"
+        v-for="item in currentTopBookmarks"
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
@@ -134,7 +134,7 @@
         cols="12"
         sm="6"
         md="3"
-        v-for="(item) in currentTopReservations"
+        v-for="item in currentTopReservations"
         :key="item.restaurantId"
       >
         <v-card @click="goToRestaurantDetail(item.restaurantId)">
@@ -211,7 +211,9 @@ export default {
             this.itemsPerGroup
           );
         })
-        .catch((error) => console.error("Error fetching top views:", error));
+        .catch((error) =>
+          console.error("조회수 TOP 10 데이터 조회 실패:", error)
+        );
     },
     fetchTopBookmarks() {
       axios
@@ -225,7 +227,7 @@ export default {
           );
         })
         .catch((error) =>
-          console.error("Error fetching top bookmarks:", error)
+          console.error("즐겨찾기 TOP 10 데이터 조회 실패:", error)
         );
     },
     fetchTopReservations() {
@@ -240,7 +242,7 @@ export default {
           );
         })
         .catch((error) =>
-          console.error("Error fetching top reservations:", error)
+          console.error("예약순 TOP 10 데이터 조회 실패:", error)
         );
     },
     startRotation() {

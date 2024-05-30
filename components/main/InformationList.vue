@@ -80,7 +80,7 @@
                   "
                   :src="detailsNotice.img"
                   alt="첨부 이미지"
-                  height="200"
+                  :aspect-ratio="aspectRatio"
                 ></v-img>
                 <!-- 파일 이름을 표시 -->
                 <v-text-field
@@ -127,6 +127,7 @@ export default {
         postDate: "",
       },
       showDetailsModal: false,
+      aspectRatio: 1,
     };
   },
   mounted() {
@@ -150,6 +151,13 @@ export default {
     showDetails(item) {
       this.detailsNotice = { ...item };
       this.showDetailsModal = true;
+      if (item.img && item.img.startsWith("http")) {
+        const img = new Image();
+        img.onload = () => {
+          this.aspectRatio = img.width / img.height;
+        };
+        img.src = item.img;
+      }
     },
   },
 };
@@ -157,4 +165,7 @@ export default {
 
 <style scoped>
 /* 여기에 스타일을 추가할 수 있습니다. */
+.clickable {
+  cursor: pointer;
+}
 </style>

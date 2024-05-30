@@ -161,9 +161,9 @@
                 <v-img
                   v-if="imageUrl"
                   :src="imageUrl"
-                  height="200"
+                  :aspect-ratio="aspectRatio"
                   class="mt-4"
-                  style="border-radius: 8px; object-fit: cover"
+                  style="border-radius: 8px; object-fit: contain"
                 ></v-img>
               </v-col>
             </v-row> </v-container
@@ -224,7 +224,7 @@
                   "
                   :src="detailsNotice.img"
                   alt="첨부 이미지"
-                  height="200"
+                  :aspect-ratio="aspectRatio"
                 ></v-img>
                 <!-- 파일 이름을 표시 -->
                 <v-text-field
@@ -287,6 +287,7 @@ export default {
       currentPage: 1,
       itemsPerPage: 10,
       showDialog: false,
+      aspectRatio: 1,
     };
   },
   computed: {
@@ -341,12 +342,14 @@ export default {
       this.editingNotice = null;
       this.showCreateNoticeModal = true;
       this.imageUrl = null;
+      this.aspectRatio = 1;
     },
     editNotice(item) {
       this.currentNotice = { ...item };
       this.editingNotice = item;
       this.showCreateNoticeModal = true;
       this.imageUrl = item.filePath || null;
+      this.aspectRatio = 1;
     },
     closeModal() {
       this.showCreateNoticeModal = false;
@@ -359,6 +362,7 @@ export default {
         postDate: null,
       };
       this.imageUrl = null;
+      this.aspectRatio = 1;
     },
     async createNotice() {
       const formData = new FormData();
@@ -477,6 +481,12 @@ export default {
           const reader = new FileReader();
           reader.onload = (e) => {
             this.imageUrl = e.target.result;
+
+            const img = new Image();
+            img.onload = () => {
+              this.aspectRatio = img.width / img.height;
+            };
+            img.src = e.target.result;
           };
           reader.readAsDataURL(resizedImage);
         } catch (error) {
@@ -490,6 +500,13 @@ export default {
     showDetails(item) {
       this.detailsNotice = { ...item };
       this.showDetailsModal = true;
+      if (item.filePath && item.filePath.startsWith("http")) {
+        const img = new Image();
+        img.onload = () => {
+          this.aspectRatio = img.width / img.height;
+        };
+        img.src = item.filePath;
+      }
     },
     closeDetailsModal() {
       this.showDetailsModal = false;
