@@ -28,17 +28,12 @@
                         ></v-text-field>
 
                         <!-- 공지사항 목록 테이블 -->
-<<<<<<< HEAD
-                        <v-data-table :headers="headers" :items="displayedNotices" hide-default-footer>
-                          <template v-slot:item="{ item }" >
-=======
                         <v-data-table
                           :headers="headers"
                           :items="displayedNotices"
                           hide-default-footer
                         >
                           <template v-slot:item="{ item }">
->>>>>>> 43597349ff6f09b296048411b848f6ae0849ceb7
                             <tr>
                               <td>{{ item.category }}</td>
                               <td @click="showDetails(item)" class="clickable">
@@ -443,9 +438,13 @@ export default {
       }
 
       axios
-        .put(`${process.env.API_URL}/${this.editingNotice.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        .put(
+          `${process.env.API_URL}/informs/${this.editingNotice.id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        )
         .then((response) => {
           const index = this.notices.findIndex(
             (n) => n.id === this.editingNotice.id
