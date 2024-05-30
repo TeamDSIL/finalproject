@@ -44,14 +44,13 @@
                   회원가입을 위해,&nbsp;
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <a target="_blank" href="/main/MainPage" @click.stop v-on="on">
-                        이용약관
-                      </a>
+                      <a @click.stop="openTermsModal" v-on="on">이용약관</a>
                     </template>
                     새 창에서 보기
                   </v-tooltip>
                   에 동의해야 합니다.
                 </div>
+                <UsingTerms ref="termsModal" />
               </template>
             </v-checkbox>
           </div>
@@ -76,8 +75,12 @@
 
 <script>
 import axios from 'axios';
+import UsingTerms from '@/components/memberManage/UsingTerms.vue';
 
 export default {
+  components: {
+    UsingTerms,
+  },
   layout: 'session',
   data() {
     return {
@@ -128,6 +131,9 @@ export default {
     document.head.appendChild(script);
   },
   methods: {
+    openTermsModal() {
+      this.$refs.termsModal.openModal();
+    },
     gotoLoginPage() {
       this.$router.push('/memberManage/LoginPage');
     },

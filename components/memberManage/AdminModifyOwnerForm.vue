@@ -174,6 +174,12 @@ export default {
                     return;
                 }
 
+                // 삭제 확인
+                const confirmed = confirm('해지하시겠습니까?');
+                if (!confirmed) {
+                    return; // 확인을 누르지 않으면 현재 상태 유지
+                }
+
                 // 전체 restaurantInfo 객체를 data 속성에 포함
                 const response = await axios.delete(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`, {
                     headers: {

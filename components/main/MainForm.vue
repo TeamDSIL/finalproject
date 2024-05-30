@@ -9,7 +9,7 @@
               <v-tab href="#tab-2" style="font-weight: bold; font-size: large">내주변찾기</v-tab>
               <v-spacer></v-spacer>
               <nuxt-link style="margin-top: 10px" :to="{ path: '/main/InformationPage' }" class="text-decoration-none">
-                <v-btn style="
+                <v-button style="
       font-size: large;
       color: gray;
       background-color: white;
@@ -18,7 +18,7 @@
       margin-right: 25px;
     " medium>
                   공지사항
-                </v-btn>
+                </v-button>
               </nuxt-link>
 
             </v-tabs>
