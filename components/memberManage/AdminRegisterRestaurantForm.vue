@@ -395,13 +395,21 @@ export default {
       formData.append(`menuDTOs[${index}].menuInfo`, item.menuInfo);
     });
 
+    const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    console.error('No token found');
+                    alert('토큰을 찾을 수 없습니다.');
+                    return;
+                }
+
     // Send the form data
     const response = await axios.post(
       `${process.env.API_URL}/memberManage/registerRestaurant`,
       formData,
       {
         headers: {
-          'Content-Type': 'multipart/form-data',
+          'Authorization': `${token}`,
+          'Content-Type': 'multipart/form-data'
         },
       }
     );

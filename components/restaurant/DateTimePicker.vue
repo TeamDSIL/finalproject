@@ -3,7 +3,7 @@
     <!-- 예약 날짜, 시간 선택하는 모달창 -->
     <v-dialog ref="dialog" v-model="modal" persistent width="330px">
       <template v-slot:activator="{ on }">
-        <v-btn v-on="on">예약 날짜 및 시간 선택</v-btn>
+        <v-btn v-if="isTokenPresent" v-on="on">예약 날짜 및 시간 선택</v-btn>
       </template>
       <v-card>
         <!-- 예약 날짜 선택 -->
@@ -722,6 +722,7 @@ export default {
       user: null,
       restaurant_table_count: 0, // 테이블 수 추가
       excludeCancelReservationOnLeave: false, // 특정 메서드 호출을 제외하기 위한 플래그
+            isTokenPresent: false, // 토큰 존재 여부를 저장하는 상태
     };
   },
   mounted() {
@@ -729,6 +730,7 @@ export default {
     this.fetchUserInfo();
     this.fetchRestaurantInfo(this.$route.params.id); // 음식점 ID를 전달하여 음식점 정보 가져오기
     window.addEventListener('beforeunload', this.cancelReservationOnLeave);
+    this.checkToken();
   },
   beforeDestroy() {
     // 페이지를 떠날 때 이벤트 리스너 제거
@@ -802,6 +804,14 @@ export default {
         }
     },
 
+    async checkToken() {
+      const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+      if (token) {
+        this.isTokenPresent = true;
+      } else {
+        this.isTokenPresent = false;
+      }
+    },
     async fetchRestaurantInfo() {
       try {
         const restaurantId = this.$route.params.id
