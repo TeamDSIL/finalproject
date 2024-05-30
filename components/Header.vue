@@ -4,58 +4,32 @@
       <v-container class="d-flex align-center">
         <nuxt-link to="/">
           <div class="me-10" tile>
-            <img
-              src="~/assets/images/DSILnewLOGO.png"
-              alt=""
-              style="width: 100px"
-            />
+            <img src="~/assets/images/DSILnewLOGO.png" alt="" style="width: 100px" />
           </div>
         </nuxt-link>
 
         <v-dialog v-model="dsilModal" width="600">
           <v-card>
             <v-card-title>
-              <span
-                style="font-size: large; font-weight: bold; margin-top: 10px"
-                >빠른 검색</span
-              >
+              <span style="font-size: large; font-weight: bold; margin-top: 10px">빠른 검색</span>
             </v-card-title>
             <v-card-text>
-              <div
-                v-for="category in categories"
-                :key="category.name"
-                class="my-3"
-              >
+              <div v-for="category in categories" :key="category.name" class="my-3">
                 <div style="margin-bottom: 10px; display: flex">
-                  <v-img
-                    contain
-                    :src="
-                      require(`~/assets/images/clikCategory/${category.img}.png`)
-                    "
-                    width="20px"
-                    style="max-width: 20px; margin-right: 5px"
-                  ></v-img
-                  ><span
-                    style="font-weight: bold; font-size: large; color: black"
-                    >{{ category.displayName }}</span
-                  >
+                  <v-img contain :src="require(`~/assets/images/clikCategory/${category.img}.png`)
+                    " width="20px" style="max-width: 20px; margin-right: 5px"></v-img><span
+                    style="font-weight: bold; font-size: large; color: black">{{ category.displayName }}</span>
                 </div>
 
                 <div class="button-grid">
-                  <v-btn
-                    v-for="item in category.items"
-                    :key="item.name"
-                    :class="{
-                      'btn-selected': category.selected.some(
-                        (selected) => selected.name === item.name
-                      ),
-                      'btn-unselected': !category.selected.some(
-                        (selected) => selected.name === item.name
-                      ),
-                    }"
-                    text
-                    @click="toggleSelection(category.selected, item)"
-                  >
+                  <v-btn v-for="item in category.items" :key="item.name" :class="{
+                    'btn-selected': category.selected.some(
+                      (selected) => selected.name === item.name
+                    ),
+                    'btn-unselected': !category.selected.some(
+                      (selected) => selected.name === item.name
+                    ),
+                  }" text @click="toggleSelection(category.selected, item)">
                     {{ item.displayName }}
                   </v-btn>
                 </div>
@@ -69,37 +43,15 @@
           </v-card>
         </v-dialog>
 
-        <div
-          class="search-bar-container flex-grow-1 d-none d-md-flex border rounded"
-        >
-          <v-btn
-            icon
-            tile
-            large
-            text
-            class="text-capitalize rounded-0"
-            width="120px"
-            style="background-color: rgb(210, 63, 87)"
-            @click="dsilModal = true"
-          >
+        <div class="search-bar-container flex-grow-1 d-none d-md-flex border rounded">
+          <v-btn icon tile large text class="text-capitalize rounded-0" width="120px"
+            style="background-color: rgb(210, 63, 87)" @click="dsilModal = true">
             <!-- <v-icon small>mdi-crosshairs-gps</v-icon> -->
             <span style="color: white; font-weight: bold">빠른검색하기</span>
           </v-btn>
-          <input
-            class="white flex-grow-1 ps-5"
-            type="text"
-            placeholder="카테고리 및 음식이름을 입력해주세요"
-            v-model="searchQuery"
-            @keyup.enter="search"
-          />
-          <v-btn
-            icon
-            large
-            tile
-            class="rounded-l-0 text-capitalize"
-            @click="search"
-            width="100px"
-            >Search
+          <input class="white flex-grow-1 ps-5" type="text" placeholder="카테고리 및 음식이름을 입력해주세요" v-model="searchQuery"
+            @keyup.enter="search" />
+          <v-btn icon large tile class="rounded-l-0 text-capitalize" @click="search" width="100px">Search
           </v-btn>
         </div>
         <v-spacer></v-spacer>
@@ -110,51 +62,33 @@
         </v-btn> -->
 
         <template v-if="user">
-      <v-btn light text @click="logout">
-        <span class="d-none d-sm-block">로그아웃</span>
-      </v-btn>
-      <v-btn
-        v-if="user.permission.permission === 'USER'"
-        light
-        text
-        :href="`${frontUrl}/memberManage/userMyPage`"
-      >
-        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-        <span class="d-none d-sm-block">{{ user.email }}</span>
-      </v-btn>
-      <v-btn
-        v-else-if="user.permission.permission === 'OWNER'"
-        light
-        text
-        :href="`${frontUrl}/memberManage/ownerMyPage`"
-      >
-        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-        <span class="d-none d-sm-block">{{ user.email }}</span>
-      </v-btn>
-      <v-btn
-        v-else
-        light
-        text
-        :href="`${frontUrl}/memberManage/AdminManageUserPage`"
-      >
-        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-        <span class="d-none d-sm-block">{{ user.email }}</span>
-      </v-btn>
-    </template>
-    <template v-else>
-      <v-btn light text :href="`${frontUrl}/memberManage/loginPage`">
-        <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
-        <span class="d-none d-sm-block">로그인</span>
-      </v-btn>
-    </template>
+          <v-btn light text @click="logout">
+            <span class="d-none d-sm-block">로그아웃</span>
+          </v-btn>
+          <v-btn v-if="user.permission.permission === 'USER'" light text :href="`${frontUrl}/memberManage/userMyPage`">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
+          </v-btn>
+          <v-btn v-else-if="user.permission.permission === 'OWNER'" light text
+            :href="`${frontUrl}/memberManage/ownerMyPage`">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
+          </v-btn>
+          <v-btn v-else light text :href="`${frontUrl}/memberManage/AdminManageUserPage`">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">{{ user.email }}</span>
+          </v-btn>
+        </template>
+        <template v-else>
+          <v-btn light text :href="`${frontUrl}/memberManage/loginPage`">
+            <v-icon class="me-0 me-sm-3">mdi-account-circle-outline</v-icon>
+            <span class="d-none d-sm-block">로그인</span>
+          </v-btn>
+        </template>
         <!-- <v-btn @click="shoppingCartDrawer = true" light text tile class="me-2">
                 <v-icon small>mdi-cart-outline</v-icon>(8)
               </v-btn> -->
-        <v-app-bar-nav-icon
-          text
-          light
-          @click="drawer = true"
-        ></v-app-bar-nav-icon>
+        <v-app-bar-nav-icon text light @click="drawer = true"></v-app-bar-nav-icon>
       </v-container>
     </v-app-bar>
     <!-- <v-navigation-drawer
@@ -199,6 +133,7 @@
 </template>
 <script>
 import axios from "axios";
+import { EventBus } from '~/plugins/event-bus.js';
 
 export default {
   data: () => ({
@@ -319,33 +254,45 @@ export default {
     ],
   }),
   methods: {
-    async fetchUserInfo() {
+    async checkLoginAndFetchUserInfo() {
+      const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+      if (token) {
+        await this.fetchUserInfo(token);
+      } else {
+        console.log('아직 로그인하지 않아 토큰이 없음');
+      }
+    },
+    async fetchUserInfo(token) {
       try {
-        const token = localStorage.getItem("token"); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error("No token found");
-        }
-
         // 토큰을 Authorization 헤더에 포함하여 요청 보내기
         const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
           headers: {
-            Authorization: `${token}`,
+            'Authorization': `${token}`
           },
-          withCredentials: true,
+          withCredentials: true
         });
 
         if (response.status === 200) {
           const userInfo = response.data;
-          console.log("User Info:", userInfo);
+          console.log('User Info:', userInfo);
           // 사용자 정보를 상태나 컴포넌트 데이터에 저장
           this.user = userInfo;
-          console.log(this.user);
+          console.log(this.user, '헤더부분');
           console.log(this.user.id);
         } else {
-          console.error("Failed to fetch user info:", response);
+          console.error('Failed to fetch user info:', response);
         }
       } catch (error) {
-        console.error("Error fetching user info:", error);
+        console.error('Error fetching user info:', error);
+      }
+    },
+    async loadUserDetails() {
+      try {
+        const email = this.user.email;
+        const response = await axios.get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`);
+        this.userInfo = response.data;
+      } catch (error) {
+        console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
       }
     },
     async logout() {
@@ -356,6 +303,7 @@ export default {
           console.log("Logout successful");
           localStorage.removeItem("token");
           this.user = null;
+          EventBus.$emit('user-logged-out'); // 로그아웃 이벤트 발행
           this.$router.push("/memberManage/loginPage");
         } else {
           console.error("Failed to logout:", response);
@@ -426,7 +374,7 @@ export default {
   },
 
   async mounted() {
-    await this.fetchUserInfo();
+    await this.checkLoginAndFetchUserInfo();
     window.document.onscroll = () => {
       if (window.scrollY > 400) {
         this.active = true;
@@ -434,6 +382,14 @@ export default {
         this.active = false;
       }
     };
+
+    EventBus.$on('user-logged-in', async () => {
+      await this.checkLoginAndFetchUserInfo();
+    });
+
+    EventBus.$on('user-logged-out', () => {
+      this.user = null;
+    });
   },
   computed: {
     frontUrl() {

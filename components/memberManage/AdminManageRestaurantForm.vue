@@ -1,8 +1,6 @@
 <template>
     <div>
         <v-container>
-
-
             <v-row>
                 <v-col cols="12">
                     <Box class="dashboard-box">
@@ -26,7 +24,7 @@
                                                 <!-- 회원 정보 목록 테이블 -->
                                                 <v-data-table :headers="headers" :items="displayedRestaurants"
                                                     hide-default-footer>
-                                                    <template v-slot:item="{ item }" >
+                                                    <template v-slot:item="{ item }">
                                                         <tr>
                                                             <td>{{ item.id }}</td>
                                                             <td>{{ item.name }}</td>
@@ -35,7 +33,7 @@
                                                             <td>{{ item.address }}</td>
                                                             <td>
                                                                 <v-dialog max-width="500">
-                                                                    <template v-slot:activator="{ on }" >
+                                                                    <template v-slot:activator="{ on }">
                                                                         <v-btn color="primary" dark
                                                                             @click="openDetailDialog(item)"
                                                                             v-on="on">상세정보</v-btn>
@@ -57,14 +55,11 @@
                                         <div
                                             class="d-flex justify-center align-center justify-sm-space-between flex-wrap">
                                             <div class="mb-4 me-3">
-                                                <p class="font-weight-normal mb-0 text-14">Showing {{ startItemIndex
-                                                    }}-{{ endItemIndex }} of {{
-                                                        filteredRestaurants.length }} Reviews</p>
                                             </div>
                                             <div class="mb-4">
                                                 <!-- 페이지네이션 -->
                                                 <v-pagination v-model="currentPage" :length="numberOfPages" circle
-                                                    @input="navigateToPage"></v-pagination>
+                                                    @input="navigateToPage" :total-visible="10"></v-pagination>
                                             </div>
                                         </div>
                                     </v-col>
@@ -76,9 +71,9 @@
             </v-row>
         </v-container>
         <Footer />
-
     </div>
 </template>
+
 <script>
 import AdminModifyOwnerForm from '@/components/memberManage/AdminModifyOwnerForm.vue';
 import axios from 'axios'; // axios를 import합니다.
@@ -97,7 +92,7 @@ export default {
             searchQuery: '',
             currentPage: 1, // 현재 페이지 번호
             itemsPerPage: 10, // 페이지당 표시할 아이템 수
-            showDialog: {}, // 다이얼로그 표시 여부를 관리하는 변수 추가
+            showDialog: false, // 다이얼로그 표시 여부를 관리하는 변수
             selectedRestaurantInfo: {}, // 선택된 사용자 정보를 저장할 변수 추가
             restaurants: [],
             headers: [
@@ -122,7 +117,7 @@ export default {
                 restaurant.ownerName.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                 restaurant.address.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                 restaurant.tel.includes(this.searchQuery) ||
-                restaurant.id.includes(this.searchQuery)
+                restaurant.id.toString().includes(this.searchQuery)
             );
         },
         displayedRestaurants() {
@@ -145,17 +140,38 @@ export default {
         },
     },
     methods: {
-        // API를 호출하여 식당 정보를 받아오는 메서드입니다.
         async fetchRestaurants() {
-            // API 통신을 통해 식당 정보를 받아옵니다.
-            const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`)
-                .then((response) => {
-                    // 받아온 식당 정보를 restaurants에 저장합니다.
+            try {
+                console.log('Fetching restaurants...');
+
+                // Vuex 스토어 또는 로컬 스토리지에서 토큰 가져오기
+                const token = this.$store.state.token || localStorage.getItem('token');
+                if (!token) {
+                    throw new Error('No token found');
+                }
+
+                // axios 요청에 헤더 추가
+                const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageRestaurantPage`, {
+                    headers: {
+                        'Authorization': `${token}`
+                    },
+                    withCredentials: true
+                });
+
+                console.log('API response:', response.data);
+                console.log('식당 관리자 응답', response.data);
+
+                // 데이터가 배열인지 확인하고 설정
+                if (Array.isArray(response.data)) {
                     this.restaurants = response.data;
-                })
-                .catch((error) => {
-                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-                })
+                } else {
+                    console.error('Invalid data format:', response.data);
+                    this.restaurants = [];
+                }
+            } catch (error) {
+                console.error('Error fetching restaurant data:', error);
+                this.restaurants = [];
+            }
         },
         // 페이지 변경 시 실행되는 이벤트 핸들러
         navigateToPage(newPage) {
@@ -192,12 +208,10 @@ export default {
             // 식당 정보 다시 불러오기
             this.fetchRestaurants();
         }
-
     },
-
 }
-
 </script>
+
 <style lang="scss">
 #text-nowrap {
     white-space: nowrap;

@@ -180,6 +180,7 @@
 </template>
 <script>
 import axios from "axios";
+
 export default {
   data() {
     return {
@@ -289,19 +290,29 @@ export default {
 </script>
 <style scoped>
 .v-container {
-  margin-bottom: 40px; /* 각 섹션의 하단 여백을 40px로 설정 */
+  margin-bottom: 40px;
+  /* 각 섹션의 하단 여백을 40px로 설정 */
 }
+
 .v-card {
   max-width: 100%;
-  margin-bottom: 20px; /* 카드 간의 간격을 20px로 설정 */
+  margin-bottom: 20px;
+  /* 카드 간의 간격을 20px로 설정 */
 }
+
 .v-img {
-  width: 100%; /* 이미지가 카드 너비에 맞도록 설정 */
+  width: 100%;
+  /* 이미지가 카드 너비에 맞도록 설정 */
 }
+
 .v-card-text {
-  height: 60px; /* 카드 텍스트 영역의 높이를 고정 */
-  overflow: hidden; /* 내용이 넘칠 경우 숨김 처리 */
-  text-overflow: ellipsis; /* 넘치는 텍스트는 말줄임표로 표시 */
-  white-space: nowrap; /* 텍스트를 한 줄로 표시 */
+  height: 60px;
+  /* 카드 텍스트 영역의 높이를 고정 */
+  overflow: hidden;
+  /* 내용이 넘칠 경우 숨김 처리 */
+  text-overflow: ellipsis;
+  /* 넘치는 텍스트는 말줄임표로 표시 */
+  white-space: nowrap;
+  /* 텍스트를 한 줄로 표시 */
 }
 </style>

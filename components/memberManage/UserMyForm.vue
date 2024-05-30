@@ -16,7 +16,7 @@
                                             <h1>회원정보</h1>
 
                                             <v-dialog v-model="dialogModify" width="500">
-                                                <template v-slot:activator="{ on }" >
+                                                <template v-slot:activator="{ on }">
                                                     <v-btn light text v-on="on"
                                                         class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0"
                                                         id="modify-userInfo-btn">
@@ -24,7 +24,8 @@
                                                     </v-btn>
                                                 </template>
 
-                                                <UserInfoModifyForm :userInfo="userInfo" :dialogModify="dialogModify" />
+                                                <UserInfoModifyForm :userInfo="userInfo" @modify-user="updateUserInfo"
+                                                    @close="dialogModify = false" />
                                             </v-dialog>
 
                                             <v-dialog v-model="dialogDelete" width="500">
@@ -43,19 +44,6 @@
 
                                     <v-col cols="7">
                                         <v-card elevation="0" class="border br-10">
-                                            <div
-                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
-                                                <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
-                                                    <div class="text-center text-sm-left">
-                                                        <div class="text-14 f-600 mb-2 mb-sm-0">이메일</div>
-                                                    </div>
-                                                </div>
-                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
-                                                    {{ userInfo.email }}
-                                                </p>
-                                            </div>
-
-                                            <v-divider></v-divider>
 
                                             <div
                                                 class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
@@ -66,6 +54,20 @@
                                                 </div>
                                                 <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
                                                     {{ userInfo.name }}
+                                                </p>
+                                            </div>
+
+                                            <v-divider></v-divider>
+
+                                            <div
+                                                class="d-flex align-center flex-column flex-sm-row justify-space-between flex-wrap px-4 px-sm-10 pa-4">
+                                                <div class="d-flex flex-column flex-sm-row align-center flex-wrap me-4">
+                                                    <div class="text-center text-sm-left">
+                                                        <div class="text-14 f-600 mb-2 mb-sm-0">이메일</div>
+                                                    </div>
+                                                </div>
+                                                <p class="mb-0 grey--text text--darken-1 text-14 mb-3 mb-sm-0">
+                                                    {{ userInfo.email }}
                                                 </p>
                                             </div>
 
@@ -135,8 +137,9 @@
                                                     max-height="50px"></v-img>
 
                                                 <span v-if="userInfo.point">
-                                                    &nbsp; 지금까지 {{ formatNumber((userInfo.point.accumulatePoint / 100).toFixed(2))
-                                                    }}공기 드셨어요.
+                                                    &nbsp; 지금까지 {{ userInfo.point.accumulatePoint ?
+                                                        formatNumber((userInfo.point.accumulatePoint /
+                                                            100).toFixed(2)) : 0 }} 공기 드셨어요.
                                                 </span>
                                             </div>
                                         </v-card>
@@ -166,8 +169,10 @@ export default {
         title: 'Order History'
     },
     async created() {
-        await this.getUserInfo();
-        this.fetchUserInfo();
+        if (process.client) {
+            await this.getUserInfo();
+            this.fetchUserInfo();
+        }
     },
     data() {
         return {
@@ -191,45 +196,73 @@ export default {
         };
     },
     methods: {
+
         async getUserInfo() {
-      try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
+            if (typeof window !== 'undefined') {
+                try {
+                    const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                    if (!token) {
+                        throw new Error('No token found');
+                    }
 
-        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-          headers: {
-            'Authorization': `${token}`
-          },
-          withCredentials: true
-        });
+                    // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                    const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+                        headers: {
+                            'Authorization': `${token}`
+                        },
+                        withCredentials: true
+                    });
 
-        if (response.status === 200) {
-          const userInfo = response.data;
-          console.log('User Info:', userInfo);
-          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-          this.user = userInfo;
-          console.log(this.user);
-          console.log(this.user.id);
-        } else {
-          console.error('Failed to fetch user info:', response);
-        }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
-      }
-    },
+                    if (response.status === 200) {
+                        const userInfo = response.data;
+                        console.log('유저 User Info:', userInfo);
+                        // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                        this.user = userInfo;
+                    } else {
+                        console.error('Failed to fetch user info:', response);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                }
+            } else {
+                console.error('localStorage is not defined');
+            }
+        },
+        
         async fetchUserInfo() {
-            const email = this.user.email;
-            const response = await axios
-                .get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`)
-                .then((response) => {
-                    this.userInfo = response.data;
-                })
-                .catch((error) => {
+            if (this.user && this.user.email) {
+                const email = this.user.email;
+                try {
+                    const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                    if (!token) {
+                        throw new Error('No token found');
+                    }
+
+                    // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                    const response = await axios.get(`${process.env.API_URL}/memberManage/userMyPage?email=${email}`, {
+                        headers: {
+                            'Authorization': `${token}`
+                        },
+                        withCredentials: true
+                    });
+
+                    if (response.status === 200) {
+                        this.userInfo = response.data;
+                        console.log(this.userInfo, '중간점검');
+                    } else {
+                        console.error('Failed to fetch user info:', response);
+                    }
+                } catch (error) {
                     console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-                });
+                }
+            } else {
+                console.error('User information is not available');
+            }
+        },
+        updateUserInfo(updatedUserInfo) {
+            this.userInfo = { ...this.userInfo, ...updatedUserInfo };
+            this.dialogModify = false;
+            this.$router.push('/memberManage/userMyPage');
         },
         openModifyDialog() {
             this.dialogModify = true;

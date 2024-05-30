@@ -1,13 +1,16 @@
 <template>
   <div class="log-in-form">
     <div class="log-in-form-container">
-      <div class="px-3 px-md-10 py-8 ">
+      <div class="px-3 px-md-10 py-8">
         <h3 class="mb-2 text-center">드실에 오신 걸 환영합니다.</h3>
         <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">이메일과 비밀번호를 입력해주세요.</h5>
         <v-text-field label="이메일" class="mb-4" v-model="email" :error-messages="emailErrors" @input="handleEmailInput"
           @keyup.enter="loginButton"></v-text-field>
-        <v-text-field label="비밀번호" type="password" class="mb-4" v-model="password" @input="handlePasswordInput"
-          @keyup.enter="loginButton"></v-text-field>
+        <v-text-field label="비밀번호" type="password" class="mb-4" v-model="password" :error-messages="passwordErrors"
+          @input="handlePasswordInput" @keyup.enter="loginButton"></v-text-field>
+        <transition name="fade">
+          <v-alert v-if="errorMessage" type="error" dismissible>{{ errorMessage }}</v-alert>
+        </transition>
         <v-btn block color="rgb(255,84,82)" class="primary" @click="loginButton" :disabled="!isFormValid">
           로그인
         </v-btn>
@@ -18,23 +21,20 @@
             <v-divider></v-divider>
           </div>
         </v-col>
-
         <div class="icon-align">
           <a :href="`${apiUrl}/oauth2/authorization/naver`">
-      <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
-    </a>
-    <a :href="`${apiUrl}/oauth2/authorization/kakao`">
-      <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
-    </a>
-    <a :href="`${apiUrl}/oauth2/authorization/google`">
-      <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
-    </a>
+            <img class="custom-btn icon-btn" src="~/assets/images/login/naverIcon.png" alt="네이버 아이콘">
+          </a>
+          <a :href="`${apiUrl}/oauth2/authorization/kakao`">
+            <img class="custom-btn icon-btn" src="~/assets/images/login/kakaoIcon.png" alt="카카오 아이콘">
+          </a>
+          <a :href="`${apiUrl}/oauth2/authorization/google`">
+            <img class="icon-img icon-btn" src="~/assets/images/login/googleIcon.png" alt="구글 아이콘">
+          </a>
         </div>
-
         <div class="text-14 text-center my-3">아직 드실 회원이 아니신가요?
           <nuxt-link to="/memberManage/SignupPage" class="grey--text text--darken-4 font-600">회원가입</nuxt-link>
         </div>
-
         <div class="py-4 bg-grey-light" id="find-idpw">
           <div class="text-center">
             <nuxt-link to="/memberManage/FindIdPage" class="ms-2 grey--text text--darken-4 font-600">아이디 찾기</nuxt-link>
@@ -51,13 +51,16 @@
 <script>
 import axios from 'axios';
 import Cookies from 'js-cookie';
+import { EventBus } from '~/plugins/event-bus.js';
 
 export default {
   data() {
     return {
       email: '',
       password: '',
-      emailErrors: []
+      emailErrors: [],
+      passwordErrors: [],
+      errorMessage: ''
     };
   },
   computed: {
@@ -65,7 +68,7 @@ export default {
       return this.email !== '' && this.password !== '' && this.emailErrors.length === 0;
     },
     apiUrl() {
-      return this.$config.apiUrl;
+      return process.env.API_URL;
     },
   },
   methods: {
@@ -77,7 +80,9 @@ export default {
       }
     },
     handlePasswordInput() {
-      // 비밀번호 입력 중 에러 메시지를 처리하는 로직을 추가할 수 있습니다.
+      if (this.password === '') {
+        this.passwordErrors = [];
+      }
     },
     validateEmail() {
       this.emailErrors = [];
@@ -88,6 +93,8 @@ export default {
     },
     async loginButton() {
       this.validateEmail();
+      this.passwordErrors = [];
+      this.errorMessage = '';
 
       if (!this.isFormValid) {
         return;
@@ -103,78 +110,60 @@ export default {
           const token = response.headers['authorization'];
           localStorage.setItem('token', token); // 액세스 토큰 저장
           axios.defaults.headers.common['Authorization'] = token; // Axios 인터셉터에 토큰 설정
-          console.log('토큰이 찍혔는지');
-          console.log('Response Headers:', response.headers);
-          console.log('Extracted Token:', token);
-          alert('로그인 성공');
 
-          try {
-            if (!token) {
-              throw new Error('No token found');
-            }
+          const userInfoResponse = await axios.get(`${this.apiUrl}/userInfo/me`, {
+            headers: {
+              'Authorization': `${token}`
+            },
+            withCredentials: true
+          });
 
-            // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-            const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-              headers: {
-                'Authorization': `${token}`
-              },
-              withCredentials: true
-            });
+          if (userInfoResponse.status === 200) {
+            const userInfo = userInfoResponse.data;
+            this.user = userInfo;
+            EventBus.$emit('user-logged-in');
 
-            if (response.status === 200) {
-              const userInfo = response.data;
-              console.log('User Info:', userInfo);
-              // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-              this.user = userInfo;
-              console.log(this.user);
-              console.log(this.user.id);
-              console.log(this.user.permission.permission);
-
-              if (this.user.permission.id === 1) {
-                this.$router.push('/'); // '/' 로 리디렉트
-              } else if (this.user.permission.id === 2) {
-                this.$router.push('/restaurant/RestaurantManagePage'); // '/' 로 리디렉트
-              } else {
-                this.$router.push('/memberManage/adminManageUserPage'); // '/' 로 리디렉트
-              }
+            if (this.user.permission.id === 1) {
+              this.$router.push('/');
+            } else if (this.user.permission.id === 2) {
+              this.$router.push('/restaurant/RestaurantManagePage');
             } else {
-              console.error('Failed to fetch user info:', response);
+              this.$router.push('/memberManage/adminManageUserPage');
             }
-          } catch (error) {
-            console.error('Error fetching user info:', error);
+          } else {
+            console.error('Failed to fetch user info:', userInfoResponse);
           }
-        } else {
-          const errorUrl = response.headers['location'];
-          this.$router.push(errorUrl);
         }
       } catch (error) {
-        if (error.response && error.response.status === 401) {
-          console.error('로그인 실패:', error.response.data);
-          alert('로그인 실패: ' + error.response.data);
-          if (error.response.headers['location']) {
-            this.$router.push(error.response.headers['location']);
-          }
+        console.error('로그인 실패:', error);
+        console.log('Error response:', error.response); // 에러 응답 객체 출력
+
+        if (error.response && error.response.data && error.response.data.error) {
+          this.errorMessage = error.response.data.error;
         } else {
-          console.error('로그인 실패:', error);
-          alert('로그인 실패: 서버에 문제가 있습니다.');
+          this.errorMessage = '로그인 실패: 서버에 문제가 있습니다.';
         }
+
+        // 에러 메시지를 2초 후에 사라지게 설정
+        setTimeout(() => {
+          this.errorMessage = '';
+        }, 2000);
       }
     },
     async useRefreshToken() {
       try {
         const refreshToken = Cookies.get('refreshToken');
-        console.log(refreshToken);
         if (!refreshToken) {
           console.log('Refresh Token이 없습니다.');
           return;
         }
 
-        const response = await axios.post(`${process.env.API_URL}/userInfo/refresh`, { refreshToken });
+        const response = await axios.post(`${this.apiUrl}/userInfo/refresh`, { refreshToken });
 
         if (response.status === 200) {
           const token = response.headers['authorization'];
           localStorage.setItem('token', token); // Access Token 저장
-          axios.defaults.headers.common['Authorization'] = `Bearer ${token}`; // Axios 인터셉터에 토큰 설정
+          axios.defaults.headers.common['Authorization'] = `${token}`; // Axios 인터셉터에 토큰 설정
           alert('Access 토큰이 갱신되었습니다.');
         } else {
           console.log('Access Token을 가져오지 못했습니다.');
@@ -207,6 +196,48 @@ export default {
       padding: 3rem 1rem 0px;
     }
   }
+}
+
+.v-text-field input {
+  border-radius: 4px !important;
+  border: 1px solid #ced4da !important;
+  padding: 0.5rem 1rem !important;
+  font-size: 1rem !important;
+  background-color: #f8f9fa !important;
+}
+
+.v-btn.primary {
+  background-color: #D23F57 !important;
+  color: #fff !important;
+  font-weight: 600 !important;
+  text-transform: uppercase !important;
+  padding: 0.75rem 1.5rem !important;
+  border-radius: 4px !important;
+  transition: background-color 0.2s !important;
+}
+
+.v-btn.primary:hover {
+  background-color: #e03e3e !important;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.5s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+.v-alert {
+  background-color: #D23F57 !important;
+  color: white !important;
+  border: 1px solid #D23F57 !important;
+  border-radius: 4px !important;
+  margin-top: 1rem !important;
+  padding: 0.75rem 1.25rem !important;
+  font-size: 0.875rem !important;
 }
 
 .icon-align {

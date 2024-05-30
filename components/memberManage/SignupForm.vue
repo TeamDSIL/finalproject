@@ -11,8 +11,12 @@
           <v-text-field v-model="userInfo.name" label="이름" type="text" class="mb-4" :error-messages="nameErrors"
             @input="handleNameInput"></v-text-field>
 
-          <v-text-field v-model="userInfo.email" label="이메일" type="email" class="mb-4" :error-messages="emailErrors"
-            @input="handleEmailInput"></v-text-field>
+          <div class="d-flex align-center mb-4">
+            <v-text-field v-model="userInfo.email" label="이메일" type="email"
+              :error-messages="emailErrors.concat(emailCheckMessage)" @input="handleEmailInput"
+              class="flex-grow-1 mr-2"></v-text-field>
+            <v-btn @click="checkEmailAvailability" color="primary">중복 검사</v-btn>
+          </div>
 
           <v-text-field v-model="userInfo.tel" label="연락처" type="tel" class="mb-4" :error-messages="telErrors"
             @input="handleTelInput"></v-text-field>
@@ -40,14 +44,13 @@
                   회원가입을 위해,&nbsp;
                   <v-tooltip bottom>
                     <template v-slot:activator="{ on }">
-                      <a target="_blank" href="/main/MainPage" @click.stop v-on="on">
-                        이용약관
-                      </a>
+                      <a @click.stop="openTermsModal" v-on="on">이용약관</a>
                     </template>
                     새 창에서 보기
                   </v-tooltip>
                   에 동의해야 합니다.
                 </div>
+                <UsingTerms ref="termsModal" />
               </template>
             </v-checkbox>
           </div>
@@ -72,8 +75,12 @@
 
 <script>
 import axios from 'axios';
+import UsingTerms from '@/components/memberManage/UsingTerms.vue';
 
 export default {
+  components: {
+    UsingTerms,
+  },
   layout: 'session',
   data() {
     return {
@@ -95,6 +102,8 @@ export default {
       passwordErrors: [],
       confirmPasswordErrors: [],
       addressSelected: false, // 주소가 선택되었는지 여부
+      emailCheckMessage: '', // 이메일 중복 확인 메시지
+      emailAvailable: false, // 이메일 사용 가능 여부
     };
   },
   computed: {
@@ -110,7 +119,8 @@ export default {
         this.userInfo.email &&
         this.userInfo.tel &&
         this.userInfo.password &&
-        this.confirmPassword
+        this.confirmPassword &&
+        this.emailAvailable // 이메일이 사용 가능해야 회원가입 가능
       );
     },
   },
@@ -121,6 +131,9 @@ export default {
     document.head.appendChild(script);
   },
   methods: {
+    openTermsModal() {
+      this.$refs.termsModal.openModal();
+    },
     gotoLoginPage() {
       this.$router.push('/memberManage/LoginPage');
     },
@@ -132,6 +145,8 @@ export default {
       }
     },
     handleEmailInput() {
+      this.emailCheckMessage = ''; // 이메일 입력 시 중복 확인 메시지 초기화
+      this.emailAvailable = false; // 이메일 사용 가능 여부 초기화
       if (this.userInfo.email === '') {
         this.emailErrors = [];
       } else {
@@ -199,6 +214,35 @@ export default {
         this.confirmPasswordErrors.push('비밀번호가 일치하지 않습니다');
       }
     },
+    async checkEmailAvailability() {
+      this.emailErrors = [];
+      this.emailCheckMessage = '';
+
+      // 이메일 형식 확인
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(this.userInfo.email)) {
+        this.emailErrors.push('이메일 형식이 아닙니다');
+        this.emailCheckMessage = '이메일 형식이 아닙니다';
+        this.emailAvailable = false;
+        return;
+      }
+
+      try {
+        const response = await axios.post(`${process.env.API_URL}/memberManage/checkEmail`, { email: this.userInfo.email });
+        if (response.data.exists) {
+          this.emailErrors.push('이미 존재하는 이메일입니다');
+          this.emailCheckMessage = '이미 존재하는 이메일입니다';
+          this.emailAvailable = false;
+        } else {
+          this.emailCheckMessage = '사용 가능한 이메일입니다';
+          this.emailAvailable = true;
+        }
+      } catch (error) {
+        console.error('이메일 중복 확인 중 오류가 발생했습니다:', error);
+        this.emailErrors.push('이메일 중복 확인 중 오류가 발생했습니다');
+      }
+    },
+
     async signUp() {
       this.validateName();
       this.validateEmail();
@@ -306,6 +350,14 @@ export default {
 
   .mb-10 {
     margin-bottom: 3rem;
+  }
+
+  .text-success {
+    color: green;
+  }
+
+  .text-error {
+    color: red;
   }
 }
 </style>

@@ -61,11 +61,11 @@ export default {
                 // 토큰을 Authorization 헤더에 포함하여 요청 보내기
                 console.log('access token', token);
                 const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-                    headers: {
-                        'Authorization': `${token}`
-                    },
-                    withCredentials: true
-                });
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                withCredentials: true
+            });
                 if (response.status === 200) {
                     const userInfo = response.data;
                     console.log('User Info:', userInfo);
@@ -80,18 +80,26 @@ export default {
             }
         },
 
-    async fetchRestaurants() {
-      console.log("restaurant목록을 불러올 멤버: ",this.user);
-      const memberId = this.user.id;
-      console.log("유저번호",memberId);
-      await axios.get(`${process.env.API_URL}/restaurant/${memberId}/restaurants`)
-        .then(response => {
-          this.restaurants = response.data;
-          console.log(this.restaurants);
-        })
-        .catch(error => {
-          console.error('식당 정보를 불러오는 데 실패했습니다.', error);
-        });
+        async fetchRestaurants() {
+        console.log("restaurant목록을 불러올 멤버: ", this.user);
+        const memberId = this.user.id;
+        console.log("유저번호", memberId);
+        try {
+            const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+            if (!token) {
+                throw new Error('No token found');
+            }
+            const response = await axios.get(`${process.env.API_URL}/restaurant/${memberId}/restaurants`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
+                },
+                withCredentials: true
+            });
+            this.restaurants = response.data;
+            console.log(this.restaurants);
+        } catch (error) {
+            console.error('식당 정보를 불러오는 데 실패했습니다.', error);
+        }
     },
 
     goToRestaurantManagement(restaurant) {

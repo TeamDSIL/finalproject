@@ -35,7 +35,8 @@
                             <span class="d-none d-sm-block">수정</span>
                           </v-btn>
                         </template>
-                        <OwnerInfoModifyForm :selectedOwnerInfo="selectedOwnerInfo" :dialogModify="dialogModify" />
+                        <OwnerInfoModifyForm :selectedOwnerInfo="selectedOwnerInfo" :dialogModify="dialogModify"
+                          @modify-user="updateOwnerInfo" @close="dialogModify = false" />
                       </v-dialog>
                     </div>
                   </v-col>
@@ -166,8 +167,10 @@ export default {
     OwnerInfoModifyForm,
   },
   async created() {
-    await this.fetchUserInfo();
-    this.fetchOwnerInfos();
+    if (process.client) {
+      await this.fetchUserInfo();
+      this.fetchOwnerInfos();
+    }
   },
   data() {
     return {
@@ -176,74 +179,84 @@ export default {
       selectedOwnerInfo: null,
       hoverItem: null,
       user: null,
-      ownerInfos: [
-        {
-          id: '',
-          email: '',
-          modifiedPassword: '',           // 비밀번호
-          confirmPassword: '',    // 비밀번호 확인
-          name: '',               // 매장명
-          ownerName: '',        // 사업자명
-          tel: '',              // 연락처
-          address: '',            // 주소
-          registerNumber: '',     // 사업자등록번호
-        },
-      ],
-
+      ownerInfos: [],
     };
   },
   methods: {
     async fetchUserInfo() {
-      try {
-        const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
-        if (!token) {
-          throw new Error('No token found');
-        }
+      if (typeof window !== 'undefined') {
+        try {
+          const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+          if (!token) {
+            throw new Error('No token found');
+          }
 
-        // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-        const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
-          headers: {
-            'Authorization': `${token}`
-          },
-          withCredentials: true
-        });
+          // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+          const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+            headers: {
+              'Authorization': `${token}`
+            },
+            withCredentials: true
+          });
 
-        if (response.status === 200) {
-          const userInfo = response.data;
-          console.log('User Info:', userInfo);
-          // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-          this.user = userInfo;
-          console.log(this.user);
-          console.log(this.user.id);
-        } else {
-          console.error('Failed to fetch user info:', response);
+          if (response.status === 200) {
+            const userInfo = response.data;
+            console.log('User Info:', userInfo);
+            // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+            this.user = userInfo;
+            console.log(this.user);
+            console.log(this.user.id);
+          } else {
+            console.error('Failed to fetch user info:', response);
+          }
+        } catch (error) {
+          console.error('Error fetching user info:', error);
         }
-      } catch (error) {
-        console.error('Error fetching user info:', error);
       }
     },
     async fetchOwnerInfos() {
-      // API 통신을 통해 식당 정보를 받아옵니다.
-      const email = this.user.email;
-      const response = await axios.get(`${process.env.API_URL}/memberManage/ownerMyPage?email=${email}`)
-        // this.selectedOwnerInfo.email
-        .then((response) => {
-          // 받아온 식당 정보를 restaurants에 저장합니다.
+      if (this.user && this.user.email) {
+        // API 통신을 통해 식당 정보를 받아옵니다.
+        const email = this.user.email;
+        try {
+          const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+          if (!token) {
+            throw new Error('No token found');
+          }
+
+          // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+          const response = await axios.get(`${process.env.API_URL}/memberManage/ownerMyPage?email=${email}`, {
+            headers: {
+              'Authorization': `Bearer ${token}`
+            },
+            withCredentials: true
+          });
+
+          // 응답 처리
           console.log(response.data);
           this.ownerInfos = response.data;
           // 데이터를 성공적으로 가져온 후에 첫 번째 항목을 선택합니다.
           this.selectedItem = 0;
           this.selectedOwnerInfo = this.ownerInfos[0];
 
-        })
-        .catch((error) => {
+        } catch (error) {
           console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-        })
+        }
+      } else {
+        console.error('User information is not available');
+      }
     },
     toggleItem(index) {
       this.selectedItem = index;
       this.selectedOwnerInfo = this.ownerInfos[index];
     },
+    updateOwnerInfo(updatedInfo) {
+      const index = this.ownerInfos.findIndex(info => info.email === updatedInfo.email);
+      if (index !== -1) {
+        this.$set(this.ownerInfos, index, updatedInfo);
+        this.selectedOwnerInfo = updatedInfo;
+      }
+    }
   },
 }
 </script>

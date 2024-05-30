@@ -22,22 +22,21 @@
       <div class="d-flex align-center card-rating">
         <img src="../assets/images/babscore.png" width="16" height="16" />
         <div class="">
-          <span class="font-weight-bold text-14"> 4.5</span>
+          <span class="font-weight-bold text-14"> {{ cardSection.score }}</span>
           <span class="grey--text text--darken-1 text-14">/5</span>
         </div>
       </div>
     </div>
-   
       <div class="crowdClass">
                               <span v-if="cardSection.restaurant_crowd === 'BUSY'" class="busy1">　혼잡　</span>
-                              <span v-else-if="cardSection.restaurant_crowd === 'NORMAL' "class="normal1">　보통　</span>
+                              <span v-else-if="cardSection.restaurant_crowd === 'NORMAL'" class="normal1">　보통　</span>
                               <span v-else-if="cardSection.restaurant_crowd === 'AVAILABLE'" class="available1">　여유　</span>
                           </div>
-                         
-                           　<v-icon left small color="grey" style="margin-left:15px; margin-right: 5px;">mdi-map-marker</v-icon>{{ cardSection.restaurant_address }}<br>
-                          　식당 예약금(1인) : {{ cardSection.restaurant_deposit }}원<br>
-       <span class="primary--text f-400 me-1">　{{ formatCategories(cardSection.categoryNames) }}</span>
-    
+                         <div style="display: flex;">
+                           <div><v-icon left small color="grey" style="margin-left:15px; margin-right: 5px;">mdi-map-marker</v-icon></div><div>{{ cardSection.restaurant_address }}</div>
+                          </div>
+                          <div style="padding-left: 20px;">식당 예약금(1인) : {{ cardSection.restaurant_deposit }}원</div>
+       <div class="primary--text f-400 me-1" style="padding-left: 20px;">{{ formatCategories(cardSection.categoryNames) }}</div>
   </v-card>
 </template>
 
@@ -79,7 +78,16 @@ const categoryMappings = {
 "GURO_DIGITAL_VALLEY": "구로디지털단지",
 };
 export default {
-props: ["cardSection"],
+  props: {
+    cardSection: {
+      type: Object,
+      required: true
+    },
+    cardSection1: {
+      type: Object,
+      required: true
+    }
+  },
 data: () => ({
  
 }),

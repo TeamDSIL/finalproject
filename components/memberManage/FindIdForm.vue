@@ -14,7 +14,7 @@
                 <h5 class="font-600 grey--text text--darken-3 text-sm mb-9 text-center">가입 시 입력했던 연락처를 입력해주세요.</h5>
 
                 <v-text-field placeholder="- 없이 입력해주세요." v-model="tel" class="mb-4" label="연락처"
-                    :error-messages="telErrors" @input="formatTel" maxlength="13"></v-text-field>
+                    :error-messages="telErrors" @input="formatTel" maxlength="13" @keyup.enter="handleFindEmail"></v-text-field>
 
                 <v-dialog v-model="dialog" width="500">
                     <template v-slot:activator="{ on, attrs }">

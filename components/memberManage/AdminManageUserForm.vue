@@ -13,7 +13,6 @@
                                     <v-col cols="12">
                                         <h1>회원 정보 관리</h1>
                                     </v-col>
-
                                     <v-col cols="12">
                                         <div>
                                             <v-container>
@@ -22,17 +21,16 @@
                                                     clearable append-icon="mdi-magnify"
                                                     @keyup.enter="performSearch"></v-text-field>
 
-                                                <!-- 일반 회원 정보 카드 -->
-
+                                                <!-- 회원 정보 목록 테이블 -->
                                                 <v-data-table :headers="headers" :items="displayedMembers"
                                                     hide-default-footer>
-                                                    <template v-slot:item="{ item }" >
+                                                    <template v-slot:item="{ item }">
                                                         <tr>
                                                             <td>{{ item.id }}</td>
-                                                            <td>{{ item.email }}</td>
-                                                            <td>{{ item.point ? item.point.currentPoint : 'N/A' }}</td>
                                                             <td>{{ item.name }}</td>
+                                                            <td>{{ item.email }}</td>
                                                             <td>{{ item.tel }}</td>
+                                                            <td>{{ item.point ? item.point.currentPoint : 'N/A' }}</td>
                                                             <td>
                                                                 <v-dialog max-width="500">
                                                                     <template v-slot:activator="{ on }">
@@ -57,14 +55,11 @@
                                         <div
                                             class="d-flex justify-center align-center justify-sm-space-between flex-wrap">
                                             <div class="mb-4 me-3">
-                                                <p class="font-weight-normal mb-0 text-14">Showing {{ startItemIndex
-                                                    }}-{{ endItemIndex }} of {{
-                                                        filteredMembers.length }} Reviews</p>
                                             </div>
                                             <div class="mb-4">
                                                 <!-- 페이지네이션 -->
                                                 <v-pagination v-model="currentPage" :length="numberOfPages" circle
-                                                    @input="navigateToPage"></v-pagination>
+                                                    @input="navigateToPage" :total-visible="10"></v-pagination>
                                             </div>
                                         </div>
                                     </v-col>
@@ -97,25 +92,23 @@ export default {
             searchQuery: '',
             currentPage: 1,
             itemsPerPage: 10,
-            showDialog: {}, // 다이얼로그 표시 여부를 관리하는 변수 추가
+            showDialog: false, // 다이얼로그 표시 여부를 관리하는 변수 추가
             selectedUserInfo: {}, // 선택된 사용자 정보를 저장할 변수 추가
             members: [], // API로부터 받아온 회원 정보를 저장할 배열
             headers: [
                 { text: 'ID', align: 'start', value: 'id' },
-                { text: '이메일', value: 'email' },
-                { text: '밥알', value: 'point' },
                 { text: '이름', value: 'name' },
+                { text: '이메일', value: 'email' },
                 { text: '전화번호', value: 'phone' },
+                { text: '밥알', value: 'point' },
                 { text: '상세보기', value: '' },
             ],
         };
     },
-    created() {
+    async created() {
         // 페이지가 로드될 때 API를 호출하여 회원 정보를 받아옵니다.
+        await this.fetchUserInfo();
         this.fetchMembers();
-    },
-    mounted() {
-        this.fetchUserInfo();
     },
     computed: {
         // 필터링된 회원 목록 반환
@@ -124,7 +117,7 @@ export default {
                 member.email.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                 member.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
                 member.tel.includes(this.searchQuery)
-            )
+            );
         },
         // 현재 페이지에 해당하는 회원 목록 반환
         displayedMembers() {
@@ -148,46 +141,69 @@ export default {
     },
     methods: {
         async fetchUserInfo() {
+            if (process.client) {
+                try {
+                    const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                    if (!token) {
+                        throw new Error('No token found');
+                    }
+
+                    // 토큰을 Authorization 헤더에 포함하여 요청 보내기
+                    const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+                        headers: {
+                            'Authorization': `${token}`
+                        },
+                        withCredentials: true
+                    });
+
+                    if (response.status === 200) {
+                        const userInfo = response.data;
+                        console.log('User Info:', userInfo);
+                        // 사용자 정보를 상태나 컴포넌트 데이터에 저장
+                        this.user = userInfo;
+                        console.log(this.user);
+                        console.log(this.user.id);
+                    } else {
+                        console.error('Failed to fetch user info:', response);
+                    }
+                } catch (error) {
+                    console.error('Error fetching user info:', error);
+                }
+            }
+        },
+        // API를 호출하여 회원 정보를 받아오는 메소드입니다.
+        async fetchMembers() {
             try {
-                const token = localStorage.getItem('token'); // 저장된 토큰 가져오기
+                console.log('Fetching members...');
+
+                // Vuex 스토어 또는 로컬 스토리지에서 토큰 가져오기
+                const token = this.$store.state.token || localStorage.getItem('token');
                 if (!token) {
                     throw new Error('No token found');
                 }
 
-                // 토큰을 Authorization 헤더에 포함하여 요청 보내기
-                const response = await axios.get(`${process.env.API_URL}/userInfo/me`, {
+                // axios 요청에 헤더 추가
+                const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageUserPage`, {
                     headers: {
                         'Authorization': `${token}`
                     },
                     withCredentials: true
                 });
 
+                console.log('API response:', response); // 응답 데이터를 콘솔에 출력
+                console.log('회원 정보 응답', response.data);
+
                 if (response.status === 200) {
-                    const userInfo = response.data;
-                    console.log('User Info:', userInfo);
-                    // 사용자 정보를 상태나 컴포넌트 데이터에 저장
-                    this.user = userInfo;
-                    console.log(this.user);
-                    console.log(this.user.id);
+                    // 받아온 회원 정보를 members에 저장합니다.
+                    // API 응답 형식에 맞게 members 할당
+                    this.members = Array.isArray(response.data) ? response.data : response.data.members || [];
+                    console.log('불러온 멤버:', this.members);
                 } else {
-                    console.error('Failed to fetch user info:', response);
+                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', response);
                 }
             } catch (error) {
-                console.error('Error fetching user info:', error);
+                console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
             }
-        },
-        // API를 호출하여 회원 정보를 받아오는 메소드입니다.
-        async fetchMembers() {
-
-            // API 통신을 통해 회원 정보를 받아옵니다.
-            const response = await axios.get(`${process.env.API_URL}/memberManage/adminManageUserPage`)
-                .then((response) => {
-                    // 받아온 회원 정보를 members에 저장합니다.
-                    this.members = response.data;
-                })
-                .catch((error) => {
-                    console.error('회원 정보를 불러오는 중 오류가 발생했습니다:', error);
-                })
         },
         // 페이지 변경 시 실행되는 이벤트 핸들러
         navigateToPage(newPage) {
@@ -222,7 +238,7 @@ export default {
             // 회원 정보 다시 불러오기
             this.fetchMembers();
         }
-    },
+    }
 };
 </script>
 
