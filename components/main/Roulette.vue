@@ -6,16 +6,26 @@
         v-model="newMenu"
         placeholder="새 메뉴 입력"
         @keyup.enter="addMenu"
-        style="border: 1px solid #ccc; padding: 8px; border-radius: 4px; width: 200px;"
+        style="
+          border: 1px solid #ccc;
+          padding: 8px;
+          border-radius: 4px;
+          width: 200px;
+        "
       />
-      <v-btn @click="addMenu" style="background-color: rgb(255,207,2);">메뉴 추가</v-btn>
+      <v-btn @click="addMenu" style="background-color: rgb(255, 207, 2)"
+        >메뉴 추가</v-btn
+      >
       <v-btn @click="selectAll">전체 선택/해제</v-btn>
+      <v-btn @click="quickRecommend" style="background-color: rgb(210, 63, 87)"
+        >빠른 추천</v-btn
+      >
     </div>
 
     <div class="menu-selection">
       <div class="menu-row" v-for="(chunk, index) in chunkedMenus" :key="index">
         <v-btn
-          style="box-shadow: 0,0,0,0;"
+          style="box-shadow: 0, 0, 0, 0"
           v-for="menu in chunk"
           :key="menu.name"
           :class="{
@@ -28,18 +38,30 @@
         </v-btn>
       </div>
     </div>
-    <v-btn @click="startRoulette" v-if="menus.some((menu) => menu.selected)" style="background-color: rgb(255,207,2); margin-top: 10px;">
+    <v-btn
+      @click="startRoulette"
+      v-if="menus.some((menu) => menu.selected)"
+      style="background-color: rgb(255, 207, 2); margin-top: 10px"
+    >
       메뉴 고르기 시작!
     </v-btn>
     <div v-if="alertVisible" class="alert-message">메뉴를 선택해주세요.</div>
-    <div v-if="finalMenu" :class="['final-menu', { 'animate-fade-in': showCelebration }]">
+    <div
+      v-if="finalMenu"
+      :class="['final-menu', { 'animate-fade-in': showCelebration }]"
+    >
       최종 메뉴: {{ finalMenu }}
     </div>
     <!-- 축하 이미지 요소 -->
     <div>
-      <img v-if="showCelebration" src="~/assets/images/clikCategory/celebration.gif" alt="축하" class="celebration-image" />
+      <img
+        v-if="showCelebration"
+        src="~/assets/images/clikCategory/celebration.gif"
+        alt="축하"
+        class="celebration-image"
+      />
     </div>
-    <v-btn @click="closeModal" style="margin-top: 10px;">닫기</v-btn>
+    <v-btn @click="closeModal" style="margin-top: 10px">닫기</v-btn>
   </div>
 </template>
 
@@ -147,6 +169,11 @@ export default {
       setTimeout(() => {
         this.showCelebration = false;
       }, 3000); // 3초 후에 축하 이미지 숨기기
+    },
+    quickRecommend() {
+      const randomIndex = Math.floor(Math.random() * this.menus.length);
+      this.finalMenu = this.menus[randomIndex].name;
+      this.showCelebrationImage();
     },
   },
 };
