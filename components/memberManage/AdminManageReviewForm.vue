@@ -147,7 +147,7 @@ export default {
         // axios 요청에 헤더 추가
         const response = await axios.get(`${process.env.API_URL}/memberManage/reviewManage`, {
           headers: {
-            'Authorization': `Bearer ${token}`
+            'Authorization': `${token}`
           },
           withCredentials: true
         });

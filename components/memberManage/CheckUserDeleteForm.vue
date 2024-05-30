@@ -73,7 +73,7 @@ export default {
                     {},
                     {
                         headers: {
-                            'Authorization': `Bearer ${token}` // Bearer 접두어 추가
+                            'Authorization': `${token}` // Bearer 접두어 추가
                         },
                         withCredentials: true
                     }
