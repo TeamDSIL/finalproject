@@ -274,7 +274,7 @@ export default {
         console.log('회원 정보 응답:', response.data);
         alert('회원가입이 완료되었습니다.');
 
-        this.$router.push('/main/mainPage');
+        this.$router.push('/');
         // 부모 컴포넌트로 수정된 정보를 전달
         this.$emit('modify-user', requestData);
 
