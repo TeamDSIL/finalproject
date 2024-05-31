@@ -434,9 +434,13 @@ export default {
       }
 
       axios
-        .put(`${process.env.API_URL}/${this.editingNotice.id}`, formData, {
-          headers: { "Content-Type": "multipart/form-data" },
-        })
+        .put(
+          `${process.env.API_URL}/informs/${this.editingNotice.id}`,
+          formData,
+          {
+            headers: { "Content-Type": "multipart/form-data" },
+          }
+        )
         .then((response) => {
           const index = this.notices.findIndex(
             (n) => n.id === this.editingNotice.id
