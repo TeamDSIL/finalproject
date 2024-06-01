@@ -19,14 +19,6 @@
             <v-text-field v-model="userInfo.tel" label="연락처" class="mb-4" :error-messages="telErrors"
                 @input="handleTelInput"></v-text-field>
 
-            <!-- 비밀번호 -->
-            <v-text-field v-model="modifiedPassword" label="비밀번호" type="password" class="mb-4"
-                :error-messages="passwordErrors" @input="handlePasswordInput"></v-text-field>
-
-            <!-- 비밀번호 재입력 -->
-            <v-text-field v-model="confirmPassword" label="비밀번호 확인" type="password" class="mb-4"
-                :error-messages="confirmPasswordErrors" @input="handleConfirmPasswordInput"></v-text-field>
-
             <!-- 기존 주소 표시 -->
             <v-text-field v-if="!addressSelected" v-model="userInfo.address" label="주소" type="text" readonly
                 class="mb-4"></v-text-field>
@@ -62,13 +54,9 @@ export default {
     props: ['userInfo'], // userInfo prop 추가
     data() {
         return {
-            modifiedPassword: '',           // 비밀번호
-            confirmPassword: '',    // 비밀번호 확인
             nameErrors: [],
             emailErrors: [],
             telErrors: [],
-            passwordErrors: [],
-            confirmPasswordErrors: [],
             addressSelected: false, // 주소가 선택되었는지 여부
         };
     },
@@ -76,11 +64,7 @@ export default {
         isFormValid() {
             return (
                 this.nameErrors.length === 0 &&
-                this.telErrors.length === 0 &&
-                this.passwordErrors.length === 0 &&
-                this.confirmPasswordErrors.length === 0 &&
-                this.modifiedPassword &&
-                this.confirmPassword
+                this.telErrors.length === 0
             );
         },
     },
@@ -111,20 +95,6 @@ export default {
                 this.validateTel();
             }
         },
-        handlePasswordInput() {
-            if (this.modifiedPassword === '') {
-                this.passwordErrors = [];
-            } else {
-                this.validatePassword();
-            }
-        },
-        handleConfirmPasswordInput() {
-            if (this.confirmPassword === '') {
-                this.confirmPasswordErrors = [];
-            } else {
-                this.validateConfirmPassword();
-            }
-        },
         validateName() {
             this.nameErrors = [];
             const namePattern = /^[가-힣a-zA-Z\s]+$/;
@@ -144,24 +114,9 @@ export default {
                 this.userInfo.tel = tel.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
             }
         },
-        validatePassword() {
-            this.passwordErrors = [];
-            const passwordPattern = /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&~])[A-Za-z\d@$!%*#?&~]{10,15}$/;
-            if (!passwordPattern.test(this.modifiedPassword)) {
-                this.passwordErrors.push('문자와 숫자, 특수문자(!, @, #, $, %, *, ?, &, ~) 합하여 10~15자를 입력해주세요');
-            }
-        },
-        validateConfirmPassword() {
-            this.confirmPasswordErrors = [];
-            if (this.modifiedPassword !== this.confirmPassword) {
-                this.confirmPasswordErrors.push('비밀번호가 일치하지 않습니다');
-            }
-        },
         async handleModify() {
             this.validateName();
             this.validateTel();
-            this.validatePassword();
-            this.validateConfirmPassword();
 
             if (!this.isFormValid) {
                 return;
@@ -175,7 +130,6 @@ export default {
 
                 const modifiedData = {
                     email: this.userInfo.email,
-                    password: this.modifiedPassword,
                     name: this.userInfo.name,
                     tel: this.userInfo.tel,
                     address: address, // 수정된 부분

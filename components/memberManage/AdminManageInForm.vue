@@ -28,12 +28,8 @@
                         ></v-text-field>
 
                         <!-- 공지사항 목록 테이블 -->
-                        <v-data-table
-                          :headers="headers"
-                          :items="displayedNotices"
-                          hide-default-footer
-                        >
-                          <template v-slot:item="{ item }">
+                        <v-data-table :headers="headers" :items="displayedNotices" hide-default-footer>
+                          <template v-slot:item="{ item }" >
                             <tr>
                               <td>{{ item.category }}</td>
                               <td @click="showDetails(item)" class="clickable">
