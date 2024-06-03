@@ -71,14 +71,17 @@
 
 ### 기술스택 
 > FRONT
- - HTML, CSS, VUE.JS
+ - HTML, CSS, VUE.JS+Axios / IDE : VSCode
 
 > BACKEND 
- - Java 17, Spring Boot, JPA, Spring Security
- - MySql, NCP(NaverCloudPlatform)
+ - Java 17, Spring Boot(Maven), JPA, Spring Security / IDE : IntelliJ IDEA(Ultimate)
+ - MySQL, NCP(NaverCloudPlatform)
 
 > 사용 API
 - KAKAO Map, PORTONE
+
+> 기타 툴(협업, 일정 관리)
+- Github, Slack, Notion
 ## 🎈 배포 주소
 > <a href="https://github.com/TeamDSIL/DSILbackend">Back-end Git<a>
 
@@ -95,7 +98,7 @@
     <a href ="https://github.com/Hwije-Jung">팀장 : 정휘제</a><br>
   </td>
   <td>
-    <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/99d1cb59-9bc4-403d-a20a-74fcfaad2ec5" width="100px"><br>
+    <img src="https://github.com/TeamDSIL/finalproject/assets/147921376/7b5691ad-ff34-44b7-95b3-a8e36eaaf8b8" width="90px" height="100"px><br>
     <a href ="https://github.com/yunyeobin">팀원 : 윤여빈</a>
   </td>
   <td>
