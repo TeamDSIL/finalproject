@@ -1233,7 +1233,7 @@ export default {
         } else {
           // 결제 함수 정의
           const paymentFunction = () => {
-            IMP.init('imp56476634');
+            IMP.init('고객사 식별코드를 입력해주세요');
             IMP.request_pay(this.paymentData, (rsp) => { // 화살표 함수로 콜백 함수 정의
               if (rsp.success) {
                 const impUid = rsp.imp_uid;
